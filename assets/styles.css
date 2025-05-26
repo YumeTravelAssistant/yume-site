@@ -536,3 +536,7 @@ ul {
   transform: translateY(0);
 }
 
+.titolo-centrale {
+  text-align: center;
+}
+
