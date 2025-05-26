@@ -125,7 +125,12 @@ footer {
   color: #8B2C2B;
   cursor: pointer;
   z-index: 1001;
-  padding: 6px;  /* ✅ perfetto equilibrio per click e visibilità */
+<header class="hero-banner">
+      <img src="assets/home.jpg" alt="Yume Travel copertina" class="hero-banner-img">
+       <div class="hero-text-overlay">
+  </div>
+
+</header>  padding: 6px;  /* ✅ perfetto equilibrio per click e visibilità */
   margin: 0;     /* ✅ elimina lo sfasamento verticale */
 }
 
@@ -585,7 +590,9 @@ ul {
   width: 100%;
   display: flex;
   justify-content: center;
-  padding: 30px 10px 10px;
+  padding: 20px 20px 0; /* 👈 dimezza lo spazio sopra */
+}
+
   background-color: #F4F0E2;
 }
 
@@ -604,5 +611,13 @@ ul {
   .slogan {
     font-size: 2.2rem;
   }
+}
+
+.slogan-black {
+  color: #000000;
+}
+
+.slogan-rosso {
+  color: #8B2C2B;
 }
 
