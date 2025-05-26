@@ -3,7 +3,6 @@ body {
   font-family: 'Raleway', sans-serif;
   background-color: #F4F0E2;
   color: #1C1C1C;
-  display: flex;
 }
 
 h1, h2, h3 {
@@ -107,13 +106,14 @@ footer {
 
 .hamburger {
   display: block;
-  font-size: 26px;
+  font-size: 30px;
   background: none;
   border: none;
   color: #8B2C2B;
   cursor: pointer;
   z-index: 1001;
-  padding: 4px; /* per clic più comodo */
+  padding: 4px;
+  margin-top: 4px; /* 👉 regola fine per centratura */
 }
 
 
@@ -296,16 +296,20 @@ button:hover {
 
 .hero-banner {
   position: relative;
-  width: 100%;
-  height: 80vh; /* raddoppiato */
+  width: 100vw; /* 💥 ora davvero full screen */
+  height: 80vh;
   overflow: hidden;
+  margin-top: 0;
+  padding: 0;
 }
 
 .hero-banner-img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(65%);
+  margin: 0;
+  padding: 0;
 }
 
 .hero-text-overlay {
@@ -471,7 +475,7 @@ ul {
   position: fixed;
   top: 0;
   left: 0;
-  height: 60px;
+  height: 100px;
   width: 100%;
   background-color: #FFF8F4;
   display: flex;
@@ -483,7 +487,7 @@ ul {
 }
 
 .logo-navbar {
-  height: 32px;
+  height: 40px;
   display: block;
   object-fit: contain;
 }
