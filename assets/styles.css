@@ -60,12 +60,10 @@ a {
 }
 
 .main-content {
-  background: white;
-  max-width: 800px;
   width: 100%;
   padding: 40px 35px;
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  margin: 0 auto;
+  background: transparent; /* ← niente bianco */
 }
 
 h1 {
@@ -115,8 +113,7 @@ footer {
   color: #8B2C2B;
   cursor: pointer;
   z-index: 1001;
-  position: relative;
-  top: 2px;
+  align-self: center; /* ✅ perfetto allineamento verticale */
 }
 
 
@@ -365,10 +362,11 @@ ul {
 .offerta-section, .vantaggi-section {
   margin-top: 60px;
   padding: 40px 20px;
-  background-color: #F2EBDF; /* beige sobrio in palette */
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  max-width: 800px;
+  background-color: transparent; /* ✅ NIENTE sfondo, mostra il beige */
+  width: 100%;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Contatti e newsletter (sfondo bianco) */
@@ -392,7 +390,7 @@ ul {
 
 .grid-2 {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* max 2 per riga */
+  grid-template-columns: repeat(3, 1fr); /* ← ora 3 per riga */
   gap: 30px;
   margin-top: 30px;
   align-items: stretch;
