@@ -377,3 +377,88 @@ ul {
   list-style-position: outside;
 }
 
+/* Sezioni offerta e vantaggi */
+.offerta-section, .vantaggi-section, .contatti-section, .newsletter-section {
+  margin-top: 60px;
+  padding: 40px 20px;
+  background-color: #FFF8F4;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.offerta-section h2, .vantaggi-section h2, .contatti-section h2, .newsletter-section h2 {
+  color: #8B2C2B;
+  font-size: 2em;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.box {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  text-align: center;
+}
+
+.box img {
+  width: 100%;
+  max-height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.box h3 {
+  color: #8B2C2B;
+  font-size: 1.2em;
+  margin: 10px 0 8px;
+}
+
+.box p {
+  font-size: 0.95em;
+  color: #333;
+}
+
+/* Form contatti e newsletter */
+.contatti-section form,
+.newsletter-section form {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.newsletter-section input[type="email"],
+.contatti-section input,
+.contatti-section textarea {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1em;
+}
+
+.newsletter-section button,
+.contatti-section button {
+  background-color: #8B2C2B;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.newsletter-section button:hover,
+.contatti-section button:hover {
+  background-color: #721F1E;
+}
+
