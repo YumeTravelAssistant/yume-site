@@ -370,3 +370,10 @@ ul li {
   margin-bottom: 0.8em;
 }
 
+ul {
+  font-size: 1.1em;
+  line-height: 1.8;
+  padding-left: 1.6em; /* margine per far vedere bene il pallino */
+  list-style-position: outside;
+}
+
