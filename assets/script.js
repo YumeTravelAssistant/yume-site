@@ -37,3 +37,32 @@ if (typeof $ !== "undefined" && typeof $.fn.select2 !== "undefined") {
   });
 }
 
+// 🔽 NAVBAR dinamica: hide on scroll down, show on scroll up
+let lastScrollTop = 0;
+const navbar = document.querySelector('.navbar');
+
+window.addEventListener("scroll", function () {
+  const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+  if (currentScroll > lastScrollTop && currentScroll > 100) {
+    navbar.classList.add("hidden");
+  } else {
+    navbar.classList.remove("hidden");
+  }
+  lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+});
+
+// 🎬 Slide-in title when in viewport
+const slideIns = document.querySelectorAll('.slide-in');
+
+const slideObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, {
+  threshold: 0.1
+});
+
+slideIns.forEach(el => slideObserver.observe(el));
+
