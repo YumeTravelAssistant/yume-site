@@ -377,16 +377,13 @@ ul {
 }
 
 /* Sezioni offerta e vantaggi */
-/* Offerta e vantaggi (oro Yume) */
 .offerta-section, .vantaggi-section {
   margin-top: 60px;
   padding: 40px 20px;
-  background-color: #C9A86A; /* oro Yume */
+  background-color: #F2EBDF; /* beige sobrio in palette */
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 /* Contatti e newsletter (sfondo bianco) */
@@ -397,8 +394,6 @@ ul {
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 /* Titoli */
