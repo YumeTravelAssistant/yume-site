@@ -71,6 +71,8 @@ a {
 .main-wrapper {
   flex-grow: 1;
   padding: 40px 30px;
+  margin-left: 220px; /* ← compensa la sidebar */
+  box-sizing: border-box;
 }
 
 .main-content {
@@ -392,8 +394,10 @@ ul {
 
 .grid-2 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 30px;
+  margin-top: 30px;
+  align-items: stretch;
 }
 
 .box {
