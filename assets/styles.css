@@ -377,15 +377,33 @@ ul {
 }
 
 /* Sezioni offerta e vantaggi */
-.offerta-section, .vantaggi-section, .contatti-section, .newsletter-section {
+/* Offerta e vantaggi (oro Yume) */
+.offerta-section, .vantaggi-section {
   margin-top: 60px;
   padding: 40px 20px;
-  background-color: #FFF8F4;
+  background-color: #C9A86A; /* oro Yume */
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.offerta-section h2, .vantaggi-section h2, .contatti-section h2, .newsletter-section h2 {
+/* Contatti e newsletter (sfondo bianco) */
+.contatti-section, .newsletter-section {
+  margin-top: 60px;
+  padding: 40px 20px;
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Titoli */
+.offerta-section h2, .vantaggi-section h2,
+.contatti-section h2, .newsletter-section h2 {
   color: #8B2C2B;
   font-size: 2em;
   text-align: center;
@@ -394,10 +412,16 @@ ul {
 
 .grid-2 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(2, 1fr); /* max 2 per riga */
   gap: 30px;
   margin-top: 30px;
   align-items: stretch;
+}
+
+@media (max-width: 700px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
 }
 
 .box {
