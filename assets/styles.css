@@ -1,10 +1,27 @@
 body {
   margin: 0;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Raleway', sans-serif;
   background-color: #F4F0E2;
   color: #1C1C1C;
   display: flex;
 }
+
+h1, h2, h3 {
+  font-family: 'Playfair Display', serif;
+  letter-spacing: 0.5px;
+  color: #8B2C2B;
+}
+
+.sidebar a,
+button,
+label,
+input,
+textarea,
+select,
+a {
+  font-family: 'Quicksand', sans-serif;
+}
+
 
 .sidebar {
   width: 220px;
@@ -340,5 +357,16 @@ button:hover {
   margin-left: auto;
   margin-right: auto;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+p {
+  margin-bottom: 1.6em;
+  line-height: 1.8;
+  font-size: 1.1em;
+  letter-spacing: 0.3px;
+}
+
+ul li {
+  margin-bottom: 0.8em;
 }
 
