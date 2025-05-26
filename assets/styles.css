@@ -542,7 +542,7 @@ ul {
 
 .mission-section {
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   justify-content: space-between;
   gap: 60px;
   padding: 80px 30px;
