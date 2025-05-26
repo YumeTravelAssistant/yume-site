@@ -585,19 +585,19 @@ ul {
   width: 100%;
   display: flex;
   justify-content: center;
-  padding: 60px 20px 40px;
+  padding: 30px 10px 10px;
   background-color: #F4F0E2;
 }
 
 .slogan {
-  max-width: 80%;
-  font-size: 3rem;
-  font-weight: 700;
+  max-width: 90%;
+  font-size: clamp(3.5rem, 8vw, 6rem); /* 💥 più grande, dinamico */
+  font-weight: 800;
   text-align: center;
   color: #8B2C2B;
-  letter-spacing: 1px;
-  line-height: 1.3;
-  font-family: 'Quicksand', sans-serif; 
+  letter-spacing: 1.5px;
+  line-height: 1.2;
+  font-family: 'Quicksand', sans-serif;
 }
 
 @media (max-width: 768px) {
