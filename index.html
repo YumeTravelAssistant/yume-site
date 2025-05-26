@@ -33,10 +33,11 @@
 </div>
 
 <header class="hero-banner">
-      <img src="assets/home.jpg" alt="Yume Travel copertina" class="hero-banner-img">
-       <div class="hero-text-overlay">
-  </div>
-
+  <picture>
+    <source srcset="assets/home_mobile.jpg" media="(max-width: 768px)">
+    <img src="assets/home.jpg" alt="Yume Travel copertina" class="hero-banner-img">
+  </picture>
+  <div class="hero-text-overlay"></div>
 </header>
 
 <section class="slogan-intro">
@@ -72,8 +73,6 @@
 
 <section class="founders-section">
   <div class="founders-image">
-    <img src="assets/gruppo_2.jpg" alt="Fondatori Yume Travel" class="group-photo">
-  </div>
   <div class="founders-text">
   <p><strong>Dieci anni fa</strong> ho messo piede in Giappone per la prima volta.<br>
   I templi, l’estetica degli anime, <strong>l’armonia silenziosa</strong> di un altro mondo: tutto era lì. Ma al ritorno <strong>ho capito che non bastava vederlo, volevo capirlo</strong>.<br>
@@ -88,6 +87,8 @@
   <p>Perché <strong>Yume significa sogno</strong>.<br>
   E il nostro, ora, <strong>vogliamo condividerlo con voi</strong>.</p>
   </div>
+  </div>
+   <img src="assets/gruppo_2.jpg" alt="Fondatori Yume Travel" class="group-photo">
   </div>
 </section>
 
