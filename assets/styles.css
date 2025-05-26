@@ -16,7 +16,7 @@ body {
   overflow-x: hidden;
 }
 
-h1, h2, h3 {
+h1:not(.slogan), h2, h3 {
   font-family: 'Playfair Display', serif;
   letter-spacing: 0.5px;
   color: #8B2C2B;
