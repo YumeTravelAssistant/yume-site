@@ -517,3 +517,22 @@ ul {
   object-fit: contain;
 }
 
+.navbar {
+  transition: transform 0.3s ease-in-out;
+  will-change: transform;
+}
+
+.navbar.hidden {
+  transform: translateY(-100%);
+}
+.slide-in {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.slide-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
