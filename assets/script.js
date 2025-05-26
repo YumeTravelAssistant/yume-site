@@ -56,9 +56,11 @@ const slideIns = document.querySelectorAll('.slide-in');
 
 const slideObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-    }
+   if (entry.isIntersecting) {
+    entry.target.classList.add('visible');
+   } else {
+    entry.target.classList.remove('visible'); // 👈 rimuove se esce, per poter riapparire
+   }
   });
 }, {
   threshold: 0.1
