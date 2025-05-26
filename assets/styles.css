@@ -663,3 +663,38 @@ ul {
   }
 }
 
+.main-footer {
+  padding: 40px 20px;
+  background-color: #FFF8F4;
+  text-align: center;
+  font-family: 'Quicksand', sans-serif;
+  margin-top: 60px;
+}
+
+.footer-social {
+  margin-bottom: 10px;
+}
+
+.footer-social p {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.footer-social a {
+  margin: 0 10px;
+  font-size: 28px;
+  color: #8B2C2B;
+  transition: color 0.3s ease;
+  text-decoration: none;
+}
+
+.footer-social a:hover {
+  color: #000;
+}
+
+.footer-copy {
+  font-size: 0.9em;
+  color: #8B2C2B;
+  margin-top: 10px;
+}
+
