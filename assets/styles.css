@@ -591,8 +591,6 @@ ul {
   display: flex;
   justify-content: center;
   padding: 20px 20px 0; /* 👈 dimezza lo spazio sopra */
-}
-
   background-color: #F4F0E2;
 }
 
