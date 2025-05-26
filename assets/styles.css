@@ -108,14 +108,17 @@ footer {
 }
 
 .hamburger {
-  display: block; /* ✅ ORA SEMPRE VISIBILE */
+  display: block;
   font-size: 28px;
   background: none;
   border: none;
   color: #8B2C2B;
   cursor: pointer;
   z-index: 1001;
+  position: relative;
+  top: 2px;
 }
+
 
 @media (max-width: 768px) {
   .hamburger {
