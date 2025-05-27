@@ -991,34 +991,36 @@ h2.slide-in.visible {
   transform: translateY(0);
 }
 
-/* Decorazione MISSION – grande da sinistra, dietro al testo */
+/* MISSION – decorazione più stretta, spostata più verso sinistra */
 .mission-section .deco-uno {
   position: absolute;
   top: 0;
   left: 0;
-  width: 60%;
+  width: 45%;
   height: 100%;
   background-image: url("deco_1.jpg");
   background-repeat: no-repeat;
   background-position: left center;
   background-size: cover;
-  opacity: 0.1;
-  z-index: 1;
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 0; /* sotto tutto */
 }
 
-/* Decorazione FOUNDERS – grande da destra, dietro al testo */
+/* FOUNDERS – decorazione più stretta, spostata più verso destra */
 .founders-section .deco-due {
   position: absolute;
   top: 0;
   right: 0;
-  width: 60%;
+  width: 45%;
   height: 100%;
   background-image: url("deco_2.jpg");
   background-repeat: no-repeat;
   background-position: right center;
   background-size: cover;
-  opacity: 0.1;
-  z-index: 1;
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* Foto sopra le decorazioni */
@@ -1041,5 +1043,9 @@ h2.slide-in.visible {
   z-index: 1;
   padding-top: 100px;
   padding-bottom: 100px;
+}
+
+.group-photo {
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
 }
 
