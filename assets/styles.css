@@ -434,11 +434,19 @@ ul {
 }
 
 .grid-2 {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* ← ora 3 per riga */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch; /* 🔥 forza altezza uguale tra box in riga */
   gap: 30px;
-  margin-top: 30px;
-  align-items: stretch;
+}
+
+.grid-2 .box {
+  flex: 0 1 50%;            /* ← larghezza al 50%, ma adattabile */
+  max-width: 500px;         /* ← limite massimo visivo opzionale */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;   /* ← per distribuire contenuti verticalmente */
 }
 
 @media (max-width: 1400px) {
