@@ -827,3 +827,35 @@ ul {
   }
 }
 
+@media (max-width: 768px) {
+  .founders-section {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .founders-text {
+    order: 1; /* 👈 Prima cosa che si vede */
+  }
+
+  .founders-image {
+    order: 2; /* 👈 Poi viene l'immagine */
+    margin-top: 30px;
+  }
+
+  .founders-signatures.mobile-only {
+    order: 3; /* 👈 Poi le firme mobile */
+  }
+
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+  }
+}
+
