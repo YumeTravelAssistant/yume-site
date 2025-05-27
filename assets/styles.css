@@ -939,3 +939,36 @@ ul {
     margin-top: 30px;
   }
 }
+.slide-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.slide-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.slide-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.slide-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.fade-text {
+  opacity: 0.3;
+  filter: blur(2px);
+  color: #333;
+  transition: all 0.8s ease;
+}
+
+.fade-text.visible {
+  opacity: 1;
+  filter: blur(0);
+  color: #1C1C1C;
+}
+
