@@ -52,20 +52,17 @@ window.addEventListener("scroll", function () {
 });
 
 // 🎬 Slide-in title when in viewport
-const slideIns = document.querySelectorAll('.slide-in');
+const animatedElements = document.querySelectorAll('.slide-in, .slide-left, .slide-right, .fade-text');
 
-const slideObserver = new IntersectionObserver((entries) => {
+const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
-   if (entry.isIntersecting) {
-    entry.target.classList.add('visible');
-   } else {
-    entry.target.classList.remove('visible'); // 👈 rimuove se esce, per poter riapparire
-   }
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    } else {
+      entry.target.classList.remove('visible');
+    }
   });
-}, {
-  threshold: 0.1
-});
+}, { threshold: 0.2 });
 
-slideIns.forEach(el => slideObserver.observe(el));
-
+animatedElements.forEach(el => observer.observe(el));
 
