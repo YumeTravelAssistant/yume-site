@@ -742,3 +742,14 @@ ul {
   object-fit: cover;
 }
 
+@media (max-width: 768px) {
+  .hero-banner {
+    height: auto;
+  }
+
+  .hero-banner-img {
+    height: auto;
+    object-fit: contain;
+  }
+}
+
