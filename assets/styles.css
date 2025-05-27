@@ -961,14 +961,12 @@ ul {
 
 .fade-text {
   opacity: 0.3;
-  filter: blur(2px);
-  color: #333;
-  transition: all 0.8s ease;
+  color: #999; /* più chiaro, ma leggibile */
+  transition: opacity 0.6s ease, color 0.6s ease;
 }
 
 .fade-text.visible {
   opacity: 1;
-  filter: blur(0);
   color: #1C1C1C;
 }
 
