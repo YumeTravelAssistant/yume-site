@@ -912,20 +912,34 @@ ul {
 }
 
 @media screen and (min-width: 769px) and (max-width: 1023px) {
+  .mission-section, .founders-section {
+    flex-direction: row;
+    flex-wrap: nowrap; /* 🔒 forza il layout in riga */
+    gap: 30px;
+  }
+
   .mission-text, .founders-text {
-    min-width: 0;      /* 🔥 sovrascrive i 300px fissi */
+    font-size: 0.85em;         /* 🔽 testo più compatto */
+    line-height: 1.5;
     flex: 1 1 50%;
-    font-size: 0.85em; /* 🔽 migliora fitting */
+    min-width: 0;              /* ❌ rimuove i 300px min-width */
   }
 
   .mission-image, .founders-image {
-    min-width: 0;      /* 🔥 evita blocchi a capo */
     flex: 1 1 50%;
+    min-width: 0;
     justify-content: center;
   }
 
-  .mission-section, .founders-section {
-    flex-wrap: nowrap; /* 🔐 forza riga unica */
+  .founders-signatures.mobile-only {
+    display: none !important;
+  }
+
+  .founders-signatures.desktop-only {
+    display: flex !important;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 30px;
   }
 }
 
