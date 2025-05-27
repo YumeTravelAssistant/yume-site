@@ -1000,7 +1000,7 @@ h2.slide-in.visible {
   background-repeat: repeat;
   background-position: center;
   background-size: 300px auto;
-  opacity: 0.08;
+  opacity: 0.15;
   pointer-events: none;
   z-index: 0;
 }
@@ -1017,5 +1017,7 @@ h2.slide-in.visible {
 .founders-section {
   position: relative;
   z-index: 1;
+  padding-top: 100px;
+  padding-bottom: 100px;
 }
 
