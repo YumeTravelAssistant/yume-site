@@ -1005,12 +1005,37 @@ h2.slide-in.visible {
   z-index: 0;
 }
 
-.deco-uno {
+/* Decorazione MISSION – sfalsata a sinistra */
+.mission-section .deco-uno {
+  position: absolute;
+  top: 40px;
+  left: -80px;
+  width: 250px;
+  height: 250px;
   background-image: url("deco_1.jpg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.15;
+  z-index: 0;
 }
 
-.deco-due {
+/* Decorazione FOUNDERS – sfalsata a destra */
+.founders-section .deco-due {
+  position: absolute;
+  bottom: 40px;
+  right: -80px;
+  width: 250px;
+  height: 250px;
   background-image: url("deco_2.jpg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.15;
+  z-index: 0;
+}
+
+.group-photo {
+  position: relative;
+  z-index: 2;
 }
 
 .mission-section,
