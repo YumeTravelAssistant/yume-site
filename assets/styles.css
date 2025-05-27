@@ -808,17 +808,29 @@ ul {
   }
 }
 
-@media screen and (min-width: 769px) {
+@media screen and (min-width: 1024px) {
+  .mission-section {
+    flex-direction: row;
+  }
+
   .founders-section {
     flex-direction: row;
   }
 
+  .mission-text {
+    order: 1;
+  }
+
+  .mission-image {
+    order: 2;
+  }
+
   .founders-image {
-    order: 1; /* immagine a sinistra */
+    order: 1;
   }
 
   .founders-text {
-    order: 2; /* testo a destra */
+    order: 2;
   }
 
   .founders-signatures.mobile-only {
