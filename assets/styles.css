@@ -776,9 +776,7 @@ ul {
   display: none;
 }
 
-@media screen and (max-width: 768px),
-       screen and (max-width: 1024px) and (max-height: 768px) and (orientation: portrait),
-       screen and (orientation: landscape) and (max-width: 900px)
+@media screen and (max-width: 768px) {
 
   .founders-section {
     flex-direction: column;
@@ -832,6 +830,27 @@ ul {
     display: flex !important;
     justify-content: center;
     gap: 40px;
+    margin-top: 30px;
+  }
+}
+
+@media screen and (min-width: 769px) {
+  .founders-section {
+    position: relative;
+    padding-bottom: 160px; /* spazio per firme fuori flusso */
+  }
+
+  .founders-image {
+    position: relative;
+  }
+
+  .founders-signatures.desktop-only {
+    position: absolute;
+    left: 60%;
+    top: 100%;
+    transform: translateX(-60%);
+    width: max-content;
+    justify-content: start;
     margin-top: 30px;
   }
 }
