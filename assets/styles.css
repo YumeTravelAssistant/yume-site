@@ -847,14 +847,17 @@ ul {
 }
 
 @media (orientation: landscape) and (max-height: 600px) {
+  .mission-section,
   .founders-section {
     flex-direction: column;
   }
 
+  .mission-text,
   .founders-text {
     order: 1;
   }
 
+  .mission-image,
   .founders-image {
     order: 2;
     margin-top: 30px;
