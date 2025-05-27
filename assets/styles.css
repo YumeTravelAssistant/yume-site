@@ -808,3 +808,29 @@ ul {
   }
 }
 
+@media screen and (min-width: 769px) and (orientation: landscape) {
+  .founders-section {
+    flex-direction: row;
+  }
+
+  .founders-text {
+    order: 1;
+  }
+
+  .founders-image {
+    order: 2;
+    margin-top: 0;
+  }
+
+  .founders-signatures.mobile-only {
+    display: none !important;
+  }
+
+  .founders-signatures.desktop-only {
+    display: flex !important;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 30px;
+  }
+}
+
