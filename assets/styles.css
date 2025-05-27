@@ -609,9 +609,13 @@ ul {
 <div class="founders-image">  font-family: 'Quicksand', sans-serif;
 }
 
-@media (max-width: 1100px) and (min-width: 769px) {
+@media (min-width: 769px) and (max-width: 1100px),
+       (max-height: 500px) and (orientation: landscape) {
   .slogan {
-    font-size: clamp(2.4rem, 5vw, 3.5rem); /* 📏 più contenuta su laptop piccoli */
+    font-size: clamp(2.2rem, 4vw, 3rem);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
@@ -620,6 +624,8 @@ ul {
     font-size: 2.2rem;
   }
 }
+
+
 
 .slogan-black {
   color: #000000;
