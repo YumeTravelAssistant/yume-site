@@ -1005,31 +1005,33 @@ h2.slide-in.visible {
   z-index: 0;
 }
 
-/* Decorazione MISSION – sfalsata a sinistra */
+/* Decorazione MISSION – blocco grande da sinistra */
 .mission-section .deco-uno {
   position: absolute;
-  top: 40px;
-  left: -80px;
-  width: 250px;
-  height: 250px;
+  top: 0;
+  left: 0;
+  width: 55%;
+  height: 100%;
   background-image: url("deco_1.jpg");
   background-repeat: no-repeat;
-  background-size: contain;
-  opacity: 0.15;
+  background-position: left center;
+  background-size: cover;
+  opacity: 0.1;
   z-index: 0;
 }
 
-/* Decorazione FOUNDERS – sfalsata a destra */
+/* Decorazione FOUNDERS – blocco grande da destra */
 .founders-section .deco-due {
   position: absolute;
-  bottom: 40px;
-  right: -80px;
-  width: 250px;
-  height: 250px;
+  top: 0;
+  right: 0;
+  width: 55%;
+  height: 100%;
   background-image: url("deco_2.jpg");
   background-repeat: no-repeat;
-  background-size: contain;
-  opacity: 0.15;
+  background-position: right center;
+  background-size: cover;
+  opacity: 0.1;
   z-index: 0;
 }
 
