@@ -912,33 +912,20 @@ ul {
 }
 
 @media screen and (min-width: 769px) and (max-width: 1023px) {
-  .mission-section, .founders-section {
-    flex-direction: row;
-    gap: 40px;
-  }
-
   .mission-text, .founders-text {
-    font-size: 0.9em;
-    line-height: 1.6;
-    flex: 1 1 48%;
-    min-width: 220px;
+    min-width: 0;      /* 🔥 sovrascrive i 300px fissi */
+    flex: 1 1 50%;
+    font-size: 0.85em; /* 🔽 migliora fitting */
   }
 
   .mission-image, .founders-image {
-    flex: 1 1 48%;
-    min-width: 200px;
+    min-width: 0;      /* 🔥 evita blocchi a capo */
+    flex: 1 1 50%;
     justify-content: center;
   }
 
-  .founders-signatures.mobile-only {
-    display: none !important;
-  }
-
-  .founders-signatures.desktop-only {
-    display: flex !important;
-    justify-content: center;
-    gap: 30px;
-    margin-top: 30px;
+  .mission-section, .founders-section {
+    flex-wrap: nowrap; /* 🔐 forza riga unica */
   }
 }
 
