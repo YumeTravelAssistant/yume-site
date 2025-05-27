@@ -621,6 +621,7 @@ ul {
 
 .founders-section {
   display: flex;
+  flex-direction: row; /* ✅ FORZA L'ORDINE IMMAGINE → TESTO */
   align-items: flex-start;
   justify-content: space-between;
   gap: 60px;
@@ -750,6 +751,37 @@ ul {
   .hero-banner-img {
     height: auto;
     object-fit: contain;
+  }
+}
+
+/* Mostra solo su desktop */
+.desktop-only {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 30px;
+}
+
+/* Mostra solo su mobile */
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .founders-section {
+    flex-direction: column;
   }
 }
 
