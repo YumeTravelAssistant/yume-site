@@ -703,7 +703,7 @@ ul {
   gap: 40px;
   margin-top: 40px;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 .founders-signatures .firma-img {
