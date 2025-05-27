@@ -679,17 +679,6 @@ ul {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
-@media (max-width: 768px) {
-  .founders-section {
-    flex-direction: column; /* ✅ NON reverse */
-    padding: 40px 20px;
-  }
-
-  .founders-image {
-    margin-top: 30px; /* ✅ come nella mission */
-  }
-}
-
 .main-footer {
   padding: 40px 20px;
   background-color: #FFF8F4;
@@ -749,28 +738,6 @@ ul {
   transform: scale(1.05); /* 🔍 effetto elegante al passaggio */
 }
 
-@media (max-width: 768px) {
-  .founders-signatures.mobile-only {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    margin-top: 20px;
-  }
-
-  .desktop-only {
-    display: none;
-  }
-
-  .founders-section {
-    flex-direction: column;
-  }
-
-  .founders-image {
-    margin-top: 30px;
-  }
-}
-
 
 @media (max-width: 480px) {
   .founders-signatures .firma-img {
@@ -809,26 +776,8 @@ ul {
   display: none;
 }
 
-@media (max-width: 768px) {
-  .desktop-only {
-    display: none;
-  }
-
-  .mobile-only {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    margin-top: 20px;
-  }
-
-  .founders-section {
-    flex-direction: column;
-  }
-}
-
-/* ✅ MOBILE: solo smartphone verticali e orizzontali */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 768px),
+       screen and (orientation: portrait) and (max-width: 1024px) {
   .founders-section {
     flex-direction: column;
   }
@@ -847,11 +796,11 @@ ul {
   }
 
   .desktop-only {
-    display: none;
+    display: none !important;
   }
 
   .mobile-only {
-    display: flex;
+    display: flex !important;
     flex-direction: column;
     align-items: center;
     gap: 20px;
