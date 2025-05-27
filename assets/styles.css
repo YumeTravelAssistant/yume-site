@@ -634,7 +634,7 @@ ul {
 .founders-image {
   flex: 1 1 40%;
   min-width: 260px;
-  display: flex;
+  display: block;
   align-items: flex-start;
   justify-content: center;
 }
