@@ -938,6 +938,45 @@ ul {
     margin-top: 30px;
   }
 }
+
+@media (orientation: landscape) and (max-width: 1023px) and (max-height: 500px) {
+  .mission-section,
+  .founders-section {
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .mission-text,
+  .founders-text,
+  .mission-image,
+  .founders-image {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .mission-image,
+  .founders-image {
+    margin-bottom: 20px;
+    justify-content: center;
+    display: flex;
+  }
+
+  .founders-signatures.desktop-only {
+    display: none !important;
+  }
+
+  .founders-signatures.mobile-only {
+    display: flex !important;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+}
+
+
 /* 🔁 ANIMAZIONI LENTE E FLUIDE */
 
 .slide-left {
