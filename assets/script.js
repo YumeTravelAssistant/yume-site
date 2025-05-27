@@ -68,3 +68,4 @@ const slideObserver = new IntersectionObserver((entries) => {
 
 slideIns.forEach(el => slideObserver.observe(el));
 
+
