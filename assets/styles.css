@@ -5,7 +5,29 @@ html, body {
   width: 100%;
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+
+  .sidebar {
+    width: 0;
+    overflow-x: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #8B2C2B;
+    transition: 0.3s;
+    z-index: 999;
+    flex-direction: column;
+    padding-top: 60px;
+  }
+
+  .sidebar.active {
+    width: 220px;
+    display: flex;
+  }  overflow-x: hidden;
 }
 
 body {
@@ -736,7 +758,29 @@ ul {
   width: auto;
   object-fit: contain;
   filter: contrast(130%) brightness(1.15); /* 🔆 ancora più leggibile */
-  transition: transform 0.3s ease;
+  t@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+
+  .sidebar {
+    width: 0;
+    overflow-x: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #8B2C2B;
+    transition: 0.3s;
+    z-index: 999;
+    flex-direction: column;
+    padding-top: 60px;
+  }
+
+  .sidebar.active {
+    width: 220px;
+    display: flex;
+  }ransition: transform 0.3s ease;
 }
 
 .founders-signatures .firma-img:hover {
@@ -778,7 +822,29 @@ ul {
 
 /* Mostra solo su mobile */
 .mobile-only {
-  display: none;
+  d@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+
+  .sidebar {
+    width: 0;
+    overflow-x: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #8B2C2B;
+    transition: 0.3s;
+    z-index: 999;
+    flex-direction: column;
+    padding-top: 60px;
+  }
+
+  .sidebar.active {
+    width: 220px;
+    display: flex;
+  }isplay: none;
 }
 
 @media screen and (max-width: 768px) {
@@ -928,7 +994,29 @@ ul {
   }
 
   .founders-signatures.mobile-only {
-    display: none !important;
+   @media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+
+  .sidebar {
+    width: 0;
+    overflow-x: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #8B2C2B;
+    transition: 0.3s;
+    z-index: 999;
+    flex-direction: column;
+    padding-top: 60px;
+  }
+
+  .sidebar.active {
+    width: 220px;
+    display: flex;
+  } display: none !important;
   }
 
   .founders-signatures.desktop-only {
@@ -936,43 +1024,6 @@ ul {
     justify-content: center;
     gap: 30px;
     margin-top: 30px;
-  }
-}
-
-@media (orientation: landscape) and (max-width: 1023px) and (max-height: 500px) {
-  .mission-section,
-  .founders-section {
-    flex-direction: column !important;
-    flex-wrap: nowrap !important;
-  }
-
-  .mission-text,
-  .founders-text,
-  .mission-image,
-  .founders-image {
-    flex: 1 1 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-  }
-
-  .mission-image,
-  .founders-image {
-    margin-bottom: 20px;
-    justify-content: center;
-    display: flex;
-  }
-
-  .founders-signatures.desktop-only {
-    display: none !important;
-  }
-
-  .founders-signatures.mobile-only {
-    display: flex !important;
-    flex-direction: column;
-    gap: 20px;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
   }
 }
 
