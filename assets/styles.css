@@ -125,12 +125,7 @@ footer {
   color: #8B2C2B;
   cursor: pointer;
   z-index: 1001;
-<header class="hero-banner">
-      <img src="assets/home.jpg" alt="Yume Travel copertina" class="hero-banner-img">
-       <div class="hero-text-overlay">
-  </div>
-
-</header>  padding: 6px;  /* ✅ perfetto equilibrio per click e visibilità */
+  padding: 6px;  /* ✅ perfetto equilibrio per click e visibilità */
   margin: 0;     /* ✅ elimina lo sfasamento verticale */
 }
 
@@ -391,6 +386,8 @@ ul {
   width: 100%;
   max-width: 1400px;
   margin-left: auto;
+}
+
 @media (min-width: 769px) and (max-width: 1100px),
        (max-height: 500px) and (orientation: landscape) {
   .slogan {
@@ -602,7 +599,6 @@ ul {
   color: #8B2C2B;
   letter-spacing: 1.5px;
   line-height: 1.2;
-<div class="founders-image">  font-family: 'Quicksand', sans-serif;
 }
 
 @media (min-width: 1101px) and (max-width: 1300px) {
@@ -936,43 +932,6 @@ ul {
     justify-content: center;
     gap: 30px;
     margin-top: 30px;
-  }
-}
-
-@media (orientation: landscape) and (max-width: 1023px) and (max-height: 500px) {
-  .mission-section,
-  .founders-section {
-    flex-direction: column !important;
-    flex-wrap: nowrap !important;
-  }
-
-  .mission-text,
-  .founders-text,
-  .mission-image,
-  .founders-image {
-    flex: 1 1 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-  }
-
-  .mission-image,
-  .founders-image {
-    margin-bottom: 20px;
-    justify-content: center;
-    display: flex;
-  }
-
-  .founders-signatures.desktop-only {
-    display: none !important;
-  }
-
-  .founders-signatures.mobile-only {
-    display: flex !important;
-    flex-direction: column;
-    gap: 20px;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
   }
 }
 
