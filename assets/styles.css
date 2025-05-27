@@ -654,12 +654,12 @@ ul {
 
 @media (max-width: 768px) {
   .founders-section {
-    flex-direction: column-reverse;
+    flex-direction: column; /* ✅ NON reverse */
     padding: 40px 20px;
   }
 
   .founders-image {
-    margin-bottom: 30px;
+    margin-top: 30px; /* ✅ come nella mission */
   }
 }
 
