@@ -571,6 +571,9 @@ ul {
   padding: 80px 30px;
   max-width: 1400px;
   margin: 0 auto;
+  position: relative;
+  z-index: 1;
+
 }
 
 @media (max-width: 768px) {
@@ -1018,7 +1021,7 @@ h2.slide-in.visible {
   background-image: url('assets/deco_2.jpg');
   background-repeat: repeat;
   background-size: 200px;
-  opacity: 0.04;
+  opacity: 0.15;
   z-index: 0;
   pointer-events: none;
 }
