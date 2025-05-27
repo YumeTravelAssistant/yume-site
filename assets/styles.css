@@ -827,23 +827,23 @@ ul {
   }
 }
 
-@media (max-width: 768px) {
+/* ✅ MOBILE: solo smartphone verticali e orizzontali */
+@media screen and (max-width: 768px) {
   .founders-section {
-    display: flex;
     flex-direction: column;
   }
 
   .founders-text {
-    order: 1; /* 👈 Prima cosa che si vede */
+    order: 1;
   }
 
   .founders-image {
-    order: 2; /* 👈 Poi viene l'immagine */
+    order: 2;
     margin-top: 30px;
   }
 
   .founders-signatures.mobile-only {
-    order: 3; /* 👈 Poi le firme mobile */
+    order: 3;
   }
 
   .desktop-only {
