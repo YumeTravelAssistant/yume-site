@@ -560,13 +560,14 @@ ul {
 
 .mission-section {
   display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap; /* 🔒 */
   align-items: stretch;
   justify-content: space-between;
   gap: 60px;
   padding: 80px 30px;
   max-width: 1400px;
   margin: 0 auto;
-  flex-wrap: wrap;
 }
 
 @media (max-width: 768px) {
@@ -637,14 +638,14 @@ ul {
 
 .founders-section {
   display: flex;
-  flex-direction: row; /* ✅ FORZA L'ORDINE IMMAGINE → TESTO */
+  flex-direction: row;
+  flex-wrap: nowrap; /* 🔒 blocca il ritorno a capo */
   align-items: flex-start;
   justify-content: space-between;
   gap: 60px;
   padding: 80px 30px;
   max-width: 1400px;
   margin: 0 auto;
-  flex-wrap: wrap;
 }
 
 .mission-text,
