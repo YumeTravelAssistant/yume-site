@@ -5,29 +5,7 @@ html, body {
   width: 100%;
   margin: 0;
   padding: 0;
-@media (max-width: 768px) {
-  .hamburger {
-    display: block;
-  }
-
-  .sidebar {
-    width: 0;
-    overflow-x: hidden;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    background-color: #8B2C2B;
-    transition: 0.3s;
-    z-index: 999;
-    flex-direction: column;
-    padding-top: 60px;
-  }
-
-  .sidebar.active {
-    width: 220px;
-    display: flex;
-  }  overflow-x: hidden;
+  overflow-x: hidden;
 }
 
 body {
@@ -147,7 +125,12 @@ footer {
   color: #8B2C2B;
   cursor: pointer;
   z-index: 1001;
-  padding: 6px;  /* ✅ perfetto equilibrio per click e visibilità */
+<header class="hero-banner">
+      <img src="assets/home.jpg" alt="Yume Travel copertina" class="hero-banner-img">
+       <div class="hero-text-overlay">
+  </div>
+
+</header>  padding: 6px;  /* ✅ perfetto equilibrio per click e visibilità */
   margin: 0;     /* ✅ elimina lo sfasamento verticale */
 }
 
@@ -408,7 +391,6 @@ ul {
   width: 100%;
   max-width: 1400px;
   margin-left: auto;
-
 @media (min-width: 769px) and (max-width: 1100px),
        (max-height: 500px) and (orientation: landscape) {
   .slogan {
@@ -620,6 +602,7 @@ ul {
   color: #8B2C2B;
   letter-spacing: 1.5px;
   line-height: 1.2;
+<div class="founders-image">  font-family: 'Quicksand', sans-serif;
 }
 
 @media (min-width: 1101px) and (max-width: 1300px) {
@@ -753,29 +736,7 @@ ul {
   width: auto;
   object-fit: contain;
   filter: contrast(130%) brightness(1.15); /* 🔆 ancora più leggibile */
-  t@media (max-width: 768px) {
-  .hamburger {
-    display: block;
-  }
-
-  .sidebar {
-    width: 0;
-    overflow-x: hidden;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    background-color: #8B2C2B;
-    transition: 0.3s;
-    z-index: 999;
-    flex-direction: column;
-    padding-top: 60px;
-  }
-
-  .sidebar.active {
-    width: 220px;
-    display: flex;
-  }ransition: transform 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 .founders-signatures .firma-img:hover {
@@ -817,29 +778,7 @@ ul {
 
 /* Mostra solo su mobile */
 .mobile-only {
-  @media (max-width: 768px) {
-  .hamburger {
-    display: block;
-  }
-
-  .sidebar {
-    width: 0;
-    overflow-x: hidden;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    background-color: #8B2C2B;
-    transition: 0.3s;
-    z-index: 999;
-    flex-direction: column;
-    padding-top: 60px;
-  }
-
-  .sidebar.active {
-    width: 220px;
-    display: flex;
-  }isplay: none;
+  display: none;
 }
 
 @media screen and (max-width: 768px) {
@@ -989,29 +928,7 @@ ul {
   }
 
   .founders-signatures.mobile-only {
-   @media (max-width: 768px) {
-  .hamburger {
-    display: block;
-  }
-
-  .sidebar {
-    width: 0;
-    overflow-x: hidden;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    background-color: #8B2C2B;
-    transition: 0.3s;
-    z-index: 999;
-    flex-direction: column;
-    padding-top: 60px;
-  }
-
-  .sidebar.active {
-    width: 220px;
-    display: flex;
-  } display: none !important;
+    display: none !important;
   }
 
   .founders-signatures.desktop-only {
@@ -1112,4 +1029,3 @@ h2.slide-in.visible {
   opacity: 1;
   transform: translateY(0);
 }
-
