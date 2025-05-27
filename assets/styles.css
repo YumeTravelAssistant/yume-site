@@ -700,11 +700,14 @@ ul {
 }
 
 .founders-signatures {
-  display: flex;
   gap: 40px;
   margin-top: 40px;
-  align-items: center;
+}
+
+.desktop-only {
+  display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .founders-signatures .firma-img {
@@ -721,11 +724,24 @@ ul {
 }
 
 @media (max-width: 768px) {
-  .founders-signatures {
-    flex-direction: column-reverse;
-    align-items: center; /* ✅ al centro */
+  .founders-signatures.mobile-only {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     gap: 20px;
     margin-top: 20px;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+
+  .founders-section {
+    flex-direction: column;
+  }
+
+  .founders-image {
+    margin-top: 30px;
   }
 }
 
