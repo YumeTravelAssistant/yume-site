@@ -808,18 +808,17 @@ ul {
   }
 }
 
-@media screen and (min-width: 769px) and (orientation: landscape) {
+@media screen and (min-width: 769px) {
   .founders-section {
     flex-direction: row;
   }
 
-  .founders-text {
-    order: 1;
+  .founders-image {
+    order: 1; /* immagine a sinistra */
   }
 
-  .founders-image {
-    order: 2;
-    margin-top: 0;
+  .founders-text {
+    order: 2; /* testo a destra */
   }
 
   .founders-signatures.mobile-only {
@@ -830,27 +829,6 @@ ul {
     display: flex !important;
     justify-content: center;
     gap: 40px;
-    margin-top: 30px;
-  }
-}
-
-@media screen and (min-width: 769px) {
-  .founders-section {
-    position: relative;
-    padding-bottom: 160px; /* spazio per firme fuori flusso */
-  }
-
-  .founders-image {
-    position: relative;
-  }
-
-  .founders-signatures.desktop-only {
-    position: absolute;
-    left: 60%;
-    top: 100%;
-    transform: translateX(-60%);
-    width: max-content;
-    justify-content: start;
     margin-top: 30px;
   }
 }
