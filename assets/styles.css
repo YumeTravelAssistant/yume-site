@@ -141,24 +141,23 @@ footer {
   }
 
   .sidebar {
-    width: 0;
-    overflow-x: hidden;
     position: fixed;
     top: 0;
-    left: 0;
+    right: 0; /* ✅ entra da destra */
+    width: 220px;
     height: 100%;
     background-color: #8B2C2B;
-    transition: 0.3s;
+    transform: translateX(100%); /* ✅ parte fuori a destra */
+    transition: transform 0.3s ease;
     z-index: 999;
     flex-direction: column;
     padding-top: 60px;
-  }
-
-  .sidebar.active {
-    width: 220px;
     display: flex;
   }
 
+  .sidebar.active {
+    transform: translateX(0); /* ✅ entra visibile */
+  }
   .main-wrapper {
     padding-top: 80px;
   }
@@ -979,5 +978,16 @@ ul {
 .fade-text.visible {
   opacity: 1;
   color: #1C1C1C;
+}
+
+h2.slide-in {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 1.6s ease, transform 1.6s ease;
+}
+
+h2.slide-in.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
