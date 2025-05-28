@@ -1003,3 +1003,15 @@ h2.slide-in.visible {
   z-index: 2;
 }
 
+.group-photo {
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+  will-change: transform;
+  cursor: pointer;
+}
+
+.group-photo:hover {
+  transform: scale(1.03);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+  z-index: 2;
+}
+
