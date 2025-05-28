@@ -124,3 +124,16 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+function scrollBestsellerSlider(direction) {
+  const container = document.getElementById('bestsellerSlider');
+  if (!container) return;
+  const box = container.querySelector('.bestseller-box');
+  if (!box) return;
+
+  const boxWidth = box.offsetWidth + 30; // incluso gap
+  container.scrollBy({
+    left: direction * boxWidth,
+    behavior: 'smooth'
+  });
+}
+
