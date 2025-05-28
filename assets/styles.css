@@ -1056,6 +1056,8 @@ h2.slide-in.visible {
   color: #1C1C1C;
 }
 
+
+/* Sezione base */
 .parti-con-noi-section {
   background-color: #8B2C2B;
   color: white;
@@ -1063,120 +1065,129 @@ h2.slide-in.visible {
   border-radius: 16px;
   margin-top: 80px;
   text-align: center;
+  overflow: hidden;
 }
 
-.parti-con-noi-section h2 {
-  font-size: clamp(2rem, 4vw, 2.8rem);
+.parti-con-noi-section h2,
+.parti-cta h3 {
   font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 4vw, 2.8rem);
   margin-bottom: 20px;
   color: white;
 }
 
 .parti-con-noi-subtitle {
+  font-family: 'Quicksand', sans-serif;
   font-size: 1.2em;
-  font-weight: 300;
   margin-bottom: 50px;
   font-style: italic;
-  font-family: 'Quicksand', sans-serif;
 }
 
-.parti-con-noi-boxes {
-  display: grid;
+/* Container avanzato per scroll dinamico 769-1399px */
+.parti-slider-container {
+  overflow-x: auto;
+  display: flex;
+  scroll-snap-type: x mandatory;
   gap: 30px;
-  justify-content: center;
-  margin: 0 auto 50px;
-  max-width: 1000px;
+  padding: 20px 0;
+  scroll-padding: 0 20px;
 }
 
 .parti-box {
-  background-color: rgba(255,255,255,0.1);
-  padding: 30px 20px;
+  flex: 0 0 80%;
+  scroll-snap-align: center;
+  background-color: rgba(255, 255, 255, 0.1);
   border-radius: 16px;
+  padding: 30px 20px;
+  font-family: 'Quicksand', sans-serif;
   text-align: center;
   transition: transform 0.3s ease, background 0.3s ease;
-  min-width: 250px;
-  font-family: 'Quicksand', sans-serif;
 }
 
 .parti-box:hover {
   transform: scale(1.03);
-  background-color: rgba(255,255,255,0.2);
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .parti-box h3 {
-  margin-bottom: 12px;
-  font-size: 1.4em;
   color: white;
+  font-size: 1.3em;
+  margin-bottom: 10px;
 }
 
 .parti-box p {
   font-size: 0.95em;
   color: white;
-  line-height: 1.6;
 }
 
-.parti-cta {
-  margin-top: 40px;
+.numero-step {
+  font-size: 2em;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 10px;
+  color: white;
 }
 
-.parti-cta h3 {
-  font-size: 1.6em;
-  font-weight: 600;
-  margin-bottom: 20px;
-  font-family: 'Quicksand', sans-serif;
-}
-
+/* Bottoni */
 .parti-buttons {
   display: flex;
-  flex-direction: column;
   gap: 20px;
-  align-items: center;
-  margin-top: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 30px;
 }
 
-.parti-buttons a {
-  display: inline-block;
+.btn-white, .btn-white-outline {
   padding: 14px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  font-family: 'Quicksand', sans-serif;
+  min-width: 220px;
+  text-align: center;
+  transition: background 0.3s ease;
+}
+
+.btn-white {
   background: white;
   color: #8B2C2B;
-  font-weight: 600;
-  font-family: 'Quicksand', sans-serif;
-  border-radius: 8px;
-  text-decoration: none;
-  transition: background 0.3s ease;
-  min-width: 240px;
-  text-align: center;
 }
 
-.parti-buttons a:hover {
+.btn-white-outline {
+  border: 2px solid white;
+  color: white;
+  background: transparent;
+}
+
+.btn-white:hover {
   background-color: #f4f0e2;
 }
 
-/* 👇 3 colonne sopra 1400px */
+.btn-white-outline:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+/* Layout 3 box fissi solo ≥1400px */
 @media (min-width: 1400px) {
-  .parti-con-noi-boxes {
+  .parti-slider-container {
+    display: grid;
     grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    overflow: unset;
+  }
+
+  .parti-box {
+    flex: 1;
+    scroll-snap-align: unset;
   }
 }
 
-/* 👇 2+1 a piramide tra 770 e 1399px */
-@media (min-width: 770px) and (max-width: 1399px) {
-  .parti-con-noi-boxes {
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: auto auto;
-  }
-
-  .parti-box:nth-child(3) {
-    grid-column: span 2;
-    max-width: 400px;
-    margin: 0 auto;
-  }
-}
-
-/* 👇 stack verticale sotto i 770px */
-@media (max-width: 769px) {
-  .parti-con-noi-boxes {
-    grid-template-columns: 1fr;
+/* Layout mobile stack <768px */
+@media (max-width: 768px) {
+  .parti-slider-container {
+    flex-direction: column;
+    scroll-snap-type: none;
+    overflow-x: hidden;
   }
 
   .parti-box {
@@ -1190,7 +1201,8 @@ h2.slide-in.visible {
     align-items: center;
   }
 
-  .parti-buttons a {
+  .btn-white,
+  .btn-white-outline {
     width: 100%;
     max-width: 320px;
   }
