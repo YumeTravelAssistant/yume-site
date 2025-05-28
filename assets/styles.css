@@ -1028,10 +1028,10 @@ h2.slide-in.visible {
   top: 0;
   left: 0;
   width: 100%;
-  height: 120%;
+  height: 100%; /* 🔽 da 120% a 100% per ridurre lo zoom */
   object-fit: cover;
   transform: translateY(0);
-  transition: transform 0.1s ease-out;
+  transition: transform 0.3s ease-out; /* 🔽 transizione più lenta, meno "mal di testa" */
   z-index: -1;
 }
 
