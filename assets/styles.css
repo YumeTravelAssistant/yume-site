@@ -1283,3 +1283,11 @@ h2.slide-in.visible {
   margin-bottom: 120px; /* Distanza maggiore da contatti */
 }
 
+/* Nasconde la scrollbar orizzontale visivamente ma mantiene lo scroll */
+.parti-slider-container {
+  scrollbar-width: none; /* Firefox */
+}
+.parti-slider-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
