@@ -88,3 +88,39 @@ window.addEventListener('scroll', () => {
   }
 });
 
+// 🎯 Parti con Noi – slider frecce + puntini
+let currentSlide = 0;
+const slider = document.getElementById('partiSlider');
+const boxes = slider?.querySelectorAll('.parti-box') || [];
+const dotsContainer = document.getElementById('sliderDots');
+
+function scrollPartiSlider(direction) {
+  if (!slider || boxes.length === 0) return;
+
+  const maxSlide = boxes.length - 1;
+  currentSlide = Math.max(0, Math.min(currentSlide + direction, maxSlide));
+  const boxWidth = boxes[0].offsetWidth + 30; // 30px è il gap tra box
+  slider.scrollTo({
+    left: currentSlide * boxWidth,
+    behavior: 'smooth'
+  });
+  updateDots();
+}
+
+function updateDots() {
+  if (!dotsContainer) return;
+  dotsContainer.innerHTML = '';
+  boxes.forEach((_, i) => {
+    const dot = document.createElement('span');
+    dot.classList.toggle('active', i === currentSlide);
+    dotsContainer.appendChild(dot);
+  });
+}
+
+// Inizializza i puntini solo su tablet/slider
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.innerWidth >= 769 && window.innerWidth <= 1399) {
+    updateDots();
+  }
+});
+
