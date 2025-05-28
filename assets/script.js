@@ -66,3 +66,25 @@ const observer = new IntersectionObserver((entries) => {
 
 animatedElements.forEach(el => observer.observe(el));
 
+// 🎥 Effetto scroll sul video background
+const video = document.getElementById('missionVideo');
+let ticking = false;
+
+function updateVideoPosition() {
+  const scrollPosition = window.scrollY;
+  const speedFactor = 0.2; // 📐 controlla quanto si muove
+  const translateY = scrollPosition * speedFactor;
+
+  if (video) {
+    video.style.transform = `translateY(${translateY}px)`;
+  }
+  ticking = false;
+}
+
+window.addEventListener('scroll', () => {
+  if (!ticking) {
+    window.requestAnimationFrame(updateVideoPosition);
+    ticking = true;
+  }
+});
+
