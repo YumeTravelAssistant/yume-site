@@ -1254,3 +1254,7 @@ h2.slide-in.visible {
   right: 10px;
 }
 
+.parti-slider-wrapper {
+  position: relative;
+}
+
