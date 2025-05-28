@@ -189,16 +189,15 @@
   </div>
 </section>
 
-<!-- 🟥 Sezione Bestseller - da inserire PRIMA di "Parti con noi" -->
+<!-- 🟥 Corretto blocco bestseller -->
 <section class="bestseller-section">
   <h2 class="bestseller-title slide-in">I nostri bestseller</h2>
   <div class="bestseller-slider-wrapper">
-    <button class="slider-arrow left" onclick="scrollBestseller(-1)">‹</button>
+    <button class="slider-arrow left" onclick="scrollBestsellerSlider(-1)">‹</button>
 
-    <div class="bestseller-slider">
-
+    <div class="bestseller-slider-container" id="bestsellerSlider">
       <!-- CARD 1 -->
-      <div class="bestseller-card">
+      <div class="bestseller-box">
         <img src="assets/hajimete.jpg" alt="Hajimete no Tabi">
         <div class="card-content">
           <h3>Hajimete - Debutto</h3>
@@ -207,20 +206,18 @@
           <a href="#hajimete" class="cta-btn">Scopri di più</a>
         </div>
       </div>
-
       <!-- CARD 2 -->
-      <div class="bestseller-card">
+      <div class="bestseller-box">
         <img src="assets/kodai-kansai.jpg" alt="Kodai Kansai">
         <div class="card-content">
-          <h3>Kodai Kansai- Il Saggio Kansai</h3>
+          <h3>Kodai Kansai - Il Saggio Kansai</h3>
           <p>Tra spiritualità e storia, un viaggio tra Kyoto, Koyasan, Nara e Himeji.</p>
           <span class="price-tag">A partire da 2.750€</span>
           <a href="#kodai" class="cta-btn">Scopri di più</a>
         </div>
       </div>
-
       <!-- CARD 3 -->
-      <div class="bestseller-card">
+      <div class="bestseller-box">
         <img src="assets/hagane-to-ki.jpg" alt="Hagane to Ki">
         <div class="card-content">
           <h3>Hagane to Ki - Sacro e Profano</h3>
@@ -229,10 +226,9 @@
           <a href="#hagane" class="cta-btn">Scopri di più</a>
         </div>
       </div>
-
     </div>
 
-    <button class="slider-arrow right" onclick="scrollBestseller(1)">›</button>
+    <button class="slider-arrow right" onclick="scrollBestsellerSlider(1)">›</button>
   </div>
 </section>
 
