@@ -1055,3 +1055,144 @@ h2.slide-in.visible {
 .mission-text {
   color: #1C1C1C;
 }
+
+.parti-con-noi-section {
+  background-color: #8B2C2B;
+  color: white;
+  padding: 60px 20px;
+  border-radius: 16px;
+  margin-top: 80px;
+  text-align: center;
+}
+
+.parti-con-noi-section h2 {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-family: 'Playfair Display', serif;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.parti-con-noi-subtitle {
+  font-size: 1.2em;
+  font-weight: 300;
+  margin-bottom: 50px;
+  font-style: italic;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.parti-con-noi-boxes {
+  display: grid;
+  gap: 30px;
+  justify-content: center;
+  margin: 0 auto 50px;
+  max-width: 1000px;
+}
+
+.parti-box {
+  background-color: rgba(255,255,255,0.1);
+  padding: 30px 20px;
+  border-radius: 16px;
+  text-align: center;
+  transition: transform 0.3s ease, background 0.3s ease;
+  min-width: 250px;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.parti-box:hover {
+  transform: scale(1.03);
+  background-color: rgba(255,255,255,0.2);
+}
+
+.parti-box h3 {
+  margin-bottom: 12px;
+  font-size: 1.4em;
+  color: white;
+}
+
+.parti-box p {
+  font-size: 0.95em;
+  color: white;
+  line-height: 1.6;
+}
+
+.parti-cta {
+  margin-top: 40px;
+}
+
+.parti-cta h3 {
+  font-size: 1.6em;
+  font-weight: 600;
+  margin-bottom: 20px;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.parti-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.parti-buttons a {
+  display: inline-block;
+  padding: 14px 24px;
+  background: white;
+  color: #8B2C2B;
+  font-weight: 600;
+  font-family: 'Quicksand', sans-serif;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.3s ease;
+  min-width: 240px;
+  text-align: center;
+}
+
+.parti-buttons a:hover {
+  background-color: #f4f0e2;
+}
+
+/* 👇 3 colonne sopra 1400px */
+@media (min-width: 1400px) {
+  .parti-con-noi-boxes {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* 👇 2+1 a piramide tra 770 e 1399px */
+@media (min-width: 770px) and (max-width: 1399px) {
+  .parti-con-noi-boxes {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto auto;
+  }
+
+  .parti-box:nth-child(3) {
+    grid-column: span 2;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
+
+/* 👇 stack verticale sotto i 770px */
+@media (max-width: 769px) {
+  .parti-con-noi-boxes {
+    grid-template-columns: 1fr;
+  }
+
+  .parti-box {
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+
+  .parti-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .parti-buttons a {
+    width: 100%;
+    max-width: 320px;
+  }
+}
+
