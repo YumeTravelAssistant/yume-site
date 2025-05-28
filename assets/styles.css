@@ -1060,7 +1060,7 @@ h2.slide-in.visible {
 /* Sezione base */
 .parti-con-noi-section {
   background-color: #8B2C2B;
-  color: #C9A86A;
+  color: white;
   padding: 60px 20px;
   border-radius: 16px;
   margin-top: 80px;
@@ -1072,8 +1072,8 @@ h2.slide-in.visible {
 .parti-cta h3 {
   font-family: 'Playfair Display', serif;
   font-size: clamp(2rem, 4vw, 2.8rem);
-  margin-bottom: 20px;
-  color: white;
+  margin-bottom: 80px;
+  color: #C9A86A;
 }
 
 .parti-con-noi-subtitle {
@@ -1256,5 +1256,30 @@ h2.slide-in.visible {
 
 .parti-slider-wrapper {
   position: relative;
+}
+
+/* Nascondi frecce sotto 768px e sopra 1399px */
+@media (max-width: 768px), (min-width: 1400px) {
+  .slider-arrow {
+    display: none !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1399px) {
+  .parti-slider-container {
+    scroll-snap-type: x mandatory;
+    display: flex;
+    gap: 30px;
+    overflow-x: auto;
+  }
+
+  .parti-box {
+    flex: 0 0 47%; /* mostra ~2 box per volta */
+    scroll-snap-align: center;
+  }
+}
+
+.parti-bg-wrapper {
+  margin-bottom: 120px; /* Distanza maggiore da contatti */
 }
 
