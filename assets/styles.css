@@ -1307,86 +1307,76 @@ h2.slide-in.visible {
   color: #8B2C2B;
 }
 
-.bestseller-slider-wrapper {
-  position: relative;
-}
-
+/* Wrapper dinamico come “parti” */
 .bestseller-slider-container {
-  display: flex;
-  gap: 30px;
   overflow-x: auto;
+  display: flex;
   scroll-snap-type: x mandatory;
+  gap: 30px;
   padding: 20px 0;
   scroll-padding: 0 20px;
-  scrollbar-width: none;
 }
 
-.bestseller-slider-container::-webkit-scrollbar {
-  display: none;
-}
-
+/* Card singola */
 .bestseller-box {
   flex: 0 0 80%;
   scroll-snap-align: center;
   background-color: white;
   border-radius: 16px;
   padding: 30px 20px;
+  font-family: 'Quicksand', sans-serif;
   text-align: center;
   transition: transform 0.3s ease, background 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
 
 .bestseller-box:hover {
   transform: scale(1.03);
-  background-color: #F4F0E2;
+  background-color: #FFF0EA;
+}
+
+.bestseller-box img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 20px;
 }
 
 .bestseller-box h3 {
-  color: #8B2C2B;
   font-size: 1.3em;
   margin-bottom: 10px;
+  color: #8B2C2B;
 }
 
 .bestseller-box p {
-  font-size: 0.95em;
+  font-size: 1em;
   color: #1C1C1C;
+  margin: 0 auto 20px;
+  max-width: 90%;
 }
 
-/* Frecce solo per mid screen */
-.bestseller-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 2.5rem;
-  color: #8B2C2B;
-  background-color: rgba(0,0,0,0.1);
-  border-radius: 50%;
-  padding: 10px 15px;
-  cursor: pointer;
-  z-index: 10;
-  transition: background 0.3s, color 0.3s;
+.bestseller-btn {
+  display: inline-block;
+  background-color: #8B2C2B;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background 0.3s ease;
 }
 
-.bestseller-arrow:hover {
-  background-color: rgba(0,0,0,0.2);
+.bestseller-btn:hover {
+  background-color: #721F1E;
 }
 
-.bestseller-arrow.left {
-  left: 10px;
-}
-
-.bestseller-arrow.right {
-  right: 10px;
-}
-
-/* === RESPONSIVE === */
-
-/* Desktop grande: 3 card in griglia, no scroll, no frecce */
+/* Layout a 3 fisse ≥1400px */
 @media (min-width: 1400px) {
   .bestseller-slider-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
     overflow: unset;
   }
 
@@ -1394,13 +1384,9 @@ h2.slide-in.visible {
     flex: 1;
     scroll-snap-align: unset;
   }
-
-  .bestseller-arrow {
-    display: none !important;
-  }
 }
 
-/* Mobile: verticale */
+/* Layout a colonna verticale <770px */
 @media (max-width: 768px) {
   .bestseller-slider-container {
     flex-direction: column;
@@ -1412,29 +1398,6 @@ h2.slide-in.visible {
     width: 100%;
     max-width: 360px;
     margin: 0 auto;
-  }
-
-  .bestseller-arrow {
-    display: none !important;
-  }
-}
-
-/* Tablet / intermedio: scroll orizzontale con frecce */
-@media (min-width: 769px) and (max-width: 1399px) {
-  .bestseller-slider-container {
-    scroll-snap-type: x mandatory;
-    display: flex;
-    gap: 30px;
-    overflow-x: auto;
-  }
-
-  .bestseller-box {
-    flex: 0 0 47%;
-    scroll-snap-align: center;
-  }
-
-  .bestseller-arrow {
-    display: block;
   }
 }
 
