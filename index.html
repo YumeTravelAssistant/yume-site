@@ -190,34 +190,46 @@
 </section>
 
 
-<section class="parti-con-noi-section">
-  <h2 class="slide-in">Parti con noi</h2>
-  <p class="parti-con-noi-subtitle slide-in">Il tuo viaggio da sogno in Giappone è a portata di mano. Segui questi step.</p>
+<div class="parti-bg-wrapper">
+  <section class="parti-con-noi-section">
+    <h2 class="slide-in">Parti con noi</h2>
+    <p class="parti-con-noi-subtitle slide-in">
+      Il tuo viaggio da sogno in Giappone è a portata di mano. Segui questi step.
+    </p>
 
-  <div class="parti-slider-container">
-    <div class="parti-box">
-      <span class="numero-step">1</span>
-      <h3>Contattaci</h3>
-      <p>Raccontaci i tuoi sogni e le tue aspettative per il viaggio in Giappone.</p>
-    </div>
-    <div class="parti-box">
-      <span class="numero-step">2</span>
-      <h3>Pianifichiamo</h3>
-      <p>Creiamo insieme l'itinerario perfetto personalizzato per te.</p>
-    </div>
-    <div class="parti-box">
-      <span class="numero-step">3</span>
-      <h3>Parti!</h3>
-      <p>Vivi la tua esperienza indimenticabile nella terra del sol levante.</p>
-    </div>
-  </div>
+    <div class="parti-slider-wrapper">
+      <button class="slider-arrow left" onclick="scrollPartiSlider(-1)">←</button>
 
-  <h3 class="parti-ready slide-in">Pronti per l'avventura?</h3>
-  <div class="parti-buttons">
-    <a href="#preventivo" class="btn-white">Richiedi Consulenza Gratuita</a>
-    <a href="#brochure" class="btn-white-outline">Scarica Brochure</a>
-  </div>
-</section>
+      <div class="parti-slider-container" id="partiSlider">
+        <div class="parti-box">
+          <span class="numero-step">1</span>
+          <h3>Contattaci</h3>
+          <p>Raccontaci i tuoi sogni e aspettative per un viaggio su misura.</p>
+        </div>
+        <div class="parti-box">
+          <span class="numero-step">2</span>
+          <h3>Pianifichiamo</h3>
+          <p>Costruiamo insieme l’itinerario perfetto passo dopo passo.</p>
+        </div>
+        <div class="parti-box">
+          <span class="numero-step">3</span>
+          <h3>Parti!</h3>
+          <p>Vivi l’esperienza Yume: autentica, accessibile, indimenticabile.</p>
+        </div>
+      </div>
+
+      <button class="slider-arrow right" onclick="scrollPartiSlider(1)">→</button>
+    </div>
+
+    <div class="slider-dots" id="sliderDots"></div>
+
+    <h3 class="parti-ready slide-in">Pronti per l’avventura?</h3>
+    <div class="parti-buttons">
+      <a href="#preventivo" class="btn-white">Richiedi Consulenza Gratuita</a>
+      <a href="#brochure" class="btn-white-outline">Scarica Brochure</a>
+    </div>
+  </section>
+</div>
 
 
 <section class="contatti-section">
