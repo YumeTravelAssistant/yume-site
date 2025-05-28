@@ -72,7 +72,7 @@ let ticking = false;
 
 function updateVideoPosition() {
   const scrollPosition = window.scrollY;
-  const speedFactor = 0.2; // 📐 controlla quanto si muove
+  const speedFactor = 0.05; // 📐 controlla quanto si muove
   const translateY = scrollPosition * speedFactor;
 
   if (video) {
