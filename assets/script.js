@@ -85,7 +85,7 @@ const heroImg = document.querySelector('.hero-banner-img');
 
 function updateHeroPosition() {
   const scrollPosition = window.scrollY;
-  const parallaxFactor = 0.3;
+  const parallaxFactor = 0.15;
   const translateY = scrollPosition * parallaxFactor;
 
   if (heroImg) {
