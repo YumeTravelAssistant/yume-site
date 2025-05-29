@@ -327,9 +327,6 @@ button:hover {
   will-change: transform;
   z-index: 1;
 }
-.hero-banner {
-  height: auto;
-}
 
 .hero-text-overlay {
   position: absolute;
