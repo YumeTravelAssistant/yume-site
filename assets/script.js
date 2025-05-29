@@ -81,9 +81,26 @@ function updateVideoPosition() {
   ticking = false;
 }
 
+const heroImg = document.querySelector('.hero-banner-img');
+
+function updateHeroPosition() {
+  const scrollPosition = window.scrollY;
+  const parallaxFactor = 0.3;
+  const translateY = scrollPosition * parallaxFactor;
+
+  if (heroImg) {
+    heroImg.style.transform = `translateY(${translateY}px)`;
+  }
+  ticking = false;
+}
+
+
 window.addEventListener('scroll', () => {
   if (!ticking) {
-    window.requestAnimationFrame(updateVideoPosition);
+    window.requestAnimationFrame(() => {
+      updateVideoPosition();   // già esistente
+      updateHeroPosition();    // nuova funzione
+    });
     ticking = true;
   }
 });
