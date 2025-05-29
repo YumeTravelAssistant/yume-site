@@ -1018,6 +1018,7 @@ h2.slide-in.visible {
   justify-content: center;
   padding: 100px 30px;
   height: 100vh;
+  min-height: 100dvh;
   overflow: hidden;
   width: 100%;
 }
