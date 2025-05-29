@@ -54,16 +54,14 @@ window.addEventListener("scroll", function () {
 // 🎬 Slide-in title when in viewport
 const animatedElements = document.querySelectorAll('.slide-in, .slide-left, .slide-right, .fade-text');
 
-const observer = new IntersectionObserver((entries) => {
+const observer = new IntersectionObserver((entries, observer) => {
   entries.forEach(entry => {
-    // Mostra l'animazione solo quando almeno il 60% è visibile
-    if (entry.intersectionRatio > 0.6) {
+    if (entry.isIntersecting) {
       entry.target.classList.add('visible');
-    } else {
-      entry.target.classList.remove('visible');
+      observer.unobserve(entry.target); // ✅ osserva solo la prima volta
     }
   });
-}, { threshold: [0, 0.2, 0.4, 0.6, 0.8, 1] }); // soglia precisa e fluida
+}, { threshold: 0.2 });
 
 animatedElements.forEach(el => observer.observe(el));
 
