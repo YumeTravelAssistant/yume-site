@@ -1731,23 +1731,24 @@ h2.slide-in.visible {
 }
 
 @media (min-width: 769px) and (max-width: 1399px) {
-  .sartoria-slider-container {
+  #sartoriaSlider {
     display: flex;
-    gap: 30px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     flex-wrap: nowrap;
-    padding: 20px 0;
-    scroll-padding: 0 20px;
+    gap: 30px;
+    padding: 0; /* niente padding verticale né orizzontale */
+    scroll-padding-left: 20px;
+    scroll-padding-right: 20px;
     scrollbar-width: none;
   }
 
-  .sartoria-slider-container::-webkit-scrollbar {
+  #sartoriaSlider::-webkit-scrollbar {
     display: none;
   }
 
   .sartoria-box {
-    flex: 0 0 60%;
+    flex: 0 0 80%; /* oppure 47% se vuoi mostrarne due alla volta */
     scroll-snap-align: center;
   }
 }
