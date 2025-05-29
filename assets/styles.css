@@ -1736,6 +1736,7 @@ h2.slide-in.visible {
     gap: 30px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
+    flex-wrap: nowrap;
     padding: 20px 0;
     scroll-padding: 0 20px;
     scrollbar-width: none;
@@ -1746,7 +1747,7 @@ h2.slide-in.visible {
   }
 
   .sartoria-box {
-    flex: 0 0 47%;
+    flex: 0 0 60%;
     scroll-snap-align: center;
   }
 }
