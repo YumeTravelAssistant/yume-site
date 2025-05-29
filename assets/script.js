@@ -192,6 +192,9 @@ function updateSliderArrowVisibility(containerId, leftSelector, rightSelector) {
 document.addEventListener('DOMContentLoaded', () => {
   updateSliderArrowVisibility('partiSlider', '.parti-con-noi-section .slider-arrow.left', '.parti-con-noi-section .slider-arrow.right');
   updateSliderArrowVisibility('bestsellerSlider', '.bestseller-section .slider-arrow.left', '.bestseller-section .slider-arrow.right');
+  updateSliderArrowVisibility('sartoriaSlider', '.sartoria-slider-wrapper .slider-arrow.left', '.sartoria-slider-wrapper .slider-arrow.right');
+});
+
 });
 
 // 🎯 Slider per sezione sartoria
@@ -208,8 +211,4 @@ function scrollSartoriaSlider(direction) {
   });
 }
 
-// 🎯 Attiva visibilità frecce intelligenti anche per SARTORIA
-document.addEventListener('DOMContentLoaded', () => {
-  updateSliderArrowVisibility('sartoriaSlider', '.sartoria-slider-wrapper .slider-arrow.left', '.sartoria-slider-wrapper .slider-arrow.right');
-});
 
