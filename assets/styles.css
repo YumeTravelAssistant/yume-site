@@ -758,68 +758,62 @@ ul {
 }
 
 
-.home_logo {
+.hero-logo-bottom-left {
   position: absolute;
-  bottom: 40px;
-  left: 40px;
+  bottom: 30px;
+  left: 30px;
   z-index: 11;
+  pointer-events: none;
+}
+
+.hero-logo-bottom-left img {
   width: 160px;
   max-width: 30vw;
-  opacity: 0.95;
   height: auto;
+  opacity: 0.95;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
 }
 
-/* Tablet e laptop medi (769–1023) */
+/* Tablet e mobile */
 @media (max-width: 1023px) {
-  .home_logo {
-    bottom: 30px;
-    left: 30px;
-    width: 130px;
-  }
-}
-
-/* Tablet piccoli e mobile verticale (≤768) */
-@media (max-width: 768px) {
-  .home_logo {
+  .hero-logo-bottom-left {
     bottom: 24px;
     left: 24px;
-    width: 110px;
+  }
+
+  .hero-logo-bottom-left img {
+    width: 120px;
   }
 }
 
-/* Smartphone molto piccoli o landscape basso */
 @media (max-width: 600px) {
-  .home_logo {
-    bottom: 20px;
-    left: 20px;
+  .hero-logo-bottom-left {
+    bottom: 16px;
+    left: 16px;
+  }
+
+  .hero-logo-bottom-left img {
     width: 90px;
   }
 }
 
-/* Dispositivi larghi (≥1400) */
+@media (orientation: landscape) and (max-height: 500px) {
+  .hero-logo-bottom-left {
+    bottom: 12px;
+    left: 12px;
+  }
+
+  .hero-logo-bottom-left img {
+    width: 75px;
+  }
+}
+
 @media (min-width: 1400px) {
-  .home_logo {
+  .hero-logo-bottom-left img {
     width: 180px;
   }
 }
 
-/* Landscape con altezza ridotta (iPhone orizzontale) */
-@media (orientation: landscape) and (max-height: 500px) {
-  .home_logo {
-    bottom: 16px;
-    left: 16px;
-    width: 80px;
-  }
-}
-
-
-/* Mostra solo su desktop */
-.desktop-only {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  margin-top: 30px;
-}
 
 /* Mostra solo su mobile */
 .mobile-only {
