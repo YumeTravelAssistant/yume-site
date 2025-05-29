@@ -16,6 +16,11 @@ body {
   overflow-x: hidden;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+
 h1:not(.slogan), h2, h3 {
   font-family: 'Playfair Display', serif;
   letter-spacing: 0.5px;
