@@ -1726,3 +1726,21 @@ h2.slide-in.visible {
   margin-right: 6px;
 }
 
+.hero-intro {
+  text-align: center;
+  padding: 40px 20px 10px;
+}
+
+.hero-intro .hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  color: #8B2C2B;
+  margin-bottom: 10px;
+}
+
+.hero-intro .hero-subtitle {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.1rem;
+  color: #C9A86A;
+}
+
