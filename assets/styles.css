@@ -1045,7 +1045,7 @@ h2.slide-in.visible {
   width: 100vw;
   height: auto;
   min-height: 100vh;
-  object-fit: contain;
+  object-fit: cover;
   position: absolute;
   top: 0;
   left: 0;
