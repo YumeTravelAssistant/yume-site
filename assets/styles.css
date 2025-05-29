@@ -1327,32 +1327,47 @@ h2.slide-in.visible {
 }
 
 
-.slider-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 2.5rem;
-  color: white;
-  background-color: rgba(0,0,0,0.3);
-  border-radius: 50%;
-  padding: 10px 15px;
-  cursor: pointer;
-  z-index: 10;
-  transition: background 0.3s, color 0.3s;
-  opacity: 1;
-}
+@media (min-width: 769px) and (max-width: 1399px) {
+  .slider-arrow {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background-color: #C9A86A; /* oro */
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.3s ease;
+    border: none;
+    padding: 0;
+  }
 
-.slider-arrow:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: white;
-}
+  .slider-arrow::after {
+    content: '';
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-45deg);
+    width: 20px;
+    height: 20px;
+    border-left: 5px solid #8B2C2B;  /* rosso */
+    border-bottom: 5px solid #8B2C2B;
+  }
 
-.slider-arrow.left {
-  left: 10px;
-}
+  .slider-arrow.left {
+    left: 10px;
+  }
 
-.slider-arrow.right {
-  right: 10px;
+  .slider-arrow.right {
+    right: 10px;
+    transform: translateY(-50%) scaleX(-1); /* specchia freccia */
+  }
+
+  .slider-arrow:hover {
+    transform: translateY(-50%) scale(1.1);
+  }
 }
 
 .parti-slider-wrapper {
@@ -1515,36 +1530,6 @@ h2.slide-in.visible {
 
   .slider-arrow {
     display: none !important;
-  }
-}
-
-/* frecce laterali solo tra 769 e 1399 */
-@media (min-width: 769px) and (max-width: 1399px) {
-  .slider-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 2.5rem;
-    color: white;
-    background-color: rgba(0,0,0,0.3);
-    border-radius: 50%;
-    padding: 10px 15px;
-    cursor: pointer;
-    z-index: 10;
-    transition: background 0.3s, color 0.3s;
-  }
-
-  .slider-arrow:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    color: white;
-  }
-
-  .slider-arrow.left {
-    left: 10px;
-  }
-
-  .slider-arrow.right {
-    right: 10px;
   }
 }
 
