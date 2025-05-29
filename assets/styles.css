@@ -1779,6 +1779,32 @@ h2.slide-in.visible {
   }
 }
 
+@media (max-width: 768px) {
+  .sartoria-slider-container {
+    flex-direction: column;
+    gap: 20px;
+    overflow: visible;
+  }
+
+  .sartoria-box {
+    flex: 1 1 auto;
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 1400px) {
+  .sartoria-slider-container {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 40px;
+  }
+
+  .sartoria-box {
+    flex: 1;
+  }
+}
+
+
 .hero-intro {
   text-align: center;
   padding: 40px 20px 10px;
