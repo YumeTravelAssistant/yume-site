@@ -1913,3 +1913,7 @@ p.hero-subtitle {
   font-size: 0.95em;
 }
 
+.pacchetti-box {
+  position: relative; /* 🔑 necessario per il posizionamento assoluto del bottone */
+  padding-bottom: 80px; /* 🔽 spazio per il bottone */
+}
