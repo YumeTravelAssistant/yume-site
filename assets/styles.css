@@ -1085,14 +1085,26 @@ h2.slide-in.visible {
   }
 }
 
-@media (orientation: landscape) and (max-height: 600px) {
+@media screen and (max-width: 600px), (orientation: landscape) and (max-height: 500px) {
   .mission-content {
-    max-width: 95%;
-    padding: 24px 20px;
+    max-width: 95vw;
+    width: 100%;
+    max-height: none;
+    height: auto;
+    overflow-y: visible;
+    border-radius: 0;
+    padding: 30px 16px;
     margin: 0 auto;
   }
-}
 
+  .mission-section {
+    height: auto;
+    min-height: 100svh;
+    padding: 60px 20px;
+    flex-direction: column;
+    align-items: center;
+  }
+}
 
 
 /* Sezione base */
