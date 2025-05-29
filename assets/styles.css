@@ -1619,3 +1619,35 @@ h2.slide-in.visible {
   margin-right: 8px;
 }
 
+.modern-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'Quicksand', sans-serif;
+  text-decoration: none;
+  color: #8B2C2B;
+  border: 2px solid #8B2C2B;
+  background-color: transparent;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+  margin-top: 10px;
+}
+
+.modern-btn i {
+  font-size: 0.95em;
+  transition: transform 0.3s ease;
+}
+
+.modern-btn:hover {
+  background-color: #8B2C2B;
+  color: white;
+}
+
+.modern-btn:hover i {
+  transform: translateX(5px);
+}
+
