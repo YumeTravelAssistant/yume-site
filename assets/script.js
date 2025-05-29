@@ -161,3 +161,36 @@ function scrollToMain() {
   }
 }
 
+function updateSliderArrowVisibility(containerId, leftSelector, rightSelector) {
+  const container = document.getElementById(containerId);
+  const leftArrow = document.querySelector(leftSelector);
+  const rightArrow = document.querySelector(rightSelector);
+
+  if (!container || !leftArrow || !rightArrow) return;
+
+  function checkVisibility() {
+    if (window.innerWidth < 770 || window.innerWidth > 1399) {
+      leftArrow.style.display = 'none';
+      rightArrow.style.display = 'none';
+      return;
+    }
+
+    const scrollLeft = container.scrollLeft;
+    const maxScrollLeft = container.scrollWidth - container.clientWidth;
+
+    leftArrow.style.display = scrollLeft > 10 ? 'block' : 'none';
+    rightArrow.style.display = scrollLeft < maxScrollLeft - 10 ? 'block' : 'none';
+  }
+
+  container.addEventListener('scroll', checkVisibility);
+  window.addEventListener('resize', checkVisibility);
+  window.addEventListener('load', checkVisibility);
+  checkVisibility();
+}
+
+// ✅ Attiva visibilità frecce dinamiche
+document.addEventListener('DOMContentLoaded', () => {
+  updateSliderArrowVisibility('partiSlider', '.parti-con-noi-section .slider-arrow.left', '.parti-con-noi-section .slider-arrow.right');
+  updateSliderArrowVisibility('bestsellerSlider', '.bestseller-section .slider-arrow.left', '.bestseller-section .slider-arrow.right');
+});
+
