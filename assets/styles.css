@@ -1600,3 +1600,22 @@ h2.slide-in.visible {
   100% { transform: translateX(-50%) translateY(0); opacity: 0.6; }
 }
 
+.icon-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 20px;
+  font-size: 0.95em;
+  color: #555;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.icon-list li {
+  margin-bottom: 6px;
+}
+
+.icon-list li i {
+  color: #8B2C2B;
+  margin-right: 8px;
+}
+
