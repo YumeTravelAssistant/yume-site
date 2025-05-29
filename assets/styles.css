@@ -1800,25 +1800,34 @@ h2.slide-in.visible {
 }
 
 .hero-section {
-  padding: 60px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
+  padding: 80px 20px 60px;
+  flex-direction: column;
 }
 
 .hero-intro {
-  text-align: center;
-  padding: 40px 20px 10px;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
-.hero-intro .hero-title {
+h1.hero-title {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-size: clamp(2.4rem, 5vw, 3.5rem);
+  font-weight: 700;
   color: #8B2C2B;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
-.hero-intro .hero-subtitle {
+p.hero-subtitle {
   font-family: 'Raleway', sans-serif;
-  font-size: 1.1rem;
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
+  font-weight: 400;
   color: #C9A86A;
+  text-align: center;
 }
 
