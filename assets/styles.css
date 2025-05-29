@@ -1752,6 +1752,15 @@ h2.slide-in.visible {
   }
 }
 
+.sartoria-slider-container {
+  scrollbar-width: none; /* Firefox */
+}
+
+.sartoria-slider-container::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+
 @media (max-width: 768px), (min-width: 1400px) {
   .slider-arrow {
     display: none;
