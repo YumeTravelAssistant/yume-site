@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pacchetti Flessibili - Yume Travel</title>
+  <link rel="icon" type="image/png" href="favicon.ico" />
+
+  <!-- Font Yume: Playfair, Raleway, Quicksand -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Raleway:wght@300;500;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Stili e icone -->
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+
+<!-- Navbar coerente con index -->
+<nav class="navbar">
+  <div class="navbar-left">
+    <img src="assets/logo-yume.jpg" alt="Logo YUME" class="logo-navbar">
+  </div>
+  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+</nav>
+
+<div id="sidebar" class="sidebar hidden">
+  <a href="index.html">Home</a>
+  <a href="prodotti.html">Prodotti</a>
+  <a href="faq.html">FAQ</a>
+  <a href="chi-siamo.html">Chi siamo</a>
+  <a href="contatti.html">Contatti</a>
+  <a href="yuta.html">YUTA</a>
+  <a href="profilo.html">Registrazione</a>
+  <a href="log-in.html">Area Personale</a>
+</div>
+
+<header class="hero-banner">
+  <picture>
+    <source srcset="assets/pacchetti_mob.jpg" media="(max-width: 768px)">
+    <img src="assets/pacchetti_desk.jpg" alt="Pacchetti Yume Travel" class="hero-banner-img">
+  </picture>
+
+  <div class="hero-text-overlay">
+    <h1 class="hero-title">Viaggi flessibili, emozioni autentiche</h1>
+    <p class="hero-subtitle">Scopri i nostri pacchetti pensati per adattarsi a te</p>
+  </div>
+
+  <div class="scroll-indicator" onclick="scrollToMain()">
+    <span class="arrow-down"></span>
+  </div>
+</header>
+
+<div class="main-wrapper">
+
+<section class="sartoria-section">
+  <h2 class="slide-in">Pacchetti Flessibili</h2>
+  <p class="intro-text slide-in">
+    Come un abito ben fatto, i nostri pacchetti non sono taglia unica, ma flessibili. <strong>Progettati per adattarsi a chi non può (o non vuole) investire in viaggi su misura</strong>, ma desidera comunque un’esperienza personalizzata, affidabile e costruita con cura.
+  </p>
+
+  <div class="sartoria-flex slide-in">
+    <div class="sartoria-box">
+      <h3>Soggiorno minimo</h3>
+      <p>Il numero di notti necessario per vivere l’essenza del viaggio.</p>
+    </div>
+    <div class="sartoria-box">
+      <h3>Soggiorno massimo</h3>
+      <p>La durata massima che possiamo adattare a ogni pacchetto.</p>
+    </div>
+    <div class="sartoria-box">
+      <h3>Durata consigliata</h3>
+      <p>Il tempo ideale per apprezzare pienamente ogni esperienza.</p>
+    </div>
+  </div>
+
+  <p class="sartoria-filosofia slide-in">
+    I <strong>nostri pacchetti flessibili</strong> permettono di scegliere: <br>
+    <span class="check">✔</span> il numero di notti <em>(tra minimo e massimo)</em><br>
+    <span class="check">✔</span> le città da includere <em>(tra quelle proposte)</em><br>
+    <span class="check">✔</span> la fascia degli hotel <em>(medio-bassa o medio-alta)</em><br><br>
+    Pensali come una cintura elastica: si adattano al tuo viaggio, alla tua vita, al tuo sogno.
+  </p>
+</section>
+
+</div>
+
+<footer class="main-footer">
+  <div class="footer-social">
+    <p><strong>Seguici su:</strong></p>
+    <a href="https://www.instagram.com/yumeviaggi" target="_blank" aria-label="Instagram" class="fa fa-instagram"></a>
+    <a href="https://yuta-travel.com" target="_blank" aria-label="Sito YUTA" class="fa fa-globe"></a>
+  </div>
+  <p class="footer-copy">© 2025 Yume Travel Tech – Tutti i diritti riservati.</p>
+</footer>
+
+</body>
+</html>
