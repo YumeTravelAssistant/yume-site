@@ -1737,15 +1737,17 @@ h2.slide-in.visible {
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scroll-padding: 0 20px;
-    padding: 0 20px; /* ✅ questo risolve il taglio del primo box */
+    padding: 0 20px; /* 👈 padding interno per non tagliare il primo box */
     gap: 30px;
   }
 
   .sartoria-box {
-    flex: 0 0 47%;
-    max-width: 500px;
+    flex: 0 0 auto;
+    width: 80vw;            /* 👈 larghezza stabile che assicura visibilità */
+    max-width: 400px;       /* 👈 massimo per evitare box troppo larghi */
     scroll-snap-align: center;
-    min-height: 320px; /* ✅ altezza minima decente, evita effetto tozzo */
+    min-height: 320px;
+    margin-right: 0;        /* 👈 evita doppi gap */
   }
 
   .sartoria-slider-wrapper .slider-arrow {
