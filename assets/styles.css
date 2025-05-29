@@ -1017,8 +1017,8 @@ h2.slide-in.visible {
   align-items: center;
   justify-content: center;
   padding: 100px 30px;
-  height: 100vh;
-  min-height: 100dvh;
+  height: 100svh;
+  min-height: 100svh;
   overflow: hidden;
   width: 100%;
 }
@@ -1051,6 +1051,8 @@ h2.slide-in.visible {
   background: rgba(255, 255, 255, 0.85); /* se vuoi leggere meglio */
   padding: 40px;
   border-radius: 12px;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .mission-text {
