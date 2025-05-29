@@ -194,3 +194,22 @@ document.addEventListener('DOMContentLoaded', () => {
   updateSliderArrowVisibility('bestsellerSlider', '.bestseller-section .slider-arrow.left', '.bestseller-section .slider-arrow.right');
 });
 
+// 🎯 Slider per sezione sartoria
+function scrollSartoriaSlider(direction) {
+  const container = document.getElementById('sartoriaSlider');
+  if (!container) return;
+  const box = container.querySelector('.sartoria-box');
+  if (!box) return;
+
+  const boxWidth = box.offsetWidth + 30; // incluso il gap
+  container.scrollBy({
+    left: direction * boxWidth,
+    behavior: 'smooth'
+  });
+}
+
+// 🎯 Attiva visibilità frecce intelligenti anche per SARTORIA
+document.addEventListener('DOMContentLoaded', () => {
+  updateSliderArrowVisibility('sartoriaSlider', '.sartoria-slider-wrapper .slider-arrow.left', '.sartoria-slider-wrapper .slider-arrow.right');
+});
+
