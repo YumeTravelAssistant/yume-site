@@ -1581,7 +1581,7 @@ h2.slide-in.visible {
   position: absolute;
   top: 9px;
   left: 50%;
-  transform: translateX(-50%) rotate(45deg);
+  transform: translateX(-50%) rotate(135deg);
   width: 10px;
   height: 10px;
   border-left: 2px solid white;
