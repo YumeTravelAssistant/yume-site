@@ -574,6 +574,7 @@ ul {
   padding: 80px 30px;
   max-width: 1400px;
   margin: 0 auto;
+  position: relative;
 }
 
 @media (max-width: 768px) {
@@ -1035,17 +1036,21 @@ h2.slide-in.visible {
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100%;
+  height: 100vh;
   z-index: 0;
   overflow: hidden;
 }
 
 .video-background {
   width: 100vw;
-  height: 100%;
-  object-fit: cover;
-  transform: none; /* niente zoom */
-  transition: transform 0.5s ease-out;
+  height: auto;
+  min-height: 100vh;
+  object-fit: contain;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .mission-content {
