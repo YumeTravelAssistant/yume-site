@@ -754,12 +754,12 @@ ul {
 
 @media (max-width: 768px) {
   .hero-banner {
-    height: auto;
+    height: 100vh;
   }
 
   .hero-banner-img {
-    height: auto;
-    object-fit: contain;
+    height: 100vh;
+    object-fit: cover;
   }
 }
 
