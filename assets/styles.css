@@ -1046,7 +1046,7 @@ h2.slide-in.visible {
 .mission-content {
   position: relative;
   z-index: 2;
-  max-width: 700px;
+  max-width: 900px;
   background: rgba(255, 255, 255, 0.85); /* se vuoi leggere meglio */
   padding: 40px;
   border-radius: 12px;
