@@ -1717,14 +1717,13 @@ h2.slide-in.visible {
   line-height: 1.7;
   color: #333;
   max-width: 800px;
-  margin: 0 auto;
+  margin: 50px;
 }
 
 .sartoria-filosofia .check {
   color: #8B2C2B;
   font-weight: bold;
   margin-right: 6px;
-  margin: 40px auto 0;
 }
 
 .sartoria-slider-wrapper {
