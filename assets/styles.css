@@ -1731,11 +1731,24 @@ h2.slide-in.visible {
 }
 
 @media (min-width: 769px) and (max-width: 1399px) {
+  .sartoria-slider-container {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 0 20px;
+    gap: 30px;
+  }
+
   .sartoria-box {
     flex: 0 0 47%;
     max-width: 500px;
     scroll-snap-align: center;
-    min-height: 280px;
+    min-height: 300px;
+  }
+
+  .sartoria-slider-wrapper .slider-arrow {
+    display: block;
   }
 }
 
@@ -1747,32 +1760,35 @@ h2.slide-in.visible {
 
 @media (max-width: 768px) {
   .sartoria-slider-container {
+    display: flex;
     flex-direction: column;
-    gap: 20px;
+    align-items: center;   /* 👈 centra i box */
+    gap: 30px;
     overflow: visible;
   }
 
   .sartoria-box {
-    flex: 1 1 auto;
-    max-width: 100%;
-    min-height: 280px;
+    width: 100%;
+    max-width: 360px;       /* 👈 non supera mai 360px */
+    min-height: 320px;      /* 👈 altezza minima sostenuta */
+    margin: 0 auto;
   }
-}
 
 @media (min-width: 1400px) {
   .sartoria-slider-container {
-    flex-wrap: nowrap;
-    justify-content: space-between;
+    display: flex;                    /* ✅ NECESSARIO */
+    flex-wrap: nowrap;               /* tutti su una riga */
+    justify-content: space-between;  /* spaziatura tra i box */
+    align-items: stretch;            /* opzionale: altezza coerente */
     gap: 40px;
   }
 
   .sartoria-box {
     flex: 1;
-    min-height: 280px; /* ✅ evita tozzo anche su desktop ampi */
-    max-width: 400px;
+    max-width: 400px;                /* evita box larghi su schermi enormi */
+    min-height: 300px;               /* evita box bassi = no tozzi */
   }
 }
-
 
 .hero-intro {
   text-align: center;
