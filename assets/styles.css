@@ -1799,6 +1799,11 @@ h2.slide-in.visible {
   }
 }
 
+.hero-section {
+  padding: 60px 20px;
+  text-align: center;
+}
+
 .hero-intro {
   text-align: center;
   padding: 40px 20px 10px;
