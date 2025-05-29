@@ -1619,7 +1619,15 @@ h2.slide-in.visible {
   margin-right: 8px;
 }
 
+.bestseller-box {
+  position: relative; /* 🔑 necessario per posizionare il bottone */
+  padding-bottom: 80px; /* spazio per evitare che il bottone si sovrapponga al testo */
+}
+
 .modern-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -1628,13 +1636,13 @@ h2.slide-in.visible {
   font-weight: 600;
   font-family: 'Quicksand', sans-serif;
   text-decoration: none;
-  color: #8B2C2B;
+  color: #C9A86A;
   border: 2px solid #8B2C2B;
-  background-color: transparent;
+  background-color: #8B2C2B;
   border-radius: 12px;
   transition: all 0.3s ease;
   letter-spacing: 0.5px;
-  margin-top: 10px;
+  z-index: 2;
 }
 
 .modern-btn i {
@@ -1643,8 +1651,9 @@ h2.slide-in.visible {
 }
 
 .modern-btn:hover {
-  background-color: #8B2C2B;
+  background-color: #721F1E;
   color: white;
+  border-color: #721F1E;
 }
 
 .modern-btn:hover i {
