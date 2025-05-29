@@ -1733,20 +1733,20 @@ h2.slide-in.visible {
 @media (min-width: 769px) and (max-width: 1399px) {
   .sartoria-slider-container {
     display: flex;
-    flex-wrap: nowrap;
+    gap: 30px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    gap: 30px;
-    scrollbar-width: none; /* Firefox */
-    padding: 0 20px;
+    padding: 20px 0;
+    scroll-padding: 0 20px;
+    scrollbar-width: none;
   }
 
   .sartoria-slider-container::-webkit-scrollbar {
-    display: none; /* Chrome, Safari */
+    display: none;
   }
 
   .sartoria-box {
-    flex: 0 0 47%; /* mostra ~2 box come la parti-box */
+    flex: 0 0 47%;
     scroll-snap-align: center;
   }
 }
