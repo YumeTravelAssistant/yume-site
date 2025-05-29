@@ -25,7 +25,7 @@
 
 <div id="sidebar" class="sidebar hidden">
   <a href="index.html">Home</a>
-  <a href="prodotti.html">Prodotti</a>
+  <a href="prodotti.html">Pacchetti flessibili</a>
   <a href="faq.html">FAQ</a>
   <a href="chi-siamo.html">Chi siamo</a>
   <a href="contatti.html">Contatti</a>
@@ -54,24 +54,32 @@
 
 <section class="sartoria-section">
   <h2 class="slide-in">Pacchetti Flessibili</h2>
-  <p class="intro-text slide-in">
-    Come un abito ben fatto, i nostri pacchetti non sono taglia unica, ma flessibili. <strong>Progettati per adattarsi a chi non può (o non vuole) investire in viaggi su misura</strong>, ma desidera comunque un’esperienza personalizzata, affidabile e costruita con cura.
-  </p>
 
-  <div class="sartoria-flex slide-in">
-    <div class="sartoria-box">
-      <h3>Soggiorno minimo</h3>
-      <p>Il numero di notti necessario per vivere l’essenza del viaggio.</p>
+  <div class="sartoria-slider-wrapper">
+    <div class="slider-arrow left" onclick="scrollSartoriaSlider(-1)">
+      <i class="fa fa-chevron-left"></i>
     </div>
-    <div class="sartoria-box">
-      <h3>Soggiorno massimo</h3>
-      <p>La durata massima che possiamo adattare a ogni pacchetto.</p>
+
+    <div id="sartoriaSlider" class="sartoria-flex sartoria-slider-container slide-in">
+      <div class="sartoria-box">
+        <h3>Soggiorno minimo</h3>
+        <p>Il numero di notti necessario per vivere l’essenza del viaggio.</p>
+      </div>
+      <div class="sartoria-box">
+        <h3>Soggiorno massimo</h3>
+        <p>La durata massima che possiamo adattare a ogni pacchetto.</p>
+      </div>
+      <div class="sartoria-box">
+        <h3>Durata consigliata</h3>
+        <p>Il tempo ideale per apprezzare pienamente ogni esperienza.</p>
+      </div>
     </div>
-    <div class="sartoria-box">
-      <h3>Durata consigliata</h3>
-      <p>Il tempo ideale per apprezzare pienamente ogni esperienza.</p>
+
+    <div class="slider-arrow right" onclick="scrollSartoriaSlider(1)">
+      <i class="fa fa-chevron-right"></i>
     </div>
   </div>
+</section>
 
   <p class="sartoria-filosofia slide-in">
     I <strong>nostri pacchetti flessibili</strong> permettono di scegliere: <br>
