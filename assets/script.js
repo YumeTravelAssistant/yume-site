@@ -195,8 +195,6 @@ document.addEventListener('DOMContentLoaded', () => {
   updateSliderArrowVisibility('sartoriaSlider', '.sartoria-slider-wrapper .slider-arrow.left', '.sartoria-slider-wrapper .slider-arrow.right');
 });
 
-});
-
 // 🎯 Slider per sezione sartoria
 function scrollSartoriaSlider(direction) {
   const container = document.getElementById('sartoriaSlider');
