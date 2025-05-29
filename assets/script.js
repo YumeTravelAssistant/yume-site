@@ -56,13 +56,14 @@ const animatedElements = document.querySelectorAll('.slide-in, .slide-left, .sli
 
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
-    if (entry.isIntersecting) {
+    // Mostra l'animazione solo quando almeno il 60% è visibile
+    if (entry.intersectionRatio > 0.6) {
       entry.target.classList.add('visible');
     } else {
       entry.target.classList.remove('visible');
     }
   });
-}, { threshold: 0.2 });
+}, { threshold: [0, 0.2, 0.4, 0.6, 0.8, 1] }); // soglia precisa e fluida
 
 animatedElements.forEach(el => observer.observe(el));
 
