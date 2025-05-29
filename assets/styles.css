@@ -1735,11 +1735,8 @@ h2.slide-in.visible {
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    flex-wrap: nowrap;
     gap: 30px;
-    padding: 0; /* niente padding verticale né orizzontale */
-    scroll-padding-left: 20px;
-    scroll-padding-right: 20px;
+    scroll-padding: 0 20px; /* ✅ Uniformato */
     scrollbar-width: none;
   }
 
@@ -1748,10 +1745,11 @@ h2.slide-in.visible {
   }
 
   .sartoria-box {
-    flex: 0 0 80%; /* oppure 47% se vuoi mostrarne due alla volta */
+    flex: 0 0 47%; /* ✅ uguale a parti e bestseller */
     scroll-snap-align: center;
   }
 }
+
 
 
 @media (max-width: 768px), (min-width: 1400px) {
