@@ -1782,6 +1782,7 @@ h2.slide-in.visible {
     min-height: 320px;      /* 👈 altezza minima sostenuta */
     margin: 0 auto;
   }
+}
 
 @media (min-width: 1400px) {
   .sartoria-slider-container {
