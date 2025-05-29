@@ -757,6 +757,62 @@ ul {
   }
 }
 
+
+.home_logo {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+  z-index: 11;
+  width: 160px;
+  max-width: 30vw;
+  opacity: 0.95;
+  height: auto;
+}
+
+/* Tablet e laptop medi (769–1023) */
+@media (max-width: 1023px) {
+  .home_logo {
+    bottom: 30px;
+    left: 30px;
+    width: 130px;
+  }
+}
+
+/* Tablet piccoli e mobile verticale (≤768) */
+@media (max-width: 768px) {
+  .home_logo {
+    bottom: 24px;
+    left: 24px;
+    width: 110px;
+  }
+}
+
+/* Smartphone molto piccoli o landscape basso */
+@media (max-width: 600px) {
+  .home_logo {
+    bottom: 20px;
+    left: 20px;
+    width: 90px;
+  }
+}
+
+/* Dispositivi larghi (≥1400) */
+@media (min-width: 1400px) {
+  .home_logo {
+    width: 180px;
+  }
+}
+
+/* Landscape con altezza ridotta (iPhone orizzontale) */
+@media (orientation: landscape) and (max-height: 500px) {
+  .home_logo {
+    bottom: 16px;
+    left: 16px;
+    width: 80px;
+  }
+}
+
+
 /* Mostra solo su desktop */
 .desktop-only {
   display: flex;
