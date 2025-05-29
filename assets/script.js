@@ -137,3 +137,10 @@ function scrollBestsellerSlider(direction) {
   });
 }
 
+function scrollToMain() {
+  const mainWrapper = document.querySelector('.main-wrapper');
+  if (mainWrapper) {
+    mainWrapper.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
