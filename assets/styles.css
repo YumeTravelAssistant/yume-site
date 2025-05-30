@@ -1099,7 +1099,7 @@ h2.slide-in.visible {
   position: relative;
   z-index: 2;
   max-width: 900px;
-  background: rgba(255, 255, 255, 0.85); /* se vuoi leggere meglio */
+  background-color: rgb(244 240 227 / 82%);
   padding: 40px;
   border-radius: 12px;
   max-height: 90vh;
@@ -1164,9 +1164,8 @@ h2.slide-in.visible {
     max-width: 88vw;
     max-height: fit-content;
     box-sizing: border-box;
-    background-color: rgba(255, 255, 255, 0.85);
+    background-color: rgb(244 240 227 / 82%);
     border-radius: 12px;
-    text-align: center;
     font-size: clamp(0.65rem, 2.5vw, 0.95rem);  /* 🔽 più piccolo ancora */
     line-height: 1.4;
     overflow-wrap: break-word;
@@ -1240,9 +1239,8 @@ h2.slide-in.visible {
     padding: 4vw !important;
     max-height: fit-content;
     box-sizing: border-box;
-    background-color: rgba(255, 255, 255, 0.85);
+    background-color: rgb(244 240 227 / 82%);
     border-radius: 12px;
-    text-align: center;
     font-size: clamp(0.55rem, 2vw, 0.8rem); /* ⬅️ più piccolo */
     line-height: 1.4;
     overflow-wrap: break-word;
@@ -1315,9 +1313,8 @@ h2.slide-in.visible {
     width: 88vw;
     padding: 4vw;
     box-sizing: border-box;
-    background-color: rgba(255, 255, 255, 0.85);
+    background-color: rgb(244 240 227 / 82%);
     border-radius: 14px;
-    text-align: center;
     font-size: clamp(0.85rem, 2.2vw, 1.15rem);
     line-height: 1.6;
     overflow-wrap: break-word;
@@ -1346,9 +1343,8 @@ h2.slide-in.visible {
     margin: 0 auto;
     max-height: fit-content;
     box-sizing: border-box;
-    background-color: rgba(255, 255, 255, 0.85);
+    background-color: rgb(244 240 227 / 82%);
     border-radius: 12px;
-    text-align: center;
     font-size: clamp(0.5rem, 2vw, 0.75rem);  /* più piccolo */
     line-height: 1.4;
     overflow-wrap: break-word;
@@ -1384,9 +1380,8 @@ h2.slide-in.visible {
     margin: 0 auto;
     max-height: fit-content;
     box-sizing: border-box;
-    background-color: rgba(255, 255, 255, 0.85);
+    background-color: rgb(244 240 227 / 82%);
     border-radius: 12px;
-    text-align: center;
     font-size: clamp(0.65rem, 2.5vw, 0.95rem);
     line-height: 1.4;
     overflow-wrap: break-word;
