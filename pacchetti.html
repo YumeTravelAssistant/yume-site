@@ -12,6 +12,10 @@
   <!-- Stili e icone -->
   <link rel="stylesheet" href="assets/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!-- roundSlider CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.css" />
+
 </head>
 <body>
 
@@ -92,112 +96,166 @@
 
 </div>
 
-<div class="main-wrapper">
-  <section class="pacchetti-flex-section">
-    <h2 class="slide-in">I nostri pacchetti</h2>
-    <div class="pacchetti-slider-wrapper">
-      <div class="pacchetti-slider-container">
-
-        <!-- Hajimete -->
-        <div class="pacchetti-box slide-in">
-          <img src="assets/hajimete.jpg" alt="Hajimete">
-          <div class="card-content">
-            <h3>Hajimete – Debutto</h3>
-            <p><em>Un primo sguardo sul Giappone, tra meraviglia e scoperta.</em></p>
-            <ul class="icon-list">
-              <li><i class="fa fa-calendar"></i> 9–14 notti</li>
-              <li><i class="fa fa-map-marker"></i> Tokyo, Kyoto, Osaka</li>
-              <li><i class="fa fa-user"></i> Per chi visita per la prima volta</li>
-            </ul>
-            <span class="price-tag">A partire da 2.090€</span>
-            <a href="#hajimete" class="modern-btn">Scopri di più <i class="fa fa-arrow-right"></i></a>
-          </div>
+<section class="pacchetti-filtri-section">
+  <div class="pacchetti-filtri-wrapper">
+    <div class="filtro-container">
+      <h2>Personalizza la tua esperienza</h2>
+      <div class="filtro-sliders">
+        <div class="knob-icon-wrapper">
+          <i class="fa fa-tree"></i>
+          <div class="knob-container" data-label="Natura" data-id="filtro-natura"></div>
         </div>
-
-        <!-- Tetsugaku no Michi -->
-        <div class="pacchetti-box slide-in">
-          <img src="assets/tetsugaku.jpg" alt="Tetsugaku no Michi">
-          <div class="card-content">
-            <h3>Tetsugaku no Michi – Il sentiero del Filosofo</h3>
-            <p><em>Alla scoperta del Giappone spirituale e cerimoniale.</em></p>
-            <ul class="icon-list">
-              <li><i class="fa fa-calendar"></i> 10–15 notti</li>
-              <li><i class="fa fa-map-marker"></i> Kyoto, Nara, Kanazawa</li>
-              <li><i class="fa fa-leaf"></i> Per chi ama templi, rituali e tradizione</li>
-            </ul>
-            <span class="price-tag">A partire da 2.490€</span>
-            <a href="#tetsugaku" class="modern-btn">Scopri di più <i class="fa fa-arrow-right"></i></a>
-          </div>
+        <div class="knob-icon-wrapper">
+          <i class="fa fa-leaf"></i>
+          <div class="knob-container" data-label="Spiritualità" data-id="filtro-spiritualita"></div>
         </div>
-
-        <!-- Shizen no Fūkei -->
-        <div class="pacchetti-box slide-in">
-          <img src="assets/shizen.jpg" alt="Shizen no Fūkei">
-          <div class="card-content">
-            <h3>Shizen no Fūkei – Scenario Naturale</h3>
-            <p><em>Armonia nei laghi, nei parchi e nei santuari naturali.</em></p>
-            <ul class="icon-list">
-              <li><i class="fa fa-calendar"></i> 10–15 notti</li>
-              <li><i class="fa fa-map-marker"></i> Fuji, Nara, Okayama, Miyajima</li>
-              <li><i class="fa fa-tree"></i> Per chi ama la natura</li>
-            </ul>
-            <span class="price-tag">A partire da 2.490€</span>
-            <a href="#shizen" class="modern-btn">Scopri di più <i class="fa fa-arrow-right"></i></a>
-          </div>
+        <div class="knob-icon-wrapper">
+          <i class="fa fa-shopping-cart"></i>
+          <div class="knob-container" data-label="Shopping" data-id="filtro-shopping"></div>
         </div>
-
-        <!-- Kodai Kansai -->
-        <div class="pacchetti-box slide-in">
-          <img src="assets/kodai-kansai.jpg" alt="Kodai Kansai">
-          <div class="card-content">
-            <h3>Kodai Kansai – Il saggio Kansai</h3>
-            <p><em>Un Giappone profondo, senza stress da spostamenti.</em></p>
-            <ul class="icon-list">
-              <li><i class="fa fa-calendar"></i> 8–12 notti</li>
-              <li><i class="fa fa-map-marker"></i> Kyoto, Osaka, Nara, Himeji</li>
-              <li><i class="fa fa-balance-scale"></i> Perfetto per ritmo lento</li>
-            </ul>
-            <span class="price-tag">A partire da 1.890€</span>
-            <a href="#kansai" class="modern-btn">Scopri di più <i class="fa fa-arrow-right"></i></a>
-          </div>
+        <div class="knob-icon-wrapper">
+          <i class="fa fa-cutlery"></i>
+          <div class="knob-container" data-label="Gastronomia" data-id="filtro-gastronomia"></div>
         </div>
-
-        <!-- Kataware Doki -->
-        <div class="pacchetti-box slide-in">
-          <img src="assets/kataware.jpg" alt="Kataware Doki">
-          <div class="card-content">
-            <h3>Kataware Doki – Il tempo si ferma</h3>
-            <p><em>Viaggio romantico per coppie e momenti speciali.</em></p>
-            <ul class="icon-list">
-              <li><i class="fa fa-calendar"></i> 9–15 notti</li>
-              <li><i class="fa fa-map-marker"></i> Kyoto, Fuji, Hakone</li>
-              <li><i class="fa fa-heart"></i> Per coppie e anniversari</li>
-            </ul>
-            <span class="price-tag">A partire da 2.290€</span>
-            <a href="#kataware" class="modern-btn">Scopri di più <i class="fa fa-arrow-right"></i></a>
-          </div>
+        <div class="knob-icon-wrapper">
+          <i class="fa fa-building"></i>
+          <div class="knob-container" data-label="City Life" data-id="filtro-citylife"></div>
         </div>
-
-        <!-- Hagane to Ki -->
-        <div class="pacchetti-box slide-in">
-          <img src="assets/hagane-to-ki.jpg" alt="Hagane to Ki">
-          <div class="card-content">
-            <h3>Hagane to Ki – Acciaio e Legno</h3>
-            <p><em>Metropoli futuristiche e sacralità naturalistica.</em></p>
-            <ul class="icon-list">
-              <li><i class="fa fa-calendar"></i> 8–12 notti</li>
-              <li><i class="fa fa-map-marker"></i> Tokyo, Hakone, Nikko, Fuji</li>
-              <li><i class="fa fa-building"></i> Per chi cerca contrasto</li>
-            </ul>
-            <span class="price-tag">A partire da 2.290€</span>
-            <a href="#hagane" class="modern-btn">Scopri di più <i class="fa fa-arrow-right"></i></a>
-          </div>
+        <div class="knob-icon-wrapper">
+          <i class="fa fa-archive"></i>
+          <div class="knob-container" data-label="Collezionismo" data-id="filtro-collezionismo"></div>
         </div>
-
+        <div class="knob-icon-wrapper">
+          <i class="fa fa-heart"></i>
+          <div class="knob-container" data-label="Relax" data-id="filtro-relax"></div>
+        </div>
+        <div class="knob-icon-wrapper">
+          <i class="fa fa-balance-scale"></i>
+          <div class="knob-container" data-label="Cultura" data-id="filtro-cultura"></div>
+        </div>
+        <div class="knob-icon-wrapper">
+          <i class="fa fa-star"></i>
+          <div class="knob-container" data-label="Esperienze" data-id="filtro-esperienze"></div>
+        </div>
+        <div class="knob-icon-wrapper">
+          <i class="fa fa-map-marker"></i>
+          <div class="knob-container" data-label="Avventura" data-id="filtro-avventura"></div>
+        </div>
       </div>
     </div>
-  </section>
+  </div>
+<div class="filtro-submit-wrapper">
+  <button id="applicaFiltri" class="modern-btn">Invia Preferenze</button>
 </div>
+
+</section>
+
+
+<div class="main-wrapper">
+ <section class="pacchetti-flex-section">
+  <h2 class="slide-in">I nostri pacchetti</h2>
+  <div class="pacchetti-slider-wrapper">
+    <div class="pacchetti-slider-container" id="pacchettiContainer">
+
+      <!-- Hajimete -->
+      <div id="hajimete" class="pacchetti-box slide-in">
+        <img src="assets/hajimete.jpg" alt="Hajimete">
+        <div class="card-content">
+          <h3>Hajimete – Debutto</h3>
+          <p><em>Un primo sguardo sul Giappone, tra meraviglia e scoperta.</em></p>
+          <ul class="icon-list">
+            <li><i class="fa fa-calendar"></i> 9–14 notti</li>
+            <li><i class="fa fa-map-marker"></i> Tokyo, Kyoto, Osaka</li>
+            <li><i class="fa fa-user"></i> Per chi visita per la prima volta</li>
+          </ul>
+          <span class="price-tag">A partire da 2.090€</span>
+          <a href="#hajimete" class="modern-btn">Scopri di più <i class="fa fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <!-- Tetsugaku no Michi -->
+      <div id="tetsugaku" class="pacchetti-box slide-in">
+        <img src="assets/tetsugaku.jpg" alt="Tetsugaku no Michi">
+        <div class="card-content">
+          <h3>Tetsugaku no Michi – Il sentiero del Filosofo</h3>
+          <p><em>Alla scoperta del Giappone spirituale e cerimoniale.</em></p>
+          <ul class="icon-list">
+            <li><i class="fa fa-calendar"></i> 10–15 notti</li>
+            <li><i class="fa fa-map-marker"></i> Kyoto, Nara, Kanazawa</li>
+            <li><i class="fa fa-leaf"></i> Per chi ama templi, rituali e tradizione</li>
+          </ul>
+          <span class="price-tag">A partire da 2.490€</span>
+          <a href="#tetsugaku" class="modern-btn">Scopri di più <i class="fa fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <!-- Shizen no Fūkei -->
+      <div id="shizen" class="pacchetti-box slide-in">
+        <img src="assets/shizen.jpg" alt="Shizen no Fūkei">
+        <div class="card-content">
+          <h3>Shizen no Fūkei – Scenario Naturale</h3>
+          <p><em>Armonia nei laghi, nei parchi e nei santuari naturali.</em></p>
+          <ul class="icon-list">
+            <li><i class="fa fa-calendar"></i> 10–15 notti</li>
+            <li><i class="fa fa-map-marker"></i> Fuji, Nara, Okayama, Miyajima</li>
+            <li><i class="fa fa-tree"></i> Per chi ama la natura</li>
+          </ul>
+          <span class="price-tag">A partire da 2.490€</span>
+          <a href="#shizen" class="modern-btn">Scopri di più <i class="fa fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <!-- Kodai Kansai -->
+      <div id="kodai" class="pacchetti-box slide-in">
+        <img src="assets/kodai-kansai.jpg" alt="Kodai Kansai">
+        <div class="card-content">
+          <h3>Kodai Kansai – Il saggio Kansai</h3>
+          <p><em>Un Giappone profondo, senza stress da spostamenti.</em></p>
+          <ul class="icon-list">
+            <li><i class="fa fa-calendar"></i> 8–12 notti</li>
+            <li><i class="fa fa-map-marker"></i> Kyoto, Osaka, Nara, Himeji</li>
+            <li><i class="fa fa-balance-scale"></i> Perfetto per ritmo lento</li>
+          </ul>
+          <span class="price-tag">A partire da 1.890€</span>
+          <a href="#kodai" class="modern-btn">Scopri di più <i class="fa fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <!-- Kataware Doki -->
+      <div id="kataware" class="pacchetti-box slide-in">
+        <img src="assets/kataware.jpg" alt="Kataware Doki">
+        <div class="card-content">
+          <h3>Kataware Doki – Il tempo si ferma</h3>
+          <p><em>Viaggio romantico per coppie e momenti speciali.</em></p>
+          <ul class="icon-list">
+            <li><i class="fa fa-calendar"></i> 9–15 notti</li>
+            <li><i class="fa fa-map-marker"></i> Kyoto, Fuji, Hakone</li>
+            <li><i class="fa fa-heart"></i> Per coppie e anniversari</li>
+          </ul>
+          <span class="price-tag">A partire da 2.290€</span>
+          <a href="#kataware" class="modern-btn">Scopri di più <i class="fa fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <!-- Hagane to Ki -->
+      <div id="hagane" class="pacchetti-box slide-in">
+        <img src="assets/hagane-to-ki.jpg" alt="Hagane to Ki">
+        <div class="card-content">
+          <h3>Hagane to Ki – Acciaio e Legno</h3>
+          <p><em>Metropoli futuristiche e sacralità naturalistica.</em></p>
+          <ul class="icon-list">
+            <li><i class="fa fa-calendar"></i> 8–12 notti</li>
+            <li><i class="fa fa-map-marker"></i> Tokyo, Hakone, Nikko, Fuji</li>
+            <li><i class="fa fa-building"></i> Per chi cerca contrasto</li>
+          </ul>
+          <span class="price-tag">A partire da 2.290€</span>
+          <a href="#hagane" class="modern-btn">Scopri di più <i class="fa fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
 
 
 
@@ -210,6 +268,13 @@
   <p class="footer-copy">© 2025 Yume Travel Tech – Tutti i diritti riservati.</p>
 </footer>
 
+<!-- jQuery PRIMA -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- roundSlider DOPO -->
+<script src="https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.js"></script>
+
+<!-- tuo script.js ULTIMO -->
 <script src="assets/script.js"></script>
 
 </body>
