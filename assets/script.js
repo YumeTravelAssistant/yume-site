@@ -187,12 +187,36 @@ function updateSliderArrowVisibility(containerId, leftSelector, rightSelector) {
   checkVisibility();
 }
 
+const sliderIds = [
+  'natura', 'spiritualita', 'shopping', 'gastronomia',
+  'citylife', 'collezionismo', 'relax', 'cultura',
+  'esperienze', 'avventura'
+];
+
+const filtriInput = {};
+
 // ✅ Attiva visibilità frecce dinamiche
 document.addEventListener('DOMContentLoaded', () => {
   updateSliderArrowVisibility('partiSlider', '.parti-con-noi-section .slider-arrow.left', '.parti-con-noi-section .slider-arrow.right');
   updateSliderArrowVisibility('bestsellerSlider', '.bestseller-section .slider-arrow.left', '.bestseller-section .slider-arrow.right');
   updateSliderArrowVisibility('sartoriaSlider', '.sartoria-slider-wrapper .slider-arrow.left', '.sartoria-slider-wrapper .slider-arrow.right');
+
+// Inizializza knob circolari appena visibili
+  inizializzaKnobQuandoVisibili();
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  sliderIds.forEach(id => {
+    filtriInput[id] = document.getElementById(`filtro-${id}`);
+  });
 });
+
+});
+
+window.addEventListener('load', () => {
+  inizializzaKnobQuandoVisibili();
+});
+
 
 // 🎯 Slider per sezione sartoria
 function scrollSartoriaSlider(direction) {
@@ -208,4 +232,111 @@ function scrollSartoriaSlider(direction) {
   });
 }
 
+
+// 🎛️ FILTRI PERSONALIZZATI – Algoritmo dinamico su pacchetti
+const pacchettiScoring = [
+  {
+    id: 'hajimete',
+    scores: { natura: 6, spiritualita: 4, shopping: 6, gastronomia: 5, citylife: 7, collezionismo: 5, relax: 5, cultura: 6, esperienze: 6, avventura: 5 }
+  },
+  {
+    id: 'tetsugaku',
+    scores: { natura: 5, spiritualita: 9, shopping: 2, gastronomia: 6, citylife: 3, collezionismo: 4, relax: 7, cultura: 10, esperienze: 8, avventura: 3 }
+  },
+  {
+    id: 'shizen',
+    scores: { natura: 10, spiritualita: 6, shopping: 2, gastronomia: 4, citylife: 2, collezionismo: 3, relax: 8, cultura: 7, esperienze: 6, avventura: 6 }
+  },
+  {
+    id: 'kodai',
+    scores: { natura: 5, spiritualita: 8, shopping: 3, gastronomia: 8, citylife: 5, collezionismo: 4, relax: 6, cultura: 9, esperienze: 6, avventura: 4 }
+  },
+  {
+    id: 'kataware',
+    scores: { natura: 7, spiritualita: 7, shopping: 2, gastronomia: 7, citylife: 3, collezionismo: 3, relax: 10, cultura: 7, esperienze: 9, avventura: 2 }
+  },
+  {
+    id: 'hagane',
+    scores: { natura: 6, spiritualita: 6, shopping: 7, gastronomia: 7, citylife: 9, collezionismo: 6, relax: 5, cultura: 7, esperienze: 6, avventura: 5 }
+  }
+];
+
+function calcolaDifferenzaScore(pacchetto, filtriUtente) {
+  let diff = 0;
+  for (let key in filtriUtente) {
+    diff += Math.abs(pacchetto.scores[key] - filtriUtente[key]);
+  }
+  return diff;
+}
+
+function inizializzaKnobQuandoVisibili() {
+  const containers = document.querySelectorAll('.knob-container');
+
+  containers.forEach(container => {
+    const label = container.getAttribute('data-label');
+    const id = container.getAttribute('data-id');
+
+    // Crea un div interno dove inserire il roundSlider
+    const sliderDiv = document.createElement('div');
+    sliderDiv.id = id;
+    container.appendChild(sliderDiv);
+
+    // Inizializza roundSlider
+    $(`#${id}`).roundSlider({
+      radius: 55,
+      width: 8,
+      min: 1,
+      max: 10,
+      step: 1,
+      value: 5,
+      handleSize: "+12",
+      circleShape: "pie",
+      startAngle: 315,
+      sliderType: "min-range",
+      editableTooltip: false,
+      tooltipFormat: function(args) {
+        return label + ": " + args.value;
+      },
+      drag: function () {},
+      change: function () {}
+    });
+  }); // chiusura forEach
+} // chiusura funzione inizializzaKnobQuandoVisibili
+
+
+function aggiornaOrdinePacchetti() {
+  const preferenze = {};
+  sliderIds.forEach(id => {
+     preferenze[id] = $(`#filtro-${id}`).data("roundSlider")?.getValue() || 5;
+
+  });
+
+  const pacchettiOrdinati = [...pacchettiScoring].sort((a, b) => {
+    return calcolaDifferenzaScore(a, preferenze) - calcolaDifferenzaScore(b, preferenze);
+  });
+
+  const container = document.querySelector('.pacchetti-slider-container');
+  if (!container) return;
+
+  pacchettiOrdinati.forEach(p => {
+    const el = document.getElementById(p.id);
+    if (el) container.appendChild(el);
+  });
+
+  // 🔧 forza reflow del layout grid
+  container.style.display = 'none';
+  requestAnimationFrame(() => {
+    container.style.display = '';
+  });
+
+  console.log("Ordinamento pacchetti aggiornato");
+}
+
+
+const bottoneInvia = document.getElementById('applicaFiltri');
+if (bottoneInvia) {
+  bottoneInvia.addEventListener('click', () => {
+    aggiornaOrdinePacchetti();
+  });
+}
 
