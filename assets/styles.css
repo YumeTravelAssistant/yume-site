@@ -1693,22 +1693,49 @@ h2.slide-in.visible {
 }
 
 .sartoria-box {
-  background-color: white;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   border-radius: 16px;
-  padding: 30px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  padding: 40px 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   max-width: 300px;
   flex: 1;
+  color: #F4F0E2; /* beige chiaro */
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  position: relative;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Overlay per migliorare il contrasto */
+.sartoria-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45); /* puoi anche usare #FFF8F4 con opacity */
+  border-radius: 16px;
+  z-index: 0;
+}
+
+/* Posizionamento del contenuto sopra l'overlay */
+.sartoria-box > * {
+  position: relative;
+  z-index: 1;
 }
 
 .sartoria-box h3 {
   font-size: 1.4rem;
-  color: #8B2C2B;
+  color: #C9A86A; /* oro Yume */
   margin-bottom: 10px;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
 }
 
 .sartoria-box p {
-  color: #444;
+  color: #F4F0E2;
   font-size: 0.95rem;
 }
 
