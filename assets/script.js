@@ -37,6 +37,15 @@ if (typeof $ !== "undefined" && typeof $.fn.select2 !== "undefined") {
   });
 }
 
+// ✅ Attiva roundSlider solo se jQuery e il plugin sono presenti
+if (typeof $ !== "undefined" && typeof $.fn.roundSlider !== "undefined") {
+  $(function () {
+    console.log("Inizializzo i cursori circolari (roundSlider)"); // DEBUG
+    inizializzaKnobQuandoVisibili();
+  });
+}
+
+
 // 🔽 NAVBAR dinamica: hide on scroll down, show on scroll up
 let lastScrollTop = 0;
 const navbar = document.querySelector('.navbar');
@@ -201,9 +210,6 @@ document.addEventListener('DOMContentLoaded', () => {
   updateSliderArrowVisibility('bestsellerSlider', '.bestseller-section .slider-arrow.left', '.bestseller-section .slider-arrow.right');
   updateSliderArrowVisibility('sartoriaSlider', '.sartoria-slider-wrapper .slider-arrow.left', '.sartoria-slider-wrapper .slider-arrow.right');
 
-// Inizializza knob circolari appena visibili
-  inizializzaKnobQuandoVisibili();
-
 
 document.addEventListener('DOMContentLoaded', () => {
   sliderIds.forEach(id => {
@@ -211,10 +217,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-});
-
-window.addEventListener('load', () => {
-  inizializzaKnobQuandoVisibili();
 });
 
 
