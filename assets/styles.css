@@ -49,7 +49,7 @@ a {
   transform: translateX(100%);
   transition: transform 0.3s ease;
   z-index: 999;
-  padding-top: 60px;
+  padding-top: 130px;
 }
 
 .sidebar.active {
@@ -66,6 +66,33 @@ a {
 
 .sidebar a:hover {
   background-color: #721F1E;
+}
+
+.sidebar-logo {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-top: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  height: 60px; /* o altezza logo */
+  overflow: hidden;
+  padding: 16px 0 12px 0;
+  margin-top: -100px; /* per portarlo sopra le voci visibili */
+  z-index: 1;
+  position: relative;
+}
+
+.sidebar-logo img.logo-sidebar {
+  height: 50px;
+  max-width: 80%;
+  object-fit: contain;
+}
+
+.sidebar.active .sidebar-logo {
+  opacity: 1;
 }
 
 .main-wrapper {
@@ -151,7 +178,7 @@ footer {
     transition: transform 0.3s ease;
     z-index: 999;
     flex-direction: column;
-    padding-top: 60px;
+    padding-top: 130px;
     display: flex;
   }
 
