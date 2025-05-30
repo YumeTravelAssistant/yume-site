@@ -1917,3 +1917,164 @@ p.hero-subtitle {
   position: relative; /* 🔑 necessario per il posizionamento assoluto del bottone */
   padding-bottom: 80px; /* 🔽 spazio per il bottone */
 }
+
+/* ===== STILE PER FILTRI VISUALI CIRCOLARI ===== */
+
+.pacchetti-filtri-section {
+  padding: 60px 30px;
+  background-color: #FFF8F4;
+  text-align: center;
+}
+
+.pacchetti-filtri-section h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  margin-bottom: 40px;
+  color: #8B2C2B;
+}
+
+.filtro-sliders {
+  display: grid;
+  gap: 40px 30px;
+  justify-content: center;
+  padding: 20px;
+  justify-items: center;
+}
+
+.knob-icon-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100px;
+  gap: 10px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.knob-icon-wrapper i {
+  font-size: 22px;
+  color: #8B2C2B;
+}
+
+.knob-icon-wrapper:hover {
+  transform: scale(1.05);
+}
+
+/* Versione responsive */
+/* MOBILE: 2 knob per riga */
+@media (max-width: 768px) {
+  .filtro-sliders {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* TABLET E DESKTOP MEDIO: 4-3-3 */
+@media (min-width: 769px) and (max-width: 1399px) {
+  .filtro-sliders {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* facoltativo: assicura che oltre il 4° vada a capo */
+  .filtro-sliders .knob-container:nth-child(n+5) {
+    grid-column: span 1;
+  }
+}
+
+/* DESKTOP GRANDE: 5 per riga (5 + 5) */
+@media (min-width: 1400px) {
+  .filtro-sliders {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+
+.knob-container {
+  width: 100px;
+  height: 100px;
+  position: relative;
+}
+.knob-container input[type="range"] {
+  appearance: none;
+  -webkit-appearance: none;
+  visibility: hidden;
+  position: absolute;
+}
+.knob-container canvas {
+  display: block;
+  margin: 0 auto;
+}
+
+.filtro-submit-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 0;
+  width: 100%;
+  background-color: #FFF8F4; /* stesso colore del contenitore */
+  z-index: 5;
+  position: relative;
+  min-height: 120px;
+}
+
+#applicaFiltri.modern-btn {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'Quicksand', sans-serif;
+  text-decoration: none;
+  color: #C9A86A; /* oro Yume */
+  border: 2px solid #8B2C2B;
+  background-color: #8B2C2B;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+  z-index: 2;
+  cursor: pointer;
+}
+
+#applicaFiltri.modern-btn:hover {
+  background-color: #721F1E;
+  color: white;
+  border-color: #721F1E;
+}
+
+#applicaFiltri.modern-btn i {
+  font-size: 0.95em;
+  transition: transform 0.3s ease;
+}
+
+#applicaFiltri.modern-btn:hover i {
+  transform: translateX(5px);
+}
+
+/* === roundSlider - Yume style === */
+.rs-control {
+  background-color: #FFF8F4 !important;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.rs-range-color {
+  background-color: #8B2C2B !important; /* rosso Yume */
+}
+
+.rs-path-color {
+  background-color: #F4F0E2 !important; /* beige */
+}
+
+.rs-handle {
+  background-color: #8B2C2B !important;
+  border: 2px solid #F4F0E2;
+  width: 16px !important;
+  height: 16px !important;
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
