@@ -524,14 +524,14 @@ btnAggiungiCamera.addEventListener("click", function () {
   cameraCounter++;
 
   const div = document.createElement("div");
-  div.classList.add("camera-box");
+  div.classList.add("camera-box"); // per il JSON
   div.innerHTML = `
     <label>Camera ${cameraCounter}:</label>
-    <select class="tipo-camera" name="camere[]" required>
-      <option value="Singola">Singola</option>
-      <option value="Doppia">Doppia</option>
-      <option value="Tripla">Tripla</option>
-      <option value="Quadrupla">Quadrupla</option>
+    <select class="tipologiaCamera tipo-camera" name="camere[]" required>
+      <option value="1">Singola</option>
+      <option value="2">Doppia</option>
+      <option value="3">Tripla</option>
+      <option value="4">Quadrupla</option>
     </select>
     <button type="button" class="rimuoviCamera">Rimuovi</button>
   `;
