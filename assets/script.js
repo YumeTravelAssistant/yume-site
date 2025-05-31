@@ -342,3 +342,365 @@ if (bottoneInvia) {
   });
 }
 
+const cittaPerPacchetto = {
+  hajimete: [
+    "Tokyo", "Kyoto", "Osaka", "Hakone", "Nara",
+    "Kawaguchiko", "Nikko", "Hiroshima", "Yokohama", "Kamakura"
+  ],
+
+  tetsugaku: [
+    "Kyoto", "Nara", "Kanazawa", "Kurashiki", "Okayama",
+    "Koyasan", "Uji", "Tokyo", "Hakone", "Kamakura"
+  ],
+
+  shizen: [
+    "Kawaguchiko", "Hakone", "Nikko", "Kamikochi", "Takayama",
+    "Kanazawa", "Shirakawa-go", "Yakushima", "Kiso-dani", "Gifu"
+  ],
+
+  kodai: [
+    "Kyoto", "Nara", "Osaka", "Okayama", "Himeji",
+    "Kobe", "Kurashiki", "Uji", "Hiroshima", "Tottori"
+  ],
+
+  kataware: [
+    "Tokyo", "Kyoto", "Kanazawa", "Hakone", "Nikko",
+    "Osaka", "Kawaguchiko", "Kamakura", "Enoshima", "Nagano"
+  ],
+
+  hagane: [
+    "Tokyo", "Kawaguchiko", "Yokohama", "Hakone", "Chichibu",
+    "Odawara", "Enoshima", "Kamakura", "Atami", "Nikko"
+  ]
+};
+
+let maxCitta = 0;
+
+function aggiornaCitta(pacchetto, durata) {
+  const selectCitta = document.getElementById("citta");
+  const msgMax = document.getElementById("maxCittaMsg");
+  const msgErrore = document.getElementById("erroreCitta");
+  const opzioni = cittaPerPacchetto[pacchetto] || [];
+
+  // Pulisce il campo e lo riempie
+  selectCitta.innerHTML = "";
+  opzioni.forEach(citta => {
+    const option = document.createElement("option");
+    option.value = citta;
+    option.textContent = citta;
+    selectCitta.appendChild(option);
+  });
+
+  // Disattiva il campo se non è stata selezionata la durata
+  selectCitta.disabled = !durata;
+
+  // Reset messaggi
+  msgErrore.textContent = "";
+  msgMax.textContent = "";
+
+  // Se durata non ancora disponibile (es. data non selezionata), esce
+  if (!durata) return;
+
+  // Calcolo massimo città selezionabili
+  if (durata <= 8) maxCitta = 3;
+  else if (durata <= 10) maxCitta = 4;
+  else if (durata <= 15) maxCitta = 6;
+  else maxCitta = 8;
+
+  msgMax.textContent = `Puoi selezionare fino a ${maxCitta} città.`;
+
+  // Gestore selezione città
+  const nuovoSelectCitta = selectCitta.cloneNode(true);
+  selectCitta.parentNode.replaceChild(nuovoSelectCitta, selectCitta);
+
+  // Aggiungi il listener solo al nuovo elemento pulito
+  nuovoSelectCitta.addEventListener("change", function () {
+    const selezionate = Array.from(this.selectedOptions);
+    if (selezionate.length > maxCitta) {
+      selezionate[selezionate.length - 1].selected = false;
+      msgErrore.textContent = `Attenzione: massimo ${maxCitta} città selezionabili.`;
+    } else {
+      msgErrore.textContent = "";
+    }
+
+    Array.from(this.options).forEach(opt => {
+      opt.disabled = !opt.selected && selezionate.length >= maxCitta;
+    });
+  });
+const counterCitta = document.getElementById("counterCitta");
+
+nuovoSelectCitta.addEventListener("change", function () {
+  const selezionate = Array.from(this.selectedOptions);
+
+  // aggiorna il counter live
+  counterCitta.textContent = `${selezionate.length} città selezionate su massimo ${maxCitta}`;
+
+  if (selezionate.length > maxCitta) {
+    selezionate[selezionate.length - 1].selected = false;
+    msgErrore.textContent = `Attenzione: massimo ${maxCitta} città selezionabili.`;
+  } else {
+    msgErrore.textContent = "";
+  }
+
+  Array.from(this.options).forEach(opt => {
+    opt.disabled = !opt.selected && selezionate.length >= maxCitta;
+  });
+});
+
+
+}
+
+document.getElementById('pacchetto').addEventListener('change', function () {
+  const selected = this.options[this.selectedIndex];
+  const min = parseInt(selected.dataset.min);
+  const max = parseInt(selected.dataset.max);
+  const pacchetto = this.value;
+
+  const partenza = document.getElementById('dataPartenza');
+  const ritorno = document.getElementById('dataRitorno');
+
+  // Imposta data minima partenza (oggi)
+  partenza.min = new Date().toISOString().split("T")[0];
+  ritorno.value = "";
+  document.getElementById('maxCittaMsg').textContent = "";
+  document.getElementById('counterCitta').textContent = "";
+  document.getElementById('erroreCitta').textContent = "";
+
+  // Aggiorna listener sulla data di partenza
+partenza.addEventListener("change", function () {
+  if (!partenza.value || isNaN(min) || isNaN(max)) return;
+
+  const partenzaDate = new Date(partenza.value);
+  const minRitorno = new Date(partenzaDate);
+  minRitorno.setDate(minRitorno.getDate() + min);
+
+  const maxRitorno = new Date(partenzaDate);
+  maxRitorno.setDate(maxRitorno.getDate() + max);
+
+  const ritornoInput = document.getElementById("dataRitorno");
+
+  ritornoInput.min = minRitorno.toISOString().split("T")[0];
+  ritornoInput.max = maxRitorno.toISOString().split("T")[0];
+  ritornoInput.value = ritornoInput.min; // default visivo
+
+  const durata = min; // iniziale = minima
+  aggiornaCitta(pacchetto, durata);
+});
+
+
+
+  // Reset e aggiorna città senza giorni ancora noti
+  aggiornaCitta(pacchetto, null);
+});
+
+document.getElementById('dataRitorno').addEventListener('change', function () {
+  const pacchetto = document.getElementById('pacchetto').value;
+  const partenza = new Date(document.getElementById('dataPartenza').value);
+  const ritorno = new Date(this.value);
+  const diff = Math.ceil((ritorno - partenza) / (1000 * 60 * 60 * 24));
+  aggiornaCitta(pacchetto, diff);
+});
+
+document.getElementById('formPacchetto').addEventListener('input', function () {
+  const partecipanti = parseInt(document.getElementById('partecipanti').value) || 0;
+  const adulti = parseInt(document.getElementById('adulti').value) || 0;
+  const bambini = parseInt(document.getElementById('bambini').value) || 0;
+  const errore = document.getElementById('errorePartecipanti');
+
+  if (partecipanti > 0 && (adulti + bambini !== partecipanti)) {
+    errore.textContent = `Il totale di adulti e bambini deve essere ${partecipanti}.`;
+  } else {
+    errore.textContent = '';
+  }
+});
+
+let cameraCounter = 0;
+
+const cameraContainer = document.getElementById("camereContainer");
+const btnAggiungiCamera = document.getElementById("aggiungiCamera");
+const erroreCamere = document.getElementById("erroreCamere");
+
+btnAggiungiCamera.addEventListener("click", function () {
+  cameraCounter++;
+
+  const div = document.createElement("div");
+  div.classList.add("camera-group");
+  div.innerHTML = `
+    <label>Camera ${cameraCounter}:</label>
+    <select class="tipologiaCamera" required>
+      <option value="1">Singola</option>
+      <option value="2">Doppia</option>
+      <option value="3">Tripla</option>
+      <option value="4">Quadrupla</option>
+    </select>
+    <button type="button" class="rimuoviCamera">Rimuovi</button>
+  `;
+  cameraContainer.appendChild(div);
+
+  aggiornaErroreCamere();
+  aggiornaControlloAutomaticoCamere();
+});
+
+cameraContainer.addEventListener("click", function (e) {
+  if (e.target.classList.contains("rimuoviCamera")) {
+    e.target.parentElement.remove();
+    cameraCounter--;
+    aggiornaErroreCamere();
+    aggiornaControlloAutomaticoCamere();
+  }
+});
+
+function aggiornaErroreCamere() {
+  const partecipanti = parseInt(document.getElementById("partecipanti").value) || 0;
+  const tipologie = document.querySelectorAll(".tipologiaCamera");
+  let totalePostiLetto = 0;
+
+  tipologie.forEach(sel => {
+    totalePostiLetto += parseInt(sel.value);
+  });
+
+  if (totalePostiLetto < partecipanti) {
+    erroreCamere.textContent = `Le camere selezionate coprono solo ${totalePostiLetto} posti letto su ${partecipanti}.`;
+  } else {
+    erroreCamere.textContent = "";
+  }
+}
+
+function aggiornaControlloAutomaticoCamere() {
+  const selects = document.querySelectorAll(".tipologiaCamera");
+  selects.forEach(sel => {
+    sel.addEventListener("change", aggiornaErroreCamere);
+  });
+}
+
+document.getElementById("partecipanti").addEventListener("input", aggiornaErroreCamere);
+
+document.getElementById('formPacchetto').addEventListener('submit', function (e) {
+  e.preventDefault(); // blocca invio classico
+  const feedback = document.getElementById('formFeedback');
+
+  // 🔍 simulazione: se tutti i controlli sono rispettati, mostra successo
+  if (validaForm()) {
+    feedback.textContent = "Richiesta inviata con successo!";
+    feedback.className = "form-feedback-msg success";
+  } else {
+    feedback.textContent = "Errore: verifica i campi obbligatori.";
+    feedback.className = "form-feedback-msg error";
+  }
+
+  setTimeout(() => {
+    feedback.className = "form-feedback-msg"; // reset dopo 5s
+    feedback.textContent = "";
+  }, 5000);
+});
+
+// Funzione placeholder da completare
+function validaForm() {
+  // qui puoi inserire controlli JS aggiuntivi se vuoi
+  return true;
+}
+
+document.getElementById("formPacchetto").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const form = new FormData(this);
+
+  const riepilogo = `
+    <h3>Conferma dati inseriti</h3>
+    <ul>
+      <li><strong>Nome:</strong> ${form.get("nome")}</li>
+      <li><strong>Cognome:</strong> ${form.get("cognome")}</li>
+      <li><strong>Email:</strong> ${form.get("email")}</li>
+      <li><strong>Pacchetto:</strong> ${form.get("pacchetto")}</li>
+      <li><strong>Data Partenza:</strong> ${form.get("dataPartenza")}</li>
+      <li><strong>Data Ritorno:</strong> ${form.get("dataRitorno")}</li>
+      <li><strong>Tipologia Gruppo:</strong> ${form.get("tipologiaGruppo")}</li>
+      <li><strong>Dettagli Gruppo:</strong> ${form.get("dettagliGruppo") || "Nessuno"}</li>
+      <li><strong>Partecipanti:</strong> ${form.get("partecipanti")}</li>
+      <li><strong>Adulti:</strong> ${form.get("adulti")}</li>
+      <li><strong>Bambini:</strong> ${form.get("bambini")}</li>
+      <li><strong>Fascia Prezzo:</strong> ${form.get("fasciaPrezzo")}</li>
+      <li><strong>Trasporto:</strong> ${form.get("trasporto")}</li>
+      <li><strong>Connettività:</strong> ${form.get("connettivita")}</li>
+      <li><strong>Città:</strong> ${(form.getAll("citta[]") || []).join(", ")}</li>
+      <li><strong>Camere:</strong> ${[...document.querySelectorAll('.camera-box')].map(box => {
+        const tipo = box.querySelector(".tipo-camera")?.value || "";
+        const ospiti = box.querySelector(".ospiti-camera")?.value || "";
+        return `${tipo} x ${ospiti}`;
+      }).join(" / ")}</li>
+      <li><strong>Richieste Aggiuntive:</strong> ${form.get("richieste") || "Nessuna"}</li>
+    </ul>
+    <p>Vuoi confermare e inviare la richiesta?</p>
+  `;
+
+  const modal = document.createElement("div");
+  modal.classList.add("riepilogo-modal");
+  modal.innerHTML = `
+    <div class="riepilogo-modal">
+      <div class="riepilogo-content">
+        ${riepilogo}
+        <div class="riepilogo-buttons">
+          <button id="confermaInvio" class="modern-btn conferma-btn">Conferma</button>
+          <button id="annullaInvio" class="modern-btn annulla-btn">Annulla</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  document.getElementById("confermaInvio").addEventListener("click", () => {
+    document.body.removeChild(modal);
+
+    const dati = {
+      nome: form.get("nome"),
+      cognome: form.get("cognome"),
+      email: form.get("email"),
+      pacchetto: form.get("pacchetto"),
+      dataPartenza: form.get("dataPartenza"),
+      dataRitorno: form.get("dataRitorno"),
+      tipologiaGruppo: form.get("tipologiaGruppo"),
+      dettagliGruppo: form.get("dettagliGruppo"),
+      partecipanti: form.get("partecipanti"),
+      adulti: form.get("adulti"),
+      bambini: form.get("bambini"),
+      fasciaPrezzo: form.get("fasciaPrezzo"),
+      trasporto: form.get("trasporto"),
+      connettivita: form.get("connettivita"),
+      citta: form.getAll("citta[]"),
+      camere: [...document.querySelectorAll('.camera-box')].map(box => {
+        const tipo = box.querySelector(".tipo-camera")?.value || "";
+        const ospiti = box.querySelector(".ospiti-camera")?.value || "";
+        return `${tipo} x ${ospiti}`;
+      }),
+      richieste: form.get("richieste")
+    };
+
+    fetch("https://yume-sito-form.azurewebsites.net/api/proxy", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dati)
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === "success") {
+          alert("Richiesta inviata con successo!");
+          document.getElementById("formPacchetto").reset();
+          document.getElementById("counterCitta").textContent = "";
+          document.getElementById("maxCittaMsg").textContent = "";
+          document.getElementById("erroreCitta").textContent = "";
+        } else {
+          alert("Si è verificato un errore. Riprova.");
+        }
+      })
+      .catch(error => {
+        console.error("Errore:", error);
+        alert("Errore di rete. Riprova più tardi.");
+      });
+  });
+
+  document.getElementById("annullaInvio").addEventListener("click", () => {
+    document.body.removeChild(modal);
+  });
+});
+
