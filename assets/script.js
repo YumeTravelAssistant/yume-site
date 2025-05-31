@@ -524,7 +524,7 @@ btnAggiungiCamera.addEventListener("click", function () {
   cameraCounter++;
 
   const div = document.createElement("div");
-  div.classList.add("camera-box"); // serve per JSON e controllo
+  div.classList.add("camera-box");
   div.innerHTML = `
     <label>Camera ${cameraCounter}:</label>
     <select class="tipologiaCamera tipo-camera" name="camere[]" required>
@@ -533,21 +533,25 @@ btnAggiungiCamera.addEventListener("click", function () {
       <option value="Tripla">Tripla</option>
       <option value="Quadrupla">Quadrupla</option>
     </select>
-    <input type="number" class="ospiti-camera" min="1" max="4" value="1" required style="width: 60px; margin-left: 10px;" title="Numero di ospiti in questa camera">
+    <input type="number" class="ospiti-camera" min="1" max="4" value="1" required style="width: 60px; margin-left: 10px;" title="Numero di ospiti per questa camera">
     <button type="button" class="rimuoviCamera">Rimuovi</button>
   `;
+
   cameraContainer.appendChild(div);
 
+  // 🔄 Attiva aggiornamento dinamico ogni volta che cambia tipo o numero ospiti
+  div.querySelector(".ospiti-camera").addEventListener("input", aggiornaErroreCamere);
+  div.querySelector(".tipologiaCamera").addEventListener("change", aggiornaErroreCamere);
+
   aggiornaErroreCamere();
-  aggiornaControlloAutomaticoCamere();
 });
 
+// Gestione rimozione camera
 cameraContainer.addEventListener("click", function (e) {
   if (e.target.classList.contains("rimuoviCamera")) {
     e.target.parentElement.remove();
     cameraCounter--;
     aggiornaErroreCamere();
-    aggiornaControlloAutomaticoCamere();
   }
 });
 
