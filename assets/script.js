@@ -539,9 +539,25 @@ btnAggiungiCamera.addEventListener("click", function () {
 
   cameraContainer.appendChild(div);
 
-  // 🔄 Attiva aggiornamento dinamico ogni volta che cambia tipo o numero ospiti
-  div.querySelector(".ospiti-camera").addEventListener("input", aggiornaErroreCamere);
-  div.querySelector(".tipologiaCamera").addEventListener("change", aggiornaErroreCamere);
+  const select = div.querySelector(".tipologiaCamera");
+  const input = div.querySelector(".ospiti-camera");
+
+  // 🔁 Funzione che imposta automaticamente valore e massimo
+  function aggiornaOspitiDaTipologia() {
+    const tipo = select.value;
+    const capienza = tipo === "Singola" ? 1 : tipo === "Doppia" ? 2 : tipo === "Tripla" ? 3 : 4;
+    input.max = capienza;
+    input.value = capienza;
+  }
+
+  // Inizializza e imposta listener
+  aggiornaOspitiDaTipologia();
+  select.addEventListener("change", () => {
+    aggiornaOspitiDaTipologia();
+    aggiornaErroreCamere();
+  });
+
+  input.addEventListener("input", aggiornaErroreCamere);
 
   aggiornaErroreCamere();
 });
@@ -710,4 +726,75 @@ document.getElementById("formPacchetto").addEventListener("submit", function (e)
     document.body.removeChild(modal);
   });
 });
+
+function validaForm() {
+  const nome = document.getElementById("nome").value.trim();
+  const cognome = document.getElementById("cognome").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const confermaEmail = document.getElementById("confermaEmail").value.trim();
+  const pacchetto = document.getElementById("pacchetto").value;
+  const partecipanti = parseInt(document.getElementById("partecipanti").value);
+  const adulti = parseInt(document.getElementById("adulti").value);
+  const bambini = parseInt(document.getElementById("bambini").value);
+  const dataPartenza = document.getElementById("dataPartenza").value;
+  const dataRitorno = document.getElementById("dataRitorno").value;
+  const tipologiaGruppo = document.getElementById("tipologiaGruppo").value;
+  const fasciaPrezzo = document.getElementById("fasciaPrezzo").value;
+  const trasporto = document.getElementById("trasporto").value;
+  const connettivita = document.getElementById("connettivita").value;
+  const citta = document.getElementById("citta").selectedOptions;
+
+  const errorePartecipanti = document.getElementById("errorePartecipanti");
+  const erroreCitta = document.getElementById("erroreCitta");
+  errorePartecipanti.textContent = "";
+  erroreCitta.textContent = "";
+
+  // Controllo campi obbligatori
+  if (!nome || !cognome || !email || !confermaEmail) {
+    alert("Inserisci nome, cognome ed email.");
+    return false;
+  }
+
+  if (email !== confermaEmail) {
+    alert("Le email non coincidono.");
+    return false;
+  }
+
+  if (!pacchetto) {
+    alert("Seleziona un pacchetto.");
+    return false;
+  }
+
+  if (!dataPartenza || !dataRitorno) {
+    alert("Seleziona date di partenza e ritorno.");
+    return false;
+  }
+
+  if (!tipologiaGruppo || !fasciaPrezzo || !trasporto || !connettivita) {
+    alert("Compila tutte le selezioni obbligatorie.");
+    return false;
+  }
+
+  if (isNaN(partecipanti) || partecipanti <= 0) {
+    alert("Devi indicare almeno 1 partecipante.");
+    return false;
+  }
+
+  if (isNaN(adulti) || isNaN(bambini)) {
+    alert("Devi indicare numero adulti e bambini.");
+    return false;
+  }
+
+  if ((adulti + bambini) !== partecipanti) {
+    errorePartecipanti.textContent = `Il totale adulti + bambini deve essere ${partecipanti}.`;
+    return false;
+  }
+
+  if (!citta || citta.length === 0) {
+    erroreCitta.textContent = "Devi selezionare almeno una città.";
+    return false;
+  }
+
+  return true;
+}
 
