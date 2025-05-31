@@ -1495,7 +1495,7 @@ h2.slide-in.visible {
 
 .numero-step {
   font-size: 2em;
-  font-weight: bold;
+<option value="pocketwifi">Pocket Wi-Fi</option>  font-weight: bold;
   display: block;
   margin-bottom: 10px;
   color: white;
@@ -2646,7 +2646,7 @@ p.hero-subtitle {
   #formPacchetto textarea,
   #formPacchetto button {
     font-size: 14px;
-    padding: 10px;
+    padding: 18px;
   }
 
   #formPacchetto label,
@@ -2654,7 +2654,7 @@ p.hero-subtitle {
   .rimuoviCamera,
   .modern-btn,
   #formPacchetto button {
-    font-size: 13px;
+    font-size: 18px;
   }
 }
 
@@ -2664,7 +2664,7 @@ p.hero-subtitle {
   #formPacchetto select,
   #formPacchetto textarea,
   #formPacchetto button {
-    font-size: 15px;
+    font-size: 18px;
     padding: 12px;
   }
 
@@ -2673,7 +2673,7 @@ p.hero-subtitle {
   .rimuoviCamera,
   .modern-btn,
   #formPacchetto button {
-    font-size: 14px;
+    font-size: 18px;
   }
 }
 
@@ -2683,7 +2683,7 @@ p.hero-subtitle {
   #formPacchetto select,
   #formPacchetto textarea,
   #formPacchetto button {
-    font-size: 15.5px;
+    font-size: 18.5px;
     padding: 12px 14px;
   }
 
@@ -2692,7 +2692,7 @@ p.hero-subtitle {
   .rimuoviCamera,
   .modern-btn,
   #formPacchetto button {
-    font-size: 14.5px;
+    font-size: 18.5px;
   }
 }
 
@@ -2702,7 +2702,7 @@ p.hero-subtitle {
   #formPacchetto select,
   #formPacchetto textarea,
   #formPacchetto button {
-    font-size: 16px;
+    font-size: 18.5px;
     padding: 14px 16px;
   }
 
@@ -2711,7 +2711,7 @@ p.hero-subtitle {
   .rimuoviCamera,
   .modern-btn,
   #formPacchetto button {
-    font-size: 15px;
+    font-size: 18.5px;
   }
 }
 
@@ -2750,7 +2750,7 @@ p.hero-subtitle {
 
   /* ✅ Altri select (trasporto, fascia prezzo, connettività, tipologia gruppo) */
   #formPacchetto select:not(#citta) {
-    max-width: 220px;
+    max-width: 260px;
   }
 
   /* 📝 Textarea (dettagli gruppo, richieste) */
@@ -2761,9 +2761,9 @@ p.hero-subtitle {
 
   /* ➕ Bottone aggiungi camera */
   #aggiungiCamera.modern-btn {
-    font-size: 14px;
+    font-size: 18px;
     padding: 10px 18px;
-    max-width: 200px;
+    max-width: 230px;
     margin-left: 20px;
   }
 }
