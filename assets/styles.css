@@ -2405,6 +2405,7 @@ p.hero-subtitle {
 #formPacchetto label {
   font-weight: 600;
   color: #8B2C2B;
+  margin-bottom: 10px;
 }
 
 #formPacchetto input,
@@ -2633,6 +2634,137 @@ p.hero-subtitle {
 
   .riepilogo-buttons .modern-btn {
     max-width: 100%;
+  }
+}
+
+/* 🔠 DIMENSIONI FORM PACCHETTO PER TUTTE LE RISOLUZIONI */
+
+/* 1. Mobile piccoli: fino a 500px */
+@media (max-width: 500px) {
+  #formPacchetto input,
+  #formPacchetto select,
+  #formPacchetto textarea,
+  #formPacchetto button {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  #formPacchetto label,
+  .camera-box,
+  .rimuoviCamera,
+  .modern-btn,
+  #formPacchetto button {
+    font-size: 13px;
+  }
+}
+
+/* 2. Smartphone medi: 501–768px */
+@media (min-width: 501px) and (max-width: 768px) {
+  #formPacchetto input,
+  #formPacchetto select,
+  #formPacchetto textarea,
+  #formPacchetto button {
+    font-size: 15px;
+    padding: 12px;
+  }
+
+  #formPacchetto label,
+  .camera-box,
+  .rimuoviCamera,
+  .modern-btn,
+  #formPacchetto button {
+    font-size: 14px;
+  }
+}
+
+/* 3. Tablet e laptop medi: 769–1399px */
+@media (min-width: 769px) and (max-width: 1399px) {
+  #formPacchetto input,
+  #formPacchetto select,
+  #formPacchetto textarea,
+  #formPacchetto button {
+    font-size: 15.5px;
+    padding: 12px 14px;
+  }
+
+  #formPacchetto label,
+  .camera-box,
+  .rimuoviCamera,
+  .modern-btn,
+  #formPacchetto button {
+    font-size: 14.5px;
+  }
+}
+
+/* 4. Desktop grandi: 1400px e oltre */
+@media (min-width: 1400px) {
+  #formPacchetto input,
+  #formPacchetto select,
+  #formPacchetto textarea,
+  #formPacchetto button {
+    font-size: 16px;
+    padding: 14px 16px;
+  }
+
+  #formPacchetto label,
+  .camera-box,
+  .rimuoviCamera,
+  .modern-btn,
+  #formPacchetto button {
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 769px) {
+  .due-colonne {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .due-colonne > div {
+    flex: 1 1 48%;
+  }
+}
+
+  /* 📅 Campi data (partenza e ritorno) */
+  #formPacchetto input[type="date"] {
+    max-width: 180px;
+  }
+
+  /* 👥 Campi numero persone (partecipanti, adulti, bambini) */
+  #formPacchetto input[type="number"] {
+    max-width: 80px;
+  }
+
+  /* 🧑‍💻 Campi testo principali (nome, cognome, email, conferma) */
+  #formPacchetto input[type="text"],
+  #formPacchetto input[type="email"] {
+    max-width: 300px;
+  }
+
+  /* 🏙️ Selezione città (multiple) */
+  #formPacchetto select#citta {
+    max-width: 450px;
+  }
+
+  /* ✅ Altri select (trasporto, fascia prezzo, connettività, tipologia gruppo) */
+  #formPacchetto select:not(#citta) {
+    max-width: 220px;
+  }
+
+  /* 📝 Textarea (dettagli gruppo, richieste) */
+  #formPacchetto textarea {
+    max-width: 600px;
+    width: 100%;
+  }
+
+  /* ➕ Bottone aggiungi camera */
+  #aggiungiCamera.modern-btn {
+    font-size: 14px;
+    padding: 10px 18px;
+    max-width: 200px;
+    margin-left: 20px;
   }
 }
 
