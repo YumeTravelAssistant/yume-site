@@ -683,7 +683,7 @@ document.getElementById("formPacchetto").addEventListener("submit", function (e)
       richieste: form.get("richieste")
     };
 
-    fetch("https://yume-sito-form.azurewebsites.net/proxy", {
+    fetch("https://yume-sito-form.azurewebsites.net/api/proxy", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(dati)
