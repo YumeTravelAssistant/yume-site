@@ -524,15 +524,16 @@ btnAggiungiCamera.addEventListener("click", function () {
   cameraCounter++;
 
   const div = document.createElement("div");
-  div.classList.add("camera-box"); // per il JSON
+  div.classList.add("camera-box"); // serve per JSON e controllo
   div.innerHTML = `
     <label>Camera ${cameraCounter}:</label>
     <select class="tipologiaCamera tipo-camera" name="camere[]" required>
-      <option value="1">Singola</option>
-      <option value="2">Doppia</option>
-      <option value="3">Tripla</option>
-      <option value="4">Quadrupla</option>
+      <option value="Singola">Singola</option>
+      <option value="Doppia">Doppia</option>
+      <option value="Tripla">Tripla</option>
+      <option value="Quadrupla">Quadrupla</option>
     </select>
+    <input type="number" class="ospiti-camera" min="1" max="4" value="1" required style="width: 60px; margin-left: 10px;" title="Numero di ospiti in questa camera">
     <button type="button" class="rimuoviCamera">Rimuovi</button>
   `;
   cameraContainer.appendChild(div);
@@ -552,15 +553,16 @@ cameraContainer.addEventListener("click", function (e) {
 
 function aggiornaErroreCamere() {
   const partecipanti = parseInt(document.getElementById("partecipanti").value) || 0;
-  const tipologie = document.querySelectorAll(".tipologiaCamera");
-  let totalePostiLetto = 0;
+  const camere = document.querySelectorAll(".camera-box");
+  let totaleOspiti = 0;
 
-  tipologie.forEach(sel => {
-    totalePostiLetto += parseInt(sel.value);
+  camere.forEach(box => {
+    const ospiti = parseInt(box.querySelector(".ospiti-camera")?.value || "0");
+    totaleOspiti += ospiti;
   });
 
-  if (totalePostiLetto < partecipanti) {
-    erroreCamere.textContent = `Le camere selezionate coprono solo ${totalePostiLetto} posti letto su ${partecipanti}.`;
+  if (totaleOspiti < partecipanti) {
+    erroreCamere.textContent = `Hai assegnato solo ${totaleOspiti} posti letto su ${partecipanti} partecipanti.`;
   } else {
     erroreCamere.textContent = "";
   }
@@ -668,11 +670,12 @@ document.getElementById("formPacchetto").addEventListener("submit", function (e)
       trasporto: form.get("trasporto"),
       connettivita: form.get("connettivita"),
       citta: form.getAll("citta[]"),
-      camere: [...document.querySelectorAll('.camera-box')].map(box => {
-        const tipo = box.querySelector(".tipo-camera")?.value || "";
-        const ospiti = box.querySelector(".ospiti-camera")?.value || "";
-        return `${tipo} x ${ospiti}`;
-      }),
+     camere: [...document.querySelectorAll('.camera-box')].map(box => {
+       const tipo = box.querySelector(".tipo-camera")?.selectedOptions[0]?.text || "";
+       const ospiti = box.querySelector(".ospiti-camera")?.value || "";
+       return `${tipo} x ${ospiti}`;
+     }),
+
       richieste: form.get("richieste")
     };
 
