@@ -266,73 +266,90 @@
   <h2>Richiedi il tuo pacchetto personalizzato</h2>
   <form id="formPacchetto">
 
-  <!-- INFORMAZIONI PERSONALI -->
-  <label for="nome">Nome:</label>
-  <input type="text" id="nome" name="nome" required>
+    <!-- INFORMAZIONI PERSONALI -->
+    <div class="due-colonne">
+      <div>
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required>
+      </div>
+      <div>
+        <label for="cognome">Cognome:</label>
+        <input type="text" id="cognome" name="cognome" required>
+      </div>
+    </div>
 
-  <label for="cognome">Cognome:</label>
-  <input type="text" id="cognome" name="cognome" required>
-
-  <label for="email">Email:</label>
-  <input type="email" id="email" name="email" required>
-
-  <label for="confermaEmail">Conferma Email:</label>
-  <input type="email" id="confermaEmail" name="confermaEmail" required>
-
+    <div class="due-colonne">
+      <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div>
+        <label for="confermaEmail">Conferma Email:</label>
+        <input type="email" id="confermaEmail" name="confermaEmail" required>
+      </div>
+    </div>
 
     <!-- Pacchetto -->
     <label for="pacchetto">Scegli un pacchetto:</label>
     <select id="pacchetto" name="pacchetto" required>
       <option value="" disabled selected>Seleziona...</option>
-      <option value="hajimete" data-min="9" data-max="14">Hajimete</option>
-      <option value="tetsugaku" data-min="10" data-max="15">Tetsugaku no Michi</option>
-      <option value="shizen" data-min="10" data-max="15">Shizen no Fūkei</option>
-      <option value="kodai" data-min="8" data-max="12">Kodai Kansai</option>
-      <option value="kataware" data-min="9" data-max="15">Kataware Doki</option>
-      <option value="hagane" data-min="8" data-max="12">Hagane to Ki</option>
+      <option value="hajimete" data-min="8" data-max="18">Hajimete</option>
+      <option value="tetsugaku" data-min="8" data-max="18">Tetsugaku no Michi</option>
+      <option value="shizen" data-min="8" data-max="18">Shizen no Fūkei</option>
+      <option value="kodai" data-min="8" data-max="18">Kodai Kansai</option>
+      <option value="kataware" data-min="8" data-max="18">Kataware Doki</option>
+      <option value="hagane" data-min="8" data-max="18">Hagane to Ki</option>
     </select>
 
     <!-- Date -->
-    <label for="dataPartenza">Data di partenza</label>
-    <input type="date" id="dataPartenza" name="dataPartenza" required>
+    <div class="due-colonne">
+      <div>
+        <label for="dataPartenza">Data di partenza</label>
+        <input type="date" id="dataPartenza" name="dataPartenza" required>
+      </div>
+      <div>
+        <label for="dataRitorno">Data di ritorno</label>
+        <input type="date" id="dataRitorno" name="dataRitorno" required>
+      </div>
+    </div>
 
-    <label for="dataRitorno">Data di ritorno</label>
-    <input type="date" id="dataRitorno" name="dataRitorno" required>
+    <!-- Gruppo -->
+    <label for="tipologiaGruppo">Tipologia di gruppo:</label>
+    <select id="tipologiaGruppo" name="tipologiaGruppo" required>
+      <option value="" disabled selected>Seleziona una tipologia</option>
+      <option value="famiglia">Famiglia</option>
+      <option value="amici">Amici</option>
+      <option value="coppia">Coppia</option>
+      <option value="colleghi">Colleghi</option>
+      <option value="gruppo-misto">Gruppo misto</option>
+      <option value="altro">Altro</option>
+    </select>
 
+    <label for="dettagliGruppo">Dettagli aggiuntivi sul gruppo:</label>
+    <textarea id="dettagliGruppo" name="dettagliGruppo" rows="2" maxlength="250" placeholder="Es. età media, occasioni speciali..."></textarea>
 
-  <label for="tipologiaGruppo">Tipologia di gruppo:</label>
-  <select id="tipologiaGruppo" name="tipologiaGruppo" required>
-    <option value="" disabled selected>Seleziona una tipologia</option>
-    <option value="famiglia">Famiglia</option>
-    <option value="amici">Amici</option>
-    <option value="coppia">Coppia</option>
-    <option value="colleghi">Colleghi</option>
-    <option value="gruppo-misto">Gruppo misto</option>
-    <option value="altro">Altro</option>
-  </select>
+    <!-- Partecipanti -->
+    <label for="partecipanti">Numero totale partecipanti:</label>
+    <input type="number" id="partecipanti" name="partecipanti" min="1" value="0" required>
 
-  <label for="dettagliGruppo">Dettagli aggiuntivi sul gruppo:</label>
-  <textarea id="dettagliGruppo" name="dettagliGruppo" rows="2" maxlength="250" placeholder="Es. età media, occasioni speciali, esigenze particolari..."></textarea>
+    <div class="due-colonne">
+      <div>
+        <label for="adulti">Adulti:</label>
+        <input type="number" id="adulti" name="adulti" min="0" value="0" required>
+      </div>
+      <div>
+        <label for="bambini">Bambini:</label>
+        <input type="number" id="bambini" name="bambini" min="0" value="0" required>
+      </div>
+    </div>
 
-  <!-- NUMERO COMPONENTI -->
-  <label for="partecipanti">Numero totale partecipanti:</label>
-  <input type="number" id="partecipanti" name="partecipanti" min="1" required>
+    <p id="errorePartecipanti" class="errore-msg" style="font-size: 0.9em; color: red; margin-top: 4px;"></p>
 
-  <label for="adulti">Adulti:</label>
-  <input type="number" id="adulti" name="adulti" min="0" required>
-
-  <label for="bambini">Bambini:</label>
-  <input type="number" id="bambini" name="bambini" min="0" required>
-
-  <p id="errorePartecipanti" class="errore-msg" style="font-size: 0.9em; color: red; margin-top: 4px;"></p>
-
-<label>Camere richieste:</label>
-<div id="camereContainer">
-  <!-- Le camere verranno aggiunte qui dinamicamente -->
-</div>
-
-<button type="button" id="aggiungiCamera" class="modern-btn">+ Aggiungi camera</button>
-<p id="erroreCamere" class="errore-msg" style="font-size: 0.9em; color: red; margin-top: 4px;"></p>
+    <!-- Camere -->
+    <label>Camere richieste:</label>
+    <div id="camereContainer"></div>
+    <button type="button" id="aggiungiCamera" class="modern-btn">+ Aggiungi camera</button>
+    <p id="erroreCamere" class="errore-msg" style="font-size: 0.9em; color: red; margin-top: 4px;"></p>
 
     <!-- Fascia di spesa -->
     <label for="fasciaPrezzo">Fascia di spesa desiderata:</label>
@@ -365,16 +382,15 @@
     <label for="citta">Seleziona le città</label>
     <select id="citta" name="citta[]" multiple required></select>
 
-    <!-- Messaggi dinamici -->
     <div class="citta-feedback">
       <div id="maxCittaMsg" class="max-msg"></div>
       <div id="counterCitta" class="citta-counter-msg"></div>
       <div id="erroreCitta" class="errore-msg"></div>
     </div>
 
-    
-   <label for="richieste">Richieste Aggiuntive (facoltativo):</label>
-   <textarea id="richieste" name="richieste" rows="3" maxlength="250" placeholder="Scrivi qui eventuali esigenze, richieste particolari, ecc... (max 250 caratteri)"></textarea>
+    <!-- Richieste -->
+    <label for="richieste">Richieste Aggiuntive (facoltativo):</label>
+    <textarea id="richieste" name="richieste" rows="3" maxlength="250" placeholder="Scrivi qui eventuali esigenze, richieste o preferenze..."></textarea>
 
     <button type="submit" class="modern-btn">Invia richiesta</button>
     <div id="formFeedback" class="form-feedback-msg"></div>
