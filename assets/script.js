@@ -822,7 +822,10 @@ function toggleYukiChat() {
   chatbox.classList.toggle("hidden");
 
   if (wasHidden && !yukiWelcomeShown) {
-    appendMessage("Yuki", "Konnichiwa! Sono <strong>YUKI</strong>, la tua assistente virtuale. ✨<br>Come posso aiutarti?");
+    ricaricaConversazioneYuki(); // 👈 AGGIUNTA
+    if (!localStorage.getItem("yukiChatHistory")) {
+      appendMessage("Yuki", "Konnichiwa! Sono <strong>YUKI</strong>, la tua assistente virtuale. ✨<br>Come posso aiutarti?");
+    }
     yukiWelcomeShown = true;
   }
 }
@@ -856,6 +859,33 @@ function appendMessage(sender, text) {
   msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
   msg.style.marginBottom = "10px";
   container.appendChild(msg);
+  container.scrollTop = container.scrollHeight;
+
+  // 🔄 Salva su localStorage
+  const history = JSON.parse(localStorage.getItem("yukiChatHistory")) || [];
+  history.push({ sender, text });
+  localStorage.setItem("yukiChatHistory", JSON.stringify(history));
+}
+
+function ricaricaConversazioneYuki() {
+  const history = JSON.parse(localStorage.getItem("yukiChatHistory")) || [];
+  const container = document.getElementById("chatbox-messages");
+
+  if (history.length === 0) return;
+
+  const conferma = confirm("Konbanwa! Vuoi ricaricare la vecchia conversazione?");
+  if (!conferma) {
+    localStorage.removeItem("yukiChatHistory"); // se rifiuta, svuota la memoria
+    return;
+  }
+
+  history.forEach(msg => {
+    const div = document.createElement("div");
+    div.innerHTML = `<strong>${msg.sender}:</strong> ${msg.text}`;
+    div.style.marginBottom = "10px";
+    container.appendChild(div);
+  });
+
   container.scrollTop = container.scrollHeight;
 }
 
