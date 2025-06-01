@@ -873,12 +873,6 @@ function ricaricaConversazioneYuki() {
 
   if (history.length === 0) return;
 
-  const conferma = confirm("Konbanwa! Vuoi ricaricare la vecchia conversazione?");
-  if (!conferma) {
-    localStorage.removeItem("yukiChatHistory"); // se rifiuta, svuota la memoria
-    return;
-  }
-
   history.forEach(msg => {
     const div = document.createElement("div");
     div.innerHTML = `<strong>${msg.sender}:</strong> ${msg.text}`;
