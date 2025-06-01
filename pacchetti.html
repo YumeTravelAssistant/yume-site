@@ -169,10 +169,10 @@
           <p><em>Un primo sguardo sul Giappone, tra meraviglia e scoperta.</em></p>
           <ul class="icon-list">
             <li><i class="fa fa-calendar"></i> 9–14 notti</li>
-            <li><i class="fa fa-map-marker"></i> Tokyo, Kyoto, Osaka</li>
-            <li><i class="fa fa-user"></i> Per chi visita per la prima volta</li>
+            <li><i class="fa fa-map-marker"></i> Tokyo, Kyoto, Osaka, Nara, Hiroshima</li>
+            <li><i class="fa fa-user"></i> Perfetto per la prima volta</li>
           </ul>
-          <span class="price-tag">A partire da 2.090€</span>
+          <span class="price-tag">A partire da 2.490€</span>
           <a href="#hajimete" class="modern-btn">Scopri di più <i class="fa fa-arrow-right"></i></a>
         </div>
       </div>
@@ -184,11 +184,11 @@
           <h3>Tetsugaku no Michi – Il sentiero del Filosofo</h3>
           <p><em>Alla scoperta del Giappone spirituale e cerimoniale.</em></p>
           <ul class="icon-list">
-            <li><i class="fa fa-calendar"></i> 10–15 notti</li>
-            <li><i class="fa fa-map-marker"></i> Kyoto, Nara, Kanazawa</li>
+            <li><i class="fa fa-calendar"></i> 10–14 notti</li>
+            <li><i class="fa fa-map-marker"></i> Kyoto, Nara, Kanazawa, Gifu</li>
             <li><i class="fa fa-leaf"></i> Per chi ama templi, rituali e tradizione</li>
           </ul>
-          <span class="price-tag">A partire da 2.490€</span>
+          <span class="price-tag">A partire da 2.590€</span>
           <a href="#tetsugaku" class="modern-btn">Scopri di più <i class="fa fa-arrow-right"></i></a>
         </div>
       </div>
@@ -201,7 +201,7 @@
           <p><em>Armonia nei laghi, nei parchi e nei santuari naturali.</em></p>
           <ul class="icon-list">
             <li><i class="fa fa-calendar"></i> 10–15 notti</li>
-            <li><i class="fa fa-map-marker"></i> Fuji, Nara, Okayama, Miyajima</li>
+            <li><i class="fa fa-map-marker"></i> Kawaguchiko, Hakone, Nara, Okayama, Miyajima</li>
             <li><i class="fa fa-tree"></i> Per chi ama la natura</li>
           </ul>
           <span class="price-tag">A partire da 2.490€</span>
@@ -217,10 +217,10 @@
           <p><em>Un Giappone profondo, senza stress da spostamenti.</em></p>
           <ul class="icon-list">
             <li><i class="fa fa-calendar"></i> 8–12 notti</li>
-            <li><i class="fa fa-map-marker"></i> Kyoto, Osaka, Nara, Himeji</li>
-            <li><i class="fa fa-balance-scale"></i> Perfetto per ritmo lento</li>
+            <li><i class="fa fa-map-marker"></i> Kyoto, Osaka, Nara, Himeji, Hiroshima</li>
+            <li><i class="fa fa-balance-scale"></i> Ideale per amanti della cultura classica</li>
           </ul>
-          <span class="price-tag">A partire da 1.890€</span>
+          <span class="price-tag">A partire da 2.390€</span>
           <a href="#kodai" class="modern-btn">Scopri di più <i class="fa fa-arrow-right"></i></a>
         </div>
       </div>
@@ -233,10 +233,10 @@
           <p><em>Viaggio romantico per coppie e momenti speciali.</em></p>
           <ul class="icon-list">
             <li><i class="fa fa-calendar"></i> 9–15 notti</li>
-            <li><i class="fa fa-map-marker"></i> Kyoto, Fuji, Hakone</li>
+            <li><i class="fa fa-map-marker"></i> Kyoto, Enoshima, Hakone, Kanazawa, Kamakura</li>
             <li><i class="fa fa-heart"></i> Per coppie e anniversari</li>
           </ul>
-          <span class="price-tag">A partire da 2.290€</span>
+          <span class="price-tag">A partire da 2.590€</span>
           <a href="#kataware" class="modern-btn">Scopri di più <i class="fa fa-arrow-right"></i></a>
         </div>
       </div>
@@ -249,10 +249,10 @@
           <p><em>Metropoli futuristiche e sacralità naturalistica.</em></p>
           <ul class="icon-list">
             <li><i class="fa fa-calendar"></i> 8–12 notti</li>
-            <li><i class="fa fa-map-marker"></i> Tokyo, Hakone, Nikko, Fuji</li>
+            <li><i class="fa fa-map-marker"></i> Tokyo, Kamakura, Nikko, Hakone, Kawaguchiko</li>
             <li><i class="fa fa-building"></i> Per chi cerca contrasto</li>
           </ul>
-          <span class="price-tag">A partire da 2.290€</span>
+          <span class="price-tag">A partire da 2.390€</span>
           <a href="#hagane" class="modern-btn">Scopri di più <i class="fa fa-arrow-right"></i></a>
         </div>
       </div>
@@ -408,6 +408,52 @@
   <p class="footer-copy">© 2025 Yume Travel Tech – Tutti i diritti riservati.</p>
 </footer>
 
+
+<!-- Avatar Chatbot Yuki -->
+<div id="yuki-chat-avatar" onclick="toggleYukiChat()" title="Hai bisogno di aiuto?">
+  <img src="assets/yuki-avatar.png" alt="Yuki" />
+</div>
+
+<!-- Finestra Chat -->
+<div id="yuki-chatbox" class="hidden">
+  <div class="chatbox-header">
+    <span>Yuki, assistente AI</span>
+    <button onclick="toggleYukiChat()">✕</button>
+  </div>
+  <div class="chatbox-messages" id="chatbox-messages"></div>
+  <div class="chatbox-input">
+    <input type="text" id="userMessage" placeholder="Scrivi qui..." />
+    <button onclick="sendMessage()">Invia</button>
+  </div>
+</div>
+
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    const el = document.querySelector('#yuki-chat-avatar');
+    if (!el) return;
+
+    el.style.position = 'fixed';
+    el.style.bottom = '25px';
+    el.style.right = '25px';
+    el.style.width = '90px';
+    el.style.height = '90px';
+    el.style.zIndex = '9999';
+    el.style.borderRadius = '50%';
+    el.style.overflow = 'hidden';
+    el.style.boxShadow = '0 4px 10px rgba(0,0,0,0.2)';
+    el.style.backgroundColor = '#fff';
+
+    const img = el.querySelector('img');
+    if (img) {
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.objectFit = 'cover';
+      img.style.borderRadius = '50%';
+    }
+  });
+</script>
+
+
 <!-- jQuery PRIMA -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -416,6 +462,7 @@
 
 <!-- tuo script.js ULTIMO -->
 <script src="assets/script.js"></script>
+
 
 </body>
 </html>
