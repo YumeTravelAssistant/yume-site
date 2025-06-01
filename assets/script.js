@@ -834,7 +834,7 @@ function sendMessage() {
   appendMessage("Tu", message);
   input.value = "";
 
-  fetch("https://yellow-bay-077dd2b03.6.azurestaticapps.net/api/invio-chat", {
+  fetch("https://yellow-bay-077dd2b03.6.azurestaticapps.net/invio-chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ domanda: message })
