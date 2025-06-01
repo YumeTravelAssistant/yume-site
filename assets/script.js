@@ -770,6 +770,21 @@ function validaForm() {
     return false;
   }
 
+  // ✅ Verifica che la durata sia nei limiti del pacchetto
+  const pacchettoSelezionato = document.querySelector('#pacchetto option:checked');
+  const minNotti = parseInt(pacchettoSelezionato.dataset.min);
+  const maxNotti = parseInt(pacchettoSelezionato.dataset.max);
+
+  const startDate = new Date(dataPartenza);
+  const endDate = new Date(dataRitorno);
+  const diffTime = endDate - startDate;
+  const diffDays = diffTime / (1000 * 60 * 60 * 24);
+
+  if (isNaN(diffDays) || diffDays < minNotti || diffDays > maxNotti) {
+    alert(`La durata del viaggio deve essere tra ${minNotti} e ${maxNotti} notti per il pacchetto selezionato.`);
+    return false;
+  }
+
   if (!tipologiaGruppo || !fasciaPrezzo || !trasporto || !connettivita) {
     alert("Compila tutte le selezioni obbligatorie.");
     return false;
