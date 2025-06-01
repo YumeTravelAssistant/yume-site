@@ -821,7 +821,7 @@ function toggleYukiChat() {
   chatbox.classList.toggle("hidden");
 
   if (wasHidden && !yukiWelcomeShown) {
-    appendMessage("Yuki", "Ciao, sono <strong>YUKI</strong>, la tua assistente di viaggio AI. ✨<br>Come posso aiutarti?");
+    appendMessage("Yuki", "Konnichiwa! Sono <strong>YUKI</strong>, la tua assistente virtuale. ✨<br>Come posso aiutarti?");
     yukiWelcomeShown = true;
   }
 }
