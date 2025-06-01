@@ -1,3 +1,5 @@
+let yukiWelcomeShown = false;
+
 function toggleSidebar() {
   const sidebar = document.querySelector('.sidebar');
   const hamburger = document.querySelector('.hamburger');
@@ -813,7 +815,6 @@ function validaForm() {
   return true;
 }
 
-let yukiWelcomeShown = false;
 
 function toggleYukiChat() {
   const chatbox = document.getElementById("yuki-chatbox");
