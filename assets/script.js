@@ -354,8 +354,8 @@ const cittaPerPacchetto = {
   ],
 
   shizen: [
-    "Kawaguchiko", "Hakone", "Nikko", "Kamikochi", "Takayama",
-    "Kanazawa", "Shirakawa-go", "Yakushima", "Kiso-dani", "Gifu"
+    "Kawaguchiko", "Hakone", "Nikko", "Miyajima", "Takayama",
+    "Kanazawa", "Shirakawa-go", "Okayama", "Kiso-dani", "Gifu"
   ],
 
   kodai: [
@@ -811,5 +811,50 @@ function validaForm() {
   }
 
   return true;
+}
+
+let yukiWelcomeShown = false;
+
+function toggleYukiChat() {
+  const chatbox = document.getElementById("yuki-chatbox");
+  const wasHidden = chatbox.classList.contains("hidden");
+  chatbox.classList.toggle("hidden");
+
+  if (wasHidden && !yukiWelcomeShown) {
+    appendMessage("Yuki", "Ciao, sono <strong>YUKI</strong>, la tua assistente di viaggio AI. ✨<br>Come posso aiutarti?");
+    yukiWelcomeShown = true;
+  }
+}
+
+function sendMessage() {
+  const input = document.getElementById("userMessage");
+  const message = input.value.trim();
+  if (!message) return;
+
+  appendMessage("Tu", message);
+  input.value = "";
+
+  fetch("https://yellow-bay-077dd2b03.6.azurestaticapps.net/api/invio-chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ domanda: message })
+  })
+    .then(res => res.json())
+    .then(data => {
+      appendMessage("Yuki", data.risposta || "Risposta non disponibile.");
+    })
+    .catch(err => {
+      console.error("Errore chatbot:", err);
+      appendMessage("Yuki", "Errore di rete. Riprova più tardi.");
+    });
+}
+
+function appendMessage(sender, text) {
+  const container = document.getElementById("chatbox-messages");
+  const msg = document.createElement("div");
+  msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
+  msg.style.marginBottom = "10px";
+  container.appendChild(msg);
+  container.scrollTop = container.scrollHeight;
 }
 
