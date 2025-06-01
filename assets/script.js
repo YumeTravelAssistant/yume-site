@@ -834,7 +834,7 @@ function sendMessage() {
   appendMessage("Tu", message);
   input.value = "";
 
-  fetch("https://yellow-bay-077dd2b03.6.azurestaticapps.net/invio-chat", {
+  fetch("https://yuki-chat.azurewebsites.net/api/invio-chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ domanda: message })
