@@ -344,6 +344,68 @@ if (bottoneInvia) {
   });
 }
 
+
+
+// 🎯 Info Utili – Toggle Apri/Chiudi
+document.addEventListener("DOMContentLoaded", () => {
+  const boxes = document.querySelectorAll(".info-box");
+
+  boxes.forEach((box) => {
+    const toggle = box.querySelector(".info-toggle");
+    const content = box.querySelector(".info-content");
+
+    // Stato iniziale: tutto chiuso
+    content.style.maxHeight = null;
+
+    toggle.addEventListener("click", () => {
+      const isOpen = box.classList.contains("aperto");
+
+      // Chiude tutti
+      document.querySelectorAll(".info-box").forEach((b) => {
+        b.classList.remove("aperto");
+        b.querySelector(".info-content").style.maxHeight = null;
+      });
+
+      // Apre solo se era chiuso
+      if (!isOpen) {
+        box.classList.add("aperto");
+        content.style.maxHeight = content.scrollHeight + "px";
+      }
+    });
+  });
+});
+
+
+// ✳️ Clic su voce dell’indice: scrolla e apre box corrispondente
+document.querySelectorAll(".indice-lista a[href^='#']").forEach(link => {
+  link.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    const targetId = this.getAttribute("href").substring(1);
+    const targetBox = document.getElementById(targetId);
+
+    if (!targetBox) return;
+
+    // Scrolla dolcemente
+    targetBox.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    // Chiude tutti i box
+    document.querySelectorAll(".info-box").forEach((b) => {
+      b.classList.remove("aperto");
+      b.querySelector(".info-content").style.maxHeight = null;
+    });
+
+    // Apre il box selezionato
+    const content = targetBox.querySelector(".info-content");
+    targetBox.classList.add("aperto");
+    content.style.maxHeight = content.scrollHeight + "px";
+  });
+});
+
+
+
+
+
 const cittaPerPacchetto = {
   hajimete: [
     "Tokyo", "Kyoto", "Osaka", "Hakone", "Nara",
