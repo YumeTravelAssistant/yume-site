@@ -1,6 +1,42 @@
 * {
   box-sizing: border-box;
+/* -------------------------------
+   INFO UTILI - INDICE E BOX
+-------------------------------- */
+
+.indice-info-utili {
+  background-color: #F4F0E2;
+  padding: 40px 20px;
+  font-family: 'Quicksand', sans-serif;
+  text-align: center;
 }
+
+.indice-info-utili h2 {
+  color: #8B2C2B;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+.indice-lista {
+  list-style: none;
+  padding-left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px 25px;
+  font-size: 1rem;
+}
+
+.indice-lista li a {
+  color: #C9A86A;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.indice-lista li a:hover {
+  color: #8B2C2B;
+  text-decoration: underline;
+}}
 html, body {
   width: 100%;
   margin: 0;
@@ -827,7 +863,43 @@ ul {
 }
 
 /* Mobile verticale (max 768px) */
-@media screen and (max-width: 768px) {
+/* -------------------------------
+   INFO UTILI - INDICE E BOX
+-------------------------------- */
+
+.indice-info-utili {
+  background-color: #F4F0E2;
+  padding: 40px 20px;
+  font-family: 'Quicksand', sans-serif;
+  text-align: center;
+}
+
+.indice-info-utili h2 {
+  color: #8B2C2B;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+.indice-lista {
+  list-style: none;
+  padding-left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px 25px;
+  font-size: 1rem;
+}
+
+.indice-lista li a {
+  color: #C9A86A;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.indice-lista li a:hover {
+  color: #8B2C2B;
+  text-decoration: underline;
+}@media screen and (max-width: 768px) {
   .hero-logo-bottom-left {
     bottom: 3%;
     right: 3%;
@@ -2125,7 +2197,7 @@ h1.hero-title {
 
 p.hero-subtitle {
   font-family: 'Raleway', sans-serif;
-  font-size: clamp(1.2rem, 2vw, 1.6rem);
+  font-size: clamp(1.6rem, 2vw, 1.6rem);
   font-weight: 400;
   color: #C9A86A;
   text-align: center;
@@ -2930,5 +3002,277 @@ p.hero-subtitle {
   border: none;
   padding: 12px;
   cursor: pointer;
+}
+
+/* -------------------------------
+   INFO UTILI - INDICE E BOX
+-------------------------------- */
+body .indice-info-utili {
+  background-color: #FFF8F4 !important;
+  padding: 40px 20px;
+  font-family: 'Quicksand', sans-serif;
+  text-align: center;
+  max-width: 1000px;
+  margin: 0 auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.indice-info-utili h2 {
+  color: #8B2C2B;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  font-family: 'Playfair Display', serif;
+}
+
+.indice-lista {
+  list-style: none;
+  padding-left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 20px;
+  font-size: 1rem;
+}
+
+.indice-lista li a {
+  color: #C9A86A;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.indice-lista li a:hover {
+  color: #8B2C2B;
+  text-decoration: underline;
+}
+
+
+
+/* -------------------------------
+   INFO UTILI - TOGGLE BUTTON STYLE
+-------------------------------- */
+.info-toggle {
+  all: unset; /* Reset totale stile browser */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background-color: #8B2C2B;
+  color: #C9A86A;
+  font-size: 1.05rem;
+  font-weight: 600;
+  padding: 22px 20px;
+  cursor: pointer;
+  font-family: 'Raleway', sans-serif;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  box-sizing: border-box;
+  transition: background-color 0.3s ease;
+}
+
+
+.info-toggle:hover {
+  background-color: #a73a39;
+}
+
+.toggle-icon {
+  transition: transform 0.3s ease;
+}
+
+.toggle-icon.rotated {
+  transform: rotate(180deg);
+}
+
+.info-box {
+  background-color: #fff;
+  border: 1px solid #C9A86A;
+  border-radius: 10px;
+  margin: 20px auto;
+  font-family: 'Quicksand', sans-serif;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  max-width: 800px; /* ✅ Box più piccolo e centrato */
+  width: 90%;        /* ✅ Responsive su mobile */
+}
+
+.info-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+
+.info-box.aperto .info-content {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-left: 20px;
+}
+
+/* -----------------------------
+   Stile per sezione "Prima di partire"
+------------------------------ */
+
+.info-section {
+  padding: 40px 20px;
+}
+
+.info-section h2 {
+  color: #8B2C2B;
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.info-boxes-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+
+/* -------------------------------
+   INFO UTILI – RESPONSIVE TABLET / MOBILE
+-------------------------------- */
+
+@media screen and (max-width: 768px) {
+  .info-toggle {
+    font-size: 0.85rem;
+    padding: 14px 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .info-content {
+    font-size: 0.8rem;
+    padding: 0 16px;
+  }
+
+  .info-box.aperto .info-content {
+    padding: 14px 16px;
+    margin-left: 20px;
+  }
+
+  .info-section h2 {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 1.4rem;
+  }
+
+  .indice-info-utili h2 {
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 1.2rem;
+  }
+
+  .hero-title {
+    font-size: clamp(1.8rem, 4.2vw, 4.5rem);
+    text-align: center;
+    margin-bottom: 0.5em;
+  }
+
+  .hero-subtitle {
+    font-size: clamp(1.2rem, 2vw, 1.6rem);
+    text-align: center;
+    margin-bottom: 1em;
+  }
+
+  .indice-lista {
+    padding-left: 0;
+    list-style: none;
+    text-align: left;
+    margin: 0 auto;
+    max-width: 90%;
+  }
+
+
+  .info-box.aperto .info-content {
+    padding: 12px 14px;
+    margin-left: 16px;
+  }
+
+  .indice-lista li {
+    margin-bottom: 0.8rem;
+    font-size: 0.95rem;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .indice-lista li::before {
+    content: "•";
+    color: #8B2C2B;
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+  }
+
+  .info-box {
+    margin: 16px 0;
+  }
+.info-boxes-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 15px;
+  margin-left: 20px;
+}
+
+/* 🔄 Transizione apertura box */
+.info-content {
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+
+/* 🔄 Transizione icona */
+.toggle-icon {
+  transition: transform 0.3s ease;
+}
+
+.toggle-icon.rotated {
+  transform: rotate(180deg);
+}
+
+
+/* -------------------------------
+   INFO UTILI – RESPONSIVE MOBILE
+-------------------------------- */
+
+@media screen and (max-width: 400px) {
+  .info-toggle {
+    font-size: 0.75rem;
+    padding: 12px 16px;
+  }
+
+  .info-content {
+    font-size: 0.7rem;
+    padding: 0px 16px;
+  }
+
+  .info-section h2 {
+    text-align: center;
+    font-size: 1.4rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .indice-info-utili h2 {
+    font-size: 1.4rem;
+    margin-bottom: 1.2rem;
+    text-align: center;
+  }
+
+  .hero-title {
+    font-size: clamp(1.4rem, 3.2vw, 4.5rem);
+  }
+
+  .hero-subtitle {
+    font-size: clamp(1.2rem, 2.0vw, 1.6rem);
+  }
+  
+  .info-boxes-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 15px;
+  margin-left: 20px;
+ 
 }
 
