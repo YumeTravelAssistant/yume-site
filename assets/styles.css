@@ -1,41 +1,5 @@
 * {
   box-sizing: border-box;
-/* -------------------------------
-   INFO UTILI - INDICE E BOX
--------------------------------- */
-
-.indice-info-utili {
-  background-color: #F4F0E2;
-  padding: 40px 20px;
-  font-family: 'Quicksand', sans-serif;
-  text-align: center;
-}
-
-.indice-info-utili h2 {
-  color: #8B2C2B;
-  font-size: 1.8rem;
-  margin-bottom: 20px;
-}
-
-.indice-lista {
-  list-style: none;
-  padding-left: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px 25px;
-  font-size: 1rem;
-}
-
-.indice-lista li a {
-  color: #C9A86A;
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.3s ease;
-}
-
-.indice-lista li a:hover {
-  color: #8B2C2B;
-  text-decoration: underline;
 }}
 html, body {
   width: 100%;
@@ -863,42 +827,6 @@ ul {
 }
 
 /* Mobile verticale (max 768px) */
-/* -------------------------------
-   INFO UTILI - INDICE E BOX
--------------------------------- */
-
-.indice-info-utili {
-  background-color: #F4F0E2;
-  padding: 40px 20px;
-  font-family: 'Quicksand', sans-serif;
-  text-align: center;
-}
-
-.indice-info-utili h2 {
-  color: #8B2C2B;
-  font-size: 1.8rem;
-  margin-bottom: 20px;
-}
-
-.indice-lista {
-  list-style: none;
-  padding-left: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px 25px;
-  font-size: 1rem;
-}
-
-.indice-lista li a {
-  color: #C9A86A;
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.3s ease;
-}
-
-.indice-lista li a:hover {
-  color: #8B2C2B;
-  text-decoration: underline;
 }@media screen and (max-width: 768px) {
   .hero-logo-bottom-left {
     bottom: 3%;
