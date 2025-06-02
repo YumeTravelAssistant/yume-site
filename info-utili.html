@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Informazioni Utili - Yume Travel</title>
+  <link rel="icon" type="image/png" href="favicon.ico" />
+
+  <!-- Font Yume -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Raleway:wght@300;500;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Stili -->
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-left">
+    <img src="assets/logo-yume.jpg" alt="Logo YUME" class="logo-navbar">
+  </div>
+  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+</nav>
+
+<div id="sidebar" class="sidebar hidden">
+  <div class="sidebar-logo">
+    <img src="assets/logo_bar.png" alt="Logo Yume" class="logo-sidebar">
+  </div>
+  <a href="index.html">Home</a>
+  <a href="prodotti.html">Pacchetti flessibili</a>
+  <a href="faq.html">FAQ</a>
+  <a href="info-utili.html">Informazioni Utili</a>
+  <a href="contatti.html">Contatti</a>
+  <a href="yuta.html">YUTA</a>
+  <a href="profilo.html">Registrazione</a>
+  <a href="log-in.html">Area Personale</a>
+</div>
+
+<!-- COPERTINA -->
+<header class="hero-banner">
+  <picture>
+    <source srcset="assets/info-utili-mob.jpg" media="(max-width: 768px)">
+    <img src="assets/info-utili-desk.jpg" alt="Informazioni Utili Yume Travel" class="hero-banner-img">
+  </picture>
+  <div class="scroll-indicator" onclick="scrollToMain()">
+    <span class="arrow-down"></span>
+  </div>
+</header>
+
+<!-- HERO SECTION -->
+<section class="hero-section">
+  <div class="hero-intro">
+    <h1 class="hero-title">Informazioni utili per viaggiare in Giappone</h1>
+    <p class="hero-subtitle">Tutto ciò che devi sapere prima di partire</p>
+  </div>
+</section>
+
+<section class="indice-info-utili">
+  <h2>Indice dei contenuti</h2>
+  <ul class="indice-lista">
+    <li><a href="#documenti-visti">1. Documenti e visti</a></li>
+    <li><a href="#sanita-vaccinazioni">2. Sanità e vaccinazioni</a></li>
+    <li><a href="#assicurazione-viaggio">3. Assicurazione di viaggio</a></li>
+    <li><a href="#sicurezza">4. Sicurezza</a></li>
+    <li><a href="#clima-stagioni">5. Clima</a></li>
+    <li><a href="#costo-vita">6. Budget stimato</a></li>
+    <li><a href="#prese-corrente-voltaggio">7. Fuso orario e elettricità</a></li>
+    <li><a href="#soldi-pagamenti">8. Valuta, pagamenti e cambi</a></li>
+    <li><a href="#telefonia">9. Telefonia</a></li>
+    <li><a href="#reti mobili">10. Reti mobili</a></li>
+    <li><a href="#patente-guida">11. Patente di guida</a></li>
+    <li><a href="#trasporti">12. Trasporti</a></li>
+    <li><a href="#geografia">13. Geografia</a></li>
+    <li><a href="#lingua">14. Lingua</a></li>
+    <li><a href="#religione">15. Religione</a></li>
+    <li><a href="#orari-attivita">16. Orari uffici e attività</a></li>
+    <li><a href="#festivita-giappone">17. Festività in Giappone</a></li>
+    <li><a href="#numeri-utili-ambasciata">18. Numeri utili e precauzioni</a></li>
+  </ul>
+</section>
+
+
+<!-- CONTENUTO -->
+<div class="main-wrapper">
+  <section class="info-section">
+    <h2 class="slide-in">Prima di partire</h2>
+
+    <div class="info-boxes-container">
+
+<div class="info-box" id="documenti-visti">
+  <button class="info-toggle">
+    <span class="info-number">1.</span> Documenti e visti
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Per entrare in Giappone, i cittadini italiani devono avere un <strong>passaporto in corso di validità</strong> e almeno una pagina libera. 
+      Non è necessario un visto per soggiorni a fini turistici fino a 90 giorni. Tuttavia, è sempre consigliabile verificare i <strong>requisiti di ingresso</strong> con l'ambasciata o il consolato giapponese in Italia prima della partenza.
+    </p>
+  </div>
+</div>
+
+<div class="info-box" id="sanita-vaccinazioni">
+  <button class="info-toggle">
+    <span class="info-number">2.</span> Sanità e vaccinazioni
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      La sanità in Giappone è di alta qualità, ma può essere <strong>costosa</strong> in mancanza di un’assicurazione sanitaria. 
+      Non sono necessarie vaccinazioni specifiche per il Giappone, ma è sempre consigliabile essere in regola con le <strong>vaccinazioni di base</strong>. 
+      Inoltre, è opportuno portare con sé dei <strong>farmaci generici e specifici</strong> per eventuali patologie preesistenti, in quantità sufficiente alla durata di viaggio. (Verificare sul sito dell'ambasciata giapponese farmaci vietati e/o limitati, e se necessario il Yunyu kakunin-sho.
+    </p>
+  </div>
+</div>
+
+<div class="info-box" id="assicurazione-viaggio">
+  <button class="info-toggle">
+    <span class="info-number">3.</span> Assicurazione di viaggio
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      E' altamente consigliabile avere un'<strong>assicurazione di viaggio</strong> che copra le <strong>spese mediche</strong> e di <strong>ospedalizzazione</strong>, nonché eventuali annullamenti o interruzioni del viaggio. 
+      Il Giappone ha un eccellente sistema sanitario, ma <strong>non è gratuito per i turisti</strong>. 
+      Basti pensare che una semplice visita in Pronto Soccorso può costare centinaia di euro, mentre un ricovero le migliaia di euro. 
+      Si consiglia inoltre di valutare anche <strong>assicurazione bagagli</strong>.
+    </p>
+    <p>
+      Si ricorda che nei nostri pacchetti è sempre compresa l'<strong>Assicurazione medica, bagagli e di cancellazione</strong> per la durata del viaggio.
+    </p>
+  </div>
+</div>
+
+<div class="info-box" id="sicurezza">
+  <button class="info-toggle">
+    <span class="info-number">4.</span> Sicurezza
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Il Giappone è un paese molto sicuro, con una <strong>bassa incidenza di crimini</strong>. 
+      Tuttavia, è sempre opportuno prendere le normali <strong>precauzioni per la sicurezza personale</strong>, 
+      come ad esempio essere attenti ai propri effetti personali e evitare di camminare da soli in zone isolate di notte. 
+      Si rimanda alla sezione “Numeri utili” per i contatti di emergenza.
+    </p>
+  </div>
+</div>
+
+<div class="info-box" id="clima-stagioni">
+  <button class="info-toggle">
+    <span class="info-number">5.</span> Clima
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Il Giappone ha un <strong>clima temperato</strong>, con <strong>quattro stagioni distinte</strong>. 
+      La primavera e l'autunno sono le stagioni più piacevoli, con <strong>temperature miti</strong> e giornate soleggiate. 
+      L'estate può essere <strong>calda e umida</strong>, mentre l'inverno può essere <strong>freddo e nevoso</strong>.
+    </p>
+  </div>
+</div>
+
+<div class="info-box" id="costo-vita">
+  <button class="info-toggle">
+    <span class="info-number">6.</span> Budget stimato
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Il Giappone non è il Paese più caro al mondo come alcune leggende fanno credere, specialmente se paragonato alle principali città europee. 
+      Di seguito sono riportate alcune <strong>indicazioni generali sulle spese</strong> che potresti sostenere durante un viaggio in Giappone.
+    </p>
+    <p>
+      In generale, le <strong>spese medie giornaliere a persona</strong> si aggirano tra i <strong>40 € e i 60 €</strong>, considerando trasporti, pasti ed entrate ai siti.
+    </p>
+    <p>
+      In particolare si sottolinea che tendedialmente:
+    </p>
+    <ul>
+      <li><strong>Pasti e bevande</strong>: un pasto in Giappone costa mediamente tra <strong>5 € e 25 €</strong>.</li>
+      <li><strong>Siti</strong>: un'entrata al tempio (buddhista) costa in media <strong>500-1000 yen</strong> (circa <strong>3-6 €</strong>). I santuari (shintoisti) sono generalmente <strong>gratuiti</strong>.</li>
+      <li><strong>Mezzi di trasporto</strong>: i prezzi sono leggermente più alti che in Italia, ma esistono diverse <strong>tipologie di Pass</strong> che permettono di risparmiare.</li>
+      <li><strong>Hotel</strong>: una camera doppia in hotel a 3 stelle durante la media stagione costa circa <strong>100-150 €</strong> al giorno.</li>
+    </ul>
+    <p>
+      Si ricorda che i nostri pacchetti comprendono sempre i <strong>pernottamenti in strutture verificate</strong> e in <strong>zone ottimali</strong> per gli spostamenti.
+    </p>
+  </div>
+</div>
+
+<div class="info-box" id="prese-corrente-voltaggio">
+  <button class="info-toggle">
+    <span class="info-number">7.</span> Fuso orario e elettricità
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Il Giappone si trova a <strong>+8 ore rispetto all'Italia</strong> durante i periodi vigenti l’ora solare (autunno/inverno) e a <strong>+7 ore durante la nostra ora legale</strong> (primavera/estate).
+    </p>
+    <p>
+      La corrente elettrica in Giappone è erogata a <strong>100 volt</strong>, con una frequenza di <strong>50 Hz a Tokyo</strong> e <strong>60 Hz a Osaka</strong>. È necessario un adattatore per la presa elettrica.
+    </p>
+  </div>
+</div>
+
+<div class="info-box" id="soldi-pagamenti">
+  <button class="info-toggle">
+    <span class="info-number">8.</span> Valuta, Pagamenti e Cambi
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      La valuta giapponese è lo <strong>yen (JPY)</strong>. I pagamenti con carte di credito sono diffusi, ma è sempre opportuno avere con sé del contante. Gli sportelli automatici (ATM) sono disponibili in molte zone del paese.
+    </p>
+    <p>
+      Infatti in Giappone, <strong>il contante è ancora la forma di pagamento più utilizzata</strong>. Tuttavia, le carte di credito internazionali (Visa e MasterCard) sono accettate in molti negozi e ristoranti.
+    </p>
+    <h4>Utilizzo delle Carte di Credito</h4>
+    <p>
+      Le carte di credito/debito/prepagate internazionali sono lo strumento più pratico per prelevare contante in valuta locale. Tuttavia, le <strong>carte prepagate possono dare problemi</strong>, in quanto non vengono lette da tutti i dispositivi.
+    </p>
+    <h4>Prelievi di Contante</h4>
+    <p>
+      I prelievi sono possibili presso gli <strong>ATM internazionali delle poste giapponesi (JP Bank)</strong>, nei <strong>convenience store</strong> (7 Eleven, Lawson, FamilyMart…) e in alcune banche. È importante verificare con la propria banca se la carta è attivata per l'uso in Giappone e se ci sono eventuali blocchi o limitazioni.
+    </p>
+    <h4>Cambio di Valuta</h4>
+    <p>
+      Si consiglia di cambiare la valuta agli <strong>sportelli bancari in aeroporto</strong>, nelle <strong>principali banche</strong>, o nei numerosi uffici "<strong>Authorized Foreign Exchange Bank</strong>", dove i cambi sono solitamente onesti.
+    </p>
+  </div>
+</div>
+
+<div class="info-box" id="reti mobili">
+  <button class="info-toggle">
+    <span class="info-number">10.</span> Reti mobili
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Per garantire una connessione internet stabile e veloce durante il tuo soggiorno in Giappone, esistono tre opzioni principali, a seconda delle compatibilità:
+    </p>
+    <ul>
+      <li><strong>la SIM Card dati</strong>,</li>
+      <li><strong>l’eSIM dati</strong>,</li>
+      <li><strong>il Pocket Wi-Fi</strong>.</li>
+    </ul>
+    <p>
+      La SIM Card dati è una classica SIM che può essere acquistata da un operatore giapponese, ma si consiglia di acquistarla prima di partire per praticità e convenienza.
+      Permette di utilizzare dati in base al piano scelto, che può essere anche illimitato.
+      Deve essere inserita nel dispositivo mobile, sostituendo la SIM Card originale, se disponibile un solo slot preposto.
+    </p>
+    <p>
+      L'eSIM è una SIM Card virtuale che non richiede l'inserimento di una SIM fisica, ma è necessario seguire le istruzioni del partner
+      (generalmente un QR code o un codice alfanumerico) per attivarla online in pochi minuti.
+      È soggetta a compatibilità e, dato che necessita di internet per essere installata correttamente, si consiglia di acquistarla e impostarla prima di partire.
+    </p>
+    <p>
+      Il Pocket Wi-Fi è un dispositivo portatile che contiene una SIM Card preinstallata.
+      Offre diversi piani dati disponibili, anche illimitati.
+      In generale è un router portatile, a forma di saponetta, che permette di collegare diversi dispositivi alla volta, senza rallentamenti apprezzabili di connessione.
+    </p>
+    <p><strong>Considerazioni</strong></p>
+    <p>
+      Prima di scegliere tra il Pocket Wi-Fi e la SIM Card dati (eSIM compresa) è importante considerare le proprie esigenze e preferenze.
+      Il Pocket Wi-Fi è ideale per coloro che desiderano una connessione internet stabile e veloce senza dover sostituire la SIM Card originale.
+      La SIM Card dati è invece ideale per coloro che desiderano utilizzare il proprio dispositivo mobile con una SIM Card giapponese.
+    </p>
+    <p>
+      Si ricorda che nei nostri pacchetti è sempre compresa la <strong>SIM dati o eSIM illimitata</strong> per la durata del viaggio.
+    </p>
+  </div>
+</div>
+
+
+<div class="info-box" id="telefonia">
+  <button class="info-toggle">
+    <span class="info-number">9.</span> Telefonia
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Il Giappone supporta gli standard di telefonia mobile <strong>UMTS (3G, 4G, 4G+, 5G)</strong>, quindi la maggior parte degli smartphone di nuova generazione funzionerà regolarmente.
+    </p>
+    <p>
+      In particolare tieni a mente che:
+    </p>
+    <ul>
+      <li>I dispositivi mobili con tecnologia <strong>GSM non sono compatibili</strong> con la rete giapponese.</li>
+      <li>Gli smartphone con tecnologia <strong>UMTS (3G, 4G, 4G+, 5G)</strong> sono compatibili con la rete giapponese.</li>
+    </ul>
+    <p>
+      Si consiglia di verificare con il proprio gestore se sono disponibili <strong>offerte vantaggiose</strong> che comprendano minuti di conversazione e/o dati, perché i costi del roaming internazionale sono tendenzialmente molto elevati.
+    </p>
+    <p>
+      <strong>Ricapitolando</strong> se il tuo telefono supporta la tecnologia UMTS (3G, 4G, 4G+, 5G) e il tuo gestore ha un accordo di roaming con un operatore giapponese, potrai ricevere chiamate in Giappone.
+    </p>
+    <p>
+      Tuttavia, è importante notare che:
+    </p>
+    <ul>
+      <li>Il tuo telefono deve essere compatibile con le <strong>frequenze utilizzate in Giappone</strong>.</li>
+      <li>Il tuo gestore deve avere un <strong>accordo di roaming</strong> con un operatore giapponese.</li>
+      <li>Potresti dover <strong>attivare il roaming internazionale</strong> sul tuo telefono e/o con il tuo gestore.</li>
+    </ul>
+    <p>
+      Pertanto prima di partire, è consigliabile verificare con il tuo gestore:
+    </p>
+    <ul>
+      <li>La <strong>compatibilità del tuo telefono</strong> con la rete giapponese.</li>
+      <li>La disponibilità del <strong>roaming internazionale in Giappone</strong>.</li>
+      <li>I <strong>costi del roaming internazionale</strong>.</li>
+    </ul>
+    <p>
+      Inoltre, potresti considerare l'<strong>acquisto di una SIM Card locale</strong> o l'utilizzo di un <strong>servizio di roaming internazionale alternativo</strong> per evitare costi elevati.
+    </p>
+    <p>
+      Per domande inerenti alla rete mobile e alle principali soluzioni consigliate, si rimanda alla sezione seguente.
+    </p>
+    <p>
+      Si ricorda che chi acquista i nostri pacchetti o la consulenza specifica su “telefonia e internet”, avrà le <strong>informazioni più dettagliate su compatibilità, accordi operatori italiani e giapponesi e soluzioni alternative</strong>.
+    </p>
+  </div>
+</div>
+
+<div class="info-box" id="patente-guida">
+  <button class="info-toggle">
+    <span class="info-number">11.</span> Patente di guida
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      La <strong>patente di guida italiana non è valida in Giappone</strong>, ma è possibile noleggiare un'auto con una <strong>patente internazionale</strong>, 
+      rilasciata ai fini della convenzione di Ginevra del 1949 (per ottenerla, rivolgersi alla Motorizzazione Civile o alla Scuola guida di riferimento).
+    </p>
+    <p><strong>Ricordarsi che:</strong></p>
+    <ul>
+      <li>si guida sul lato sinistro della strada come in Gran Bretagna,</li>
+      <li>le macchine hanno generalmente il cambio automatico,</li>
+      <li>per il noleggio è richiesta la carta di credito.</li>
+    </ul>
+  </div>
+</div>
+<div class="info-box" id="trasporti">
+  <button class="info-toggle">
+    <span class="info-number">12.</span> Trasporti
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Il <strong>Japan Rail Pass (JR Pass)</strong> è un abbonamento ferroviario nominativo creato per i viaggiatori stranieri in Giappone con permesso turistico.
+      Può offrire risparmi considerevoli rispetto all'acquisto dei singoli biglietti, se applicato nel giusto contesto di viaggio.
+    </p>
+
+    <p><strong>Cosa include il Japan Rail Pass?</strong></p>
+    <p>
+      Il JR Pass è valido sulle tratte ferroviarie delle compagnie JR (Japan Railways), comprese:
+    </p>
+    <ul>
+      <li>Quasi tutte le linee degli Shinkansen (treni proiettile)</li>
+      <li>Alcuni bus e traghetti</li>
+    </ul>
+    <p>
+      Inoltre, il JR Pass consente di effettuare <strong>gratuitamente le prenotazioni dei posti a sedere</strong> sugli Shinkansen e sui treni speciali.
+    </p>
+
+    <p><strong>Tipologie e Costi</strong></p>
+    <p>
+      Il JR Pass è disponibile per 1, 2 o 3 settimane, con costi rispettivamente di:
+    </p>
+    <ul>
+      <li>50.000 yen per 1 settimana</li>
+      <li>80.000 yen per 2 settimane</li>
+      <li>100.000 yen per 3 settimane</li>
+    </ul>
+    <p>
+      Il JR Pass <strong>dal 1 ottobre 2023 non è più possibile acquistarlo in Giappone</strong>, pertanto è necessario acquistarlo prima di partire.
+    </p>
+
+    <p><strong>Pass Regionali e Abbonamenti Locali</strong></p>
+    <p>
+      Oltre al JR Pass "nazionale", esistono anche dei pass regionali che possono risultare convenienti se il tuo viaggio è limitato a un'area specifica.
+      Alcuni esempi includono:
+    </p>
+    <ul>
+      <li>JR Hokkaido Rail Pass</li>
+      <li>JR East Pass</li>
+      <li>JR Kansai Area Pass</li>
+      <li>JR Sanyo Area Pass</li>
+      <li>JR Shikoku Pass</li>
+      <li>JR Kyushu Rail Pass</li>
+    </ul>
+    <p>
+      Inoltre, ci sono numerosi abbonamenti locali per le compagnie ferroviarie private.
+    </p>
+
+    <p><strong>Tessere Magnetiche Ricaricabili</strong></p>
+    <p>
+      Per gli spostamenti in metropolitana o bus non compresi nel JR Pass, si consiglia l'uso di pratiche tessere magnetiche ricaricabili,
+      come la <strong>Suica</strong> o la <strong>Pasmo</strong> a Tokyo.
+      Queste tessere offrono il vantaggio di non dover acquistare ogni volta il biglietto e possono essere utilizzate anche come "carte di credito"
+      per pagare in numerosi negozi.
+      Inoltre, per dispositivi dotati di tecnologia NFC è possibile fare la versione digitale, direttamente sul proprio dispositivo.
+    </p>
+  </div>
+</div>
+<div class="info-box" id="geografia">
+  <button class="info-toggle">
+    <span class="info-number">13.</span> Geografia
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Il Giappone è un arcipelago situato nell'Estremo Oriente, composto da oltre <strong>6.800 isole</strong>, delle quali solo circa 430 sono abitate.
+      La popolazione giapponese è di circa <strong>126 milioni</strong> di abitanti e la capitale è <strong>Tokyo</strong>.
+    </p>
+
+    <p><strong>Le quattro isole principali del Giappone sono:</strong></p>
+    <ul>
+      <li><strong>Honshu</strong>: l'isola più grande e popolosa, dove si trovano le città di Tokyo, Osaka e Kyoto.</li>
+      <li><strong>Hokkaido</strong>: l'isola più settentrionale, nota per le sue bellezze naturali e le stazioni sciistiche.</li>
+      <li><strong>Kyushu</strong>: l'isola più meridionale, famosa per le sue sorgenti termali e i vulcani attivi.</li>
+      <li><strong>Shikoku</strong>: l'isola più piccola delle quattro, conosciuta per le sue bellezze naturali e i siti storici.</li>
+    </ul>
+
+    <p><strong>Okinawa</strong> è un'isola situata a sud del Giappone, nota per le sue bellezze marine e le spiagge tropicali.</p>
+
+    <p><strong>Le tre montagne sacre del Giappone sono:</strong></p>
+    <ul>
+      <li><strong>Monte Fuji</strong>: la montagna più alta del Giappone, nota per la sua forma conica e la sua bellezza naturale.</li>
+      <li><strong>Monte Tate</strong>: una montagna sacra situata sull'isola di Honshu.</li>
+      <li><strong>Monte Haku</strong>: una montagna sacra situata sull'isola di Honshu.</li>
+    </ul>
+
+    <p>
+      La <strong>regione dei 5 laghi</strong> è un'area situata ai piedi del Monte Fuji, nota per i suoi cinque laghi naturali:
+    </p>
+    <ul>
+      <li>Lago Kawaguchi</li>
+      <li>Lago Yamanaka</li>
+      <li>Lago Sai</li>
+      <li>Lago Motosu</li>
+      <li>Lago Shoji</li>
+    </ul>
+
+    <p><strong>Hakone</strong> è una città situata nella prefettura di Kanagawa, nota per le sue sorgenti termali, i vulcani attivi e la sua bellezza naturale.</p>
+
+    <p><strong>La penisola di Izu</strong> è una penisola situata nella prefettura di Shizuoka, nota per le sue sorgenti termali, le spiagge e la sua bellezza naturale.</p>
+
+    <p><strong>Terreni Coltivabili</strong></p>
+    <p>
+      Il Giappone ha una <strong>scarsità di terreni coltivabili</strong>, il che rende difficile la produzione di frutta e verdura.
+      Ciò è anche il motivo per cui la frutta e verdura possono essere costose in Giappone.
+    </p>
+  </div>
+</div>
+
+<div class="info-box" id="lingua">
+  <button class="info-toggle">
+    <span class="info-number">14.</span> Lingua
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      La <strong>lingua ufficiale del Giappone</strong> è il giapponese, con il <strong>dialetto di Tokyo (Kanto)</strong> come variante standard.
+      Esistono anche altri dialetti, come quelli della zona di <strong>Osaka e Kyoto (Kansai)</strong>.
+    </p>
+
+    <p><strong>Diffusione dell'Inglese</strong></p>
+    <p>
+      L'inglese <strong>non è diffuso</strong> in Giappone, sebbene sia possibile incontrare persone che hanno studiato la lingua all'estero
+      o a livello universitario. Tuttavia, la maggior parte della popolazione può essere riluttante a parlare inglese
+      e la <strong>pronuncia può essere difficile da comprendere</strong>.
+    </p>
+
+    <p><strong>Informazioni Turistiche</strong></p>
+    <p>
+      Le informazioni turistiche sono spesso <strong>bilingue</strong> (giapponese e inglese) e possono essere accompagnate anche dal cinese.
+      Tuttavia, non si può dare per scontato che l'inglese sia ampiamente compreso.
+    </p>
+
+    <p><strong>Accoglienza e Ospitalità</strong></p>
+    <p>
+      La <strong>gentilezza, la disponibilità e il senso di ospitalità</strong> dei giapponesi rendono la lingua
+      <strong>non una barriera insormontabile</strong>. Il Giappone è considerato uno dei paesi <strong>più sicuri e efficienti al mondo</strong>,
+      rendendolo un luogo piacevole per viaggiare.
+    </p>
+  </div>
+</div>
+<div class="info-box" id="religione">
+  <button class="info-toggle">
+    <span class="info-number">15.</span> Religione
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Il Giappone presenta una pluralità di religioni, con una particolare caratteristica di <strong>sincretismo</strong>
+      tra le diverse credenze.
+    </p>
+
+    <p><strong>Lo Shintoismo</strong></p>
+    <p>
+      Lo shintoismo è la <strong>religione autoctona</strong> del Giappone, caratterizzata da una visione <strong>panteistica e politeistica</strong>.
+      Essa si concentra sul culto degli <strong>kami</strong>, spiriti o divinità associate alla natura e agli antenati.
+    </p>
+
+    <p><strong>Il Buddhismo</strong></p>
+    <p>
+      Il buddhismo è stato introdotto in Giappone nel <strong>VI secolo</strong> e ha avuto un'influenza significativa sulla cultura
+      e la spiritualità giapponese. Esso offre una dottrina più complessa e <strong>testi sacri</strong> che hanno arricchito la tradizione religiosa giapponese.
+    </p>
+
+    <p><strong>Sincretismo e Convivenza</strong></p>
+    <p>
+      Le due religioni, shintoismo e buddhismo, hanno <strong>convissuto pacificamente</strong> nel corso dei secoli, dando origine
+      a un sincretismo unico e tipico del Giappone. Questo si manifesta nella pratica comune di visitare sia <strong>templi shintoisti</strong>
+      che <strong>buddisti</strong>.
+    </p>
+
+    <p><strong>Altre Religioni</strong></p>
+    <p>
+      Oltre allo shintoismo e al buddhismo, sono presenti in Giappone altre religioni, tra cui:
+    </p>
+    <ul>
+      <li>Il cristianesimo</li>
+      <li>L'islamismo</li>
+      <li>L'induismo</li>
+    </ul>
+    <p>
+      Queste religioni <strong>minoritarie convivono pacificamente</strong> con le tradizioni religiose principali,
+      contribuendo alla <strong>diversità culturale e religiosa</strong> del Giappone.
+    </p>
+  </div>
+</div>
+<div class="info-box" id="orari-attivita">
+  <button class="info-toggle">
+    <span class="info-number">16.</span> Orari uffici e attività
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Quanto segue sono <strong>informazioni generiche</strong> al fine di orientare il viaggiatore a organizzare
+      nel miglior modo il proprio soggiorno.
+    </p>
+
+    <p><strong>Uffici e Servizi Pubblici</strong></p>
+    <ul>
+      <li>Uffici: lunedì-venerdì, 9:00-17:00</li>
+      <li>Uffici postali: lunedì-venerdì, 9:00-17:00 (gli uffici postali principali sono aperti tutti i giorni)</li>
+      <li>Banche: lunedì-venerdì, 9:00-15:00</li>
+    </ul>
+
+    <p><strong>Centri Commerciali e Negozi</strong></p>
+    <ul>
+      <li>Centri commerciali: tutti i giorni, 10:00-20:00/21:00</li>
+      <li>Konbini: 24/7 (salvo in zone rurali)</li>
+      <li>Negozi di souvenir: 10:00-18:00</li>
+    </ul>
+
+    <p><strong>Musei e Templi</strong></p>
+    <ul>
+      <li>Musei: 9:00/10:00-17:00/17:30 (l'ultima ammissione è 30 minuti prima della chiusura)</li>
+      <li>Templi: orari variabili, ma generalmente aperti dalle 9:00 alle 17:00</li>
+    </ul>
+
+    <p><strong>Ristoranti e Locali</strong></p>
+    <ul>
+      <li>Ristoranti e locali: orari variabili, ma generalmente aperti dalle 11:00/12:00 alle 14:00/15:00 per il pranzo
+        e dalle 18:00 alle 22:00 per la cena</li>
+      <li>Izakaya (ristoranti tradizionali): generalmente aperti solo la sera, dalle 18:00 alle 24:00
+        (alcuni nelle grandi metropoli fanno anche tarda notte)</li>
+      <li>Locali e bar notturni: aperti fino alle 3:00 di notte e oltre (<strong>27:00</strong> indica le 3:00 nelle insegne di questi locali)</li>
+    </ul>
+  </div>
+</div>
+<div class="info-box" id="festivita-giappone">
+  <button class="info-toggle">
+    <span class="info-number">17.</span> Festività principali in Giappone
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>Il Giappone celebra diverse <strong>festività nazionali</strong> durante l'anno. Ecco le principali:</p>
+
+    <ul>
+      <li>1° gennaio: Capodanno (Oshogatsu)</li>
+      <li>Secondo lunedì di gennaio: Festa degli adulti (Seijin no Hi)</li>
+      <li>11 febbraio: Festa della fondazione del Giappone (Kenkoku Kinenbi)</li>
+      <li>23 febbraio: Compleanno dell'Imperatore (Tennō tanjōbi)</li>
+      <li>20 o 21 marzo: Equinozio di primavera (Shunbun no Hi)</li>
+      <li>29 aprile: Festa della verdura (Midori no Hi)</li>
+      <li>3 maggio: Festa della costituzione (Kenpō Kinenbi)</li>
+      <li>5 maggio: Festa dei bambini (Kodomo no Hi)</li>
+      <li>Terzo lunedì di luglio: Festa del mare (Umi no Hi)</li>
+      <li>Terzo lunedì di settembre: Festa del rispetto per gli anziani (Keirō no Hi)</li>
+      <li>22 o 23 settembre: Equinozio d'autunno (Shūbun no Hi)</li>
+      <li>Secondo lunedì di ottobre: Festa della salute e dello sport (Taiiku no Hi)</li>
+      <li>3 novembre: Festa della cultura (Bunka no Hi)</li>
+      <li>23 novembre: Festa del lavoro (Kinro Kansha no Hi)</li>
+    </ul>
+
+    <p><strong>Note importanti:</strong></p>
+    <ul>
+      <li>Il periodo compreso tra il <strong>29 aprile e il 5 maggio</strong> è noto come <strong>Golden week</strong>, in quanto denso di festività ravvicinate.</li>
+      <li>Se una festività nazionale cade di domenica, il lunedì successivo è festivo.</li>
+      <li>Se un giorno è compreso tra due festività nazionali, <strong>diventa anch'esso festivo</strong>.</li>
+      <li>Il 25 dicembre (Natale) <strong>non è festivo</strong>.</li>
+      <li>Tra il <strong>29 dicembre e il 3 gennaio</strong>, le amministrazioni, i musei e alcuni negozi sono chiusi.</li>
+    </ul>
+  </div>
+</div>
+<div class="info-box" id="numeri-utili-ambasciata">
+  <button class="info-toggle">
+    <span class="info-number">18.</span> Numeri utili e precauzioni
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p><strong>Numeri di Emergenza in Giappone</strong></p>
+    <ul>
+      <li>Polizia: 110</li>
+      <li>Ambulanza: 119 (anche 911)</li>
+      <li>Vigili del Fuoco: 119</li>
+      <li>Emergenze marine: 118</li>
+      <li>Servizio di assistenza stradale: 0120-977-665 (numero verde)</li>
+      <li>Servizio di informazione turistica: 050-8833-3333 (numero verde)</li>
+      <li>Japan National Tourism Organization (JNTO): 03-3216-1907 (Tokyo)</li>
+    </ul>
+
+    <p><strong>Ambasciata d'Italia a Tokyo</strong></p>
+    <p>
+      Indirizzo: 2-5-4 Mita, Minato-ku, Tokyo 108-8302<br>
+      Telefono: +81 (0)3-3453-5291<br>
+      Fax: +81 (0)3-3456-2319<br>
+      Cell. di emergenza: +81-(0)90-3908-1006<br>
+      Contattare in caso di comprovata emergenza e/o minaccia alla sicurezza e all'incolumità dei cittadini italiani.<br>
+      Sito web: <a href="https://www.ambtokyo.esteri.it" target="_blank">www.ambtokyo.esteri.it</a><br>
+      Email: <a href="mailto:ambasciata.tokyo@esteri.it">ambasciata.tokyo@esteri.it</a>
+    </p>
+
+    <p><strong>Consolato generale d'Italia a Osaka</strong></p>
+    <p>
+      Indirizzo: Nakanoshima Festival Tower 17F, 2-3-18 Nakanoshima, Kita-ku, Osaka 530-0005<br>
+      Segreteria Console Generale<br>
+      Telefono: +81-(0)6-4706-5833<br>
+      Fax: +81-(0)6-6201-0590<br>
+      Cell. di emergenza: +81-(0)90-3350-1561<br>
+      Il numero indicato è accessibile nei seguenti orari:<br>
+      • Giorni lavorativi: dalle 8:00 alle 22:00, tranne che nelle fasce orarie 9:00-13:00 e 14:00-17:00<br>
+      • Sabato, domenica e giorni festivi: dalle 8:00 alle 22:00<br>
+      Sito web: <a href="https://www.consosaka.esteri.it" target="_blank">www.consosaka.esteri.it</a><br>
+      Email: <a href="mailto:segreteria.osaka@esteri.it">segreteria.osaka@esteri.it</a>
+    </p>
+
+    <p><strong>App di Emergenza</strong></p>
+    <ul>
+      <li><strong>J-Alert</strong>: un'app di emergenza che fornisce informazioni su disastri naturali e altre situazioni di emergenza.</li>
+      <li><strong>NHK WORLD-JAPAN</strong>: un'app che fornisce informazioni su disastri naturali e altre situazioni di emergenza, oltre a notizie e informazioni utili per i turisti.</li>
+    </ul>
+  </div>
+</div>
+
+    </div>
+  </section>
+</div>
+
+<!-- FOOTER -->
+<footer class="main-footer">
+  <div class="footer-social">
+    <p><strong>Seguici su:</strong></p>
+    <a href="https://www.instagram.com/yumeviaggi" target="_blank" aria-label="Instagram" class="fa fa-instagram"></a>
+    <a href="https://yuta-travel.com" target="_blank" aria-label="Sito YUTA" class="fa fa-globe"></a>
+  </div>
+  <p class="footer-copy">© 2025 Yume Travel Tech – Tutti i diritti riservati.</p>
+</footer>
+
+<!-- CHAT YUKI -->
+<div id="yuki-chat-avatar" onclick="toggleYukiChat()" title="Hai bisogno di aiuto?">
+  <img src="assets/yuki-avatar.png" alt="Yuki" />
+</div>
+
+<div id="yuki-chatbox" class="hidden">
+  <div class="chatbox-header">
+    <span>Yuki, assistente AI</span>
+    <button onclick="toggleYukiChat()">✕</button>
+  </div>
+  <div class="chatbox-messages" id="chatbox-messages"></div>
+  <div class="chatbox-input">
+    <input type="text" id="userMessage" placeholder="Scrivi qui..." />
+    <button onclick="sendMessage()">Invia</button>
+  </div>
+</div>
+
+<!-- SCRIPT -->
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    const el = document.querySelector('#yuki-chat-avatar');
+    if (!el) return;
+    el.style.position = 'fixed';
+    el.style.bottom = '25px';
+    el.style.right = '25px';
+    el.style.width = '90px';
+    el.style.height = '90px';
+    el.style.zIndex = '9999';
+    el.style.borderRadius = '50%';
+    el.style.overflow = 'hidden';
+    el.style.boxShadow = '0 4px 10px rgba(0,0,0,0.2)';
+    el.style.backgroundColor = '#fff';
+    const img = el.querySelector('img');
+    if (img) {
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.objectFit = 'cover';
+      img.style.borderRadius = '50%';
+    }
+  });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="assets/script.js"></script>
+
+</body>
+</html>
+
