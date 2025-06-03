@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FAQ - Yume Travel</title>
+  <link rel="icon" type="image/png" href="favicon.ico" />
+
+  <!-- Font Yume -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Raleway:wght@300;500;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Stili -->
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-left">
+    <img src="assets/logo-yume.jpg" alt="Logo YUME" class="logo-navbar">
+  </div>
+  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+</nav>
+
+<div id="sidebar" class="sidebar hidden">
+  <div class="sidebar-logo">
+    <img src="assets/logo_bar.png" alt="Logo Yume" class="logo-sidebar">
+  </div>
+  <a href="index.html">Home</a>
+  <a href="pacchetti.html">Pacchetti flessibili</a>
+  <a href="faq.html">FAQ</a>
+  <a href="info-utili.html">Informazioni utili</a>
+  <a href="contatti.html">Contatti</a>
+  <a href="yuta.html">YUTA</a>
+  <a href="profilo.html">Registrazione</a>
+  <a href="log-in.html">Area Personale</a>
+</div>
+
+<!-- HERO FAQ -->
+<header class="hero-banner">
+  <picture>
+    <source srcset="assets/faq-mob.jpg" media="(max-width: 768px)">
+    <img src="assets/faq-desk.jpg" alt="FAQ Yume Travel" class="hero-banner-img">
+  </picture>
+  <div class="scroll-indicator" onclick="scrollToMain()">
+    <span class="arrow-down"></span>
+  </div>
+</header>
+
+<!-- HERO TITLE -->
+<section class="hero-section">
+  <div class="hero-intro">
+    <h1 class="hero-title">FAQ – Domande Frequenti</h1>
+    <p class="hero-subtitle">Tutto quello che ti serve sapere sui viaggi Yume</p>
+  </div>
+</section>
+
+<!-- INDICE (opzionale, attivabile più avanti se desideri) -->
+<section class="indice-info-utili">
+  <h2>Indice per categoria</h2>
+
+  <h3 class="indice-categoria"><i class="fa fa-globe"></i> FAQ Generali</h3>
+  <ul class="indice-lista">
+    <li><a href="#faq1">1. Cosa si intende per viaggio individuale?</a></li>
+    <li><a href="#faq2">2. Quanto posso personalizzare il mio viaggio individuale?</a></li>
+    <li><a href="#faq3">3. Cosa si intende con soggiorni minimi, massimi e durata consigliata?</a></li>
+    <li><a href="#faq4">4. Come interpretare la scala visiva e i simboli presenti nei pacchetti?</a></li>
+    <li><a href="#faq5">5. Mi conviene prenotare pacchetti con volo incluso o escluso?</a></li>
+    <li><a href="#faq6">6. Cosa si intende con pacchetto standard, premium ed elite?</a></li>
+  </ul>
+
+  <h3 class="indice-categoria"><i class="fa fa-globe"></i> Viaggio con Yume</h3>
+  <ul class="indice-lista">
+    <li><a href="#faq7">7. Cosa rende un viaggio Yume diverso da un pacchetto turistico?</a></li>
+    <li><a href="#faq8">8. Posso partire in qualsiasi periodo dell’anno?</a></li>
+    <li><a href="#faq9">9. I viaggi sono adatti anche a chi non conosce il Giappone?</a></li>
+  </ul>
+
+  <h3 class="indice-categoria"><i class="fa fa-cogs"></i> Personalizzazione e Servizi Digitali</h3>
+  <ul class="indice-lista">
+    <li><a href="#faq10">10. Fornite strumenti digitali di assistenza al viaggio?</a></li>
+    <li><a href="#faq11">11. Posso decidere quante tappe fare e quali città includere?</a></li>
+    <li><a href="#faq12">12. Come vengono scelti gli alloggi?</a></li>
+    <li><a href="#faq13">13. Posso modificare l’itinerario anche dopo la prenotazione?</a></li>
+  </ul>
+
+  <h3 class="indice-categoria"><i class="fa fa-universal-access"></i> Accessibilità e Adattamento</h3>
+  <ul class="indice-lista">
+    <li><a href="#faq14">14. Offrite soluzioni per esigenze specifiche?</a></li>
+    <li><a href="#faq15">15. Come supportate chi è sensibile a stimoli ambientali?</a></li>
+    <li><a href="#faq16">16. Ho restrizioni alimentari: posso viaggiare in sicurezza?</a></li>
+  </ul>
+
+  <h3 class="indice-categoria"><i class="fa fa-suitcase"></i> Organizzazione e Logistica</h3>
+  <ul class="indice-lista">
+    <li><a href="#faq17">17. Cosa ricevo dopo la conferma del viaggio?</a></li>
+    <li><a href="#faq18">18. L’assicurazione è inclusa?</a></li>
+  </ul>
+
+  <h3 class="indice-categoria"><i class="fa fa-laptop"></i> Piattaforma e Interazioni</h3>
+  <ul class="indice-lista">
+    <li><a href="#faq19">19. Come funziona il modulo di richiesta viaggio?</a></li>
+    <li><a href="#faq20">20. Perché devo indicare fascia di prezzo o preferenze?</a></li>
+    <li><a href="#faq21">21. I pacchetti sono rigidi o personalizzabili?</a></li>
+  </ul>
+
+  <h3 class="indice-categoria"><i class="fa fa-comments"></i> Dubbi frequenti dei clienti</h3>
+  <ul class="indice-lista">
+    <li><a href="#faq22">22. Posso viaggiare anche da solo?</a></li>
+    <li><a href="#faq23">23. È possibile aggiungere esperienze particolari?</a></li>
+  </ul>
+</section>
+
+<!-- CONTENUTO FAQ -->
+<div class="main-wrapper">
+  <section class="info-section">
+    <h2 class="slide-in">FAQ principali</h2>
+    <div class="info-boxes-container">
+      <div class="info-box" id="faq1">
+  <button class="info-toggle">
+    <span class="info-number">1.</span> Cosa si intende per viaggio individuale?
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      I nostri viaggi individuali sono pacchetti pre-pianificati, validi tutto l'anno, che offrono un itinerario dettagliato, volo incluso (a seconda dell'opzione scelta), soluzioni d'alloggio personalizzate in base alle tue preferenze di budget, comfort e composizione dei viaggiatori, e opzioni di trasporto per esplorare il Giappone al tuo ritmo e alle tue tasche.
+    </p>
+    <p>
+      Inoltre, potrai aggiungere esperienze autentiche e attività speciali per rendere il viaggio davvero tuo. A differenza dei tour guidati, non sarai accompagnato da una guida turistica, ma potrai contare sulla nostra guida digitale, i documenti elettronici e strumenti di supporto digitale sviluppati per assisterti in autonomia.
+    </p>
+  </div>
+</div>
+
+<div class="info-box" id="faq2">
+  <button class="info-toggle">
+    <span class="info-number">2.</span> Quanto posso personalizzare il mio viaggio?
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      I nostri viaggi offrono un’ampia gamma di personalizzazioni. Puoi modificare la durata, cambiare le tappe, selezionare attività extra o scegliere il livello di comfort. I pacchetti suggeriti sono flessibili e adattabili senza compromettere la qualità dell’itinerario.
+    </p>
+    <p>
+      Se desideri un itinerario completamente personalizzato, puoi:
+    </p>
+    <ul>
+      <li>Richiedere una consulenza esperta per creare un viaggio su misura;</li>
+      <li>Descriverci il viaggio che hai in mente: penseremo noi a tutto il resto.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="info-box" id="faq3">
+  <button class="info-toggle">
+    <span class="info-number">3.</span> Cosa si intende con soggiorni minimi, massimi e durata consigliata?
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Nei nostri pacchetti definiamo tre parametri chiave:
+    </p>
+    <ul>
+      <li><strong>Soggiorno minimo</strong>: notti essenziali per vivere il tema del viaggio;</li>
+      <li><strong>Soggiorno massimo</strong>: limite massimo entro cui l’itinerario resta armonico;</li>
+      <li><strong>Durata consigliata</strong>: tempo ideale per godere appieno delle esperienze proposte.</li>
+    </ul>
+    <p>
+      I nostri viaggi restano comunque flessibili e adattabili a seconda delle tue esigenze specifiche.
+    </p>
+  </div>
+</div>
+<div class="info-box" id="faq4">
+  <button class="info-toggle">
+    <span class="info-number">4.</span> Come interpretare la scala visiva e i simboli nei pacchetti?
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Da Yume utilizziamo una <strong>comunicazione visiva intuitiva</strong> per aiutarti a scegliere il pacchetto più adatto alle tue preferenze.
+    </p>
+    <p>
+      I <strong>simboli e i punteggi</strong> associati a ogni itinerario ti permettono di valutarne rapidamente le caratteristiche: stile del viaggio, ritmo, equilibrio tra cultura, natura, spiritualità o gastronomia.
+    </p>
+    <p>
+      In aggiunta, trovi una <strong>scala emozionale analogica</strong> che puoi compilare in pochi secondi. In base alle emozioni che ricerchi (meraviglia, contemplazione, scoperta...) ti suggerisce il pacchetto più in sintonia con te.
+    </p>
+  </div>
+</div>
+
+<div class="info-box" id="faq5">
+  <button class="info-toggle">
+    <span class="info-number">5.</span> Mi conviene prenotare pacchetti con volo incluso o escluso?
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      I nostri pacchetti prevedono il volo incluso con <strong>partenze da Roma o Milano</strong> a tariffe competitive, grazie all'utilizzo di un <strong>Global Distribution System (GDS)</strong>.
+    </p>
+    <p>
+      Se scegli questa opzione, penseremo noi all’inserimento dei dati, alla prenotazione e alla gestione del volo: riceverai direttamente l’<strong>e-ticket</strong> via mail.
+    </p>
+    <p>
+      In alternativa, puoi decidere di acquistare il volo in autonomia. In tal caso, ti aiutiamo comunque a coordinare orari e trasferimenti.
+    </p>
+    <p>
+      In entrambi i casi, il nostro obiettivo è <strong>semplificarti la vita</strong> e offrirti il miglior rapporto qualità-prezzo.
+    </p>
+  </div>
+</div>
+
+<div class="info-box" id="faq6">
+  <button class="info-toggle">
+    <span class="info-number">6.</span> Cosa si intende con pacchetto standard, premium ed elite?
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Offriamo tre fasce di viaggio per garantire a ogni viaggiatore l’esperienza più adatta al proprio stile e budget:
+    </p>
+    <ul>
+      <li><strong>Standard</strong>: servizi essenziali, selezionati per garantire affidabilità, comodità e un ottimo rapporto qualità/prezzo.</li>
+      <li><strong>Premium</strong>: maggiore comfort, alloggi di categoria superiore, esperienze culturali e culinarie più raffinate.</li>
+      <li><strong>Élite</strong>: esperienze esclusive, strutture di alta gamma, attenzioni personalizzate per un viaggio di livello superiore.</li>
+    </ul>
+    <p>
+      Qualunque pacchetto tu scelga, ti garantiamo sempre <strong>cura nei dettagli, assistenza continua e qualità selezionata</strong>.
+    </p>
+  </div>
+</div>
+<div class="info-box" id="faq7">
+  <button class="info-toggle">
+    <span class="info-number">7.</span> Cosa rende un viaggio Yume diverso da un pacchetto turistico?
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Un viaggio Yume non è una formula standardizzata, ma un progetto costruito attorno a <strong>chi sei e cosa cerchi</strong>.
+    </p>
+    <p>
+      Combiniamo <strong>consulenza esperta</strong>, materiali curati e strumenti digitali per offrirti supporto, libertà di movimento e coerenza tra il viaggio che immagini e quello che vivi.
+    </p>
+    <p>
+      Non ti affiderai a un semplice catalogo, ma a un sistema dinamico e umano che lavora per darti il meglio, rispettando le tue esigenze, i tuoi tempi e il tuo stile.
+    </p>
+  </div>
+</div>
+
+<div class="info-box" id="faq8">
+  <button class="info-toggle">
+    <span class="info-number">8.</span> Posso partire in qualsiasi periodo dell’anno?
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Sì, i nostri pacchetti sono <strong>validi tutto l’anno</strong> e puoi partire nel periodo che preferisci.
+    </p>
+    <p>
+      Il nostro team ti aiuterà a individuare il momento migliore in base alle tue preferenze, alla <strong>stagionalità</strong> e agli <strong>eventi locali</strong>, consigliandoti anche su affollamento, clima o fioriture.
+    </p>
+  </div>
+</div>
+
+<div class="info-box" id="faq9">
+  <button class="info-toggle">
+    <span class="info-number">9.</span> I viaggi sono adatti anche a chi non conosce il Giappone?
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Certamente. I nostri pacchetti sono pensati per <strong>accompagnarti passo passo</strong> anche se è la tua prima volta in Giappone.
+    </p>
+    <p>
+      L’itinerario è chiaro, le informazioni sono dettagliate, e riceverai <strong>supporto dedicato prima e durante il viaggio</strong>. Se non conosci la lingua o temi di perderti, non preoccuparti: ci pensiamo noi.
+    </p>
+  </div>
+</div>
+<div class="info-box" id="faq10">
+  <button class="info-toggle">
+    <span class="info-number">10.</span> Fornite strumenti digitali di assistenza al viaggio?
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Sì. Oltre alla guida digitale personalizzata, alcuni pacchetti includono anche <strong>strumenti di supporto digitale</strong> che ti aiutano a orientarti, consultare le tappe, ricevere consigli o gestire il tuo itinerario giorno per giorno.
+    </p>
+    <p>
+      Alcuni di questi strumenti sono in fase di <strong>sperimentazione avanzata</strong>, e vengono attivati solo in determinate configurazioni. Se desideri provarli, comunicacelo in fase di richiesta.
+    </p>
+  </div>
+</div>
+
+<div class="info-box" id="faq11">
+  <button class="info-toggle">
+    <span class="info-number">11.</span> Posso decidere quante tappe fare e quali città includere?
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Sì. Ogni pacchetto ha una lista di città consigliate, ma puoi sempre adattarla in base alla <strong>durata</strong> e alle <strong>preferenze</strong>.
+    </p>
+    <p>
+      Il nostro sistema calcola automaticamente quante tappe inserire senza rendere il viaggio troppo frenetico, così da garantirti un <strong>ritmo sostenibile e piacevole</strong>.
+    </p>
+  </div>
+</div>
+
+<div class="info-box" id="faq12">
+  <button class="info-toggle">
+    <span class="info-number">12.</span> Come vengono scelti gli alloggi?
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Gli alloggi sono selezionati in base a criteri di <strong>qualità, posizione, comfort e accessibilità</strong>.
+    </p>
+    <p>
+      Puoi indicare se preferisci <strong>hotel moderni, ryokan tradizionali, capsule hotel</strong> o altre soluzioni. Consideriamo sempre anche esigenze specifiche (come camere familiari, no tatami o ascensore presente).
+    </p>
+    <p>
+      In ogni caso, selezioniamo solo strutture <strong>verificate e coerenti con il tuo profilo di viaggio</strong>.
+    </p>
+  </div>
+</div>
+<div class="info-box" id="faq13">
+  <button class="info-toggle">
+    <span class="info-number">13.</span> Posso modificare l’itinerario anche dopo la prenotazione?
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Sì, puoi sempre proporre modifiche al viaggio <strong>prima della conferma finale</strong>. Una volta confermato il pacchetto, eventuali modifiche saranno valutate in base alla <strong>disponibilità e alle condizioni del fornitore</strong>.
+    </p>
+    <p>
+      Il nostro obiettivo è accompagnarti con flessibilità: anche durante il viaggio, in alcuni casi potremo suggerirti alternative o aiutarti a prenotare esperienze aggiuntive.
+    </p>
+  </div>
+</div>
+
+<div class="info-box" id="faq14">
+  <button class="info-toggle">
+    <span class="info-number">14.</span> Offrite soluzioni per viaggiatori con esigenze specifiche?
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Sì. Yume Travel è attenta all’inclusività: offriamo soluzioni per viaggiatori con <strong>disabilità motorie, neurodivergenze, allergie, intolleranze alimentari</strong> o esigenze culturali specifiche (es. halal, kosher).
+    </p>
+    <p>
+      Ogni caso viene gestito in modo <strong>dedicato e riservato</strong>, con consulenza personalizzata e selezione attenta di strutture, trasporti e attività adatte.
+    </p>
+  </div>
+</div>
+
+<div class="info-box" id="faq15">
+  <button class="info-toggle">
+    <span class="info-number">15.</span> Come supportate chi è sensibile a stimoli ambientali?
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Abbiamo sviluppato un approccio sensoriale che ci permette di <strong>consigliare aree e attività compatibili</strong> con chi è sensibile a rumori, affollamento o ambienti visivamente caotici.
+    </p>
+    <p>
+      Il nostro team seleziona esperienze più adatte a chi ricerca <strong>ambienti rilassanti, prevedibili e poco affollati</strong>. Questo servizio è utile per persone nello spettro autistico, con ansia sociale o con alta sensibilità sensoriale.
+    </p>
+    <p>
+      Se hai esigenze specifiche, segnalacelo: costruiremo il tuo itinerario tenendone conto in ogni dettaglio.
+    </p>
+  </div>
+</div>
+<div class="info-box" id="faq16">
+  <button class="info-toggle">
+    <span class="info-number">16.</span> Ho restrizioni alimentari: posso viaggiare in sicurezza?
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Sì, assolutamente. Trattiamo con particolare attenzione tutte le <strong>restrizioni alimentari e intolleranze</strong>: celiachia, veganesimo, allergie a crostacei, lattosio, soia, frutta, ecc.
+    </p>
+    <p>
+      Includiamo sempre una guida alimentare personalizzata con <strong>frasari multilingue</strong>, icone visive e indicazioni da mostrare al personale dei ristoranti.
+    </p>
+    <p>
+      Se viaggi con una dieta specifica (es. <strong>halal, kosher</strong>), o hai bisogni clinici particolari, ti accompagneremo nella selezione di ristoranti e alloggi adeguati.
+    </p>
+  </div>
+</div>
+
+<div class="info-box" id="faq17">
+  <button class="info-toggle">
+    <span class="info-number">17.</span> Cosa ricevo dopo la conferma del viaggio?
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>Dopo la conferma riceverai:</p>
+    <ul>
+      <li><strong>Itinerario dettagliato personalizzato</strong></li>
+      <li><strong>Guida digitale</strong> con consigli giorno per giorno</li>
+      <li><strong>Voucher elettronici</strong> per hotel, trasporti e attività</li>
+      <li><strong>Contatti di emergenza e assistenza</strong></li>
+      <li><strong>Assicurazione viaggio inclusa</strong></li>
+      <li>Eventuali <strong>strumenti digitali in fase beta</strong>, se previsti</li>
+    </ul>
+    <p>Riceverai tutto in formato elettronico, ordinato e consultabile anche offline.</p>
+  </div>
+</div>
+
+<div class="info-box" id="faq18">
+  <button class="info-toggle">
+    <span class="info-number">18.</span> L’assicurazione è inclusa?
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Sì. In tutti i nostri pacchetti è <strong>sempre inclusa</strong> una copertura assicurativa completa.
+    </p>
+    <p>
+      Comprende:
+    </p>
+    <ul>
+      <li><strong>Assicurazione medica</strong> (ospedalizzazione, pronto soccorso, visite)</li>
+      <li><strong>Assicurazione bagaglio</strong> (furto, smarrimento, ritardi)</li>
+      <li><strong>Assicurazione annullamento</strong> per motivi documentabili</li>
+    </ul>
+    <p>
+      Su richiesta puoi estendere la copertura con formule premium o assicurazioni dedicate a sport, cronologie cliniche particolari o viaggi multi-paese.
+    </p>
+  </div>
+</div>
+<div class="info-box" id="faq19">
+  <button class="info-toggle">
+    <span class="info-number">19.</span> Come funziona il modulo di richiesta viaggio?
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Nella pagina <strong>“Pacchetti”</strong> troverai un modulo intuitivo da compilare con:
+    </p>
+    <ul>
+      <li><strong>Durata del viaggio</strong></li>
+      <li><strong>Numero di partecipanti</strong></li>
+      <li><strong>Preferenze di alloggio e attività</strong></li>
+      <li><strong>Fascia di prezzo</strong></li>
+    </ul>
+    <p>
+      Una volta inviata la richiesta, riceverai <strong>entro poche ore</strong> una proposta personalizzata via email con l’itinerario suggerito, il preventivo e indicazioni operative.
+    </p>
+  </div>
+</div>
+
+<div class="info-box" id="faq20">
+  <button class="info-toggle">
+    <span class="info-number">20.</span> Perché devo indicare fascia di prezzo o preferenze?
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Perché più informazioni ci dai, più riusciremo a costruire un viaggio davvero in linea con <strong>chi sei e cosa desideri vivere</strong>.
+    </p>
+    <p>
+      La fascia di prezzo ci permette di proporti soluzioni equilibrate tra qualità e budget, mentre le preferenze ci aiutano a selezionare <strong>esperienze, città e strutture coerenti con il tuo stile</strong>.
+    </p>
+    <p>
+      Il nostro obiettivo è farti vivere il Giappone secondo i tuoi tempi, i tuoi gusti e le tue emozioni.
+    </p>
+  </div>
+</div>
+
+<div class="info-box" id="faq21">
+  <button class="info-toggle">
+    <span class="info-number">21.</span> I pacchetti sono rigidi o personalizzabili?
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      I pacchetti Yume sono <strong>modulari e flessibili</strong>.
+    </p>
+    <p>
+      Ogni proposta ha una struttura consigliata (durata, tappe, temi), ma puoi modificarla liberamente: <strong>aggiungere o togliere notti</strong>, cambiare città, inserire esperienze o adattare il ritmo del viaggio.
+    </p>
+    <p>
+      Ti guideremo nel trovare la combinazione migliore per vivere il viaggio che desideri, evitando stress e ottimizzando gli spostamenti.
+    </p>
+  </div>
+</div>
+<div class="info-box" id="faq22">
+  <button class="info-toggle">
+    <span class="info-number">22.</span> Posso viaggiare anche da solo?
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Certamente. I nostri pacchetti sono perfetti anche per <strong>viaggiatori singoli</strong> e sono progettati per offrire comfort, autonomia e sicurezza.
+    </p>
+    <p>
+      Se lo desideri, possiamo integrare nel viaggio attività condivise, <strong>esperienze sociali</strong> o momenti in cui conoscere altri viaggiatori (come cene, workshop, escursioni in gruppo).
+    </p>
+  </div>
+</div>
+
+<div class="info-box" id="faq23">
+  <button class="info-toggle">
+    <span class="info-number">23.</span> È possibile aggiungere esperienze particolari?
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Assolutamente sì. Puoi arricchire il tuo itinerario con <strong>esperienze autentiche e tematiche</strong> selezionate da noi o proposte da te.
+    </p>
+    <p>
+      Alcuni esempi includono:
+    </p>
+    <ul>
+      <li>Laboratori di ceramica, calligrafia, cucina giapponese</li>
+      <li>Onsen tradizionali, soggiorni in ryokan, meditazione zen</li>
+      <li>Incontri con monaci o artigiani locali</li>
+      <li>Tour in zone rurali o esperienze nei quartieri storici</li>
+    </ul>
+    <p>
+      Tutto è pensato per offrirti <strong>emozioni uniche e fuori dai circuiti commerciali</strong>.
+    </p>
+  </div>
+</div>
+
+<div class="info-box" id="faq24">
+  <button class="info-toggle">
+    <span class="info-number">24.</span> Serve internet in Giappone per usare i servizi digitali?
+    <i class="fa fa-chevron-down toggle-icon"></i>
+  </button>
+  <div class="info-content">
+    <p>
+      Alcuni servizi digitali inclusi nei nostri pacchetti (come mappe interattive, suggerimenti in tempo reale, assistente virtuale) <strong>richiedono connessione internet attiva</strong>.
+    </p>
+    <p>
+      Per questo motivo, <strong>offriamo sempre una eSIM o SIM locale inclusa</strong> per tutta la durata del viaggio, oppure ti aiutiamo a scegliere un <strong>pocket WiFi</strong> adatto.
+    </p>
+    <p>
+      Così potrai restare connesso, ricevere assistenza, accedere alla guida online e condividere ogni momento del tuo viaggio.
+    </p>
+  </div>
+</div>
+
+          
+    </div>
+  </section>
+</div>
+
+<!-- FOOTER -->
+<footer class="main-footer">
+  <div class="footer-social">
+    <p><strong>Seguici su:</strong></p>
+    <a href="https://www.instagram.com/yumeviaggi" target="_blank" aria-label="Instagram" class="fa fa-instagram"></a>
+    <a href="https://yuta-travel.com" target="_blank" aria-label="Sito YUTA" class="fa fa-globe"></a>
+  </div>
+  <p class="footer-copy">© 2025 Yume Travel Tech – Tutti i diritti riservati.</p>
+</footer>
+
+<!-- CHAT YUKI -->
+<div id="yuki-chat-avatar" onclick="toggleYukiChat()" title="Hai bisogno di aiuto?">
+  <img src="assets/yuki-avatar.png" alt="Yuki" />
+</div>
+
+<div id="yuki-chatbox" class="hidden">
+  <div class="chatbox-header">
+    <span>Yuki, assistente AI</span>
+    <button onclick="toggleYukiChat()">✕</button>
+  </div>
+  <div class="chatbox-messages" id="chatbox-messages"></div>
+  <div class="chatbox-input">
+    <input type="text" id="userMessage" placeholder="Scrivi qui..." />
+    <button onclick="sendMessage()">Invia</button>
+  </div>
+</div>
+
+<!-- SCRIPT -->
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    const el = document.querySelector('#yuki-chat-avatar');
+    if (!el) return;
+    el.style.position = 'fixed';
+    el.style.bottom = '25px';
+    el.style.right = '25px';
+    el.style.width = '90px';
+    el.style.height = '90px';
+    el.style.zIndex = '9999';
+    el.style.borderRadius = '50%';
+    el.style.overflow = 'hidden';
+    el.style.boxShadow = '0 4px 10px rgba(0,0,0,0.2)';
+    el.style.backgroundColor = '#fff';
+    const img = el.querySelector('img');
+    if (img) {
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.objectFit = 'cover';
+      img.style.borderRadius = '50%';
+    }
+  });
+</script>
+
+<!-- SCRIPT -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="assets/script.js"></script>
+
+</body>
+</html>
+
