@@ -559,28 +559,32 @@ async function inviaRegistrazione() {
     });
 }
 
-async function verificaLogin() {
-  const identificatore = document.getElementById("emailLogin").value.trim();
-  const password = document.getElementById("passwordLogin").value.trim();
-  const output = document.getElementById("esitoLogin");
-
+async function verificaLoginOperatore() {
+  const identificatore = document.getElementById("codiceOperatore").value.trim();
+  const password = document.getElementById("passwordOperatore").value.trim();
+  const output = document.getElementById("esitoLoginOperatore");
   output.textContent = "";
 
   if (!identificatore || !password) {
-    output.textContent = "Inserisci email o codice cliente e password.";
+    output.textContent = "Inserisci codice operatore e password.";
     output.style.color = "red";
     return;
   }
 
   const password_hash = await sha256(password);
 
+  // 👇 DEBUG visibile in console
+  console.log("LOGIN DEBUG →", {
+    identificatore,
+    password,
+    password_hash
+  });
+
   fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      tipoRichiesta: "login",
+      tipoRichiesta: "login_operatore",
       identificatore,
       password_hash
     })
@@ -590,15 +594,14 @@ async function verificaLogin() {
       if (data.status === "success") {
         output.textContent = "Accesso effettuato!";
         output.style.color = "green";
-        localStorage.setItem("codice_cliente", data.codice_cliente);
-        window.location.href = "area-clienti.html";
+        localStorage.setItem("operatore", JSON.stringify(data));
+        window.location.href = "area-operatori.html";
       } else {
-        output.textContent = "Credenziali errate.";
+        output.textContent = "Accesso negato. Verifica le credenziali.";
         output.style.color = "red";
       }
     })
-    .catch(err => {
-      console.error("Errore login:", err);
+    .catch(() => {
       output.textContent = "Errore di rete. Riprova.";
       output.style.color = "red";
     });
