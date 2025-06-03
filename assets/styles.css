@@ -3204,3 +3204,82 @@ body .indice-info-utili {
  
 }
 
+@media screen and (min-width: 1400px) {
+  /* Hero Section */
+  .hero-section {
+    padding-top: 100px;
+    padding-bottom: 80px;
+  }
+
+  .hero-title {
+    font-size: clamp(3rem, 5vw, 5.8rem);
+    text-align: center;
+    margin-bottom: 1.2em;
+  }
+
+  .hero-subtitle {
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    text-align: center;
+    margin-bottom: 1.5em;
+  }
+
+  /* Intestazioni sezioni */
+  .indice-info-utili h2,
+  .info-section h2 {
+    font-size: 2.2rem;
+    margin-bottom: 2rem;
+  }
+
+  /* Indice (Lista domande) */
+  .indice-lista {
+    font-size: 1.4rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .indice-lista li {
+    margin-bottom: 1.2rem;
+    padding-left: 1.5rem;
+    font-size: 1.3rem;
+  }
+
+  .indice-lista li::before {
+    font-size: 1.2rem;
+    color: #8B2C2B;
+    left: 0;
+  }
+
+  /* Box FAQ */
+  .info-toggle {
+    font-size: 1.4rem;
+    padding: 28px 32px;
+  }
+
+  .info-content {
+    font-size: 1.3rem;
+    padding: 0 32px;
+  }
+
+  .info-box.aperto .info-content {
+    padding: 28px 32px;
+    margin-left: 28px;
+  }
+
+  .info-box {
+    margin: 24px 0;
+  }
+
+  /* Contenitore FAQ */
+  .info-boxes-container {
+    max-width: 1120px;
+    padding: 0 30px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Spaziature extra se vuoi più "respiro" */
+  .info-boxes-container > .info-box:last-child {
+    margin-bottom: 60px;
+  }
+}
+
