@@ -3535,14 +3535,6 @@ body .indice-info-utili {
   background-color: #A53433;
 }
 
-.message-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 auto;
-  max-width: 600px;
-  font-family: 'Quicksand', sans-serif;
-}
-
 .message-list li {
   background-color: white;
   border-left: 5px solid #8B2C2B;
@@ -3576,6 +3568,7 @@ body .indice-info-utili {
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
   transition: background-color 0.3s ease;
+  width: 100%;
 }
 
 .message-list .msg-header {
@@ -3594,11 +3587,12 @@ body .indice-info-utili {
   line-height: 1.5;
   max-height: 4.5em;
   overflow: hidden;
-  transition: max-height 0.3s ease;
+  transition: max-height 0.4s ease, padding 0.3s ease;
 }
 
 .message-list .msg-item.expanded .msg-preview {
   max-height: 1000px;
+  padding-bottom: 5px;
 }
 
 .message-list .toggle-msg {
@@ -3617,6 +3611,15 @@ body .indice-info-utili {
 
 .message-list .toggle-msg:hover {
   color: #8B2C2B;
+}
+
+/* ✅ Nuova regola per schermi >769px */
+@media screen and (min-width: 769px) {
+  .message-list .msg-item {
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 @media screen and (max-width: 480px) {
