@@ -6,7 +6,11 @@ async function generaSHA256(text) {
   const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
   return hashHex;
 }
-
+async function sha256(msg) {
+  const buffer = new TextEncoder().encode(msg);
+  const hash = await crypto.subtle.digest("SHA-256", buffer);
+  return [...new Uint8Array(hash)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
 
 let yukiWelcomeShown = false;
 
@@ -218,22 +222,56 @@ const filtriInput = {};
 
 // ✅ Attiva visibilità frecce dinamiche
 document.addEventListener('DOMContentLoaded', () => {
-  // ✅ Attiva visibilità frecce dinamiche
+  // 1. Frecce dinamiche slider
   updateSliderArrowVisibility('partiSlider', '.parti-con-noi-section .slider-arrow.left', '.parti-con-noi-section .slider-arrow.right');
   updateSliderArrowVisibility('bestsellerSlider', '.bestseller-section .slider-arrow.left', '.bestseller-section .slider-arrow.right');
   updateSliderArrowVisibility('sartoriaSlider', '.sartoria-slider-wrapper .slider-arrow.left', '.sartoria-slider-wrapper .slider-arrow.right');
 
-  // ✅ Inizializza slider input
-  sliderIds.forEach(id => {
-    filtriInput[id] = document.getElementById(`filtro-${id}`);
-  });
+  // 2. Filtri input (slider knob)
+  if (typeof sliderIds !== "undefined") {
+    sliderIds.forEach(id => {
+      filtriInput[id] = document.getElementById(`filtro-${id}`);
+    });
+  }
 
-  // ✅ (E qui puoi aggiungere il tuo formRegistrazione se serve)
-  const form = document.getElementById("formRegistrazione");
-  if (form) {
-    form.addEventListener("submit", function (event) {
-      event.preventDefault();
+  // 3. Registrazione
+  const formRegistrazione = document.getElementById("formRegistrazione");
+  if (formRegistrazione) {
+    formRegistrazione.addEventListener("submit", e => {
+      e.preventDefault();
       inviaRegistrazione();
+    });
+  }
+
+  // 4. Login
+  const formLogin = document.getElementById("formLogin");
+  if (formLogin) {
+    formLogin.addEventListener("submit", e => {
+      e.preventDefault();
+      verificaLogin();
+    });
+  }
+
+  // 5. Richiesta consulenza
+  const formConsulenza = document.getElementById("formConsulenza");
+  if (formConsulenza) {
+    formConsulenza.addEventListener("submit", e => {
+      e.preventDefault();
+      inviaRichiestaConsulenza();
+    });
+  }
+
+  // 6. Area Clienti – caricamento profilo se presente
+  if (window.location.pathname.includes("area-clienti")) {
+    getProfiloCliente(); // recupera dati da Sheets via codice cliente salvato
+  }
+
+  // 7. Aggiorna profilo, se bottone esiste
+  const formProfilo = document.getElementById("formProfilo");
+  if (formProfilo) {
+    formProfilo.addEventListener("submit", e => {
+      e.preventDefault();
+      aggiornaProfiloCliente();
     });
   }
 });
@@ -485,6 +523,166 @@ async function inviaRegistrazione() {
       output.textContent = "  Errore di rete. Riprova.";
       output.style.color = "red";
     });
+}
+
+async function verificaLogin() {
+  const identificatore = document.getElementById("emailLogin").value.trim();
+  const password = document.getElementById("passwordLogin").value.trim();
+  const output = document.getElementById("esitoLogin");
+
+  output.textContent = "";
+
+  if (!identificatore || !password) {
+    output.textContent = "Inserisci email o codice cliente e password.";
+    output.style.color = "red";
+    return;
+  }
+
+  const password_hash = await sha256(password);
+
+  fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      tipoRichiesta: "login",
+      identificatore,
+      password_hash
+    })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "success") {
+        output.textContent = "Accesso effettuato!";
+        output.style.color = "green";
+        localStorage.setItem("codice_cliente", data.codice_cliente);
+        window.location.href = "area-clienti.html";
+      } else {
+        output.textContent = "Credenziali errate.";
+        output.style.color = "red";
+      }
+    })
+    .catch(err => {
+      console.error("Errore login:", err);
+      output.textContent = "Errore di rete. Riprova.";
+      output.style.color = "red";
+    });
+}
+
+
+async function inviaRichiestaConsulenza() {
+  const messaggio = document.getElementById("messaggio").value.trim();
+  const esito = document.getElementById("esitoConsulenza");
+
+  esito.textContent = "";
+
+  // Recupera codice cliente da localStorage
+  const codice_cliente = localStorage.getItem("codice_cliente");
+
+  if (!codice_cliente) {
+    esito.textContent = "⚠️ Sessione scaduta. Fai login di nuovo.";
+    esito.style.color = "red";
+    return;
+  }
+
+  if (!messaggio) {
+    esito.textContent = "Inserisci un messaggio.";
+    esito.style.color = "red";
+    return;
+  }
+
+  try {
+    const response = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tipoRichiesta: "consulenza",
+        codice_cliente,
+        messaggio
+      })
+    });
+
+    const result = await response.json();
+
+    if (result.status === "ok") {
+      esito.textContent = "✅ Richiesta inviata con successo!";
+      esito.style.color = "green";
+      document.getElementById("formConsulenza").reset();
+    } else {
+      esito.textContent = "❌ Errore: " + (result.message || "Impossibile inviare.");
+      esito.style.color = "red";
+    }
+  } catch (error) {
+    console.error("Errore rete:", error);
+    esito.textContent = "❌ Errore di rete. Riprova.";
+    esito.style.color = "red";
+  }
+}
+
+async function getProfiloCliente() {
+  const codice_cliente = localStorage.getItem("codice_cliente");
+  if (!codice_cliente) return console.warn("Codice cliente non trovato nel localStorage");
+
+  try {
+    const res = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tipoRichiesta: "get",
+        codice_cliente
+      })
+    });
+
+    const data = await res.json();
+    if (data.status === "ok" && data.profilo) {
+      // Esempio: popola il form in area-clienti.html
+      for (const [chiave, valore] of Object.entries(data.profilo)) {
+        const campo = document.getElementById(chiave);
+        if (campo) campo.value = valore;
+      }
+    } else {
+      console.error("Errore nel recupero profilo:", data.message);
+    }
+  } catch (err) {
+    console.error("Errore rete:", err);
+  }
+}
+
+async function aggiornaProfiloCliente() {
+  const codice_cliente = localStorage.getItem("codice_cliente");
+  if (!codice_cliente) {
+    alert("Sessione scaduta. Fai login di nuovo.");
+    return;
+  }
+
+  // Esempio con nome e cognome. Aggiungi qui tutti i campi che desideri aggiornare
+  const nome = document.getElementById("nome").value.trim();
+  const cognome = document.getElementById("cognome").value.trim();
+
+  try {
+    const res = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tipoRichiesta: "update",
+        codice_cliente,
+        nome,
+        cognome
+        // Aggiungi altri campi se necessari
+      })
+    });
+
+    const data = await res.json();
+    if (data.status === "ok") {
+      alert("✅ Profilo aggiornato con successo!");
+    } else {
+      alert("❌ Errore: " + data.message);
+    }
+  } catch (err) {
+    console.error("Errore rete:", err);
+    alert("Errore di rete. Riprova.");
+  }
 }
 
 
