@@ -1084,7 +1084,7 @@ function caricaPDFCliente() {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      tipoRichiesta: "get_pdf",
+      tipoRichiesta: "get_pdf_cliente",
       codice_cliente: codiceCliente
     })
   })
