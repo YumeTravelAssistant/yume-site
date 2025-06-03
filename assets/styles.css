@@ -3637,3 +3637,38 @@ body .indice-info-utili {
   }
 }
 
+.reply-box {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reply-box textarea {
+  width: 100%;
+  font-family: 'Quicksand', sans-serif;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  resize: vertical;
+}
+
+.reply-box button.send-reply {
+  align-self: flex-end;
+  padding: 6px 12px;
+  font-weight: 600;
+  background-color: #8B2C2B;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.reply-box button.send-reply:hover {
+  background-color: #A33332;
+}
+
+.reply-box.hidden {
+  display: none;
+}
+
