@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (formLogin) {
     formLogin.addEventListener("submit", e => {
       e.preventDefault();
-      verificaLogin();
+      verificaLoginCliente();
     });
   }
 
