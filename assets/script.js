@@ -823,7 +823,8 @@ function inviaRispostaOperatore() {
     .then(data => {
       if (data.status === "ok") {
         alert("Risposta inviata con successo.");
-        document.getElementById("testoRisposta").value = "";
+        document.getElementById("messaggioRisposta").value = "";
+
       } else {
         alert("Errore: " + data.message);
       }
