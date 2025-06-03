@@ -656,26 +656,47 @@ async function aggiornaProfiloCliente() {
     return;
   }
 
-  // Esempio con nome e cognome. Aggiungi qui tutti i campi che desideri aggiornare
   const nome = document.getElementById("nome").value.trim();
   const cognome = document.getElementById("cognome").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const passwordAttuale = document.getElementById("passwordAttuale").value.trim();
+  const nuovaPassword = document.getElementById("nuovaPassword").value.trim();
+  const confermaNuovaPassword = document.getElementById("confermaNuovaPassword").value.trim();
+
+  const payload = {
+    tipoRichiesta: "update",
+    codice_cliente,
+    nome,
+    cognome,
+    email
+  };
+
+  if (passwordAttuale || nuovaPassword || confermaNuovaPassword) {
+    if (!passwordAttuale || !nuovaPassword || !confermaNuovaPassword) {
+      alert("Compila tutti i campi della sezione password.");
+      return;
+    }
+
+    if (nuovaPassword !== confermaNuovaPassword) {
+      alert("La nuova password e la conferma non coincidono.");
+      return;
+    }
+
+    payload.password_attuale_hash = await generaSHA256(passwordAttuale);
+    payload.nuova_password_hash = await generaSHA256(nuovaPassword);
+  }
 
   try {
     const res = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        tipoRichiesta: "update",
-        codice_cliente,
-        nome,
-        cognome
-        // Aggiungi altri campi se necessari
-      })
+      body: JSON.stringify(payload)
     });
 
     const data = await res.json();
     if (data.status === "ok") {
-      alert("✅ Profilo aggiornato con successo!");
+      alert("✅ Dati aggiornati con successo!");
+      document.getElementById("formProfilo").reset();
     } else {
       alert("❌ Errore: " + data.message);
     }
@@ -1270,5 +1291,23 @@ function checkEmailMatch() {
   }
 }
 
+function checkPasswordMatchAreaClienti() {
+  const nuova = document.getElementById("nuovaPassword").value;
+  const conferma = document.getElementById("confermaNuovaPassword").value;
+  const msg = document.getElementById("passwordMatchMessageAC");
+
+  if (!conferma) {
+    msg.innerHTML = "";
+    return;
+  }
+
+  if (nuova === conferma) {
+    msg.innerHTML = `<i class="fas fa-check-circle icon-ok"></i> Le password coincidono`;
+    msg.className = "password-message ok";
+  } else {
+    msg.innerHTML = `<i class="fas fa-times-circle icon-ko"></i> Le password non coincidono`;
+    msg.className = "password-message ko";
+  }
+}
 
 
