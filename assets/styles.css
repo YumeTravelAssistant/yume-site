@@ -179,7 +179,14 @@ footer {
     transition: transform 0.3s ease;
     z-index: 999;
     flex-direction: column;
-    padding-top: 130px;
+.info-form {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 16px;
+  max-width: 600px;
+  margin: 40px auto;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+}    padding-top: 130px;
     display: flex;
   }
 
@@ -3239,6 +3246,8 @@ body .indice-info-utili {
   padding: 0 15px;
   margin-left: 20px;
 }
+}
+
 
 /* 🔄 Transizione apertura box */
 .info-content {
@@ -3298,5 +3307,176 @@ body .indice-info-utili {
   margin-left: 20px;
  
 }
+}
 
+/* -------------------------------------
+   FORM AREA CLIENTI (profilo.html)
+------------------------------------- */
+.info-form {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 16px;
+  max-width: 600px;
+  margin: 40px auto;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+
+  display: flex;              /* ✅ necessario per align-self */
+  flex-direction: column;     /* ✅ disposizione verticale */
+  align-items: flex-start;    /* mantiene tutto allineato a sinistra tranne se specificato */
+  gap: 20px;                  /* spaziatura elegante tra i blocchi */
+}
+
+.info-form .form-group {
+  margin-bottom: 20px;
+}
+
+.info-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.info-form input[type="text"],
+.info-form input[type="email"],
+.info-form input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.95rem;
+  margin-top: 10px;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 400;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"] {
+  margin: 0;
+  width: 16px;
+  height: 16px;
+  accent-color: #8B2C2B; /* colore coerente con palette */
+  cursor: pointer;
+}
+
+
+/* -------------------------------------
+   RESPONSIVE FORM PROFILO
+------------------------------------- */
+
+/* < 400px */
+@media screen and (max-width: 400px) {
+  .info-form {
+    padding: 20px;
+    margin: 20px 10px;
+  }
+}
+
+/* 401–768px */
+@media screen and (min-width: 401px) and (max-width: 768px) {
+  .info-form {
+    padding: 25px;
+  }
+}
+
+/* 769–1399px */
+@media screen and (min-width: 769px) and (max-width: 1399px) {
+  .info-form {
+    padding: 30px;
+  }
+}
+
+/* ≥ 1400px */
+@media screen and (min-width: 1400px) {
+  .info-form {
+    padding: 35px;
+  }
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.input-wrapper input {
+  flex: 1;
+}
+
+.toggle-visibility {
+  background: none;
+  border: none;
+  font-size: 0.9rem;
+  color: var(--rosso);
+  cursor: pointer;
+  padding: 0;
+  font-family: 'Raleway', sans-serif;
+}
+
+.password-message,
+.email-message {
+  margin-top: 6px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.password-message.ok,
+.email-message.ok {
+  color: #4CAF50;
+}
+
+.password-message.ko,
+.email-message.ko {
+  color: #D32F2F;
+}
+
+.icon-ok,
+.icon-ko {
+  font-size: 1rem;
+}
+
+/* Bottone Registrazione solo per form */
+.modern-btn.form-submit {
+  position: relative;
+  display: inline-block;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #C9A86A;
+  background-color: transparent;
+  border: 2px solid #C9A86A;
+  border-radius: 16px;
+  text-decoration: none;
+  font-family: 'Quicksand', sans-serif;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  width: auto;
+  max-width: 100%;
+  box-sizing: border-box;
+  align-self: flex-end;  /* ✅ spostato a destra */
+  margin-top: 30px;
+}
+
+@media screen and (min-width: 769px) {
+  .info-form input[type="email"] {
+    min-width: 400px;
+  }
+}
 
