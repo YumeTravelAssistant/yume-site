@@ -768,17 +768,21 @@ function caricaMessaggi() {
 
         li.innerHTML = `
           <div class="msg-header">
-            <strong>${m.da === "operatore" ? "👤 Operatore" : "🧍 Tu"}</strong>
+            <strong>${m.operatore || "👤 Operatore"}</strong>
             <small>${new Date(m.timestamp).toLocaleString()}</small>
           </div>
-          <div class="msg-preview">${m.testo}</div>
+          <div class="msg-preview">${m.messaggio}</div>
           <button class="toggle-msg">Leggi tutto</button>
+          <div class="reply-box hidden">
+            <textarea rows="2" placeholder="Scrivi la tua risposta..."></textarea>
+            <button class="send-reply">Invia</button>
+          </div>
+          <button class="reply-toggle">Rispondi</button>
         `;
 
         lista.appendChild(li);
       });
 
-      // Attiva toggle su tutti i pulsanti dopo inserimento
       lista.querySelectorAll(".toggle-msg").forEach(button => {
         button.addEventListener("click", () => {
           const li = button.closest(".msg-item");
@@ -786,11 +790,43 @@ function caricaMessaggi() {
           button.textContent = li.classList.contains("expanded") ? "Chiudi" : "Leggi tutto";
         });
       });
+
+      lista.querySelectorAll(".reply-toggle").forEach(button => {
+        button.addEventListener("click", () => {
+          const box = button.previousElementSibling;
+          box.classList.toggle("hidden");
+        });
+      });
+
+      lista.querySelectorAll(".send-reply").forEach(button => {
+        button.addEventListener("click", () => {
+          const textarea = button.previousElementSibling;
+          const testo = textarea.value.trim();
+          if (!testo) return;
+
+          fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              tipoRichiesta: "risposta_cliente",
+              codice_cliente: codiceCliente,
+              messaggio: testo
+            })
+          }).then(res => res.json()).then(resp => {
+            if (resp.status === "ok") {
+              textarea.value = "";
+              button.closest(".reply-box").classList.add("hidden");
+              alert("Risposta inviata con successo.");
+              caricaMessaggi();
+            } else {
+              alert("Errore nell'invio della risposta.");
+            }
+          });
+        });
+      });
     })
     .catch(error => {
       console.error("Errore nel caricamento messaggi:", error);
-      const lista = document.getElementById("listaMessaggi");
-      if (lista) lista.innerHTML = "<li>Errore nel recupero dei messaggi.</li>";
     });
 }
 
