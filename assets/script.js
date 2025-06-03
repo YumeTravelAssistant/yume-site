@@ -864,7 +864,7 @@ async function verificaLoginOperatore() {
       if (data.status === "success") {
         output.textContent = "Accesso effettuato!";
         output.style.color = "green";
-        localStorage.setItem("codice_operatore", JSON.stringify(data));
+        localStorage.setItem("codice_operatore", data.codice_operatore);
         window.location.href = "area-operatori.html";
       } else {
         output.textContent = "Accesso negato. Verifica le credenziali.";
