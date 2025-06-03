@@ -3535,3 +3535,17 @@ body .indice-info-utili {
   background-color: #A53433;
 }
 
+.message-list {
+  list-style: none;
+  padding: 0;
+}
+
+.message-list li {
+  background-color: #f4f0e2;
+  margin-bottom: 15px;
+  padding: 15px 20px;
+  border-left: 4px solid #8B2C2B;
+  font-family: 'Quicksand', sans-serif;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
