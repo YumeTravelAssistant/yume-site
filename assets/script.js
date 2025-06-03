@@ -265,6 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (window.location.pathname.includes("area-clienti")) {
     getProfiloCliente();     // recupera dati da Sheets via codice cliente salvato
     caricaMessaggi();        // recupera i messaggi da Sheets e li mostra
+    caricaPDFCliente();      // ✅ recupera PDF personalizzati da Sheets
   }
 
   // 7. Aggiorna profilo, se bottone esiste
@@ -1072,6 +1073,33 @@ function aggiornaProfiloOperatore() {
         alert(data.message || "Errore durante l'aggiornamento.");
       }
     });
+  });
+}
+
+function caricaPDFCliente() {
+  const codiceCliente = localStorage.getItem("codice_cliente");
+  if (!codiceCliente) return;
+
+  fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      tipoRichiesta: "get_pdf",
+      codice_cliente: codiceCliente
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    const lista = document.getElementById("listaPDF");
+    if (!lista || data.status !== "ok") return;
+
+    lista.innerHTML = data.pdf.length
+      ? data.pdf.map(p => `<li><a href="${p.url}" target="_blank"><i class="fa fa-file-pdf-o"></i> ${p.nome}</a></li>`).join("")
+      : "<li>Nessun documento disponibile.</li>";
+  })
+  .catch(() => {
+    const lista = document.getElementById("listaPDF");
+    if (lista) lista.innerHTML = "<li>Errore nel caricamento dei documenti.</li>";
   });
 }
 
