@@ -3328,6 +3328,7 @@ body .indice-info-utili {
 
 .info-form .form-group {
   margin-bottom: 20px;
+  width: 100%
 }
 
 .info-form label {
@@ -3673,6 +3674,8 @@ body .indice-info-utili {
   .info-form {
     padding: 45px;
     font-size: 1.15rem;
+    max-width: 1200px;
+    width: auto;
   }
 
   .info-form h3 {
@@ -3729,5 +3732,30 @@ body .indice-info-utili {
 
 .reply-box.hidden {
   display: none;
+}
+
+#messaggioRisposta {
+  width: 100%;
+  min-height: 120px;
+  font-size: 1rem;
+  padding: 14px;
+  resize: vertical;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+@media (min-width: 769px) and (max-width: 1399px) {
+  #messaggioRisposta {
+    min-height: 160px;
+    font-size: 1.1rem;
+    min-width: 600px;
+  }
+}
+
+@media (min-width: 1400px) {
+  #messaggioRisposta {
+    min-height: 200px;
+    font-size: 1.2rem;
+    min-width: 900px;
+  }
 }
 
