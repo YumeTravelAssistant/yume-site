@@ -208,17 +208,24 @@ const filtriInput = {};
 
 // ✅ Attiva visibilità frecce dinamiche
 document.addEventListener('DOMContentLoaded', () => {
+  // ✅ Attiva visibilità frecce dinamiche
   updateSliderArrowVisibility('partiSlider', '.parti-con-noi-section .slider-arrow.left', '.parti-con-noi-section .slider-arrow.right');
   updateSliderArrowVisibility('bestsellerSlider', '.bestseller-section .slider-arrow.left', '.bestseller-section .slider-arrow.right');
   updateSliderArrowVisibility('sartoriaSlider', '.sartoria-slider-wrapper .slider-arrow.left', '.sartoria-slider-wrapper .slider-arrow.right');
 
-
-document.addEventListener('DOMContentLoaded', () => {
+  // ✅ Inizializza slider input
   sliderIds.forEach(id => {
     filtriInput[id] = document.getElementById(`filtro-${id}`);
   });
-});
 
+  // ✅ (E qui puoi aggiungere il tuo formRegistrazione se serve)
+  const form = document.getElementById("formRegistrazione");
+  if (form) {
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      inviaRegistrazione();
+    });
+  }
 });
 
 
@@ -403,6 +410,69 @@ document.querySelectorAll(".indice-lista a[href^='#']").forEach(link => {
 });
 
 
+function inviaRegistrazione(event) {
+  if (event) event.preventDefault(); //   Previene il submit classico
+
+  const nome = document.getElementById("nome").value.trim();
+  const cognome = document.getElementById("cognome").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const confermaEmail = document.getElementById("confermaEmail").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const confermaPassword = document.getElementById("confermaPassword").value.trim();
+  const newsletter = document.getElementById("newsletter").checked;
+  const privacy = document.getElementById("privacy").checked;
+  const termini = document.getElementById("termini").checked;
+  const output = document.getElementById("esitoRegistrazione");
+
+  output.textContent = "";
+
+  if (email !== confermaEmail) {
+    output.textContent = "Le email non coincidono.";
+    output.style.color = "red";
+    return;
+  }
+  if (password !== confermaPassword) {
+    output.textContent = "Le password non coincidono.";
+    output.style.color = "red";
+    return;
+  }
+  if (!privacy || !termini) {
+    output.textContent = "Devi accettare privacy e termini.";
+    output.style.color = "red";
+    return;
+  }
+
+  fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      tipoRichiesta: "registrazione",
+      nome,
+      cognome,
+      email,
+      password,
+      newsletter,
+      privacy_accettata: privacy,
+      termini_accettati: termini
+    })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "ok") {
+        output.textContent = "Registrazione completata con successo!";
+        output.style.color = "green";
+        document.getElementById("formRegistrazione").reset();
+      } else {
+        output.textContent = "Errore: " + (data.message || "Impossibile completare la registrazione.");
+        output.style.color = "red";
+      }
+    })
+    .catch(err => {
+      console.error("Errore registrazione:", err);
+      output.textContent = "Errore di rete. Riprova.";
+      output.style.color = "red";
+    });
+}
 
 
 
@@ -990,77 +1060,5 @@ function checkEmailMatch() {
   }
 }
 
-function inviaRegistrazione(event) {
-  if (event) event.preventDefault(); // ⛔ Previene il submit classico
 
-  const nome = document.getElementById("nome").value.trim();
-  const cognome = document.getElementById("cognome").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const confermaEmail = document.getElementById("confermaEmail").value.trim();
-  const password = document.getElementById("password").value.trim();
-  const confermaPassword = document.getElementById("confermaPassword").value.trim();
-  const newsletter = document.getElementById("newsletter").checked;
-  const privacy = document.getElementById("privacy").checked;
-  const termini = document.getElementById("termini").checked;
-  const output = document.getElementById("esitoRegistrazione");
-
-  output.textContent = "";
-
-  if (email !== confermaEmail) {
-    output.textContent = "Le email non coincidono.";
-    output.style.color = "red";
-    return;
-  }
-  if (password !== confermaPassword) {
-    output.textContent = "Le password non coincidono.";
-    output.style.color = "red";
-    return;
-  }
-  if (!privacy || !termini) {
-    output.textContent = "Devi accettare privacy e termini.";
-    output.style.color = "red";
-    return;
-  }
-
-  fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      tipoRichiesta: "registrazione",
-      nome,
-      cognome,
-      email,
-      password,
-      newsletter,
-      privacy_accettata: privacy,
-      termini_accettati: termini
-    })
-  })
-    .then(res => res.json())
-    .then(data => {
-      if (data.status === "ok") {
-        output.textContent = "Registrazione completata con successo!";
-        output.style.color = "green";
-        document.getElementById("formRegistrazione").reset();
-      } else {
-        output.textContent = "Errore: " + (data.message || "Impossibile completare la registrazione.");
-        output.style.color = "red";
-      }
-    })
-    .catch(err => {
-      console.error("Errore registrazione:", err);
-      output.textContent = "Errore di rete. Riprova.";
-      output.style.color = "red";
-    });
-}
-
-document.addEventListener("DOMContentLoaded", function () {
-  const form = document.getElementById("formRegistrazione");
-  if (form) {
-    form.addEventListener("submit", function (event) {
-      event.preventDefault(); // ⛔ blocca il comportamento GET
-      inviaRegistrazione();   // ✅ chiama la tua funzione JS
-    });
-  }
-});
 
