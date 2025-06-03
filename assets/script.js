@@ -1054,3 +1054,13 @@ function inviaRegistrazione(event) {
     });
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("formRegistrazione");
+  if (form) {
+    form.addEventListener("submit", function (event) {
+      event.preventDefault(); // ⛔ blocca il comportamento GET
+      inviaRegistrazione();   // ✅ chiama la tua funzione JS
+    });
+  }
+});
+
