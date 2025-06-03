@@ -275,6 +275,39 @@ document.addEventListener('DOMContentLoaded', () => {
       aggiornaProfiloCliente();
     });
   }
+ 
+  // 8. Area Operatori – carica richieste e abilita form risposta
+  if (window.location.pathname.includes("area-operatori")) {
+    caricaRichiesteOperatori();  // carica da richieste_consulenza
+
+    const formRisposta = document.getElementById("formRispostaOperatore");
+    if (formRisposta) {
+      formRisposta.addEventListener("submit", e => {
+        e.preventDefault();
+        inviaRispostaOperatore();
+      });
+    }
+  }
+  // 9. Login Operatori
+  const formLoginOperatore = document.getElementById("formLoginOperatore");
+   if (formLoginOperatore) {
+   formLoginOperatore.addEventListener("submit", e => {
+     e.preventDefault();
+     verificaLoginOperatore();
+  });
+}
+   // 10. Profilo Operatore – gestione dati
+if (window.location.pathname.includes("area-operatori")) {
+  getProfiloOperatore(); // fetch da Sheets
+  const formProfilo = document.getElementById("formProfiloOperatore");
+  if (formProfilo) {
+    formProfilo.addEventListener("submit", e => {
+      e.preventDefault();
+      aggiornaProfiloOperatore();
+    });
+  }
+}
+
 });
 
 
@@ -733,6 +766,189 @@ async function caricaMessaggi() {
       });
     }
   }
+}
+
+// 🔁 CARICA RICHIESTE CLIENTI (area operatori)
+function caricaRichiesteOperatori() {
+  const codiceOperatore = localStorage.getItem("codice_operatore");
+  if (!codiceOperatore) return;
+
+  fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      tipoRichiesta: "listaConsulenze"
+    })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "ok") {
+        const lista = document.getElementById("listaRichieste");
+        if (!lista) return;
+        lista.innerHTML = "";
+        data.consulenze.forEach(c => {
+          const li = document.createElement("li");
+          li.innerHTML = `<strong>${c.codice_cliente}</strong><br>${c.messaggio}<br><small>${c.timestamp}</small>`;
+          lista.appendChild(li);
+        });
+      }
+    });
+}
+
+// ✉️ INVIA RISPOSTA CLIENTE
+function inviaRispostaOperatore() {
+  const codice = document.getElementById("codiceClienteRisposta").value.trim();
+  const messaggio = document.getElementById("messaggioRisposta").value.trim();
+  const operatore = localStorage.getItem("codice_operatore"); // oppure inserito manualmente
+
+  if (!codice || !messaggio || !operatore) {
+    alert("Compila tutti i campi!");
+    return;
+  }
+
+  fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      tipoRichiesta: "risposta",
+      codice_cliente: codice,
+      messaggio: messaggio,
+      operatore: operatore
+    })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "ok") {
+        alert("Risposta inviata con successo.");
+        document.getElementById("testoRisposta").value = "";
+      } else {
+        alert("Errore: " + data.message);
+      }
+    })
+    .catch(err => {
+      console.error("Errore:", err);
+      alert("Errore tecnico nell'invio della risposta.");
+    });
+}
+
+async function verificaLoginOperatore() {
+  const identificatore = document.getElementById("codiceOperatore").value.trim();
+  const password = document.getElementById("passwordOperatore").value.trim();
+  const output = document.getElementById("esitoLoginOperatore");
+  output.textContent = "";
+
+  if (!identificatore || !password) {
+    output.textContent = "Inserisci codice operatore e password.";
+    output.style.color = "red";
+    return;
+  }
+
+  const password_hash = await sha256(password);
+
+  fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      tipoRichiesta: "login_operatore",
+      identificatore,
+      password_hash
+    })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "success") {
+        output.textContent = "Accesso effettuato!";
+        output.style.color = "green";
+        localStorage.setItem("operatore", JSON.stringify(data));
+        window.location.href = "area-operatori.html";
+      } else {
+        output.textContent = "Accesso negato. Verifica le credenziali.";
+        output.style.color = "red";
+      }
+    })
+    .catch(() => {
+      output.textContent = "Errore di rete. Riprova.";
+      output.style.color = "red";
+    });
+}
+
+async function getProfiloOperatore() {
+  const codice = localStorage.getItem("codice_operatore");
+  const esito = document.getElementById("esitoPasswordOperatore");
+  if (!codice) return;
+
+  try {
+    const res = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tipoRichiesta: "get_operatore",
+        codice_operatore: codice
+      })
+    });
+
+    const result = await res.json();
+    if (result.status === "ok") {
+      const profilo = result.profilo;
+      document.getElementById("nomeOperatore").value = profilo.nome || "";
+      document.getElementById("cognomeOperatore").value = profilo.cognome || "";
+      document.getElementById("emailOperatore").value = profilo.email || "";
+    } else {
+      esito.textContent = "Errore nel recupero del profilo.";
+      esito.style.color = "red";
+    }
+  } catch (err) {
+    console.error(err);
+    esito.textContent = "Errore di connessione.";
+    esito.style.color = "red";
+  }
+}
+
+
+function aggiornaProfiloOperatore() {
+  const codice_operatore = localStorage.getItem("codice_operatore");
+  const nome = document.getElementById("nome").value.trim();
+  const cognome = document.getElementById("cognome").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password_attuale = document.getElementById("passwordAttuale").value.trim();
+  const nuova_password = document.getElementById("nuovaPassword").value.trim();
+  const conferma_password = document.getElementById("confermaPassword").value.trim();
+
+  if (nuova_password && nuova_password !== conferma_password) {
+    alert("Le nuove password non coincidono.");
+    return;
+  }
+
+  const password_attuale_hash = sha256(password_attuale);
+  const nuovo_hash = nuova_password ? sha256(nuova_password) : null;
+
+  Promise.all([password_attuale_hash, nuovo_hash]).then(hashes => {
+    fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        tipoRichiesta: "update_operatore",
+        codice_operatore,
+        nome,
+        cognome,
+        email,
+        password_attuale_hash: hashes[0],
+        password_hash: nuova_password ? hashes[1] : undefined
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "ok") {
+        alert("Profilo aggiornato correttamente.");
+      } else {
+        alert(data.message || "Errore durante l'aggiornamento.");
+      }
+    });
+  });
 }
 
 
@@ -1339,4 +1555,23 @@ function checkPasswordMatchAreaClienti() {
   }
 }
 
+
+function checkPasswordMatchOperatore() {
+  const nuova = document.getElementById("nuovaPasswordOperatore").value;
+  const conferma = document.getElementById("confermaPasswordOperatore").value;
+  const msg = document.getElementById("passwordMatchMessageOperatore");
+
+  if (!conferma) {
+    msg.innerHTML = "";
+    return;
+  }
+
+  if (nuova === conferma) {
+    msg.innerHTML = `<i class="fas fa-check-circle icon-ok"></i> Le password coincidono`;
+    msg.className = "password-message ok";
+  } else {
+    msg.innerHTML = `<i class="fas fa-times-circle icon-ko"></i> Le password non coincidono`;
+    msg.className = "password-message ko";
+  }
+}
 
