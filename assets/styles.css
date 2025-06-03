@@ -2932,6 +2932,101 @@ p.hero-subtitle {
   cursor: pointer;
 }
 
+@media screen and (min-width: 1400px) {
+  .hero-section {
+    padding-top: 100px;
+    padding-bottom: 80px;
+  }
+
+  html body .hero-title {
+    font-size: clamp(3rem, 5vw, 5.8rem);
+    text-align: center;
+    margin-bottom: 1.2em;
+  }
+
+  html body .hero-subtitle {
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    text-align: center;
+    margin-bottom: 1.5em;
+  }
+
+  html body  .info-box {
+    background-color: #fff;
+    border: 1px solid #C9A86A;
+    border-radius: 10px;
+    margin: 20px auto;
+    font-family: 'Quicksand', sans-serif;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    max-width: 1800px;
+    width: 100%;
+  }
+
+  html body .indice-info-utili h2,
+  html body .info-section h2 {
+    font-size: 2.2rem;
+    margin-bottom: 2rem;
+  }
+
+  html body  .info-toggle {
+    font-size: 1.6rem;
+    padding: 32px 36px;
+    justify-content: space-between;
+    gap: 40px;
+  }
+
+  html body .indice-lista {
+    font-size: 1.4rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  html body .indice-lista li {
+    margin-bottom: 1.2rem;
+    padding-left: 1.5rem;
+    font-size: 1.3rem;
+  }
+
+  html body .indice-lista li::before {
+    font-size: 1.2rem;
+    color: #8B2C2B;
+    left: 0;
+  }
+
+  html body .info-toggle {
+    font-size: 1.4rem;
+    padding: 28px 32px;
+  }
+
+  html body .info-content {
+    font-size: 1.3rem;
+    padding: 0 32px;
+  }
+
+  html body .info-box.aperto .info-content {
+    padding: 28px 32px;
+    margin-left: 28px;
+  }
+
+  html body .info-box {
+    margin: 24px 0;
+  }
+
+  html body .info-boxes-container {
+    max-width: 1120px;
+    padding: 0 30px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  html body .info-boxes-container > .info-box:last-child {
+    margin-bottom: 60px;
+  }
+}
+
+
+
 /* -------------------------------
    INFO UTILI - INDICE E BOX
 -------------------------------- */
@@ -3204,82 +3299,4 @@ body .indice-info-utili {
  
 }
 
-@media screen and (min-width: 1400px) {
-  /* Hero Section */
-  .hero-section {
-    padding-top: 100px;
-    padding-bottom: 80px;
-  }
-
-  .hero-title {
-    font-size: clamp(3rem, 5vw, 5.8rem);
-    text-align: center;
-    margin-bottom: 1.2em;
-  }
-
-  .hero-subtitle {
-    font-size: clamp(2rem, 3vw, 2.8rem);
-    text-align: center;
-    margin-bottom: 1.5em;
-  }
-
-  /* Intestazioni sezioni */
-  .indice-info-utili h2,
-  .info-section h2 {
-    font-size: 2.2rem;
-    margin-bottom: 2rem;
-  }
-
-  /* Indice (Lista domande) */
-  .indice-lista {
-    font-size: 1.4rem;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-
-  .indice-lista li {
-    margin-bottom: 1.2rem;
-    padding-left: 1.5rem;
-    font-size: 1.3rem;
-  }
-
-  .indice-lista li::before {
-    font-size: 1.2rem;
-    color: #8B2C2B;
-    left: 0;
-  }
-
-  /* Box FAQ */
-  .info-toggle {
-    font-size: 1.4rem;
-    padding: 28px 32px;
-  }
-
-  .info-content {
-    font-size: 1.3rem;
-    padding: 0 32px;
-  }
-
-  .info-box.aperto .info-content {
-    padding: 28px 32px;
-    margin-left: 28px;
-  }
-
-  .info-box {
-    margin: 24px 0;
-  }
-
-  /* Contenitore FAQ */
-  .info-boxes-container {
-    max-width: 1120px;
-    padding: 0 30px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  /* Spaziature extra se vuoi più "respiro" */
-  .info-boxes-container > .info-box:last-child {
-    margin-bottom: 60px;
-  }
-}
 
