@@ -768,10 +768,10 @@ function caricaMessaggi() {
 
         li.innerHTML = `
           <div class="msg-header">
-            <strong>${m.operatore || "👤 Operatore"}</strong>
+            <strong>${m.da === "operatore" ? "👤 Operatore" : "🧍 Tu"}</strong>
             <small>${new Date(m.timestamp).toLocaleString()}</small>
           </div>
-          <div class="msg-preview">${m.messaggio}</div>
+          <div class="msg-preview">${m.testo}</div>
           <button class="toggle-msg">Leggi tutto</button>
           <div class="reply-box hidden">
             <textarea rows="2" placeholder="Scrivi la tua risposta..."></textarea>
@@ -783,6 +783,7 @@ function caricaMessaggi() {
         lista.appendChild(li);
       });
 
+      // Toggle messaggi
       lista.querySelectorAll(".toggle-msg").forEach(button => {
         button.addEventListener("click", () => {
           const li = button.closest(".msg-item");
@@ -791,6 +792,7 @@ function caricaMessaggi() {
         });
       });
 
+      // Mostra il box di risposta
       lista.querySelectorAll(".reply-toggle").forEach(button => {
         button.addEventListener("click", () => {
           const box = button.previousElementSibling;
@@ -798,6 +800,7 @@ function caricaMessaggi() {
         });
       });
 
+      // Invia risposta
       lista.querySelectorAll(".send-reply").forEach(button => {
         button.addEventListener("click", () => {
           const textarea = button.previousElementSibling;
@@ -827,6 +830,8 @@ function caricaMessaggi() {
     })
     .catch(error => {
       console.error("Errore nel caricamento messaggi:", error);
+      const lista = document.getElementById("listaMessaggi");
+      if (lista) lista.innerHTML = "<li>Errore nel recupero dei messaggi.</li>";
     });
 }
 
