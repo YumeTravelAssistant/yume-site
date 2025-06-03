@@ -3551,6 +3551,7 @@ body .indice-info-utili {
   margin-top: 20px;
 }
 
+
 /* LISTA MESSAGGI */
 .message-list {
   list-style: none;
@@ -3587,14 +3588,15 @@ body .indice-info-utili {
   line-height: 1.5;
   max-height: 4.5em;
   overflow: hidden;
-  white-space: pre-wrap; /* 👈 IMPORTANTE: mostra a capo e spazi */
+  white-space: pre-wrap;
   word-wrap: break-word;
-  transition: max-height 0.4s ease, padding 0.3s ease;
+  transition: max-height 0.4s ease;
 }
 
-.message-list li.expanded .msg-preview {
+.message-list .msg-item.expanded .msg-preview {
   max-height: 1000px;
-  padding-bottom: 5px;
+  padding-top: 4px;
+  transition: max-height 0.4s ease;
 }
 
 .message-list .toggle-msg {
@@ -3615,7 +3617,6 @@ body .indice-info-utili {
   color: #8B2C2B;
 }
 
-/* ✅ Nuova regola per schermi >769px */
 @media screen and (min-width: 769px) {
   .message-list .msg-item {
     width: 500px;
