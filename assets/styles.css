@@ -3637,6 +3637,63 @@ body .indice-info-utili {
   }
 }
 
+/* Ingrandimento sezioni info-form per schermi medi e grandi */
+
+/* Medium: 769–1399px */
+@media screen and (min-width: 769px) and (max-width: 1399px) {
+  .info-form {
+    padding: 35px;
+    font-size: 1.05rem;
+  }
+
+  .info-form h3 {
+    font-size: 1.6rem;
+  }
+
+  .info-form label,
+  .info-form input,
+  .info-form textarea {
+    font-size: 1.05rem;
+  }
+
+  .documenti-lista li a {
+    font-size: 1.05rem;
+  }
+
+  .modern-btn {
+    font-size: 1.05rem;
+    padding: 12px 26px;
+  }
+}
+
+/* Large: 1400px in su */
+@media screen and (min-width: 1400px) {
+  .info-form {
+    padding: 45px;
+    font-size: 1.15rem;
+  }
+
+  .info-form h3 {
+    font-size: 1.8rem;
+  }
+
+  .info-form label,
+  .info-form input,
+  .info-form textarea {
+    font-size: 1.15rem;
+  }
+
+  .documenti-lista li a {
+    font-size: 1.15rem;
+  }
+
+  .modern-btn {
+    font-size: 1.15rem;
+    padding: 14px 30px;
+  }
+}
+
+
 .reply-box {
   margin-top: 10px;
   display: flex;
