@@ -740,33 +740,60 @@ async function aggiornaProfiloCliente() {
   }
 }
 
-async function caricaMessaggi() {
-  const codice_cliente = localStorage.getItem("codice_cliente");
-  const res = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+function caricaMessaggi() {
+  const codiceCliente = localStorage.getItem("codice_cliente");
+  if (!codiceCliente) return;
+
+  fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       tipoRichiesta: "get_messaggi",
-      codice_cliente
+      codice_cliente: codiceCliente
     })
-  });
+  })
+    .then(res => res.json())
+    .then(data => {
+      const lista = document.getElementById("listaMessaggi");
+      lista.innerHTML = "";
 
-  const data = await res.json();
-  if (data.status === "ok") {
-    const lista = document.getElementById("listaMessaggi");
-    lista.innerHTML = "";
-    if (data.messaggi.length === 0) {
-      lista.innerHTML = "<li>Nessun messaggio ancora ricevuto.</li>";
-    } else {
+      if (data.status !== "ok" || !Array.isArray(data.messaggi) || data.messaggi.length === 0) {
+        lista.innerHTML = "<li>Nessun messaggio trovato.</li>";
+        return;
+      }
+
       data.messaggi.forEach(m => {
         const li = document.createElement("li");
-        const orario = new Date(m.timestamp).toLocaleString();
-        li.innerHTML = `<strong>${m.da === "operatore" ? "👤 Operatore" : "🧍 Tu"}</strong>: ${m.testo}<br><small>${orario}</small>`;
+        li.className = "msg-item";
+
+        li.innerHTML = `
+          <div class="msg-header">
+            <strong>${m.da === "operatore" ? "👤 Operatore" : "🧍 Tu"}</strong>
+            <small>${new Date(m.timestamp).toLocaleString()}</small>
+          </div>
+          <div class="msg-preview">${m.testo}</div>
+          <button class="toggle-msg">Leggi tutto</button>
+        `;
+
         lista.appendChild(li);
       });
-    }
-  }
+
+      // Attiva toggle su tutti i pulsanti dopo inserimento
+      lista.querySelectorAll(".toggle-msg").forEach(button => {
+        button.addEventListener("click", () => {
+          const li = button.closest(".msg-item");
+          li.classList.toggle("expanded");
+          button.textContent = li.classList.contains("expanded") ? "Chiudi" : "Leggi tutto";
+        });
+      });
+    })
+    .catch(error => {
+      console.error("Errore nel caricamento messaggi:", error);
+      const lista = document.getElementById("listaMessaggi");
+      if (lista) lista.innerHTML = "<li>Errore nel recupero dei messaggi.</li>";
+    });
 }
+
 
 // 🔁 CARICA RICHIESTE CLIENTI (area operatori)
 function caricaRichiesteOperatori() {
