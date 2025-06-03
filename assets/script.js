@@ -766,19 +766,19 @@ function caricaMessaggi() {
         const li = document.createElement("li");
         li.className = "msg-item";
 
-        li.innerHTML = `
-          <div class="msg-header">
-            <strong>${m.da === "operatore" ? "👤 Operatore" : "🧍 Tu"}</strong>
-            <small>${new Date(m.timestamp).toLocaleString()}</small>
-          </div>
-          <div class="msg-preview">${m.testo}</div>
-          <button class="toggle-msg">Leggi tutto</button>
-          <div class="reply-box hidden">
-            <textarea rows="2" placeholder="Scrivi la tua risposta..."></textarea>
-            <button class="send-reply">Invia</button>
-          </div>
-          <button class="reply-toggle">Rispondi</button>
-        `;
+li.innerHTML = `
+  <div class="msg-header">
+    <strong>${m.da && m.da.toUpperCase() !== "CLIENTE" ? `👤 ${m.da}` : "🧍 Tu"}</strong>
+    <small>${new Date(m.timestamp).toLocaleString()}</small>
+  </div>
+  <div class="msg-preview">${m.testo}</div>
+  <button class="toggle-msg">Leggi tutto</button>
+  <div class="reply-box hidden">
+    <textarea rows="2" placeholder="Scrivi la tua risposta..."></textarea>
+    <button class="send-reply">Invia</button>
+  </div>
+  <button class="reply-toggle">Rispondi</button>
+`;
 
         lista.appendChild(li);
       });
