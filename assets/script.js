@@ -990,7 +990,9 @@ function checkEmailMatch() {
   }
 }
 
-function inviaRegistrazione() {
+function inviaRegistrazione(event) {
+  if (event) event.preventDefault(); // ⛔ Previene il submit classico
+
   const nome = document.getElementById("nome").value.trim();
   const cognome = document.getElementById("cognome").value.trim();
   const email = document.getElementById("email").value.trim();
@@ -1004,24 +1006,22 @@ function inviaRegistrazione() {
 
   output.textContent = "";
 
-  // Validazioni base
   if (email !== confermaEmail) {
-    output.textContent = "❌ Le email non coincidono.";
+    output.textContent = "Le email non coincidono.";
     output.style.color = "red";
     return;
   }
   if (password !== confermaPassword) {
-    output.textContent = "❌ Le password non coincidono.";
+    output.textContent = "Le password non coincidono.";
     output.style.color = "red";
     return;
   }
   if (!privacy || !termini) {
-    output.textContent = "❌ Devi accettare privacy e termini.";
+    output.textContent = "Devi accettare privacy e termini.";
     output.style.color = "red";
     return;
   }
 
-  // Invio fetch
   fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -1039,17 +1039,17 @@ function inviaRegistrazione() {
     .then(res => res.json())
     .then(data => {
       if (data.status === "ok") {
-        output.textContent = "✅ Registrazione completata con successo!";
+        output.textContent = "Registrazione completata con successo!";
         output.style.color = "green";
         document.getElementById("formRegistrazione").reset();
       } else {
-        output.textContent = "❌ Errore: " + (data.message || "Impossibile completare la registrazione.");
+        output.textContent = "Errore: " + (data.message || "Impossibile completare la registrazione.");
         output.style.color = "red";
       }
     })
     .catch(err => {
       console.error("Errore registrazione:", err);
-      output.textContent = "❌ Errore di rete. Riprova.";
+      output.textContent = "Errore di rete. Riprova.";
       output.style.color = "red";
     });
 }
