@@ -1,3 +1,13 @@
+async function generaSHA256(text) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(text);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+}
+
+
 let yukiWelcomeShown = false;
 
 function toggleSidebar() {
@@ -410,9 +420,7 @@ document.querySelectorAll(".indice-lista a[href^='#']").forEach(link => {
 });
 
 
-function inviaRegistrazione(event) {
-  if (event) event.preventDefault(); //   Previene il submit classico
-
+async function inviaRegistrazione() {
   const nome = document.getElementById("nome").value.trim();
   const cognome = document.getElementById("cognome").value.trim();
   const email = document.getElementById("email").value.trim();
@@ -426,22 +434,27 @@ function inviaRegistrazione(event) {
 
   output.textContent = "";
 
+  // Validazioni
   if (email !== confermaEmail) {
-    output.textContent = "Le email non coincidono.";
+    output.textContent = "  Le email non coincidono.";
     output.style.color = "red";
     return;
   }
   if (password !== confermaPassword) {
-    output.textContent = "Le password non coincidono.";
+    output.textContent = "  Le password non coincidono.";
     output.style.color = "red";
     return;
   }
   if (!privacy || !termini) {
-    output.textContent = "Devi accettare privacy e termini.";
+    output.textContent = "  Devi accettare privacy e termini.";
     output.style.color = "red";
     return;
   }
 
+  // 👉 Hash della password
+  const password_hash = await generaSHA256(password);
+
+  // Invio al server
   fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -450,7 +463,7 @@ function inviaRegistrazione(event) {
       nome,
       cognome,
       email,
-      password,
+      password_hash,
       newsletter,
       privacy_accettata: privacy,
       termini_accettati: termini
@@ -458,22 +471,21 @@ function inviaRegistrazione(event) {
   })
     .then(res => res.json())
     .then(data => {
-      if (data.status === "ok") {
-        output.textContent = "Registrazione completata con successo!";
+      if (data.status === "success") {
+        output.textContent = "  Registrazione completata con successo!";
         output.style.color = "green";
         document.getElementById("formRegistrazione").reset();
       } else {
-        output.textContent = "Errore: " + (data.message || "Impossibile completare la registrazione.");
+        output.textContent = "  Errore: " + (data.message || "Registrazione fallita.");
         output.style.color = "red";
       }
     })
     .catch(err => {
       console.error("Errore registrazione:", err);
-      output.textContent = "Errore di rete. Riprova.";
+      output.textContent = "  Errore di rete. Riprova.";
       output.style.color = "red";
     });
 }
-
 
 
 const cittaPerPacchetto = {
