@@ -87,21 +87,24 @@
       <input type="email" id="email" required>
     </div>
 
-    <div class="form-group">
-      <label for="passwordAttuale">Password attuale</label>
-      <input type="password" id="passwordAttuale">
-    </div>
+<div class="form-group">
+  <label for="passwordAttuale">Password attuale</label>
+  <input type="password" id="passwordAttuale">
+  <button type="button" class="toggle-password-text" onclick="toggleVisibility('passwordAttuale', this)">Mostra password</button>
+</div>
 
-    <div class="form-group">
-      <label for="nuovaPassword">Nuova password</label>
-      <input type="password" id="nuovaPassword" oninput="checkPasswordMatchAreaClienti()">
-    </div>
+<div class="form-group">
+  <label for="nuovaPassword">Nuova password</label>
+  <input type="password" id="nuovaPassword" oninput="checkPasswordMatchAreaClienti()">
+  <button type="button" class="toggle-password-text" onclick="toggleVisibility('nuovaPassword', this)">Mostra password</button>
+</div>
 
-    <div class="form-group">
-      <label for="confermaNuovaPassword">Conferma nuova password</label>
-      <input type="password" id="confermaNuovaPassword" oninput="checkPasswordMatchAreaClienti()">
-      <div id="passwordMatchMessageAC" class="password-message"></div>
-    </div>
+<div class="form-group">
+  <label for="confermaNuovaPassword">Conferma nuova password</label>
+  <input type="password" id="confermaNuovaPassword" oninput="checkPasswordMatchAreaClienti()">
+  <button type="button" class="toggle-password-text" onclick="toggleVisibility('confermaNuovaPassword', this)">Mostra password</button>
+  <div id="passwordMatchMessageAC" class="password-message"></div>
+</div>
 
     <button type="submit" class="modern-btn form-submit">Salva modifiche</button>
   </form>
