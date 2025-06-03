@@ -263,7 +263,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 6. Area Clienti – caricamento profilo se presente
   if (window.location.pathname.includes("area-clienti")) {
-    getProfiloCliente(); // recupera dati da Sheets via codice cliente salvato
+    getProfiloCliente();     // recupera dati da Sheets via codice cliente salvato
+    caricaMessaggi();        // recupera i messaggi da Sheets e li mostra
   }
 
   // 7. Aggiorna profilo, se bottone esiste
@@ -703,6 +704,34 @@ async function aggiornaProfiloCliente() {
   } catch (err) {
     console.error("Errore rete:", err);
     alert("Errore di rete. Riprova.");
+  }
+}
+
+async function caricaMessaggi() {
+  const codice_cliente = localStorage.getItem("codice_cliente");
+  const res = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      tipoRichiesta: "get_messaggi",
+      codice_cliente
+    })
+  });
+
+  const data = await res.json();
+  if (data.status === "ok") {
+    const lista = document.getElementById("listaMessaggi");
+    lista.innerHTML = "";
+    if (data.messaggi.length === 0) {
+      lista.innerHTML = "<li>Nessun messaggio ancora ricevuto.</li>";
+    } else {
+      data.messaggi.forEach(m => {
+        const li = document.createElement("li");
+        const orario = new Date(m.timestamp).toLocaleString();
+        li.innerHTML = `<strong>${m.da === "operatore" ? "👤 Operatore" : "🧍 Tu"}</strong>: ${m.testo}<br><small>${orario}</small>`;
+        lista.appendChild(li);
+      });
+    }
   }
 }
 
