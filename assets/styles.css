@@ -3644,7 +3644,9 @@ body .indice-info-utili {
   .info-form {
     padding: 35px;
     font-size: 1.05rem;
-  }
+    max-width: 900px;
+    width: auto; 
+ }
 
   .info-form h3 {
     font-size: 1.6rem;
