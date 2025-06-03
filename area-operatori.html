@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Area Operatori – Yume Travel</title>
+  <link rel="icon" type="image/png" href="favicon.ico" />
+
+  <!-- Font Yume -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Raleway:wght@300;500;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Stili -->
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-left">
+    <img src="assets/logo-yume.jpg" alt="Logo YUME" class="logo-navbar">
+  </div>
+  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+</nav>
+
+<!-- SIDEBAR OPERATORI -->
+<div id="sidebar" class="sidebar hidden">
+  <div class="sidebar-logo">
+    <img src="assets/logo_bar.png" alt="Logo Yume" class="logo-sidebar">
+  </div>
+  <a href="area-operatori.html">Dashboard</a>
+  <a href="#" onclick="logoutOperatore()">Logout</a>
+</div>
+
+<!-- HERO -->
+<header class="hero-banner">
+  <picture>
+    <source srcset="assets/profilo-mob.jpg" media="(max-width: 768px)">
+    <img src="assets/profilo-desk.jpg" alt="Hero operatori" class="hero-banner-img">
+  </picture>
+</header>
+
+<section class="hero-section">
+  <div class="hero-intro">
+    <h1 class="hero-title">Benvenuto nell’area operatori</h1>
+    <p class="hero-subtitle">Gestisci richieste e documenti con rapidità ed efficienza</p>
+  </div>
+</section>
+
+<!-- CONTENUTO PRINCIPALE -->
+<section class="main-wrapper">
+  <div class="info-form">
+    <h2>📬 Richieste di Consulenza</h2>
+    <ul id="listaRichieste" class="message-list"></ul>
+  </div>
+
+  <hr class="sezione-divider" />
+
+  <div class="info-form">
+    <h3>✉️ Rispondi a un cliente</h3>
+    <form id="formRispostaOperatore">
+      <div class="form-group">
+        <label for="codiceClienteRisposta">Codice Cliente*</label>
+        <input type="text" id="codiceClienteRisposta" required>
+      </div>
+      <div class="form-group">
+        <label for="messaggioRisposta">Messaggio*</label>
+        <textarea id="messaggioRisposta" rows="4" required></textarea>
+      </div>
+
+   <div class="form-wrapper-operatori">
+     <button type="submit" class="modern-btn form-submit">Invia Risposta</button>
+     <div id="esitoRisposta" class="form-feedback"></div>
+   </div>
+
+    </form>
+  </div>
+
+  <hr class="sezione-divider" />
+
+  <div class="info-form">
+    <h3>📁 Documenti Aziendali</h3>
+    <ul id="listaDocumenti" class="message-list">
+      <li><a href="https://drive.google.com/your-folder-link" target="_blank">📂 Accedi alla cartella su Google Drive</a></li>
+    </ul>
+  </div>
+</section>
+
+<hr class="sezione-divider" />
+
+<section class="main-wrapper">
+  <div class="info-form">
+    <h3>👤 Gestione Profilo Operatore</h3>
+    <form id="formProfiloOperatore">
+      <div class="form-group">
+        <label for="nomeOperatore">Nome</label>
+        <input type="text" id="nomeOperatore">
+      </div>
+      <div class="form-group">
+        <label for="cognomeOperatore">Cognome</label>
+        <input type="text" id="cognomeOperatore">
+      </div>
+      <div class="form-group">
+        <label for="emailOperatore">Email</label>
+        <input type="email" id="emailOperatore">
+      </div>
+
+         <div class="form-group">
+      <label for="passwordAttualeOperatore">Password attuale</label>
+      <input type="password" id="passwordAttualeOperatore">
+      <button type="button" class="toggle-password-text" onclick="toggleVisibility('passwordAttualeOperatore', this)">Mostra password</button>
+    </div>
+  
+     <div class="form-group">
+      <label for="nuovaPasswordOperatore">Nuova password</label>
+      <input type="password" id="nuovaPasswordOperatore" oninput="checkPasswordMatchOperatore()">
+      <button type="button" class="toggle-password-text" onclick="toggleVisibility('nuovaPasswordOperatore', this)">Mostra password</button>
+    </div>
+
+    <div class="form-group">
+      <label for="confermaPasswordOperatore">Conferma nuova password</label>
+      <input type="password" id="confermaPasswordOperatore" oninput="checkPasswordMatchOperatore()">
+      <button type="button" class="toggle-password-text" onclick="toggleVisibility('confermaPasswordOperatore', this)">Mostra password</button>
+      <div id="passwordMatchMessageOperatore" class="password-message"></div>
+    </div>
+
+<div class="form-wrapper-operatori">
+  <button type="submit" class="modern-btn form-submit">Aggiorna Password</button>
+  <div id="esitoPasswordOperatore" class="form-feedback"></div>
+</div>
+
+    </form>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer class="main-footer">
+  <div class="footer-social">
+    <p><strong>Seguici su:</strong></p>
+    <a href="https://www.instagram.com/yumeviaggi" target="_blank" aria-label="Instagram" class="fa fa-instagram"></a>
+    <a href="https://yuta-travel.com" target="_blank" aria-label="Sito YUTA" class="fa fa-globe"></a>
+  </div>
+  <p class="footer-copy">© 2025 Yume Travel Tech – Tutti i diritti riservati.</p>
+</footer>
+
+<!-- CHAT YUKI -->
+<div id="yuki-chat-avatar" onclick="toggleYukiChat()" title="Hai bisogno di aiuto?">
+  <img src="assets/yuki-avatar.png" alt="Yuki" />
+</div>
+
+<div id="yuki-chatbox" class="hidden">
+  <div class="chatbox-header">
+    <span>Yuki, assistente AI</span>
+    <button onclick="toggleYukiChat()">✕</button>
+  </div>
+  <div class="chatbox-messages" id="chatbox-messages"></div>
+  <div class="chatbox-input">
+    <input type="text" id="userMessage" placeholder="Scrivi qui..." />
+    <button onclick="sendMessage()">Invia</button>
+  </div>
+</div>
+
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    const el = document.querySelector('#yuki-chat-avatar');
+    if (!el) return;
+
+    el.style.position = 'fixed';
+    el.style.bottom = '25px';
+    el.style.right = '25px';
+    el.style.width = '90px';
+    el.style.height = '90px';
+    el.style.zIndex = '9999';
+    el.style.borderRadius = '50%';
+    el.style.overflow = 'hidden';
+    el.style.boxShadow = '0 4px 10px rgba(0,0,0,0.2)';
+    el.style.backgroundColor = '#fff';
+
+    const img = el.querySelector('img');
+    if (img) {
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.objectFit = 'cover';
+      img.style.borderRadius = '50%';
+    }
+  });
+</script>
+
+<!-- SCRIPT -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="assets/script.js"></script>
+
+</body>
+</html>
+
