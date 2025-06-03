@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (formLogin) {
     formLogin.addEventListener("submit", e => {
       e.preventDefault();
-      verificaLoginCliente();
+      verificaLogin();
     });
   }
 
@@ -559,32 +559,28 @@ async function inviaRegistrazione() {
     });
 }
 
-async function verificaLoginOperatore() {
-  const identificatore = document.getElementById("codiceOperatore").value.trim();
-  const password = document.getElementById("passwordOperatore").value.trim();
-  const output = document.getElementById("esitoLoginOperatore");
+async function verificaLogin() {
+  const identificatore = document.getElementById("emailLogin").value.trim();
+  const password = document.getElementById("passwordLogin").value.trim();
+  const output = document.getElementById("esitoLogin");
+
   output.textContent = "";
 
   if (!identificatore || !password) {
-    output.textContent = "Inserisci codice operatore e password.";
+    output.textContent = "Inserisci email o codice cliente e password.";
     output.style.color = "red";
     return;
   }
 
   const password_hash = await sha256(password);
 
-  // 👇 DEBUG visibile in console
-  console.log("LOGIN DEBUG →", {
-    identificatore,
-    password,
-    password_hash
-  });
-
   fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify({
-      tipoRichiesta: "login_operatore",
+      tipoRichiesta: "login",
       identificatore,
       password_hash
     })
@@ -594,14 +590,15 @@ async function verificaLoginOperatore() {
       if (data.status === "success") {
         output.textContent = "Accesso effettuato!";
         output.style.color = "green";
-        localStorage.setItem("operatore", JSON.stringify(data));
-        window.location.href = "area-operatori.html";
+        localStorage.setItem("codice_cliente", data.codice_cliente);
+        window.location.href = "area-clienti.html";
       } else {
-        output.textContent = "Accesso negato. Verifica le credenziali.";
+        output.textContent = "Credenziali errate.";
         output.style.color = "red";
       }
     })
-    .catch(() => {
+    .catch(err => {
+      console.error("Errore login:", err);
       output.textContent = "Errore di rete. Riprova.";
       output.style.color = "red";
     });
