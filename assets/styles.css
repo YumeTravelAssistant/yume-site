@@ -3480,3 +3480,58 @@ body .indice-info-utili {
   }
 }
 
+
+/* -------------------------------
+   AREA CLIENTI – CONSULENZA FORM
+-------------------------------- */
+
+.consulenza-section {
+  background-color: #F4F0E2;
+  padding: 50px 20px;
+  font-family: 'Quicksand', sans-serif;
+  color: #1C1C1C;
+  border-top: 1px solid #ddd;
+}
+
+.consulenza-section h3 {
+  font-size: 1.6rem;
+  color: #8B2C2B;
+  margin-bottom: 20px;
+}
+
+#formConsulenza textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-family: 'Quicksand', sans-serif;
+  resize: vertical;
+  box-sizing: border-box;
+  background-color: white;
+}
+
+#formConsulenza .form-feedback {
+  margin-top: 10px;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+#formConsulenza button {
+  margin-top: 15px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #C9A86A;
+  background-color: #8B2C2B;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#formConsulenza button:hover {
+  background-color: #A53433;
+}
+
