@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Area Clienti - Yume Travel</title>
+  <link rel="icon" href="favicon.ico" />
+
+  <!-- Font Yume -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Raleway:wght@300;500;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Stili -->
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-left">
+    <img src="assets/logo-yume.jpg" alt="Logo YUME" class="logo-navbar">
+  </div>
+  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+</nav>
+
+<!-- SIDEBAR -->
+<div id="sidebar" class="sidebar hidden">
+  <div class="sidebar-logo">
+    <img src="assets/logo_bar.png" alt="Logo Yume" class="logo-sidebar">
+  </div>
+  <a href="index.html">Home</a>
+  <a href="pacchetti.html">Pacchetti flessibili</a>
+  <a href="faq.html">FAQ</a>
+  <a href="info-utili.html">Informazioni utili</a>
+  <a href="contatti.html">Contatti</a>
+  <a href="yuta.html">YUTA</a>
+</div>
+
+<!-- HERO -->
+<header class="hero-banner">
+  <picture>
+    <source srcset="assets/profilo-mob.jpg" media="(max-width: 768px)">
+    <img src="assets/profilo-desk.jpg" alt="Area Clienti" class="hero-banner-img">
+  </picture>
+  <div class="scroll-indicator" onclick="scrollToMain()">
+    <span class="arrow-down"></span>
+  </div>
+</header>
+
+<section class="hero-section">
+  <div class="hero-intro">
+    <h1 class="hero-title">Benvenuto nella tua area personale</h1>
+    <p class="hero-subtitle">Qui troverai tutti i tuoi documenti e potrai contattare il nostro team</p>
+  </div>
+</section>
+
+<!-- SEZIONE DOCUMENTI -->
+<section class="main-wrapper">
+  <div class="info-form">
+    <h3>📄 I tuoi documenti di viaggio</h3>
+    <ul class="documenti-lista">
+      <li><a href="documenti/programma_viaggio.pdf" target="_blank"><i class="fa fa-file-pdf-o"></i> Programma viaggio</a></li>
+      <li><a href="documenti/prenotazioni.pdf" target="_blank"><i class="fa fa-file-pdf-o"></i> Riepilogo prenotazioni</a></li>
+      <li><a href="documenti/contatti_utili.pdf" target="_blank"><i class="fa fa-file-pdf-o"></i> Contatti utili</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- SEZIONE CONSULENZA -->
+<section class="main-wrapper">
+  <form id="formConsulenza" class="info-form" onsubmit="event.preventDefault(); inviaRichiestaConsulenza();">
+    <h3>🤝 Richiedi assistenza o consulenza</h3>
+    <div class="form-group">
+      <label for="messaggio">Come possiamo aiutarti?</label>
+      <textarea id="messaggio" name="messaggio" rows="4" required></textarea>
+    </div>
+    <button type="submit" class="modern-btn form-submit">Invia richiesta</button>
+    <div id="esitoConsulenza" class="form-feedback"></div>
+  </form>
+</section>
+
+<!-- FOOTER -->
+<footer class="main-footer">
+  <div class="footer-social">
+    <p><strong>Seguici su:</strong></p>
+    <a href="https://www.instagram.com/yumeviaggi" target="_blank" aria-label="Instagram" class="fa fa-instagram"></a>
+    <a href="https://yuta-travel.com" target="_blank" aria-label="Sito YUTA" class="fa fa-globe"></a>
+  </div>
+  <p class="footer-copy">© 2025 Yume Travel Tech – Tutti i diritti riservati.</p>
+</footer>
+
+<!-- YUKI CHAT -->
+<div id="yuki-chat-avatar" onclick="toggleYukiChat()" title="Hai bisogno di aiuto?">
+  <img src="assets/yuki-avatar.png" alt="Yuki" />
+</div>
+
+<div id="yuki-chatbox" class="hidden">
+  <div class="chatbox-header">
+    <span>Yuki, assistente AI</span>
+    <button onclick="toggleYukiChat()">✕</button>
+  </div>
+  <div class="chatbox-messages" id="chatbox-messages"></div>
+  <div class="chatbox-input">
+    <input type="text" id="userMessage" placeholder="Scrivi qui..." />
+    <button onclick="sendMessage()">Invia</button>
+  </div>
+</div>
+
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    const el = document.querySelector('#yuki-chat-avatar');
+    if (!el) return;
+
+    el.style.position = 'fixed';
+    el.style.bottom = '25px';
+    el.style.right = '25px';
+    el.style.width = '90px';
+    el.style.height = '90px';
+    el.style.zIndex = '9999';
+    el.style.borderRadius = '50%';
+    el.style.overflow = 'hidden';
+    el.style.boxShadow = '0 4px 10px rgba(0,0,0,0.2)';
+    el.style.backgroundColor = '#fff';
+
+    const img = el.querySelector('img');
+    if (img) {
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.objectFit = 'cover';
+      img.style.borderRadius = '50%';
+    }
+  });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="assets/script.js"></script>
+
+</body>
+</html>
+
