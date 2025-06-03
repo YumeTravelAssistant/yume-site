@@ -3592,7 +3592,7 @@ body .indice-info-utili {
   transition: max-height 0.4s ease, padding 0.3s ease;
 }
 
-.message-list .msg-item.expanded .msg-preview {
+.message-list li.expanded .msg-preview {
   max-height: 1000px;
   padding-bottom: 5px;
 }
