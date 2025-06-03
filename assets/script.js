@@ -844,9 +844,7 @@ function caricaRichiesteOperatori() {
   fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      tipoRichiesta: "listaConsulenze"
-    })
+    body: JSON.stringify({ tipoRichiesta: "listaConsulenze" })
   })
     .then(res => res.json())
     .then(data => {
@@ -854,14 +852,71 @@ function caricaRichiesteOperatori() {
         const lista = document.getElementById("listaRichieste");
         if (!lista) return;
         lista.innerHTML = "";
+
         data.consulenze.forEach(c => {
           const li = document.createElement("li");
-          li.innerHTML = `<strong>${c.codice_cliente}</strong><br>${c.messaggio}<br><small>${c.timestamp}</small>`;
+          li.className = "msg-item";
+          li.innerHTML = `
+            <div class="msg-header">
+              <strong>🧍 Cliente: ${c.codice_cliente}</strong>
+              <small>${new Date(c.timestamp).toLocaleString()}</small>
+            </div>
+            <div class="msg-preview">${c.messaggio}</div>
+            <button class="toggle-msg">Leggi tutto</button>
+            <div class="reply-box hidden">
+              <textarea rows="2" placeholder="Scrivi una risposta per il cliente..."></textarea>
+              <button class="send-reply">Invia</button>
+            </div>
+            <button class="reply-toggle">Rispondi</button>
+          `;
           lista.appendChild(li);
+
+          // Attiva toggle per messaggio
+          li.querySelector(".toggle-msg").addEventListener("click", () => {
+            li.classList.toggle("expanded");
+            const btn = li.querySelector(".toggle-msg");
+            btn.textContent = li.classList.contains("expanded") ? "Chiudi" : "Leggi tutto";
+          });
+
+          // Toggle box risposta
+          li.querySelector(".reply-toggle").addEventListener("click", () => {
+            li.querySelector(".reply-box").classList.toggle("hidden");
+          });
+
+          // Invia risposta al cliente
+          li.querySelector(".send-reply").addEventListener("click", () => {
+            const messaggio = li.querySelector("textarea").value.trim();
+            if (!messaggio) return;
+
+            fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                tipoRichiesta: "risposta",
+                codice_cliente: c.codice_cliente,
+                messaggio,
+                operatore: codiceOperatore
+              })
+            })
+              .then(res => res.json())
+              .then(risposta => {
+                if (risposta.status === "ok") {
+                  li.querySelector("textarea").value = "";
+                  alert("Risposta inviata con successo!");
+                } else {
+                  alert("Errore: " + risposta.message);
+                }
+              })
+              .catch(err => {
+                console.error("Errore invio risposta:", err);
+                alert("Errore durante l'invio.");
+              });
+          });
         });
       }
     });
 }
+
 
 // ✉️ INVIA RISPOSTA CLIENTE
 function inviaRispostaOperatore() {
