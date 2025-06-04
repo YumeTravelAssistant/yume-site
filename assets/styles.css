@@ -179,14 +179,7 @@ footer {
     transition: transform 0.3s ease;
     z-index: 999;
     flex-direction: column;
-.info-form {
-  background-color: #fff;
-  padding: 30px;
-  border-radius: 16px;
-  max-width: 600px;
-  margin: 40px auto;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
-}    padding-top: 130px;
+    padding-top: 130px;
     display: flex;
   }
 
@@ -1078,6 +1071,7 @@ h2.slide-in {
 h2.slide-in.visible {
   opacity: 1;
   transform: translateY(0);
+  text-align: center;
 }
 
 .offerta-section .box {
@@ -3756,6 +3750,380 @@ body .indice-info-utili {
     min-height: 200px;
     font-size: 1.2rem;
     min-width: 900px;
+  }
+}
+
+/* --------- CARD CONSULENZE VIAGGI SU MISURA --------- */
+
+#consulenze-viaggi .pacchetti-slider-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+#consulenze-viaggi .pacchetti-box {
+  background-color: white;
+  border-radius: 16px;
+  padding: 30px 20px;
+  font-family: 'Quicksand', sans-serif;
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  flex: 1 1 100%;
+  max-width: 520px;
+  min-height: 520px;
+}
+
+#consulenze-viaggi .pacchetti-box:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+}
+
+#consulenze-viaggi .pacchetti-box img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+#consulenze-viaggi .pacchetti-box h3 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  color: #8B2C2B;
+}
+
+#consulenze-viaggi .pacchetti-box p {
+  font-size: 0.95em;
+  margin-bottom: 16px;
+}
+
+#consulenze-viaggi .pacchetti-box .icon-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+  font-size: 0.95em;
+}
+
+#consulenze-viaggi .pacchetti-box .icon-list li {
+  margin-bottom: 8px;
+}
+
+#consulenze-viaggi .price-tag {
+  font-size: 1.05rem;
+  font-weight: bold;
+  color: #C9A86A;
+  display: block;
+  margin-bottom: 16px;
+}
+
+@media (min-width: 769px) and (max-width: 1399px) {
+  #consulenze-viaggi .pacchetti-box {
+    flex: 1 1 calc(50% - 40px);
+  }
+}
+
+@media (min-width: 1400px) {
+  #consulenze-viaggi .pacchetti-box {
+    flex: 1 1 calc(33.333% - 40px);
+    max-width: 420px;
+  }
+}
+
+@media (max-width: 400px) {
+  #consulenze-viaggi .pacchetti-box {
+    padding: 20px 15px;
+  }
+
+  #consulenze-viaggi .pacchetti-box h3 {
+    font-size: 1.1rem;
+  }
+
+  #consulenze-viaggi .pacchetti-box p,
+  #consulenze-viaggi .pacchetti-box .icon-list li,
+  #consulenze-viaggi .price-tag {
+    font-size: 0.88em;
+  }
+
+  #consulenze-viaggi .modern-btn {
+    font-size: 0.9rem;
+    padding: 10px 16px;
+  }
+}
+
+/* ==== Layout Specifico per Sartoria Consulenze (Lite, Smart, Premium) ==== */
+#sartoriaConsulenze {
+  padding: 80px 30px;
+  background-color: #FFF8F4;
+  text-align: center;
+  border-radius: 16px;
+  margin-top: 80px;
+}
+
+#sartoriaConsulenze h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  margin-bottom: 50px;
+  color: #8B2C2B;
+}
+
+#sartoriaConsulenze .sartoria-slider-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+}
+
+#sartoriaConsulenze .sartoria-box {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 16px;
+  padding: 40px 20px 80px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  color: #F4F0E2;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  flex: 1 1 100%;
+  max-width: 100%;
+  margin: 20px;
+  min-height: 340px;
+}
+
+/* Overlay */
+#sartoriaConsulenze .sartoria-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 16px;
+  z-index: 0;
+}
+
+#sartoriaConsulenze .sartoria-box > * {
+  position: relative;
+  z-index: 1;
+}
+
+#sartoriaConsulenze .sartoria-box h3 {
+  font-size: 1.4rem;
+  color: #C9A86A;
+  margin-bottom: 10px;
+}
+
+#sartoriaConsulenze .sartoria-box p {
+  color: #F4F0E2;
+  font-size: 0.95rem;
+  margin-bottom: auto;
+}
+
+#sartoriaConsulenze .sartoria-box .price-tag {
+  font-weight: bold;
+  margin-top: 20px;
+  font-size: 1.1rem;
+}
+
+#sartoriaConsulenze .sartoria-box a.modern-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  font-size: 0.9rem;
+  padding: 10px 20px;
+}
+
+/* Desktop > 1400px (3 colonne) */
+@media (min-width: 1400px) {
+  #sartoriaConsulenze .sartoria-box {
+    flex: 1 1 calc(33.33% - 40px);
+    max-width: 420px;
+  }
+}
+
+/* Tablet 769–1399px (2+1) */
+@media (min-width: 769px) and (max-width: 1399px) {
+  #sartoriaConsulenze .sartoria-box {
+    flex: 1 1 calc(50% - 40px);
+    max-width: calc(50% - 40px);
+    margin: auto;
+  }
+
+  /* Fai andare SOLO la terza card (Premium) da sola e centrata */
+  #sartoriaConsulenze .sartoria-box:nth-child(3) {
+    flex: 1 1 100%;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Mobile ≤ 768px (1+1+1) */
+@media (max-width: 768px) {
+  #sartoriaConsulenze .sartoria-box {
+    flex: 1 1 100%;
+    max-width: 360px;
+    margin: 0 auto 30px;
+  }
+}
+
+/* Mobile Piccolo ≤ 400px */
+@media (max-width: 400px) {
+  #sartoriaConsulenze .sartoria-box {
+    padding: 30px 15px 70px;
+    min-height: 280px;
+  }
+
+  #sartoriaConsulenze .sartoria-box h3 {
+    font-size: 1.2rem;
+  }
+
+  #sartoriaConsulenze .sartoria-box p {
+    font-size: 0.9rem;
+  }
+
+  #sartoriaConsulenze .sartoria-box a.modern-btn {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+}
+
+/* ==== Sezione Funzionamento Consulenze ==== */
+#funzionamento-consulenze.step-boxes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  margin: 50px auto 80px;
+  max-width: 1200px;
+  padding: 0 20px;
+}
+
+.step-box {
+  background-color: #fffefc;
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  padding: 30px 20px 80px;
+  text-align: center;
+  flex: 1 1 calc(33.33% - 30px);
+  max-width: 360px;
+  min-height: 260px;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.step-box:hover {
+  transform: translateY(-6px);
+}
+
+.step-box i {
+  font-size: 2.4rem;
+  color: #8B2C2B;
+  margin-bottom: 15px;
+  display: block;
+}
+
+.step-box h3 {
+  color: #C9A86A;
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+}
+
+.step-box p {
+  font-size: 0.95rem;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+  .step-box {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 400px) {
+  .step-box {
+    padding: 20px 15px 70px;
+  }
+
+  .step-box h3 {
+    font-size: 1rem;
+  }
+
+  .step-box i {
+    font-size: 2rem;
+  }
+
+  .step-box p {
+    font-size: 0.9rem;
+  }
+}
+
+/* ==== Sezione Yume Atelier – Servizi Consulente ==== */
+.sartoria-servizi-section {
+  padding: 80px 30px;
+  background-color: #F4F0E2;
+  border-radius: 16px;
+  max-width: 1100px;
+  margin: 0 auto 80px;
+  text-align: center;
+}
+
+.sartoria-servizi-section h2 {
+  color: #8B2C2B;
+  font-size: 2.2rem;
+  margin-bottom: 20px;
+  font-family: 'Playfair Display', serif;
+}
+
+.sartoria-servizi-intro {
+  font-size: 1.05rem;
+  color: #333;
+  margin-bottom: 40px;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.sartoria-servizi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.servizio-box {
+  background: white;
+  padding: 20px 18px;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  font-size: 0.95rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  text-align: left;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.servizio-box i {
+  color: #8B2C2B;
+  font-size: 1.2rem;
+  margin-top: 4px;
+}
+
+/* Responsive adattivo */
+@media (max-width: 500px) {
+  .sartoria-servizi-section h2 {
+    font-size: 1.6rem;
+  }
+  .servizio-box {
+    font-size: 0.9rem;
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 
