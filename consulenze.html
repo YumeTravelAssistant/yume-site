@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Consulenze - Yume Travel</title>
+  <link rel="icon" type="image/png" href="favicon.ico" />
+
+  <!-- Font Yume: Playfair, Raleway, Quicksand -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Raleway:wght@300;500;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Stili e icone -->
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="navbar-left">
+    <img src="assets/logo-yume.jpg" alt="Logo YUME" class="logo-navbar">
+  </div>
+  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+</nav>
+
+<div id="sidebar" class="sidebar hidden">
+  <div class="sidebar-logo">
+    <img src="assets/logo_bar.png" alt="Logo Yume" class="logo-sidebar">
+  </div>
+  <a href="index.html">Home</a>
+  <a href="pachetti.html">Pacchetti flessibili</a>
+  <a href="consulenze.html">Consulenze</a>
+  <a href="faq.html">FAQ</a>
+  <a href="info-utili.html">Informazioni utili</a>
+  <a href="contatti.html">Contatti</a>
+  <a href="profilo.html">Registrazione</a>
+  <a href="log-in.html">Area Personale</a>
+</div>
+
+<header class="hero-banner">
+  <picture>
+    <source srcset="assets/consulenze_mob.jpg" media="(max-width: 768px)">
+    <img src="assets/consulenze_desk.jpg" alt="Consulenze Yume Travel" class="hero-banner-img">
+  </picture>
+  <div class="scroll-indicator" onclick="scrollToMain()">
+    <span class="arrow-down"></span>
+  </div>
+</header>
+
+<section class="hero-section">
+  <div class="hero-intro">
+    <h1 class="hero-title">Consulenze di Viaggio</h1>
+    <p class="hero-subtitle">Scopri il Giappone con un esperto al tuo fianco</p>
+  </div>
+</section>
+
+<div class="main-wrapper">
+<section class="consulenze-section">
+  <h2 class="slide-in">Come funzionano le consulenze</h2>
+  <div id="funzionamento-consulenze" class="step-boxes">
+    <div class="step-box slide-in">
+      <i class="fa fa-clock-o"></i>
+      <h3>1. Call conoscitiva gratuita</h3>
+      <p>Un incontro informale di 15 minuti per conoscerci, capire le tue esigenze e spiegarti il nostro metodo di lavoro.</p>
+    </div>
+    <div class="step-box slide-in">
+      <i class="fa fa-lightbulb-o"></i>
+      <h3>2. Consulenza vera e propria</h3>
+      <p>Sessione approfondita (1h, 3h o 5h) su temi come SIM, pass, farmaci, accessibilità, trasporti, alloggi e preferenze.</p>
+    </div>
+    <div class="step-box slide-in">
+      <i class="fa fa-file-text-o"></i>
+      <h3>3. Materiali esclusivi e vantaggi</h3>
+      <p>Riceverai un documento riepilogativo, accesso temporaneo all’area clienti Yume e sconti su esperienze selezionate.</p>
+    </div>
+  </div>
+</section>
+
+<h2 class="slide-in">Consulenze Tematiche</h2>
+<section id="sartoriaConsulenze">
+  <div class="sartoria-slider-container">
+    <div class="sartoria-box slide-in" style="background-image: url('assets/consulenza_lite.jpg');">
+      <h3>Yume Lite – 1 ora</h3>
+      <p>Supporto base specifico monotematico (Telefonia e Reti mobili, Pass e Trasporti pubblici, Esigenze speciali…)</p>
+      <span class="price-tag">49€</span>
+      <a href="#" class="modern-btn">Acquista</a>
+    </div>
+
+    <div class="sartoria-box slide-in" style="background-image: url('assets/consulenza_smart.jpg');">
+      <h3>Yume Smart – 3 ore</h3>
+      <p>Consulenza estesa multitematica, fino a 3 temi con rilascio documenti personalizzati</p>
+      <span class="price-tag">119€</span>
+      <a href="#" class="modern-btn">Acquista</a>
+    </div>
+
+    <div class="sartoria-box slide-in" style="background-image: url('assets/consulenza_premium.jpg');">
+      <h3>Yume Premium – 5 ore</h3>
+      <p>Consulenza completa, con rilascio guide esclusive Yume Travel per itinerari, preferenze e esigenze</p>
+      <span class="price-tag">179€</span>
+      <a href="#" class="modern-btn">Acquista</a>
+    </div>
+  </div>
+</section>
+
+<section id="atelier-servizi" class="sartoria-servizi-section slide-in">
+  <h2 class="slide-in">Yume Atelier – Viaggi su misura</h2>
+  <p class="sartoria-servizi-intro">
+    Il nostro servizio ti guida nella creazione di un viaggio unico, senza prenotazioni dirette. Il consulente nel dettaglio:
+  </p>
+  <div class="sartoria-servizi-grid">
+    <div class="servizio-box"><i class="fa fa-user-circle"></i> Analizza i tuoi obiettivi, aspettative ed esigenze speciali (allergie, neurodivergenze, mobilità, ecc.)</div>
+    <div class="servizio-box"><i class="fa fa-map-signs"></i> Suggerisce le tappe ideali e i tempi migliori per muoversi</div>
+    <div class="servizio-box"><i class="fa fa-bed"></i> Consiglia strutture ricettive adatte al tuo stile e al tuo budget</div>
+    <div class="servizio-box"><i class="fa fa-plane"></i> Ti aiuta a selezionare i voli più coerenti (senza prenotare)</div>
+    <div class="servizio-box"><i class="fa fa-wifi"></i> Raccomanda SIM, pass e copertura internet</div>
+    <div class="servizio-box"><i class="fa fa-star"></i> Propone esperienze culturali, attività particolari o partner convenzionati</div>
+    <div class="servizio-box"><i class="fa fa-file-text"></i> Compila un documento riepilogativo su misura</div>
+    <div class="servizio-box"><i class="fa fa-key"></i> Ti dà accesso all’area clienti con materiali e guida digitale</div>
+    <div class="servizio-box"><i class="fa fa-video-camera"></i> Fissa una videochiamata pre-partenza per risolvere gli ultimi dubbi</div>
+  </div>
+</section>
+
+
+<section id="consulenze-viaggi">
+  <h2 class="slide-in">Consulenze Yume Atelier</h2>
+  <div class="pacchetti-slider-wrapper">
+
+      <div id="singolo" class="pacchetti-box slide-in">
+        <img src="assets/single.jpg" alt="Yume Singolo">
+        <div class="card-content">
+          <h3>Consulenza Singolo</h3>
+          <p><em>Ideale per viaggiatori autonomi con esigenze precise</em></p>
+          <ul class="icon-list">
+            <li><i class="fa fa-calendar"></i>Accesso a migliori hotel con camere singole</li>
+            <li><i class="fa fa-map-marker"></i>Spostamenti, connettività e assicurazione pensate per chi viaggia da solo </li>
+            <li><i class="fa fa-balance-scale"></i>Consigli su locali ed attività studiate ad hoc per non perdersi niente</li>
+          </ul>
+          <span class="price-tag">390€</span>
+          <a href="#kodai" class="modern-btn">Prenota <i class="fa fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+       <div id="coppia" class="pacchetti-box slide-in">
+  <img src="assets/coppia.jpg" alt="Yume Coppia">
+  <div class="card-content">
+    <h3>Consulenza Coppia</h3>
+    <p><em>Perfetta per viaggi romantici o anniversari</em></p>
+    <ul class="icon-list">
+      <li><i class="fa fa-heart"></i>Itinerari suggestivi e location panoramiche</li>
+      <li><i class="fa fa-cutlery"></i>Cene, ryokan e onsen pensati per due</li>
+      <li><i class="fa fa-camera"></i>Esperienze esclusive da immortalare insieme</li>
+    </ul>
+    <span class="price-tag">590€</span>
+    <a href="#coppia" class="modern-btn">Prenota <i class="fa fa-arrow-right"></i></a>
+  </div>
+</div>
+ 
+   <div id="famiglia" class="pacchetti-box slide-in">
+  <img src="assets/famiglia.jpg" alt="Yume Famiglia">
+  <div class="card-content">
+    <h3>Consulenza Famiglia</h3>
+    <p><em>Fino a 4 membri o 2 adulti + minori illimitati</em></p>
+    <ul class="icon-list">
+      <li><i class="fa fa-home"></i>Strutture family friendly testate da noi</li>
+      <li><i class="fa fa-child"></i>Attività culturali e parchi per ogni età</li>
+      <li><i class="fa fa-shield"></i>Supporto su logistica, salute e sicurezza</li>
+    </ul>
+    <span class="price-tag">790€</span>
+    <a href="#famiglia" class="modern-btn">Prenota <i class="fa fa-arrow-right"></i></a>
+  </div>
+</div>
+
+<div id="minigruppo" class="pacchetti-box slide-in">
+  <img src="assets/minigruppo.jpg" alt="Mini Gruppo">
+  <div class="card-content">
+    <h3>Mini Gruppo (5–9)</h3>
+    <p><em>Amici, gruppi misti, famiglie estese</em></p>
+    <ul class="icon-list">
+      <li><i class="fa fa-users"></i>Gestione coordinata per itinerari condivisi</li>
+      <li><i class="fa fa-bed"></i>Prenotazioni multiple, alloggi e ryokan di gruppo</li>
+      <li><i class="fa fa-calendar-check-o"></i>Assistenza nelle attività compatibili per tutti</li>
+    </ul>
+    <span class="price-tag">990€</span>
+    <a href="#minigruppo" class="modern-btn">Prenota <i class="fa fa-arrow-right"></i></a>
+  </div>
+</div>
+
+<div id="groupatelier" class="pacchetti-box slide-in">
+  <img src="assets/groupatelier.jpg" alt="Group Atelier">
+  <div class="card-content">
+    <h3>Yume Group Atelier</h3>
+    <p><em>Gruppi 10+ con blocchi alberghieri e logistica dedicata</em></p>
+    <ul class="icon-list">
+      <li><i class="fa fa-sitemap"></i>Logistica coordinata e supporto dedicato</li>
+      <li><i class="fa fa-briefcase"></i>Programmi su misura per team, scuole e club</li>
+      <li><i class="fa fa-tags"></i>Sconti su esperienze e trasporti per gruppi</li>
+    </ul>
+    <span class="price-tag">Prezzo su richiesta</span>
+    <a href="#groupatelier" class="modern-btn">Contattaci <i class="fa fa-arrow-right"></i></a>
+  </div>
+</div>
+
+
+</section>
+
+</div>
+
+<!-- FAQ - DOMANDE FREQUENTI -->
+<section class="info-section">
+  <h2 class="slide-in">Domande frequenti</h2>
+  <div class="info-boxes-container">
+    
+    <div class="info-box">
+      <button class="info-toggle">
+        <span class="info-number">1.</span> Le consulenze includono prenotazioni?
+        <i class="fa fa-chevron-down toggle-icon"></i>
+      </button>
+      <div class="info-content">
+        <p>No. Il servizio Yume Atelier offre consulenza personalizzata e supporto strategico per la progettazione del viaggio, ma non effettua prenotazioni dirette. Riceverai un dossier completo da condividere con il tuo agente di fiducia o da usare in autonomia.</p>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <button class="info-toggle">
+        <span class="info-number">2.</span> Posso usare la consulenza anche se ho già prenotato il volo?
+        <i class="fa fa-chevron-down toggle-icon"></i>
+      </button>
+      <div class="info-content">
+        <p>Certo. Il nostro servizio parte dalle informazioni che hai già, inclusi voli e date fisse. Adatteremo tutto il resto (trasporti interni, tappe, ritmo) per ottimizzare il tuo viaggio in base a ciò che hai confermato.</p>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <button class="info-toggle">
+        <span class="info-number">3.</span> Se siamo più di 9 persone possiamo avere un preventivo?
+        <i class="fa fa-chevron-down toggle-icon"></i>
+      </button>
+      <div class="info-content">
+        <p>Sì. In tal caso si attiva il servizio <strong>Yume Group Atelier</strong>, con una logistica dedicata (blocchi camere, gestione pasti di gruppo, orari personalizzati). Il preventivo sarà su richiesta in base alla composizione del gruppo e alle esigenze specifiche.</p>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <button class="info-toggle">
+        <span class="info-number">4.</span> In quanto tempo riceverò il documento finale?
+        <i class="fa fa-chevron-down toggle-icon"></i>
+      </button>
+      <div class="info-content">
+        <p>In genere, riceverai il tuo itinerario personalizzato entro <strong>5–7 giorni lavorativi</strong> dalla call conoscitiva. In periodi di alta stagione o in caso di richieste complesse, i tempi possono allungarsi leggermente (fino a 10 giorni).</p>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <button class="info-toggle">
+        <span class="info-number">5.</span> La guida digitale è inclusa in ogni consulenza?
+        <i class="fa fa-chevron-down toggle-icon"></i>
+      </button>
+      <div class="info-content">
+        <p>Sì. Ogni consulenza Yume Atelier include l’accesso all’<strong>area clienti</strong> con materiali riservati, guida digitale giorno per giorno e assistenza tramite <strong>Yuki chatbot</strong> attivo 24/7.</p>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <button class="info-toggle">
+        <span class="info-number">6.</span> Le consulenze vengono rimborsate se acquisto un pacchetto?
+        <i class="fa fa-chevron-down toggle-icon"></i>
+      </button>
+      <div class="info-content">
+        <p>Sì! Se dopo la consulenza decidi di acquistare un pacchetto personalizzato, l’importo della consulenza (al netto dell’IVA) verrà detratto dal preventivo finale. È il nostro modo di accompagnarti passo dopo passo, premiando chi si affida a noi.</p>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <button class="info-toggle">
+        <span class="info-number">7.</span> Offrite supporto per esigenze alimentari e accessibilità?
+        <i class="fa fa-chevron-down toggle-icon"></i>
+      </button>
+      <div class="info-content">
+        <p>Assolutamente sì. Analizziamo allergie, restrizioni alimentari, mobilità ridotta, neurodivergenze e altre esigenze per creare un itinerario sicuro, rilassato e su misura.</p>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <button class="info-toggle">
+        <span class="info-number">8.</span> Posso fare più consulenze in momenti diversi?
+        <i class="fa fa-chevron-down toggle-icon"></i>
+      </button>
+      <div class="info-content">
+        <p>Sì. Puoi iniziare con una consulenza Lite e proseguire in seguito con Smart o Premium. Il sistema memorizza il tuo storico per costruire un viaggio coerente, senza ripetizioni.</p>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <button class="info-toggle">
+        <span class="info-number">9.</span> Posso regalare una consulenza?
+        <i class="fa fa-chevron-down toggle-icon"></i>
+      </button>
+      <div class="info-content">
+        <p>Certo! Puoi acquistare una consulenza come <strong>gift card digitale</strong> per un amico, una coppia o una famiglia. Riceveranno un voucher personalizzato valido 12 mesi.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<footer class="main-footer">
+  <div class="footer-social">
+    <p><strong>Seguici su:</strong></p>
+    <a href="https://www.instagram.com/yumeviaggi" target="_blank" class="fa fa-instagram"></a>
+    <a href="https://yuta-travel.com" target="_blank" class="fa fa-globe"></a>
+  </div>
+  <p class="footer-copy">© 2025 Yume Travel Tech – Tutti i diritti riservati.</p>
+</footer>
+
+<!-- Avatar Chatbot Yuki -->
+<div id="yuki-chat-avatar" onclick="toggleYukiChat()" title="Hai bisogno di aiuto?">
+  <img src="assets/yuki-avatar.png" alt="Yuki" />
+</div>
+
+<!-- Finestra Chat -->
+<div id="yuki-chatbox" class="hidden">
+  <div class="chatbox-header">
+    <span>Yuki, assistente AI</span>
+    <button onclick="toggleYukiChat()">✕</button>
+  </div>
+  <div class="chatbox-messages" id="chatbox-messages"></div>
+  <div class="chatbox-input">
+    <input type="text" id="userMessage" placeholder="Scrivi qui..." />
+    <button onclick="sendMessage()">Invia</button>
+  </div>
+</div>
+
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    const el = document.querySelector('#yuki-chat-avatar');
+    if (!el) return;
+
+    el.style.position = 'fixed';
+    el.style.bottom = '25px';
+    el.style.right = '25px';
+    el.style.width = '90px';
+    el.style.height = '90px';
+    el.style.zIndex = '9999';
+    el.style.borderRadius = '50%';
+    el.style.overflow = 'hidden';
+    el.style.boxShadow = '0 4px 10px rgba(0,0,0,0.2)';
+    el.style.backgroundColor = '#fff';
+
+    const img = el.querySelector('img');
+    if (img) {
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.objectFit = 'cover';
+      img.style.borderRadius = '50%';
+    }
+  });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="assets/script.js"></script>
+</body>
+</html>
