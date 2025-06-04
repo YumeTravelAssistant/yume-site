@@ -2598,6 +2598,17 @@ p.hero-subtitle {
   color: #8B2C2B;
 }
 
+
+@media (max-width: 500px) {
+  .modern-btn {
+    font-size: 0.85rem;
+    padding: 8px 16px;
+    border-width: 1.5px;
+    border-radius: 12px;
+  }
+}
+
+
 /* Bottone + Aggiungi camera */
 #aggiungiCamera.modern-btn {
   font-size: 0.95rem;
