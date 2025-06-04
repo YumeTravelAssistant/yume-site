@@ -2591,6 +2591,7 @@ p.hero-subtitle {
   width: auto;
   max-width: 100%;
   box-sizing: border-box;
+  margin-top: 40px;
 }
 
 .modern-btn:hover {
@@ -4136,22 +4137,21 @@ body .indice-info-utili {
 }
 
 
-@media (max-width: 500px) {
-  .modern-btn {
-    font-size: 0.85rem;
-    padding: 8px 8px;
-    border-width: 1.5px;
-    border-radius: 12px;
-  }
+/* Fissa il contenuto e bottone in colonna verticale */
+#consulenze-viaggi .pacchetti-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  padding-bottom: 80px; /* spazio extra per il bottone */
 }
 
-@media (max-width: 350px) {
-  .modern-btn {
-    font-size: 0.75rem;
-    padding: 6px 6px;
-    border-width: 1.2px;
-    border-radius: 10px;
-    margin-top: 30px; 
- }
+/* Modern-btn che si posiziona sempre in fondo */
+#consulenze-viaggi .modern-btn mt-2 {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 0; /* elimina margine extra */
 }
 
