@@ -1,0 +1,359 @@
+let invioInCorso = false;
+
+function mostraStep(numero) {
+  document.querySelectorAll(".step").forEach((step, index) => {
+    step.classList.toggle("hidden", index !== numero - 1);
+  });
+}
+
+function vaiAlStep1() {
+  mostraStep(1);
+}
+
+function vaiAlStep2() {
+  const categoria = document.getElementById("categoria_servizio")?.value;
+  const calendario = document.getElementById("data_calendario")?.value;
+
+  if (!categoria) {
+    alert("Seleziona una categoria di consulenza (Tematica o Atelier).");
+    return;
+  }
+
+  let tipoServizio = "";
+  if (categoria === "tematica") {
+    tipoServizio = document.getElementById("tipo_servizio_tematica")?.value;
+  } else if (categoria === "experience") {
+    tipoServizio = document.getElementById("tipo_servizio_experience")?.value;
+  }
+
+  if (!tipoServizio) {
+    alert("Seleziona il tipo specifico di consulenza desiderato.");
+    return;
+  }
+
+  if (!calendario) {
+    alert("Seleziona una data nel calendario.");
+    return;
+  }
+
+  // Se tutto è valido, passa allo step 2
+  mostraStep(2);
+}
+
+function vaiAlStep3Prenota() {
+  const riepilogo = document.getElementById("riepilogo");
+  if (!riepilogo) return;
+
+  const nome = document.getElementById("nome")?.value.trim();
+  const cognome = document.getElementById("cognome")?.value.trim();
+  const email = document.getElementById("email")?.value.trim();
+  const confermaEmail = document.getElementById("confermaEmail")?.value.trim();
+  const password = document.getElementById("password")?.value;
+  const confermaPassword = document.getElementById("confermaPassword")?.value;
+  const cf = document.getElementById("cf")?.value;
+  const note = document.getElementById("note")?.value;
+
+  // Validazioni obbligatorie
+  if (!nome) return alert("Il campo Nome è obbligatorio.");
+  if (!cognome) return alert("Il campo Cognome è obbligatorio.");
+  if (!email || !confermaEmail) return alert("Entrambi i campi Email sono obbligatori.");
+  if (email !== confermaEmail) return alert("Le email non coincidono.");
+  if (!password || !confermaPassword) return alert("Entrambi i campi Password sono obbligatori.");
+  if (password !== confermaPassword) return alert("Le password non coincidono.");
+
+  // Riepilogo
+  riepilogo.innerHTML = "";
+  riepilogo.innerHTML += `<li><strong>Nome:</strong> ${nome}</li>`;
+  riepilogo.innerHTML += `<li><strong>Cognome:</strong> ${cognome}</li>`;
+  riepilogo.innerHTML += `<li><strong>Email:</strong> ${email}</li>`;
+  if (cf) {
+    riepilogo.innerHTML += `<li><strong>Codice Fiscale:</strong> ${cf}</li>`;
+  } else {
+    riepilogo.innerHTML += `<li><strong>Codice Fiscale:</strong> <em>non fornito</em> <span title="Se in futuro deciderai di acquistare una consulenza, il CF velocizzerà la procedura di fatturazione.">ℹ️</span></li>`;
+  }
+  if (note) riepilogo.innerHTML += `<li><strong>Note:</strong> ${note}</li>`;
+
+  // Passaggio allo step 3
+  document.querySelectorAll(".step").forEach(s => s.classList.add("hidden"));
+  document.getElementById("step3")?.classList.remove("hidden");
+}
+
+function vaiAlStep3() {
+  const tipoCliente = document.getElementById("cliente_tipo")?.value || "";
+  const riepilogo = document.getElementById("riepilogo");
+  if (!riepilogo) return;
+
+  // Verifica selezione cliente
+  if (!tipoCliente) {
+    alert("Seleziona una tipologia di cliente per proseguire.");
+    return;
+  }
+
+  riepilogo.innerHTML = "";
+
+  // === PRIVATO ===
+  if (tipoCliente === "privato") {
+    const email = document.getElementById("email")?.value.trim();
+    const email2 = document.getElementById("confermaEmail")?.value.trim();
+    const password = document.getElementById("password")?.value;
+    const password2 = document.getElementById("confermaPassword")?.value;
+
+    if (email !== email2) {
+      alert("Le email non coincidono.");
+      return;
+    }
+
+    if (password !== password2) {
+      alert("Le password non coincidono.");
+      return;
+    }
+
+    const campiPrivatoObbligatori = [
+      "nome", "cognome", "email", "confermaEmail", "password", "confermaPassword",
+      "cf", "telefono", "via", "cap", "citta", "provincia", "stato"
+    ];
+
+    for (let id of campiPrivatoObbligatori) {
+      const val = document.getElementById(id)?.value.trim();
+      if (!val) {
+        alert("Compila tutti i campi obbligatori.");
+        return;
+      }
+    }
+
+    // Riepilogo PRIVATO
+    riepilogo.innerHTML += `<li><strong>Tipo cliente:</strong> Privato</li>`;
+    riepilogo.innerHTML += `<li><strong>Nome:</strong> ${document.getElementById("nome").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Cognome:</strong> ${document.getElementById("cognome").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Email:</strong> ${email}</li>`;
+    riepilogo.innerHTML += `<li><strong>Codice Fiscale:</strong> ${document.getElementById("cf").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Telefono:</strong> ${document.getElementById("telefono").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Via:</strong> ${document.getElementById("via").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>CAP:</strong> ${document.getElementById("cap").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Città:</strong> ${document.getElementById("citta").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Provincia:</strong> ${document.getElementById("provincia").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Stato:</strong> ${document.getElementById("stato").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Note:</strong> ${document.getElementById("note").value}</li>`;
+  }
+
+  // === AZIENDA ===
+  else if (tipoCliente === "azienda") {
+    const email = document.getElementById("email_azienda")?.value.trim();
+    const email2 = document.getElementById("confermaEmail_azienda")?.value.trim();
+    const password = document.getElementById("password_azienda")?.value;
+    const password2 = document.getElementById("confermaPassword_azienda")?.value;
+
+    if (email !== email2) {
+      alert("Le email non coincidono.");
+      return;
+    }
+
+    if (password !== password2) {
+      alert("Le password non coincidono.");
+      return;
+    }
+
+    const campiAziendaObbligatori = [
+      "ragione_sociale", "email_azienda", "confermaEmail_azienda",
+      "password_azienda", "confermaPassword_azienda", "piva", "cf_azienda",
+      "pec", "codice_destinatario", "referente_nome", "referente_cognome",
+      "telefono_azienda", "via_azienda", "cap_azienda", "citta_azienda", "provincia_azienda", "stato_azienda"
+    ];
+
+    for (let id of campiAziendaObbligatori) {
+      const val = document.getElementById(id)?.value.trim();
+      if (!val) {
+        alert("Compila tutti i campi obbligatori.");
+        return;
+      }
+    }
+
+    // Riepilogo AZIENDA
+    riepilogo.innerHTML += `<li><strong>Tipo cliente:</strong> Azienda</li>`;
+    riepilogo.innerHTML += `<li><strong>Ragione Sociale:</strong> ${document.getElementById("ragione_sociale").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Email:</strong> ${email}</li>`;
+    riepilogo.innerHTML += `<li><strong>Partita IVA:</strong> ${document.getElementById("piva").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Codice Fiscale:</strong> ${document.getElementById("cf_azienda").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>PEC:</strong> ${document.getElementById("pec").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Codice SDI:</strong> ${document.getElementById("codice_destinatario").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Referente:</strong> ${document.getElementById("referente_nome").value} ${document.getElementById("referente_cognome").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Telefono:</strong> ${document.getElementById("telefono_azienda").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Via:</strong> ${document.getElementById("via_azienda").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>CAP:</strong> ${document.getElementById("cap_azienda").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Città:</strong> ${document.getElementById("citta_azienda").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Provincia:</strong> ${document.getElementById("provincia_azienda").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Stato:</strong> ${document.getElementById("stato_azienda").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Note:</strong> ${document.getElementById("note_azienda").value}</li>`;
+  }
+
+  // Mostra step 3
+  document.querySelectorAll(".step").forEach(s => s.classList.add("hidden"));
+  document.getElementById("step3")?.classList.remove("hidden");
+}
+
+
+function aggiornaTipoCliente() {
+  const tipo = document.getElementById("cliente_tipo").value;
+  const privato = document.getElementById("sezione_privato");
+  const azienda = document.getElementById("sezione_azienda");
+
+  if (!privato || !azienda) return;
+
+  privato.classList.add("hidden");
+  azienda.classList.add("hidden");
+
+  if (tipo === "privato") {
+    privato.classList.remove("hidden");
+  } else if (tipo === "azienda") {
+    azienda.classList.remove("hidden");
+  }
+}
+
+
+function mostraCampiAzienda() {
+  const tipo = document.getElementById("cliente_tipo").value;
+  document.getElementById("campi_azienda").classList.toggle("hidden", tipo !== "azienda");
+}
+
+async function inviaRichiestaConsulenza() {
+  if (invioInCorso) return;
+  invioInCorso = true;
+
+  try {
+    const tipoFunnel = "caldo";
+    const tipoCliente = document.getElementById("cliente_tipo").value;
+    const categoriaServizio = document.getElementById("categoria_servizio").value;
+    const calendario = document.getElementById("data_calendario").value;
+    const idOrdine = "ORD-" + Date.now();
+    const statoPagamento = "In attesa";
+
+    let tipo_servizio = "";
+    if (categoriaServizio === "tematica") {
+      tipo_servizio = document.getElementById("tipo_servizio_tematica").value;
+    } else {
+      tipo_servizio = document.getElementById("tipo_servizio_experience").value;
+    }
+
+    const dati = {
+      tipo_funnel: tipoFunnel,
+      cliente_tipo: tipoCliente,
+      tipo_servizio,
+      calendario,
+      stato_pagamento: statoPagamento,
+      ID_ordine: idOrdine
+    };
+
+    if (tipoCliente === "privato") {
+      dati.nome = document.getElementById("nome").value;
+      dati.cognome = document.getElementById("cognome").value;
+      dati.email = document.getElementById("email").value;
+      dati.password_hash = await sha256(document.getElementById("password").value);
+      dati.CF = document.getElementById("cf").value;
+      dati.telefono = document.getElementById("telefono").value;
+      dati.via = document.getElementById("via").value;
+      dati.numero_civico = document.getElementById("numero_civico").value;
+      dati.cap = document.getElementById("cap").value;
+      dati.città = document.getElementById("citta").value;
+      dati.provincia = document.getElementById("provincia").value;
+      dati.stato = document.getElementById("stato").value;
+      dati.note = document.getElementById("note").value;
+    } else if (tipoCliente === "azienda") {
+      dati.ragione_sociale = document.getElementById("ragione_sociale").value;
+      dati.email = document.getElementById("email_azienda").value;
+      dati.password_hash = await sha256(document.getElementById("password_azienda").value);
+      dati.PIVA = document.getElementById("piva").value;
+      dati.CF = document.getElementById("cf_azienda").value;
+      dati.referente_nome = document.getElementById("referente_nome").value;
+      dati.referente_cognome = document.getElementById("referente_cognome").value;
+      dati.telefono_azienda = document.getElementById("telefono_azienda").value;
+      dati.via_azienda = document.getElementById("via_azienda").value;
+      dati.numero_civico_azienda = document.getElementById("numero_civico_azienda").value;
+      dati.cap_azienda = document.getElementById("cap_azienda").value;
+      dati.città_azienda = document.getElementById("citta_azienda").value;
+      dati.provincia_azienda = document.getElementById("provincia_azienda").value;
+      dati.stato_azienda = document.getElementById("stato_azienda").value;
+      dati.PEC = document.getElementById("pec").value;
+      dati.codice_destinatario = document.getElementById("codice_destinatario").value;
+      dati.note_azienda = document.getElementById("note_azienda").value;
+    }
+
+    const response = await fetch("https://yume-consulenze.azurewebsites.net/api/invio-estremi", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dati)
+    });
+
+    const result = await response.json();
+
+    if (result.status === "ok" && result.checkout_url) {
+      window.location.href = result.checkout_url;
+    } else {
+      throw new Error(result.message || "Impossibile avviare il pagamento.");
+    }
+
+  } catch (err) {
+    alert("Errore durante l'invio: " + err.message);
+  } finally {
+    invioInCorso = false;
+  }
+}
+
+
+function aggiornaTipoServizio() {
+  const categoria = document.getElementById("categoria_servizio")?.value;
+  const sezioneTematica = document.getElementById("sezione_tematica");
+  const sezioneExperience = document.getElementById("sezione_experience");
+
+  if (!categoria || !sezioneTematica || !sezioneExperience) return;
+
+  sezioneTematica.classList.add("hidden");
+  sezioneExperience.classList.add("hidden");
+
+  if (categoria === "tematica") {
+    sezioneTematica.classList.remove("hidden");
+  } else if (categoria === "experience") {
+    sezioneExperience.classList.remove("hidden");
+  }
+}
+
+function checkEmailMatchAzienda() {
+  const email = document.getElementById("email_azienda")?.value || "";
+  const conferma = document.getElementById("confermaEmail_azienda")?.value || "";
+  const msg = document.getElementById("emailMatchMessageAzienda");
+
+  if (!msg) return;
+  if (!conferma) return msg.innerHTML = "";
+
+  if (email === conferma) {
+    msg.innerHTML = `<i class="fas fa-check-circle icon-ok"></i> Le email coincidono`;
+    msg.className = "email-message ok";
+  } else {
+    msg.innerHTML = `<i class="fas fa-times-circle icon-ko"></i> Le email non coincidono`;
+    msg.className = "email-message ko";
+  }
+}
+
+function checkPasswordMatchAzienda() {
+  const pw = document.getElementById("password_azienda")?.value || "";
+  const conferma = document.getElementById("confermaPassword_azienda")?.value || "";
+  const msg = document.getElementById("passwordMatchMessageAzienda");
+
+  if (!msg) return;
+  if (!conferma) return msg.innerHTML = "";
+
+  if (pw === conferma) {
+    msg.innerHTML = `<i class="fas fa-check-circle icon-ok"></i> Le password coincidono`;
+    msg.className = "password-message ok";
+  } else {
+    msg.innerHTML = `<i class="fas fa-times-circle icon-ko"></i> Le password non coincidono`;
+    msg.className = "password-message ko";
+  }
+}
+
+async function sha256(str) {
+  const buffer = new TextEncoder().encode(str);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+

@@ -220,18 +220,20 @@ textarea::placeholder {
 }
 
 button {
-  border-radius: 6px;
-  padding: 12px 20px;
+  border-radius: 16px;
+  padding: 12px 24px;
   margin-top: 30px;
   background-color: #8B2C2B;
   color: white;
   border: none;
-  font-size: 1em;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Quicksand', sans-serif;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-button:hover {
+button {
   background-color: #721F1E;
   color: #fff;
 }
@@ -1896,7 +1898,7 @@ h2.slide-in.visible {
   margin-bottom: 6px;
 }
 
-.icon-list li i {
+  border-color: #721F1E;.icon-list li i {
   color: #8B2C2B;
   margin-right: 8px;
 }
@@ -2123,7 +2125,7 @@ h1.hero-title {
   margin-bottom: 20px;
   text-align: center;
 }
-
+  border-color: #721F1E;
 p.hero-subtitle {
   font-family: 'Raleway', sans-serif;
   font-size: clamp(1.6rem, 2vw, 1.6rem);
@@ -4153,5 +4155,126 @@ body .indice-info-utili {
   left: 50%;
   transform: translateX(-50%);
   margin-top: 0; /* elimina margine extra */
+}
+
+.btn-group-step {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 30px;
+}
+
+.btn-step {
+  position: relative; /* rimuove il comportamento flottante */
+  display: flex;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #C9A86A;
+  background-color: transparent;
+  border: 2px solid #C9A86A;
+  border-radius: 16px;
+  text-decoration: none;
+  font-family: 'Quicksand', sans-serif;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  width: auto;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin-top: 20px;
+}
+
+.btn-step:hover {
+  background-color: #C9A86A;
+  color: #8B2C2B;
+  border-color: #721F1E;
+}
+
+/* FIX solo per sartoria-box con doppio bottone */
+#sartoriaConsulenze .sartoria-box {
+  position: relative;
+  padding-bottom: 80px; /* spazio in basso per i bottoni */
+}
+
+#sartoriaConsulenze .sartoria-box .button-container {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: row; /* bottoni affiancati */
+  gap: 12px;
+  z-index: 2;
+}
+
+/* Mantiene lo stile originale */
+#sartoriaConsulenze .sartoria-box .button-container .modern-btn {
+  position: static !important;
+  color: #C9A86A;
+  background-color: transparent;
+  border: 2px solid #C9A86A;
+  border-radius: 16px;
+  text-decoration: none;
+  font-family: 'Quicksand', sans-serif;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  width: auto;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 0; /* rimuove il margin-top: 40px */
+  padding: 12px 24px;
+  font-size: 1rem;
+}
+
+/* Hover coerente */
+#sartoriaConsulenze .sartoria-box .button-container .modern-btn:hover {
+    background-color: #C9A86A;
+    color: #8B2C2B;
+    border-color: #721F1E;
+}
+
+/* FIX layout bottoni affiancati per #consulenze-viaggi */
+#consulenze-viaggi .pacchetti-box {
+  position: relative;
+  padding-bottom: 80px; /* spazio per i bottoni */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Contenitore dei due bottoni */
+#consulenze-viaggi .button-container {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: row; /* 🔥 bottoni affiancati */
+  gap: 12px;
+  z-index: 2;
+}
+
+/* Bottoni moderni affiancati con stile coerente */
+#consulenze-viaggi .button-container .modern-btn {
+  position: static !important;
+  color: #C9A86A;
+  background-color: transparent;
+  border: 2px solid #C9A86A;
+  border-radius: 16px;
+  text-decoration: none;
+  font-family: 'Quicksand', sans-serif;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  width: auto;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 12px 24px;
+  font-size: 1rem;
+  margin: 0;
+}
+
+#consulenze-viaggi .button-container .modern-btn:hover {
+  background-color: #C9A86A;
+  color: #8B2C2B;
+  border-color: #721F1E;
 }
 

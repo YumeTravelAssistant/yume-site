@@ -1,0 +1,185 @@
+<!-- Pagina ACQUISTA - STEP FORM -->
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acquista Consulenza - Yume Travel</title>
+  <link rel="icon" type="image/png" href="favicon.ico" />
+
+  <!-- Font e stile coerente -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Raleway:wght@300;500;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <div class="main-wrapper">
+    <section class="step-container">
+
+      <!-- STEP 1 -->
+      <div class="step" id="step1">
+        <h2>Scegli la tua consulenza</h2>
+       <label for="categoria_servizio">Categoria:</label>
+        <select id="categoria_servizio" onchange="aggiornaTipoServizio()">
+          <option value="">-- Seleziona --</option>
+          <option value="tematica">Consulenza Tematica</option>
+          <option value="experience">Yume Experience</option>
+        </select>
+
+        <div id="sezione_tematica" class="hidden mt-2">
+          <label for="tipo_servizio_tematica">Tipologia:</label>
+          <select id="tipo_servizio_tematica">
+            <option value="">-- Seleziona --</option>
+            <option value="Consulenza Yume Lite">Yume Lite (1h)</option>
+            <option value="Consulenza Yume Smart">Yume Smart (3h)</option>
+            <option value="Consulenza Yume Premium">Yume Premium (5h)</option>
+          </select>
+        </div>
+
+        <div id="sezione_experience" class="hidden mt-2">
+          <label for="tipo_servizio_experience">Tipologia:</label>
+          <select id="tipo_servizio_experience">
+            <option value="">-- Seleziona --</option>
+            <option value="Consulenza Yume Experience Singolo">Experience Singolo</option>
+            <option value="Consulenza Yume Experience Coppia">Experience Coppia</option>
+            <option value="Consulenza Yume Experience Famiglia">Experience Famiglia</option>
+            <option value="Consulenza Yume Experience Mini Gruppo">Experience Mini Gruppo</option>
+            <option value="Consulenza Yume Experience Yume Atelier">Yume Gruppo Atelier</option>
+          </select>
+        </div>
+
+        <label for="data_calendario" class="mt-2">Data e ora:</label>
+        <input type="datetime-local" id="data_calendario">
+
+       <button class="btn-step" onclick="vaiAlStep2()">Avanti</button>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step hidden" id="step2">
+        <h2>I tuoi dati</h2>
+
+        <label for="cliente_tipo">Tipologia cliente:</label>
+        <select id="cliente_tipo" onchange="aggiornaTipoCliente()">
+          <option value="">-- Seleziona --</option>
+          <option value="privato">Privato</option>
+          <option value="azienda">Azienda</option>
+        </select>
+
+        <!-- PRIVATO -->
+        <div id="sezione_privato" class="hidden mt-2">
+          <input type="text" id="nome" placeholder="Nome" required>
+          <input type="text" id="cognome" placeholder="Cognome" required>
+          <input type="email" id="email" placeholder="Email" oninput="checkEmailMatch()" required>
+          <input type="email" id="confermaEmail" placeholder="Conferma Email" oninput="checkEmailMatch()" required>
+          <div id="emailMatchMessage" class="email-message"></div>
+          <input type="password" id="password" placeholder="Password" oninput="checkPasswordMatch()" required>
+          <input type="password" id="confermaPassword" placeholder="Conferma Password" oninput="checkPasswordMatch()" required>
+          <div id="passwordMatchMessage" class="password-message"></div>
+          <input type="text" id="cf" placeholder="Codice Fiscale" required>
+          <input type="tel" id="telefono" placeholder="Telefono" required>
+          <input type="text" id="via" placeholder="Via e numero civico" required>
+          <input type="text" id="cap" placeholder="CAP" required>
+          <input type="text" id="citta" placeholder="Città" required>
+          <input type="text" id="provincia" placeholder="Provincia" required>
+          <input type="text" id="stato" placeholder="Stato" required>
+          <textarea id="note" placeholder="Note aggiuntive (facoltative)"></textarea>
+        </div>
+         
+
+        <!-- AZIENDA -->
+<div id="sezione_azienda" class="hidden mt-2">
+  <input type="text" id="ragione_sociale" placeholder="Ragione Sociale" required>
+
+  <input type="email" id="email_azienda" placeholder="Email" oninput="checkEmailMatchAzienda()" required>
+  <input type="email" id="confermaEmail_azienda" placeholder="Conferma Email" oninput="checkEmailMatchAzienda()" required>
+  <div id="emailMatchMessageAzienda" class="email-message"></div>
+
+  <input type="password" id="password_azienda" placeholder="Password" oninput="checkPasswordMatchAzienda()" required>
+  <input type="password" id="confermaPassword_azienda" placeholder="Conferma Password" oninput="checkPasswordMatchAzienda()" required>
+  <div id="passwordMatchMessageAzienda" class="password-message"></div>
+
+  <input type="text" id="piva" placeholder="Partita IVA" required>
+  <input type="text" id="cf_azienda" placeholder="Codice Fiscale" required>
+
+  <input type="email" id="pec" placeholder="PEC" required>
+  <input type="text" id="codice_destinatario" placeholder="Codice SDI" required>
+
+  <input type="text" id="referente_nome" placeholder="Nome Referente" required>
+  <input type="text" id="referente_cognome" placeholder="Cognome Referente" required>
+  
+  <input type="tel" id="telefono_azienda" placeholder="Telefono" required>
+
+  <input type="text" id="via_azienda" placeholder="Via e numero civico" required>
+  <input type="text" id="cap_azienda" placeholder="CAP" required>
+  <input type="text" id="citta_azienda" placeholder="Città" required>
+  <input type="text" id="provincia_azienda" placeholder="Provincia" required>
+  <input type="text" id="stato_azienda" placeholder="Stato" required>
+
+  <textarea id="note_azienda" placeholder="Note aggiuntive (facoltative)"></textarea>
+</div>
+
+       <div class="btn-group-step">
+         <button class="btn-step" onclick="vaiAlStep1()">Indietro</button>
+         <button class="btn-step" onclick="vaiAlStep3()">Avanti</button>
+       </div>
+
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step hidden" id="step3">
+        <h2>Riepilogo</h2>
+        <ul id="riepilogo" class="riepilogo-lista"></ul>
+       <div class="btn-group-step">
+         <button class="btn-step" onclick="vaiAlStep2()">Indietro</button>
+         <button class="btn-step" onclick="inviaRichiestaConsulenza()">Conferma e Paga</button>
+      </div>
+
+      </div>
+    </section>
+  </div>
+
+  <!-- Selettore automatico pacchetto -->
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const pacchetto = urlParams.get("pacchetto");
+      if (!pacchetto) return;
+
+      const selectCategoria = document.getElementById("categoria_servizio");
+      const selectTematica = document.getElementById("tipo_servizio_tematica");
+      const selectExperience = document.getElementById("tipo_servizio_experience");
+
+      const tematici = {
+        lite: "Consulenza Yume Lite",
+        smart: "Consulenza Yume Smart",
+        premium: "Consulenza Yume Premium"
+      };
+
+      const esperienziali = {
+        singolo: "Consulenza Yume Experience Singolo",
+        coppia: "Consulenza Yume Experience Coppia",
+        famiglia: "Consulenza Yume Experience Famiglia",
+        minigruppo: "Consulenza Yume Experience Mini Gruppo",
+        groupatelier: "Consulenza Yume Experience Yume Atelier"
+      };
+
+      if (tematici[pacchetto]) {
+        selectCategoria.value = "tematica";
+        aggiornaTipoServizio();
+        if (selectTematica) selectTematica.value = tematici[pacchetto];
+      } else if (esperienziali[pacchetto]) {
+        selectCategoria.value = "experience";
+        aggiornaTipoServizio();
+        if (selectExperience) selectExperience.value = esperienziali[pacchetto];
+      }
+    });
+  </script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script src="assets/script.js"></script>
+ <script src="assets/script_consulenze.js"></script>
+
+
+</body>
+</html>
+
