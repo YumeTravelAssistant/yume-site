@@ -66,28 +66,41 @@
           <option value="azienda">Azienda</option>
         </select>
 
-        <!-- PRIVATO -->
-        <div id="sezione_privato" class="hidden mt-2">
-          <input type="text" id="nome" placeholder="Nome" required>
-          <input type="text" id="cognome" placeholder="Cognome" required>
-          <input type="email" id="email" placeholder="Email" oninput="checkEmailMatch()" required>
-          <input type="email" id="confermaEmail" placeholder="Conferma Email" oninput="checkEmailMatch()" required>
-          <div id="emailMatchMessage" class="email-message"></div>
-          <input type="password" id="password" placeholder="Password" oninput="checkPasswordMatch()" required>
-          <input type="password" id="confermaPassword" placeholder="Conferma Password" oninput="checkPasswordMatch()" required>
-          <div id="passwordMatchMessage" class="password-message"></div>
-          <input type="text" id="cf" placeholder="Codice Fiscale" required>
-          <input type="tel" id="telefono" placeholder="Telefono" required>
-          <input type="text" id="via" placeholder="Via e numero civico" required>
-          <input type="text" id="cap" placeholder="CAP" required>
-          <input type="text" id="citta" placeholder="Città" required>
-          <input type="text" id="provincia" placeholder="Provincia" required>
-          <input type="text" id="stato" placeholder="Stato" required>
-          <textarea id="note" placeholder="Note aggiuntive (facoltative)"></textarea>
-        </div>
+<!-- PRIVATO -->
+<div id="sezione_privato" class="hidden mt-2">
+  <input type="text" id="nome" placeholder="Nome" required>
+  <input type="text" id="cognome" placeholder="Cognome" required>
+  <input type="email" id="email" placeholder="Email" oninput="checkEmailMatch()" required>
+  <input type="email" id="confermaEmail" placeholder="Conferma Email" oninput="checkEmailMatch()" required>
+  <div id="emailMatchMessage" class="email-message"></div>
+
+  <input type="password" id="password" placeholder="Password" oninput="checkPasswordMatch()" required>
+  <input type="password" id="confermaPassword" placeholder="Conferma Password" oninput="checkPasswordMatch()" required>
+  <div id="passwordMatchMessage" class="password-message"></div>
+
+  <input type="text" id="cf" placeholder="Codice Fiscale" required>
+  <input type="tel" id="telefono" placeholder="Telefono" required>
+
+  <div class="campo-doppio">
+    <input type="text" id="via" placeholder="Via" required>
+    <input type="text" id="numero_civico" placeholder="Numero civico" required>
+  </div>
+
+  <div class="campo-doppio">
+    <input type="text" id="cap" placeholder="CAP" required>
+    <input type="text" id="città" placeholder="Città" required>
+  </div>
+
+  <div class="campo-doppio">
+    <input type="text" id="provincia" placeholder="Provincia" required>
+    <input type="text" id="stato" placeholder="Stato" required>
+  </div>
+
+  <textarea id="note" placeholder="Note aggiuntive (facoltative)"></textarea>
+</div>
          
 
-        <!-- AZIENDA -->
+<!-- AZIENDA -->
 <div id="sezione_azienda" class="hidden mt-2">
   <input type="text" id="ragione_sociale" placeholder="Ragione Sociale" required>
 
@@ -107,14 +120,23 @@
 
   <input type="text" id="referente_nome" placeholder="Nome Referente" required>
   <input type="text" id="referente_cognome" placeholder="Cognome Referente" required>
-  
+
   <input type="tel" id="telefono_azienda" placeholder="Telefono" required>
 
-  <input type="text" id="via_azienda" placeholder="Via e numero civico" required>
-  <input type="text" id="cap_azienda" placeholder="CAP" required>
-  <input type="text" id="citta_azienda" placeholder="Città" required>
-  <input type="text" id="provincia_azienda" placeholder="Provincia" required>
-  <input type="text" id="stato_azienda" placeholder="Stato" required>
+  <div class="campo-doppio">
+    <input type="text" id="via_azienda" placeholder="Via" required>
+    <input type="text" id="numero_civico_azienda" placeholder="Numero civico" required>
+  </div>
+
+  <div class="campo-doppio">
+    <input type="text" id="cap_azienda" placeholder="CAP" required>
+    <input type="text" id="citta_azienda" placeholder="Città" required>
+  </div>
+
+  <div class="campo-doppio">
+    <input type="text" id="provincia_azienda" placeholder="Provincia" required>
+    <input type="text" id="stato_azienda" placeholder="Stato" required>
+  </div>
 
   <textarea id="note_azienda" placeholder="Note aggiuntive (facoltative)"></textarea>
 </div>
