@@ -357,3 +357,45 @@ async function sha256(str) {
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
+async function confermaPrenotazione() {
+  if (invioInCorso) return;
+  invioInCorso = true;
+
+  try {
+    const dati = {
+      tipo_funnel: "freddo",
+      data: new Date().toISOString(),
+      nome: document.getElementById("nome").value,
+      cognome: document.getElementById("cognome").value,
+      email: document.getElementById("email").value,
+      password_hash: await sha256(document.getElementById("password").value),
+      CF: document.getElementById("cf").value,
+      tipo_servizio:
+        document.getElementById("tipo_servizio_tematica")?.value ||
+        document.getElementById("tipo_servizio_experience")?.value,
+      calendario: document.getElementById("data_calendario").value,
+      note: document.getElementById("note").value,
+    };
+
+    const response = await fetch("https://yume-consulenze.azurewebsites.net/api/invio-estremi", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dati),
+    });
+
+    const result = await response.json();
+
+    if (result.status === "ok") {
+      alert("Prenotazione registrata con successo!");
+      window.location.href = "/grazie.html"; // o altra pagina conferma
+    } else {
+      throw new Error(result.message || "Errore nella registrazione.");
+    }
+
+  } catch (err) {
+    alert("Errore: " + err.message);
+  } finally {
+    invioInCorso = false;
+  }
+}
+
