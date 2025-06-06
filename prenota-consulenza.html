@@ -148,6 +148,26 @@
     });
   </script>
 
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    const profilo = sessionStorage.getItem("profiloUtente");
+    if (profilo) {
+      // Imposta tipo cliente a "privato" di default (puoi adattare se hai tipo azienda)
+      const tipo = document.getElementById("cliente_tipo");
+      if (tipo) {
+        tipo.value = "privato";
+        aggiornaTipoCliente?.(); // se esiste la funzione
+      }
+
+      // Vai direttamente allo step 1 (scelta consulenza)
+      mostraStep?.(1);
+
+      // Quando si arriva allo step 2, i campi verranno popolati automaticamente
+    }
+  });
+</script>
+
+
   <!-- Librerie -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="assets/script.js"></script>

@@ -7,20 +7,58 @@
   <link rel="icon" href="favicon.ico" type="image/x-icon"/>
   <link rel="stylesheet" href="assets/styles.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    .success-box {
+      max-width: 600px;
+      margin: 60px auto;
+      background: #fff;
+      border-radius: 2rem;
+      padding: 3rem;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.08);
+    }
+    .success-box i {
+      color: #4CAF50;
+      font-size: 60px;
+      margin-bottom: 20px;
+    }
+    .success-box h1 {
+      font-size: 2rem;
+      color: #8B2C2B;
+      margin-bottom: 1rem;
+    }
+    .success-box p {
+      font-size: 1.1rem;
+      color: #444;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+    .btn-step {
+      background-color: #C9A86A;
+      color: #fff;
+      font-weight: bold;
+      padding: 0.8rem 2rem;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.3s ease;
+      display: inline-block;
+    }
+    .btn-step:hover {
+      background-color: #a8824f;
+    }
+  </style>
 </head>
-<body class="success-page">
-  <div class="container success-message">
-    <i class="fa fa-check-circle fa-4x" style="color: #4CAF50;"></i>
+<body class="bg-[#F4F0E2] text-black">
+  <div class="success-box">
+    <i class="fa fa-check-circle" aria-hidden="true"></i>
     <h1>Acquisto completato con successo</h1>
-    <p>Grazie per aver acquistato una consulenza Yume.<br>
-    Riceverai a breve un'email con la ricevuta e il riepilogo dell'acquisto.</p>
-
-    <!-- Eventuale link al PDF -->
-    <!-- <a href="link-al-tuo-pdf" class="btn-step" download>Scarica il riepilogo</a> -->
-
-    <div class="btn-container">
-      <a href="index.html" class="btn-step">Torna alla Home</a>
-    </div>
+    <p>
+      Grazie per aver acquistato una consulenza con Yume Travel.<br>
+      Riceverai un’email con il riepilogo e le istruzioni necessarie per la consulenza.
+    </p>
+    <a href="index.html" class="btn-step">Torna alla Home</a>
   </div>
 
   <script src="assets/script.js"></script>
