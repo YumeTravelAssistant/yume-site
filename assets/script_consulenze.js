@@ -522,6 +522,7 @@ async function checkEmailMatchAndRegistrazione() {
   } else {
     msgBox.innerHTML = `<i class="fas fa-check-circle icon-ok"></i> Le email coincidono e non risultano già registrate`;
     msgBox.className = "email-message ok";
+
     document.getElementById("email").classList.remove("input-ko");
   }
 }
@@ -787,5 +788,15 @@ async function verificaERegistrazioneSeNecessario() {
   } catch (err) {
     console.error("Errore invio registrazione:", err);
   }
+}
+
+async function eseguiRegistrazioneEInvio() {
+  const registrato = await verificaERegistrazioneSeNecessario();
+  if (registrato) confermaPrenotazione(); // o confermaAcquisto() se serve
+}
+
+async function eseguiAcquistoEInvio() {
+  const registrato = await verificaERegistrazioneSeNecessario();
+  if (registrato) inviaRichiestaConsulenza();
 }
 
