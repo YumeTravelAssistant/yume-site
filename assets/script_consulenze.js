@@ -449,6 +449,13 @@ async function confermaPrenotazione() {
 }
 
 async function verificaEmailEsistente(email) {
+  // ✅ Se il cliente è loggato, salta la verifica
+  const profilo = sessionStorage.getItem("profiloUtente");
+  if (profilo) {
+    const dati = JSON.parse(profilo);
+    if (dati.email === email) return false;
+  }
+
   try {
     const response = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
       method: "POST",
