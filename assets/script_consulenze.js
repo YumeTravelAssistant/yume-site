@@ -538,92 +538,52 @@ async function effettuaLogin() {
     })
   })
     .then(res => res.json())
-    .then(data => {
-      if (data.status === "success") {
-        output.textContent = "Accesso effettuato!";
-        output.style.color = "green";
+.then(data => {
+  if (data.status === "success") {
+    output.textContent = "Accesso effettuato!";
+    output.style.color = "green";
 
-        const cliente = data.profilo;
-        const isAzienda = cliente.tipo_cliente?.toLowerCase() === "azienda";
+    const cliente = data.profilo || {};
 
-        // Salva profilo in sessionStorage
-        sessionStorage.setItem("profiloUtente", JSON.stringify({
-          nome: cliente.nome || "",
-          cognome: cliente.cognome || "",
-          email: cliente.email || ""
-        }));
+    // Salva profilo in sessionStorage
+    sessionStorage.setItem("profiloUtente", JSON.stringify({
+      nome: cliente.nome || "",
+      cognome: cliente.cognome || "",
+      email: cliente.email || ""
+    }));
 
-        // Imposta valore e mostra sezione corretta
-        document.getElementById("cliente_tipo").value = isAzienda ? "azienda" : "privato";
-        aggiornaTipoCliente();
+    // Imposta i campi privati (nome, cognome, email e password) nel form, bloccandoli
+    document.getElementById("cliente_tipo").value = "privato"; // metti "privato" di default
+    aggiornaTipoCliente();
 
-        // Ripulisce eventuali messaggi precedenti
-        if (document.getElementById("emailMatchMessage")) {
-  document.getElementById("emailMatchMessage").innerHTML = "";
-}
-if (document.getElementById("emailMatchMessageAzienda")) {
-  document.getElementById("emailMatchMessageAzienda").innerHTML = "";
-}
+    document.getElementById("nome").value = cliente.nome || "";
+    document.getElementById("cognome").value = cliente.cognome || "";
+    document.getElementById("email").value = cliente.email || "";
+    document.getElementById("confermaEmail").value = cliente.email || "";
+    document.getElementById("password").value = "********";
+    document.getElementById("confermaPassword").value = "********";
 
-
-        if (isAzienda) {
-          document.getElementById("referente_nome").value = cliente.nome || "";
-          document.getElementById("referente_cognome").value = cliente.cognome || "";
-          document.getElementById("email_azienda").value = cliente.email || "";
-          document.getElementById("confermaEmail_azienda").value = cliente.email || "";
-          document.getElementById("password_azienda").value = "********";
-          document.getElementById("confermaPassword_azienda").value = "********";
-
-          [
-            "referente_nome",
-            "referente_cognome",
-            "email_azienda",
-            "confermaEmail_azienda",
-            "password_azienda",
-            "confermaPassword_azienda"
-          ].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-              el.setAttribute("readonly", "true");
-              el.classList.add("readonly");
-            }
-          });
-
-        } else {
-          document.getElementById("nome").value = cliente.nome || "";
-          document.getElementById("cognome").value = cliente.cognome || "";
-          document.getElementById("email").value = cliente.email || "";
-          document.getElementById("confermaEmail").value = cliente.email || "";
-          document.getElementById("password").value = "********";
-          document.getElementById("confermaPassword").value = "********";
-
-          [
-            "nome",
-            "cognome",
-            "email",
-            "confermaEmail",
-            "password",
-            "confermaPassword"
-          ].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-              el.setAttribute("readonly", "true");
-              el.classList.add("readonly");
-            }
-          });
-        }
-
-        mostraStep(1);
-      } else {
-        output.textContent = "Credenziali errate.";
-        output.style.color = "red";
+    [
+      "nome",
+      "cognome",
+      "email",
+      "confermaEmail",
+      "password",
+      "confermaPassword"
+    ].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.setAttribute("readonly", "true");
+        el.classList.add("readonly");
       }
-    })
-    .catch(err => {
-      output.textContent = "Errore: " + err.message;
-      output.style.color = "red";
     });
-}
+
+    mostraStep(1);
+  } else {
+    output.textContent = "Credenziali errate.";
+    output.style.color = "red";
+  }
+})
 
 
 function popolaCampiProfiloInStep2() {
