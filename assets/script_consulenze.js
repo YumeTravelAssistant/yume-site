@@ -791,12 +791,25 @@ async function verificaERegistrazioneSeNecessario() {
 }
 
 async function eseguiRegistrazioneEInvio() {
-  verificaERegistrazioneSeNecessario();
-  confermaPrenotazione();
+  mostraSpinner();
+
+  const promessaRegistrazione = verificaERegistrazioneSeNecessario();
+  const promessaPrenotazione = confermaPrenotazione();
+
+  // Aspetta entrambe in parallelo (non sequenziale)
+  await Promise.all([promessaRegistrazione, promessaPrenotazione]);
+
+  nascondiSpinner();
 }
 
 async function eseguiAcquistoEInvio() {
-  verificaERegistrazioneSeNecessario();
-  inviaRichiestaConsulenza();
+  mostraSpinner();
+
+  const promessaRegistrazione = verificaERegistrazioneSeNecessario();
+  const promessaInvio = inviaRichiestaConsulenza();
+
+  await Promise.all([promessaRegistrazione, promessaInvio]);
+
+  nascondiSpinner();
 }
 
