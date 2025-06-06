@@ -739,3 +739,53 @@ function popolaCampiProfiloInStep2() {
   }
 }
 
+async function verificaERegistrazioneSeNecessario() {
+  const email = document.getElementById("email")?.value.trim();
+  const nome = document.getElementById("nome")?.value.trim();
+  const cognome = document.getElementById("cognome")?.value.trim();
+  const password = document.getElementById("password")?.value.trim();
+  const newsletter = document.getElementById("newsletter")?.checked;
+  const privacy = document.getElementById("privacy")?.checked;
+  const termini = document.getElementById("termini")?.checked;
+
+  if (!email || !nome || !cognome || !password || !privacy || !termini) {
+    console.log("Dati insufficienti per registrazione.");
+    return;
+  }
+
+  const emailEsiste = await verificaEmailEsistente(email);
+  if (emailEsiste) {
+    console.log("Email già registrata, nessuna registrazione necessaria.");
+    return;
+  }
+
+  const password_hash = await sha256(password);
+
+  // Invia registrazione al CRM
+  try {
+    const response = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tipoRichiesta: "registrazione",
+        nome,
+        cognome,
+        email,
+        password_hash,
+        newsletter,
+        privacy_accettata: privacy,
+        termini_accettati: termini
+      })
+    });
+
+    const result = await response.json();
+    if (result.status === "success") {
+      console.log("Registrazione cliente completata.");
+    } else {
+      console.warn("Errore registrazione:", result.message);
+    }
+  } catch (err) {
+    console.error("Errore invio registrazione:", err);
+  }
+}
+
