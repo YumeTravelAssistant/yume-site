@@ -592,11 +592,78 @@ async function effettuaLogin() {
   }
 }
 
+async function effettuaLoginPrenota() {
+  const identificatore = document.getElementById("emailLogin")?.value.trim();
+  const password = document.getElementById("passwordLogin")?.value.trim();
+  const output = document.getElementById("esitoLogin");
+
+  output.textContent = "";
+  output.style.color = "";
+
+  if (!identificatore || !password) {
+    output.textContent = "Inserisci email o codice cliente e password.";
+    output.style.color = "red";
+    return;
+  }
+
+  try {
+    const password_hash = await sha256(password);
+
+    const response = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        identificatore,
+        password_hash,
+        tipoRichiesta: "login"
+      })
+    });
+
+    const data = await response.json();
+
+    if (data.status === "success") {
+      output.textContent = "Accesso effettuato!";
+      output.style.color = "green";
+
+      const cliente = data.profilo || {};
+
+      // Salva profilo in sessionStorage
+      sessionStorage.setItem("profiloUtente", JSON.stringify({
+        nome: cliente.nome || "",
+        cognome: cliente.cognome || "",
+        email: cliente.email || ""
+      }));
+
+      // Popola i campi specifici di prenota-consulenza
+      ["nome_prenota", "cognome_prenota", "email_prenota"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          const key = id.replace("_prenota", "");
+          el.value = cliente[key] || "";
+          el.setAttribute("readonly", "true");
+          el.classList.add("readonly");
+        }
+      });
+
+      // Passa allo step 1 (scegli consulenza o successivo step che hai)
+      mostraStep(1);
+
+    } else {
+      output.textContent = data.message || "Credenziali errate.";
+      output.style.color = "red";
+    }
+
+  } catch (err) {
+    output.textContent = "Errore: " + (err.message || err);
+    output.style.color = "red";
+  }
+}
+
 
 function popolaCampiProfiloInStep2() {
   const tipo = document.getElementById("cliente_tipo")?.value;
   const profilo = JSON.parse(sessionStorage.getItem("profiloUtente"));
-  if (!tipo || !profilo) return;
+  if (!profilo) return;
 
   if (tipo === "privato") {
     document.getElementById("nome").value = profilo.nome || "";
@@ -613,9 +680,7 @@ function popolaCampiProfiloInStep2() {
     document.getElementById("password").readOnly = true;
     document.getElementById("confermaEmail").readOnly = true;
     document.getElementById("confermaPassword").readOnly = true;
-  }
-
-  if (tipo === "azienda") {
+  } else if (tipo === "azienda") {
     document.getElementById("referente_nome").value = profilo.nome || "";
     document.getElementById("referente_cognome").value = profilo.cognome || "";
     document.getElementById("email_azienda").value = profilo.email || "";
@@ -630,6 +695,24 @@ function popolaCampiProfiloInStep2() {
     document.getElementById("password_azienda").readOnly = true;
     document.getElementById("confermaEmail_azienda").readOnly = true;
     document.getElementById("confermaPassword_azienda").readOnly = true;
+  } else {
+    // Caso default (nessun tipo o tipo non riconosciuto)
+    const campi = ["nome", "cognome", "email", "confermaEmail", "password", "confermaPassword"];
+    campi.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      if (id === "password" || id === "confermaPassword") {
+        el.value = "••••••";
+      } else if (id === "confermaEmail") {
+        el.value = profilo.email || "";
+      } else {
+        el.value = profilo[id] || "";
+      }
+
+      el.readOnly = true;
+      el.classList.add("readonly");
+    });
   }
 }
 
