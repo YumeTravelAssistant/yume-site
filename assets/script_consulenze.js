@@ -564,8 +564,14 @@ async function effettuaLogin() {
         email: data.email || ""
       };
 
-      // Salva profilo in sessionStorage
-      sessionStorage.setItem("profiloUtente", JSON.stringify(cliente));
+      // Salva profilo in sessionStorage       
+  sessionStorage.setItem("profiloUtente", JSON.stringify({
+    status: "success",
+    codice_cliente: data.codice_cliente,
+    nome: cliente.nome,
+    cognome: cliente.cognome,
+    email: cliente.email
+  }));
 
       // Imposta tipo cliente a "privato" di default (modifica se serve)
       document.getElementById("cliente_tipo").value = "privato";
@@ -640,11 +646,13 @@ const cliente = {
 
 
       // Salva profilo in sessionStorage
-      sessionStorage.setItem("profiloUtente", JSON.stringify({
-        nome: cliente.nome || "",
-        cognome: cliente.cognome || "",
-        email: cliente.email || ""
-      }));
+ sessionStorage.setItem("profiloUtente", JSON.stringify({
+  status: "success",
+  codice_cliente: data.codice_cliente,
+  nome: cliente.nome || "",
+  cognome: cliente.cognome || "",
+  email: cliente.email || ""
+}));
 
       // Popola i campi specifici di prenota-consulenza
       ["nome", "cognome", "email"].forEach(id => {

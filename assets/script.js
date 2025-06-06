@@ -592,6 +592,10 @@ async function verificaLogin() {
         output.textContent = "Accesso effettuato!";
         output.style.color = "green";
         localStorage.setItem("codice_cliente", data.codice_cliente);
+
+        // ✅ AGGIUNGI QUESTA RIGA
+        sessionStorage.setItem("profiloUtente", JSON.stringify(data));
+
         window.location.href = "area-clienti.html";
       } else {
         output.textContent = "Credenziali errate.";
@@ -604,7 +608,6 @@ async function verificaLogin() {
       output.style.color = "red";
     });
 }
-
 
 async function inviaRichiestaConsulenza() {
   const messaggio = document.getElementById("messaggio").value.trim();
