@@ -625,7 +625,12 @@ async function effettuaLoginPrenota() {
       output.textContent = "Accesso effettuato!";
       output.style.color = "green";
 
-      const cliente = data.profilo || {};
+const cliente = {
+  nome: data.nome || "",
+  cognome: data.cognome || "",
+  email: data.email || ""
+};
+
 
       // Salva profilo in sessionStorage
       sessionStorage.setItem("profiloUtente", JSON.stringify({
