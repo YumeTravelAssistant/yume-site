@@ -1,10 +1,16 @@
 let invioInCorso = false;
 
 function mostraStep(numero) {
-  document.querySelectorAll(".step").forEach((step, index) => {
-    step.classList.toggle("hidden", index !== numero - 1);
+  document.querySelectorAll(".step").forEach(step => {
+    step.classList.add("hidden");
   });
+  document.getElementById("step" + numero)?.classList.remove("hidden");
 }
+
+function vaiAlStep0() {
+ mostraStep(0);
+}
+
 
 function vaiAlStep1() {
   mostraStep(1);
@@ -40,7 +46,7 @@ function vaiAlStep2() {
   mostraStep(2);
 }
 
-function vaiAlStep3Prenota() {
+async function vaiAlStep3Prenota() {
   const riepilogo = document.getElementById("riepilogo");
   if (!riepilogo) return;
 
@@ -84,7 +90,7 @@ function vaiAlStep3Prenota() {
   document.getElementById("step3")?.classList.remove("hidden");
 }
 
-function vaiAlStep3() {
+async function vaiAlStep3() {
   const tipoCliente = document.getElementById("cliente_tipo")?.value || "";
   const riepilogo = document.getElementById("riepilogo");
   if (!riepilogo) return;
@@ -177,8 +183,6 @@ if (emailGiaUsata) {
   alert("Email già registrata. Fai login per continuare.");
   return;
 }
-
-
 
     const campiAziendaObbligatori = [
       "ragione_sociale", "email_azienda", "confermaEmail_azienda",
@@ -554,8 +558,13 @@ async function effettuaLogin() {
         aggiornaTipoCliente();
 
         // Ripulisce eventuali messaggi precedenti
-        document.getElementById("emailMatchMessage")?.innerHTML = "";
-        document.getElementById("emailMatchMessageAzienda")?.innerHTML = "";
+        if (document.getElementById("emailMatchMessage")) {
+  document.getElementById("emailMatchMessage").innerHTML = "";
+}
+if (document.getElementById("emailMatchMessageAzienda")) {
+  document.getElementById("emailMatchMessageAzienda").innerHTML = "";
+}
+
 
         if (isAzienda) {
           document.getElementById("referente_nome").value = cliente.nome || "";

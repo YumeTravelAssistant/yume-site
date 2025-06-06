@@ -29,13 +29,19 @@
 
   <div id="esitoLogin" class="email-message"></div>
 
-  <button class="modern-btn mt-2" onclick="effettuaLogin()">Accedi</button>
-  <p class="mt-4">Non hai un account? <a href="#" onclick="vaiAlStep1()">Continua senza login</a></p>
+
+  <button class="btn-step" onclick="effettuaLogin()">Accedi</button>
+  <p class="mt-4">Non hai un account? 
+  <a href="#" onclick="event.preventDefault(); vaiAlStep1()">Continua senza login</a>
+  </p>
+
+
+  <button class="btn-step" onclick="window.location.href='consulenze.html'">Indietro</button>
 </div>
 
 
       <!-- STEP 1 -->
-      <div class="step" id="step1">
+      <div class="step hidden" id="step1">
         <h2>Scegli la tua consulenza</h2>
        <label for="categoria_servizio">Categoria:</label>
         <select id="categoria_servizio" onchange="aggiornaTipoServizio()">
@@ -68,9 +74,10 @@
 
         <label for="data_calendario" class="mt-2">Data e ora:</label>
         <input type="datetime-local" id="data_calendario">
-
-       <button class="btn-step" onclick="vaiAlStep2()">Avanti</button>
-      </div>
+       
+       <button class="btn-step" onclick="vaiAlStep0()">Indietro</button>
+       <button class="btn-step" onclick="vaiAlStep2()">Avanti</button>     
+ </div>
 
       <!-- STEP 2 -->
       <div class="step hidden" id="step2">
