@@ -44,6 +44,9 @@ function vaiAlStep2() {
 
   // Se tutto è valido, passa allo step 2
   mostraStep(2);
+
+  // Qui chiami popola i campi con i dati salvati
+  popolaCampiProfiloInStep2();
 }
 
 async function vaiAlStep3Prenota() {
