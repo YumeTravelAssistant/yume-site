@@ -421,28 +421,30 @@ async function confermaPrenotazione() {
       CF: document.getElementById("cf").value,
       tipo_servizio:
         document.getElementById("tipo_servizio_tematica")?.value ||
-        document.getElementById("tipo_servizio_experience")?.value,
+        document.getElementById("tipo_servizio_experience")?.value ||
+        document.getElementById("tipo_servizio")?.value ||
+        "",
       calendario: document.getElementById("data_calendario").value,
-      note: document.getElementById("note").value,
+      note: document.getElementById("note")?.value || ""
     };
 
     const response = await fetch("https://yume-consulenze.azurewebsites.net/api/invio-estremi", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(dati),
+      body: JSON.stringify(dati)
     });
 
     const result = await response.json();
 
     if (result.status === "ok") {
-      alert("Prenotazione registrata con successo!");
-      window.location.href = "/grazie.html"; // o altra pagina conferma
+      // ✅ Redirect alla pagina di conferma
+      window.location.href = "successo-prenotazione.html";
     } else {
       throw new Error(result.message || "Errore nella registrazione.");
     }
 
   } catch (err) {
-    alert("Errore: " + err.message);
+    alert("❌ Errore: " + err.message);
   } finally {
     invioInCorso = false;
   }
