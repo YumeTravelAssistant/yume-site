@@ -791,12 +791,12 @@ async function verificaERegistrazioneSeNecessario() {
 }
 
 async function eseguiRegistrazioneEInvio() {
-  const registrato = await verificaERegistrazioneSeNecessario();
-  if (registrato) confermaPrenotazione(); // o confermaAcquisto() se serve
+  verificaERegistrazioneSeNecessario();
+  confermaPrenotazione();
 }
 
 async function eseguiAcquistoEInvio() {
-  const registrato = await verificaERegistrazioneSeNecessario();
-  if (registrato) inviaRichiestaConsulenza();
+  verificaERegistrazioneSeNecessario();
+  inviaRichiestaConsulenza();
 }
 
