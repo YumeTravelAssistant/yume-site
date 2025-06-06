@@ -635,7 +635,7 @@ async function effettuaLoginPrenota() {
       }));
 
       // Popola i campi specifici di prenota-consulenza
-      ["nome_prenota", "cognome_prenota", "email_prenota"].forEach(id => {
+      ["nome", "cognome", "email"].forEach(id => {
         const el = document.getElementById(id);
         if (el) {
           const key = id.replace("_prenota", "");
@@ -695,6 +695,7 @@ function popolaCampiProfiloInStep2() {
     document.getElementById("password_azienda").readOnly = true;
     document.getElementById("confermaEmail_azienda").readOnly = true;
     document.getElementById("confermaPassword_azienda").readOnly = true;
+
   } else {
     // Caso default (nessun tipo o tipo non riconosciuto)
     const campi = ["nome", "cognome", "email", "confermaEmail", "password", "confermaPassword"];
