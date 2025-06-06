@@ -162,6 +162,59 @@
   });
 </script>
 
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const profilo = JSON.parse(sessionStorage.getItem("profiloUtente"));
+    if (profilo) {
+      // 🔁 Reindirizza "Area Personale" direttamente ad area-clienti
+      document.querySelectorAll("a[href='log-in.html']").forEach(link => {
+        link.href = "area-clienti.html";
+      });
+
+      // 👤 Mostra avatar + logout nella sidebar
+      const sidebar = document.querySelector(".sidebar");
+      if (sidebar && !document.getElementById("userBox")) {
+        const userBox = document.createElement("div");
+        userBox.id = "userBox";
+        userBox.style.marginTop = "30px";
+        userBox.style.padding = "10px";
+        userBox.style.textAlign = "center";
+        userBox.style.borderTop = "1px solid #ccc";
+
+        const avatar = document.createElement("img");
+        avatar.src = localStorage.getItem("userAvatar") || "https://api.dicebear.com/7.x/avataaars/svg?seed=yume";
+        avatar.alt = "Avatar";
+        avatar.style.width = "60px";
+        avatar.style.height = "60px";
+        avatar.style.borderRadius = "50%";
+        avatar.style.objectFit = "cover";
+        avatar.style.border = "2px solid #C9A86A";
+        avatar.style.marginBottom = "8px";
+
+        const logoutBtn = document.createElement("button");
+        logoutBtn.textContent = "Logout";
+        logoutBtn.style.marginTop = "6px";
+        logoutBtn.style.background = "#8B2C2B";
+        logoutBtn.style.color = "#fff";
+        logoutBtn.style.border = "none";
+        logoutBtn.style.padding = "6px 12px";
+        logoutBtn.style.borderRadius = "20px";
+        logoutBtn.style.cursor = "pointer";
+
+        logoutBtn.onclick = () => {
+          sessionStorage.removeItem("profiloUtente");
+          localStorage.removeItem("userAvatar");
+          window.location.href = "index.html";
+        };
+
+        userBox.appendChild(avatar);
+        userBox.appendChild(logoutBtn);
+        sidebar.appendChild(userBox);
+      }
+    }
+  });
+</script>
+
 <!-- SCRIPT -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="assets/script.js"></script>

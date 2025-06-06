@@ -92,6 +92,7 @@
   </form>
 </section>
 
+
 <!-- SEZIONE PROFILO -->
 <section class="main-wrapper">
   <form id="formProfilo" class="info-form">
@@ -129,6 +130,19 @@
   <input type="password" id="confermaNuovaPassword" oninput="checkPasswordMatchAreaClienti()">
   <button type="button" class="toggle-password-text" onclick="toggleVisibility('confermaNuovaPassword', this)">Mostra password</button>
   <div id="passwordMatchMessageAC" class="password-message"></div>
+</div>
+
+<div id="avatarSelector" style="text-align: center; margin: 30px 0;">
+  <p style="margin-bottom: 12px;">Scegli il tuo avatar:</p>
+  <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=hana" class="avatar-option" data-url="https://api.dicebear.com/7.x/avataaars/svg?seed=hana" alt="Hana" width="60">
+    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=tomo" class="avatar-option" data-url="https://api.dicebear.com/7.x/avataaars/svg?seed=tomo" alt="Tomo" width="60">
+    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=ayame" class="avatar-option" data-url="https://api.dicebear.com/7.x/avataaars/svg?seed=ayame" alt="Ayame" width="60">
+    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=kenta" class="avatar-option" data-url="https://api.dicebear.com/7.x/avataaars/svg?seed=kenta" alt="Kenta" width="60">
+    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=shiro" class="avatar-option" data-url="https://api.dicebear.com/7.x/avataaars/svg?seed=shiro" alt="Shiro" width="60">
+    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=yume" class="avatar-option" data-url="https://api.dicebear.com/7.x/avataaars/svg?seed=yume" alt="Yume" width="60">
+  </div>
+  <p style="margin-top: 8px;"><em>Verrà mostrato nel menu dopo il login</em></p>
 </div>
 
     <button type="submit" class="modern-btn form-submit">Salva modifiche</button>
@@ -188,6 +202,80 @@
     }
   });
 </script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const profilo = JSON.parse(sessionStorage.getItem("profiloUtente"));
+    if (profilo) {
+      // 🔁 Reindirizza "Area Personale" direttamente ad area-clienti
+      document.querySelectorAll("a[href='log-in.html']").forEach(link => {
+        link.href = "area-clienti.html";
+      });
+
+      // 👤 Mostra avatar + logout nella sidebar
+      const sidebar = document.querySelector(".sidebar");
+      if (sidebar && !document.getElementById("userBox")) {
+        const userBox = document.createElement("div");
+        userBox.id = "userBox";
+        userBox.style.marginTop = "30px";
+        userBox.style.padding = "10px";
+        userBox.style.textAlign = "center";
+        userBox.style.borderTop = "1px solid #ccc";
+
+        const avatar = document.createElement("img");
+        avatar.src = localStorage.getItem("userAvatar") || "https://api.dicebear.com/7.x/avataaars/svg?seed=yume";
+        avatar.alt = "Avatar";
+        avatar.style.width = "60px";
+        avatar.style.height = "60px";
+        avatar.style.borderRadius = "50%";
+        avatar.style.objectFit = "cover";
+        avatar.style.border = "2px solid #C9A86A";
+        avatar.style.marginBottom = "8px";
+
+        const logoutBtn = document.createElement("button");
+        logoutBtn.textContent = "Logout";
+        logoutBtn.style.marginTop = "6px";
+        logoutBtn.style.background = "#8B2C2B";
+        logoutBtn.style.color = "#fff";
+        logoutBtn.style.border = "none";
+        logoutBtn.style.padding = "6px 12px";
+        logoutBtn.style.borderRadius = "20px";
+        logoutBtn.style.cursor = "pointer";
+
+        logoutBtn.onclick = () => {
+          sessionStorage.removeItem("profiloUtente");
+          localStorage.removeItem("userAvatar");
+          window.location.href = "index.html";
+        };
+
+        userBox.appendChild(avatar);
+        userBox.appendChild(logoutBtn);
+        sidebar.appendChild(userBox);
+      }
+    }
+  });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const avatars = document.querySelectorAll(".avatar-option");
+    const selectedUrl = localStorage.getItem("userAvatar");
+
+    avatars.forEach(img => {
+      if (img.dataset.url === selectedUrl) {
+        img.classList.add("selected-avatar");
+      }
+
+      img.addEventListener("click", () => {
+        localStorage.setItem("userAvatar", img.dataset.url);
+        avatars.forEach(a => a.classList.remove("selected-avatar"));
+        img.classList.add("selected-avatar");
+        alert("✅ Avatar aggiornato! Sarà visibile nel menu al prossimo accesso.");
+      });
+    });
+  });
+</script>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="assets/script.js"></script>

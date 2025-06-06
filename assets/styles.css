@@ -4278,3 +4278,20 @@ body .indice-info-utili {
   border-color: #721F1E;
 }
 
+.avatar-option {
+  cursor: pointer;
+  border-radius: 50%;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 2px solid transparent;
+}
+
+.avatar-option:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 5px #aaa;
+}
+
+.selected-avatar {
+  border-color: #C9A86A;
+  box-shadow: 0 0 10px #C9A86A;
+}
+
