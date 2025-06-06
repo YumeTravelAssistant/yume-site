@@ -515,75 +515,78 @@ async function checkEmailMatchAndRegistrazione() {
 }
 
 async function effettuaLogin() {
-  const identificatore = document.getElementById("emailLogin").value.trim();
-  const password = document.getElementById("passwordLogin").value.trim();
+  const identificatore = document.getElementById("emailLogin")?.value.trim();
+  const password = document.getElementById("passwordLogin")?.value.trim();
   const output = document.getElementById("esitoLogin");
 
   output.textContent = "";
+  output.style.color = "";
+
   if (!identificatore || !password) {
     output.textContent = "Inserisci email o codice cliente e password.";
     output.style.color = "red";
     return;
   }
 
-  const password_hash = await sha256(password);
+  try {
+    const password_hash = await sha256(password);
 
-  fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      identificatore,
-      password_hash,
-      tipoRichiesta: "login"
-    })
-  })
-    .then(res => res.json())
-.then(data => {
-  if (data.status === "success") {
-    output.textContent = "Accesso effettuato!";
-    output.style.color = "green";
-
-    const cliente = data.profilo || {};
-
-    // Salva profilo in sessionStorage
-    sessionStorage.setItem("profiloUtente", JSON.stringify({
-      nome: cliente.nome || "",
-      cognome: cliente.cognome || "",
-      email: cliente.email || ""
-    }));
-
-    // Imposta i campi privati (nome, cognome, email e password) nel form, bloccandoli
-    document.getElementById("cliente_tipo").value = "privato"; // metti "privato" di default
-    aggiornaTipoCliente();
-
-    document.getElementById("nome").value = cliente.nome || "";
-    document.getElementById("cognome").value = cliente.cognome || "";
-    document.getElementById("email").value = cliente.email || "";
-    document.getElementById("confermaEmail").value = cliente.email || "";
-    document.getElementById("password").value = "********";
-    document.getElementById("confermaPassword").value = "********";
-
-    [
-      "nome",
-      "cognome",
-      "email",
-      "confermaEmail",
-      "password",
-      "confermaPassword"
-    ].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) {
-        el.setAttribute("readonly", "true");
-        el.classList.add("readonly");
-      }
+    const response = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        identificatore,
+        password_hash,
+        tipoRichiesta: "login"
+      })
     });
 
-    mostraStep(1);
-  } else {
-    output.textContent = "Credenziali errate.";
+    const data = await response.json();
+
+    if (data.status === "success") {
+      output.textContent = "Accesso effettuato!";
+      output.style.color = "green";
+
+      const cliente = data.profilo || {};
+
+      // Salva profilo in sessionStorage (solo dati base)
+      sessionStorage.setItem("profiloUtente", JSON.stringify({
+        nome: cliente.nome || "",
+        cognome: cliente.cognome || "",
+        email: cliente.email || ""
+      }));
+
+      // Imposta tipo cliente su privato di default (modifica se hai aziende)
+      document.getElementById("cliente_tipo").value = "privato";
+      aggiornaTipoCliente();
+
+      // Popola e blocca campi anagrafici
+      ["nome", "cognome", "email", "confermaEmail", "password", "confermaPassword"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          if (id === "password" || id === "confermaPassword") {
+            el.value = "********";
+          } else {
+            el.value = cliente[id] || "";
+          }
+          el.setAttribute("readonly", "true");
+          el.classList.add("readonly");
+        }
+      });
+
+      // Mostra step 1 (scelta consulenza)
+      mostraStep(1);
+
+    } else {
+      output.textContent = data.message || "Credenziali errate.";
+      output.style.color = "red";
+    }
+
+  } catch (err) {
+    output.textContent = "Errore: " + (err.message || err);
     output.style.color = "red";
   }
-})
+}
 
 
 function popolaCampiProfiloInStep2() {
