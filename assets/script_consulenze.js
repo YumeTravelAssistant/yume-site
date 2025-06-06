@@ -47,6 +47,12 @@ function vaiAlStep3Prenota() {
   const nome = document.getElementById("nome")?.value.trim();
   const cognome = document.getElementById("cognome")?.value.trim();
   const email = document.getElementById("email")?.value.trim();
+  const esiste = await verificaEmailEsistente(email);
+  if (esiste) {
+    alert("Questa email risulta già registrata. Fai login per proseguire.");
+    return;
+  }
+
   const confermaEmail = document.getElementById("confermaEmail")?.value.trim();
   const password = document.getElementById("password")?.value;
   const confermaPassword = document.getElementById("confermaPassword")?.value;
@@ -94,6 +100,12 @@ function vaiAlStep3() {
   // === PRIVATO ===
   if (tipoCliente === "privato") {
     const email = document.getElementById("email")?.value.trim();
+    const esiste = await verificaEmailEsistente(email);
+    if (esiste) {
+     alert("Questa email risulta già registrata. Fai login per proseguire.");
+     return;
+   }
+
     const email2 = document.getElementById("confermaEmail")?.value.trim();
     const password = document.getElementById("password")?.value;
     const password2 = document.getElementById("confermaPassword")?.value;
@@ -152,6 +164,21 @@ function vaiAlStep3() {
       alert("Le password non coincidono.");
       return;
     }
+
+      // ✅ Verifica email già registrata
+const msgBox = document.getElementById("emailMatchMessageAzienda");
+if (!msgBox) return;
+
+const emailGiaUsata = await verificaEmailEsistente(email);
+if (emailGiaUsata) {
+  msgBox.innerHTML = `<i class="fas fa-times-circle icon-ko"></i> Email già registrata. <a href="log-in.html">Accedi</a>`;
+  msgBox.className = "email-message ko";
+  document.getElementById("email_azienda").classList.add("input-ko");
+  alert("Email già registrata. Fai login per continuare.");
+  return;
+}
+
+
 
     const campiAziendaObbligatori = [
       "ragione_sociale", "email_azienda", "confermaEmail_azienda",
@@ -316,20 +343,35 @@ function aggiornaTipoServizio() {
   }
 }
 
-function checkEmailMatchAzienda() {
+async function checkEmailMatchAzienda() {
   const email = document.getElementById("email_azienda")?.value || "";
   const conferma = document.getElementById("confermaEmail_azienda")?.value || "";
   const msg = document.getElementById("emailMatchMessageAzienda");
 
   if (!msg) return;
-  if (!conferma) return msg.innerHTML = "";
+  if (!conferma) {
+    msg.innerHTML = "";
+    msg.className = "email-message";
+    return;
+  }
 
-  if (email === conferma) {
-    msg.innerHTML = `<i class="fas fa-check-circle icon-ok"></i> Le email coincidono`;
-    msg.className = "email-message ok";
-  } else {
+  if (email !== conferma) {
     msg.innerHTML = `<i class="fas fa-times-circle icon-ko"></i> Le email non coincidono`;
     msg.className = "email-message ko";
+    document.getElementById("email_azienda").classList.add("input-ko");
+    return;
+  }
+
+  // ✅ Se coincidono, controlla se già registrata
+  const esiste = await verificaEmailEsistente(email);
+  if (esiste) {
+    msg.innerHTML = `<i class="fas fa-times-circle icon-ko"></i> Email già registrata. <a href="log-in.html">Accedi</a>`;
+    msg.className = "email-message ko";
+    document.getElementById("email_azienda").classList.add("input-ko");
+  } else {
+    msg.innerHTML = `<i class="fas fa-check-circle icon-ok"></i> Le email coincidono e non risultano già registrate`;
+    msg.className = "email-message ok";
+    document.getElementById("email_azienda").classList.remove("input-ko");
   }
 }
 
@@ -396,6 +438,222 @@ async function confermaPrenotazione() {
     alert("Errore: " + err.message);
   } finally {
     invioInCorso = false;
+  }
+}
+
+async function verificaEmailEsistente(email) {
+  try {
+    const response = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tipoRichiesta: "verifica_email",
+        email
+      })
+    });
+
+    const result = await response.json();
+    return result.status === "trovata"; // true se già esiste
+  } catch (err) {
+    console.error("Errore durante la verifica email:", err);
+    return false;
+  }
+}
+
+async function checkEmailRegistrata() {
+  const email = document.getElementById("email")?.value.trim();
+  const msgBox = document.getElementById("emailMatchMessage");
+
+  if (!email || !msgBox) return;
+
+  const esiste = await verificaEmailEsistente(email);
+
+  if (esiste) {
+    msgBox.innerHTML = `<i class="fas fa-times-circle icon-ko"></i> Email già registrata. <a href="log-in.html">Accedi</a> per proseguire.`;
+    msgBox.className = "email-message ko";
+    document.getElementById("email").classList.add("input-ko");
+  } else {
+    msgBox.innerHTML = `<i class="fas fa-check-circle icon-ok"></i> Email valida`;
+    msgBox.className = "email-message ok";
+    document.getElementById("email").classList.remove("input-ko");
+  }
+}
+
+async function checkEmailMatchAndRegistrazione() {
+  const email = document.getElementById("email")?.value.trim();
+  const conferma = document.getElementById("confermaEmail")?.value.trim();
+  const msgBox = document.getElementById("emailMatchMessage");
+  if (!msgBox) return;
+
+  if (!email || !conferma) {
+    msgBox.innerHTML = "";
+    msgBox.className = "email-message";
+    return;
+  }
+
+  if (email !== conferma) {
+    msgBox.innerHTML = `<i class="fas fa-times-circle icon-ko"></i> Le email non coincidono`;
+    msgBox.className = "email-message ko";
+    document.getElementById("email").classList.add("input-ko");
+    return;
+  }
+
+  const esiste = await verificaEmailEsistente(email);
+  if (esiste) {
+    msgBox.innerHTML = `<i class="fas fa-times-circle icon-ko"></i> Email già registrata. <a href="log-in.html">Accedi</a>`;
+    msgBox.className = "email-message ko";
+    document.getElementById("email").classList.add("input-ko");
+  } else {
+    msgBox.innerHTML = `<i class="fas fa-check-circle icon-ok"></i> Le email coincidono e non risultano già registrate`;
+    msgBox.className = "email-message ok";
+    document.getElementById("email").classList.remove("input-ko");
+  }
+}
+
+async function effettuaLogin() {
+  const identificatore = document.getElementById("emailLogin").value.trim();
+  const password = document.getElementById("passwordLogin").value.trim();
+  const output = document.getElementById("esitoLogin");
+
+  output.textContent = "";
+  if (!identificatore || !password) {
+    output.textContent = "Inserisci email o codice cliente e password.";
+    output.style.color = "red";
+    return;
+  }
+
+  const password_hash = await sha256(password);
+
+  fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      identificatore,
+      password_hash,
+      tipoRichiesta: "login"
+    })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "success") {
+        output.textContent = "Accesso effettuato!";
+        output.style.color = "green";
+
+        const cliente = data.profilo;
+        const isAzienda = cliente.tipo_cliente?.toLowerCase() === "azienda";
+
+        // Salva profilo in sessionStorage
+        sessionStorage.setItem("profiloUtente", JSON.stringify({
+          nome: cliente.nome || "",
+          cognome: cliente.cognome || "",
+          email: cliente.email || ""
+        }));
+
+        // Imposta valore e mostra sezione corretta
+        document.getElementById("cliente_tipo").value = isAzienda ? "azienda" : "privato";
+        aggiornaTipoCliente();
+
+        // Ripulisce eventuali messaggi precedenti
+        document.getElementById("emailMatchMessage")?.innerHTML = "";
+        document.getElementById("emailMatchMessageAzienda")?.innerHTML = "";
+
+        if (isAzienda) {
+          document.getElementById("referente_nome").value = cliente.nome || "";
+          document.getElementById("referente_cognome").value = cliente.cognome || "";
+          document.getElementById("email_azienda").value = cliente.email || "";
+          document.getElementById("confermaEmail_azienda").value = cliente.email || "";
+          document.getElementById("password_azienda").value = "********";
+          document.getElementById("confermaPassword_azienda").value = "********";
+
+          [
+            "referente_nome",
+            "referente_cognome",
+            "email_azienda",
+            "confermaEmail_azienda",
+            "password_azienda",
+            "confermaPassword_azienda"
+          ].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+              el.setAttribute("readonly", "true");
+              el.classList.add("readonly");
+            }
+          });
+
+        } else {
+          document.getElementById("nome").value = cliente.nome || "";
+          document.getElementById("cognome").value = cliente.cognome || "";
+          document.getElementById("email").value = cliente.email || "";
+          document.getElementById("confermaEmail").value = cliente.email || "";
+          document.getElementById("password").value = "********";
+          document.getElementById("confermaPassword").value = "********";
+
+          [
+            "nome",
+            "cognome",
+            "email",
+            "confermaEmail",
+            "password",
+            "confermaPassword"
+          ].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+              el.setAttribute("readonly", "true");
+              el.classList.add("readonly");
+            }
+          });
+        }
+
+        mostraStep(1);
+      } else {
+        output.textContent = "Credenziali errate.";
+        output.style.color = "red";
+      }
+    })
+    .catch(err => {
+      output.textContent = "Errore: " + err.message;
+      output.style.color = "red";
+    });
+}
+
+
+function popolaCampiProfiloInStep2() {
+  const tipo = document.getElementById("cliente_tipo")?.value;
+  const profilo = JSON.parse(sessionStorage.getItem("profiloUtente"));
+  if (!tipo || !profilo) return;
+
+  if (tipo === "privato") {
+    document.getElementById("nome").value = profilo.nome || "";
+    document.getElementById("cognome").value = profilo.cognome || "";
+    document.getElementById("email").value = profilo.email || "";
+    document.getElementById("password").value = "••••••";
+    document.getElementById("confermaEmail").value = profilo.email || "";
+    document.getElementById("confermaPassword").value = "••••••";
+
+    // Blocca i campi modificabili
+    document.getElementById("nome").readOnly = true;
+    document.getElementById("cognome").readOnly = true;
+    document.getElementById("email").readOnly = true;
+    document.getElementById("password").readOnly = true;
+    document.getElementById("confermaEmail").readOnly = true;
+    document.getElementById("confermaPassword").readOnly = true;
+  }
+
+  if (tipo === "azienda") {
+    document.getElementById("referente_nome").value = profilo.nome || "";
+    document.getElementById("referente_cognome").value = profilo.cognome || "";
+    document.getElementById("email_azienda").value = profilo.email || "";
+    document.getElementById("password_azienda").value = "••••••";
+    document.getElementById("confermaEmail_azienda").value = profilo.email || "";
+    document.getElementById("confermaPassword_azienda").value = "••••••";
+
+    // Blocca i campi modificabili
+    document.getElementById("referente_nome").readOnly = true;
+    document.getElementById("referente_cognome").readOnly = true;
+    document.getElementById("email_azienda").readOnly = true;
+    document.getElementById("password_azienda").readOnly = true;
+    document.getElementById("confermaEmail_azienda").readOnly = true;
+    document.getElementById("confermaPassword_azienda").readOnly = true;
   }
 }
 
