@@ -17,8 +17,30 @@
   <div class="main-wrapper">
     <section class="step-container">
 
+
+<!-- STEP 0: Login -->
+<div class="step" id="step0">
+  <h2>Accedi al tuo account</h2>
+
+  <label for="emailLogin">Email o Codice Cliente:</label>
+  <input type="text" id="emailLogin" placeholder="Inserisci email o codice" required>
+
+  <label for="passwordLogin">Password:</label>
+  <input type="password" id="passwordLogin" placeholder="Password" required>
+
+  <div id="esitoLogin" class="email-message"></div>
+
+
+  <button class="btn-step" onclick="effettuaLogin()">Accedi</button>
+  <p class="mt-4">Non hai un account?
+  <a href="#" onclick="event.preventDefault(); vaiAlStep1()">Continua senza login</a>
+  </p>
+
+  <button class="btn-step" onclick="window.location.href='consulenze.html'">Indietro</button>
+</div>
+
       <!-- STEP 1 -->
-      <div class="step" id="step1">
+      <div class="step hidden" id="step1">
         <h2>Prenota la tua consulenza gratuita</h2>
         <label for="categoria_servizio">Categoria:</label>
         <select id="categoria_servizio" onchange="aggiornaTipoServizio()">
@@ -52,6 +74,7 @@
         <label for="data_calendario" class="mt-2">Data e ora:</label>
         <input type="datetime-local" id="data_calendario">
 
+       <button class="btn-step" onclick="vaiAlStep0()">Indietro</button>
        <button class="btn-step" onclick="vaiAlStep2()">Avanti</button>
       </div>
 
