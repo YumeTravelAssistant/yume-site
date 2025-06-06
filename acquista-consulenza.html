@@ -95,8 +95,14 @@
           </select>
         </div>
 
-        <label for="data_calendario" class="mt-2">Data e ora:</label>
-        <input type="datetime-local" id="data_calendario">
+<label for="data_calendario" class="mt-2">Data e ora:</label>
+<input type="datetime-local" id="data_calendario" name="calendario" required>
+
+<label for="data_slot_select">Seleziona orario disponibile:</label>
+<select id="data_slot_select">
+  <option>Seleziona una data sopra</option>
+</select>
+
        
        <button class="btn-step" onclick="vaiAlStep0()">Indietro</button>
        <button class="btn-step" onclick="vaiAlStep2()">Avanti</button>     
@@ -137,7 +143,7 @@
   <input type="tel" id="telefono" placeholder="Telefono" required>
 
   <div class="campo-doppio">
-    <input type="text" id="via" placeholder="Via" required>
+    <input type="text" id="via" placeholder="Via" required oninput="avviaSuggerimentoIndirizzo(this.value)">
     <input type="text" id="numero_civico" placeholder="Numero civico" required>
   </div>
 

@@ -813,3 +813,83 @@ async function eseguiAcquistoEInvio() {
   nascondiSpinner();
 }
 
+async function compilaIndirizzoConAutocomplete(input) {
+  if (!input || input.length < 4) return;
+
+  try {
+    const res = await fetch("https://yume-consulenze.azurewebsites.net/api/invio-estremi", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tipoRichiesta: "autocomplete_indirizzo",
+        input
+      })
+    });
+
+    const { status, indirizzo } = await res.json();
+    if (status !== "ok") return;
+
+    document.getElementById("via").value = indirizzo.via || "";
+    document.getElementById("numero_civico").value = indirizzo.numero || "";
+    document.getElementById("cap").value = indirizzo.cap || "";
+    document.getElementById("citta").value = indirizzo.citta || "";
+    document.getElementById("provincia").value = indirizzo.provincia || "";
+    document.getElementById("stato").value = indirizzo.stato || "";
+
+  } catch (err) {
+    console.error("Errore autocomplete:", err);
+  }
+}
+
+let timeoutAutocomplete;
+function avviaSuggerimentoIndirizzo(valore) {
+  clearTimeout(timeoutAutocomplete);
+  timeoutAutocomplete = setTimeout(() => {
+    compilaIndirizzoConAutocomplete(valore);
+  }, 700); // debounce automatico dopo 700ms
+}
+
+const endpointAzure = "https://yume-consulenze.azurewebsites.net/api/get-slots";
+
+const campoData = document.getElementById("data_calendario");
+const slotSelect = document.getElementById("data_slot_select");
+
+if (campoData && slotSelect) {
+  campoData.addEventListener("focus", async () => {
+    const rawDate = campoData.value;
+    const giorno = rawDate?.split("T")[0];
+    if (!giorno) return;
+
+    try {
+      const res = await fetch(`${endpointAzure}?giorno=${giorno}`);
+      const slots = await res.json();
+
+      slotSelect.innerHTML = "";
+      if (slots.length === 0) {
+        const opt = document.createElement("option");
+        opt.textContent = "Nessuno slot disponibile";
+        opt.disabled = true;
+        slotSelect.appendChild(opt);
+        return;
+      }
+
+      slots.forEach(slot => {
+        const opt = document.createElement("option");
+        opt.value = slot;
+        opt.textContent = slot;
+        slotSelect.appendChild(opt);
+      });
+    } catch (err) {
+      console.error("Errore nel recupero slot:", err);
+    }
+  });
+
+  slotSelect.addEventListener("change", () => {
+    const giorno = campoData.value?.split("T")[0];
+    const orario = slotSelect.value;
+    if (giorno && orario) {
+      campoData.value = `${giorno}T${orario}`;
+    }
+  });
+}
+
