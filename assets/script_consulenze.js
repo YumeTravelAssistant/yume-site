@@ -550,20 +550,21 @@ async function effettuaLogin() {
       output.textContent = "Accesso effettuato!";
       output.style.color = "green";
 
-      const cliente = data.profilo || {};
+      // Prendi i dati direttamente da data (non da data.profilo)
+      const cliente = {
+        nome: data.nome || "",
+        cognome: data.cognome || "",
+        email: data.email || ""
+      };
 
-      // Salva profilo in sessionStorage (solo dati base)
-      sessionStorage.setItem("profiloUtente", JSON.stringify({
-        nome: cliente.nome || "",
-        cognome: cliente.cognome || "",
-        email: cliente.email || ""
-      }));
+      // Salva profilo in sessionStorage
+      sessionStorage.setItem("profiloUtente", JSON.stringify(cliente));
 
-      // Imposta tipo cliente su privato di default (modifica se hai aziende)
+      // Imposta tipo cliente a "privato" di default (modifica se serve)
       document.getElementById("cliente_tipo").value = "privato";
       aggiornaTipoCliente();
 
-      // Popola e blocca campi anagrafici
+      // Popola e blocca i campi
       ["nome", "cognome", "email", "confermaEmail", "password", "confermaPassword"].forEach(id => {
         const el = document.getElementById(id);
         if (el) {
