@@ -956,9 +956,25 @@ document.addEventListener('DOMContentLoaded', function () {
     height: 500,
     locale: 'it',
     firstDay: 1,
-    selectable: true, // ✅ attivo per cliccare sui giorni
+    selectable: true,
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridDay'
+    },
+    views: {
+      timeGridDay: {
+        type: 'timeGrid',
+        duration: { days: 1 },
+        buttonText: 'Giorno'
+      }
+    },
     dateClick: async function (info) {
       const giorno = info.dateStr;
+
+      // 🔥 Passa alla vista giornaliera
+      calendar.changeView('timeGridDay', giorno);
+
       const tipoFunnel = window.location.pathname.includes("prenota") ? "freddo" : "caldo";
       const durata = getDurataSlot();
       const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
