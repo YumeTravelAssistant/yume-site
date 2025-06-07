@@ -4360,3 +4360,13 @@ body .indice-info-utili {
   background-color: #F4F0E2;
 }
 
+/* Sfondo base per griglia giornaliera */
+.fc-timegrid-slot {
+  background-color: #F4F0E2 !important; /* beige */
+}
+
+/* Slot occupati (override) */
+.fc-event.inverse-slot {
+  background-color: rgba(139, 44, 43, 0.3) !important; /* rosso trasparente */
+}
+

@@ -1038,8 +1038,8 @@ dateClick: async function (info) {
                   tuttiGliSlot.push({
                     title: 'Occupato',
                     start: `${giorno}T${ora}`,
-                    display: 'inverse-background',
-                    color: slotColor
+                    display: 'background',
+                    classNames: ['inverse-slot']
                   });
                 }
               }
