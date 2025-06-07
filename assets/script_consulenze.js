@@ -969,15 +969,14 @@ document.addEventListener('DOMContentLoaded', function () {
         buttonText: 'Giorno'
       }
     },
-    dateClick: async function (info) {
-      const giorno = info.dateStr;
 
-      // 🔥 Passa alla vista giornaliera
-      calendar.changeView('timeGridDay', giorno);
+dateClick: async function (info) {
+  const giorno = info.date.toISOString().split("T")[0];  // ✅ solo data
+  calendar.changeView('timeGridDay', giorno);
 
-      const tipoFunnel = window.location.pathname.includes("prenota") ? "freddo" : "caldo";
-      const durata = getDurataSlot();
-      const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
+  const tipoFunnel = window.location.pathname.includes("prenota") ? "freddo" : "caldo";
+  const durata = getDurataSlot();
+  const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
 
       try {
         const res = await fetch(url);
