@@ -947,3 +947,62 @@ function getDurataSlot() {
   return mappaDurate[tipoTematica] || mappaDurate[tipoExperience] || 195;
 }
 
+document.addEventListener('DOMContentLoaded', function () {
+  const calendarEl = document.getElementById('fullcalendar');
+  if (!calendarEl) return;
+
+  const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    height: 500,
+    locale: 'it',
+    firstDay: 1,
+    selectable: false,
+    eventSources: [{
+      events: async function (fetchInfo, successCallback, failureCallback) {
+        try {
+          const tipoFunnel = window.location.pathname.includes("prenota") ? "freddo" : "caldo";
+          const durata = getDurataSlot();
+          const giornoInizio = new Date(fetchInfo.start);
+          const giornoFine = new Date(fetchInfo.end);
+          const slotColor = tipoFunnel === "freddo" ? "#8B2C2B66" : "#C9A86A66";
+
+          const tuttiGliSlot = [];
+
+          for (
+            let d = new Date(giornoInizio);
+            d < giornoFine;
+            d.setDate(d.getDate() + 1)
+          ) {
+            const giorno = d.toISOString().split("T")[0];
+            const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
+
+            const res = await fetch(url);
+            const slotDisponibili = await res.json();
+
+            for (let h = 9; h < 20; h++) {
+              for (let m = 0; m < 60; m += 15) {
+                const ora = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+                if (!slotDisponibili.includes(ora)) {
+                  tuttiGliSlot.push({
+                    title: 'Occupato',
+                    start: `${giorno}T${ora}`,
+                    display: 'inverse-background',
+                    color: slotColor
+                  });
+                }
+              }
+            }
+          }
+
+          successCallback(tuttiGliSlot);
+        } catch (err) {
+          console.error("❌ Errore caricamento eventi calendario:", err);
+          failureCallback(err);
+        }
+      }
+    }]
+  });
+
+  calendar.render();
+});
+

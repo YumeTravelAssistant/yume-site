@@ -13,6 +13,11 @@
   <link rel="stylesheet" href="assets/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
+<!-- FullCalendar -->
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css' rel='stylesheet' />
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js'></script>
+
+
 <style>
   .spinner {
     margin-top: 1.5rem;
@@ -106,17 +111,11 @@
 <div class="calendar-preview mt-3">
   <p>
     <strong><i class="fas fa-calendar-day"></i> Consulta la disponibilità generale:</strong><br>
-    I giorni già prenotati potrebbero non avere slot disponibili.
+    I giorni occupati non saranno disponibili negli slot.
   </p>
 
-  <iframe
-    src="https://calendar.google.com/calendar/embed?src=progettogiappone%40gmail.com&ctz=Europe%2FRome"
-    style="border: 1px solid #C9A86A; width: 100%; height: 450px; border-radius: 12px;"
-    frameborder="0"
-    scrolling="no">
-  </iframe>
+  <div id="fullcalendar" style="margin-top: 1rem; border: 1px solid #C9A86A; border-radius: 12px;"></div>
 </div>
-
        
        <button class="btn-step" onclick="vaiAlStep0()">Indietro</button>
        <button class="btn-step" onclick="vaiAlStep2()">Avanti</button>     
