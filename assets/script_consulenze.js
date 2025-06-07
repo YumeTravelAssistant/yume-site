@@ -904,12 +904,18 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Al cambio slot, aggiorna input datetime-local
-  slotSelect.addEventListener("change", () => {
+slotSelect.addEventListener("change", () => {
   const selectedDate = campoData.value?.split("T")[0]; // solo la data
   const selectedTime = slotSelect.value; // orario dallo slot
+
   if (selectedDate && selectedTime) {
-    campoData.value = `${selectedDate}T${selectedTime}`;
-    console.log("🕒 Data finale aggiornata:", campoData.value);
+    // Forza reset del campo (Safari fix)
+    campoData.type = "text"; // disconnette temporaneamente il binding
+    campoData.value = "";    // pulisce campo
+    campoData.type = "datetime-local"; // riattiva
+    campoData.value = `${selectedDate}T${selectedTime}`; // imposta nuova data completa
+
+    console.log("🕒 Data finale aggiornata (Safari fix):", campoData.value);
   }
 });
 
