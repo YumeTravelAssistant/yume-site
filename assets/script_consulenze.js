@@ -987,6 +987,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const res = await fetch(url);
         const slotDisponibili = await res.json();
 
+    // 🔍 Log visibile in console browser
+    console.log(`📅 Slot disponibili per ${giorno} (${tipoFunnel}, ${durata} min):`, slotDisponibili);
+
         const campoData = document.getElementById("data_calendario");
         const slotSelect = document.getElementById("data_slot_select");
 
