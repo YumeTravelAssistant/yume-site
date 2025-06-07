@@ -957,6 +957,11 @@ document.addEventListener('DOMContentLoaded', function () {
     locale: 'it',
     firstDay: 1,
     selectable: true,
+    expandRows: true,
+    allDaySlot: false,
+    slotMinTime: "09:00:00",
+    slotMaxTime: "20:00:00",
+    slotDuration: "00:15:00",
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
@@ -970,13 +975,13 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     },
 
-dateClick: async function (info) {
-  const giorno = info.date.toISOString().split("T")[0];  // ✅ solo data
-  calendar.changeView('timeGridDay', giorno);
+    dateClick: async function (info) {
+      const giorno = info.date.toISOString().split("T")[0];
+      calendar.changeView('timeGridDay', giorno);
 
-  const tipoFunnel = window.location.pathname.includes("prenota") ? "freddo" : "caldo";
-  const durata = getDurataSlot();
-  const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
+      const tipoFunnel = window.location.pathname.includes("prenota") ? "freddo" : "caldo";
+      const durata = getDurataSlot();
+      const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
 
       try {
         const res = await fetch(url);
@@ -1009,6 +1014,7 @@ dateClick: async function (info) {
         console.error("❌ Errore caricamento slot da click calendario:", err);
       }
     },
+
     eventSources: [{
       events: async function (fetchInfo, successCallback, failureCallback) {
         try {
@@ -1016,8 +1022,6 @@ dateClick: async function (info) {
           const durata = getDurataSlot();
           const giornoInizio = new Date(fetchInfo.start);
           const giornoFine = new Date(fetchInfo.end);
-          const slotColor = tipoFunnel === "freddo" ? "#8B2C2B66" : "#C9A86A66";
-
           const tuttiGliSlot = [];
 
           for (
@@ -1027,7 +1031,6 @@ dateClick: async function (info) {
           ) {
             const giorno = d.toISOString().split("T")[0];
             const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
-
             const res = await fetch(url);
             const slotDisponibili = await res.json();
 
