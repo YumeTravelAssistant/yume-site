@@ -861,55 +861,64 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Funzione per caricare gli slot
-  async function caricaSlotDisponibili() {
-    const rawDate = campoData.value;
-    const giorno = rawDate?.split("T")[0];
-    if (!giorno) {
-      console.warn("⛔️ Data non valida:", rawDate);
+async function caricaSlotDisponibili() {
+  const rawDate = campoData.value;
+  const giorno = rawDate?.split("T")[0];
+  if (!giorno) {
+    console.warn("⛔️ Data non valida:", rawDate);
+    return;
+  }
+
+  const durata = getDurataSlot(); // 🔥 durata dinamica
+  const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}`;
+  console.log("📡 FETCH:", url);
+
+  try {
+    const res = await fetch(url);
+    const slots = await res.json();
+    console.log("✅ SLOT:", slots);
+
+    slotSelect.innerHTML = "";
+    if (!Array.isArray(slots) || slots.length === 0) {
+      const opt = document.createElement("option");
+      opt.textContent = "Nessuno slot disponibile";
+      opt.disabled = true;
+      slotSelect.appendChild(opt);
       return;
     }
 
-    const url = `${endpointAzure}?giorno=${giorno}`;
-    console.log("📡 FETCH:", url);
-
-    try {
-      const res = await fetch(url);
-      const slots = await res.json();
-      console.log("✅ SLOT:", slots);
-
-      slotSelect.innerHTML = "";
-      if (!Array.isArray(slots) || slots.length === 0) {
-        const opt = document.createElement("option");
-        opt.textContent = "Nessuno slot disponibile";
-        opt.disabled = true;
-        slotSelect.appendChild(opt);
-        return;
-      }
-
-      // Popola la select
-      slots.forEach(slot => {
-        const opt = document.createElement("option");
-        opt.value = slot;
-        opt.textContent = slot;
-        slotSelect.appendChild(opt);
-      });
-    } catch (err) {
-      console.error("❌ Errore fetch slot:", err);
-    }
+    slots.forEach(slot => {
+      const opt = document.createElement("option");
+      opt.value = slot;
+      opt.textContent = slot;
+      slotSelect.appendChild(opt);
+    });
+  } catch (err) {
+    console.error("❌ Errore fetch slot:", err);
   }
+}
 
-  // Attiva la chiamata su focus e change
-  ["focus", "change"].forEach(event => {
-    campoData.addEventListener(event, caricaSlotDisponibili);
-  });
+function getDurataSlot() {
+  const url = window.location.pathname;
 
-  // Quando selezioni uno slot → aggiorna datetime-local
-  slotSelect.addEventListener("change", () => {
-    const giorno = campoData.value?.split("T")[0];
-    const orario = slotSelect.value;
-    if (giorno && orario) {
-      campoData.value = `${giorno}T${orario}`;
-    }
-  });
-});
+  // Prenota → durata fissa 20 minuti
+  if (url.includes("prenota-consulenza.html")) return 20;
+
+  // Acquista → durata in base al tipo
+  const tipoTematica = document.getElementById("tipo_servizio_tematica")?.value;
+  const tipoExperience = document.getElementById("tipo_servizio_experience")?.value;
+
+  const mappaDurate = {
+    "Consulenza Yume Lite": 75,
+    "Consulenza Yume Smart": 195,
+    "Consulenza Yume Premium": 315,
+    "Consulenza Yume Experience Singolo": 195,
+    "Consulenza Yume Experience Coppia": 195,
+    "Consulenza Yume Experience Famiglia": 195,
+    "Consulenza Yume Experience Mini Gruppo": 195,
+    "Consulenza Yume Experience Yume Atelier": 195
+  };
+
+  return mappaDurate[tipoTematica] || mappaDurate[tipoExperience] || 195;
+}
 
