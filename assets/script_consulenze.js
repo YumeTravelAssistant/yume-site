@@ -905,12 +905,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Al cambio slot, aggiorna input datetime-local
   slotSelect.addEventListener("change", () => {
-    const giorno = campoData.value?.split("T")[0];
-    const orario = slotSelect.value;
-    if (giorno && orario) {
-      campoData.value = `${giorno}T${orario}`;
-    }
-  });
+  const selectedDate = campoData.value?.split("T")[0]; // solo la data
+  const selectedTime = slotSelect.value; // orario dallo slot
+  if (selectedDate && selectedTime) {
+    campoData.value = `${selectedDate}T${selectedTime}`;
+    console.log("🕒 Data finale aggiornata:", campoData.value);
+  }
+});
+
 });
 
 function getDurataSlot() {
