@@ -1038,7 +1038,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const slotDisponibili = await res.json();
 
             for (let h = 9; h < 20; h++) {
-              for (let m = 0; m < 60; m += 15) {
+              for (let m = 0; m < 60; m += 20) {
                 const ora = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
                 if (!slotDisponibili.includes(ora)) {
                   tuttiGliSlot.push({
