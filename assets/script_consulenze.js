@@ -851,21 +851,34 @@ function avviaSuggerimentoIndirizzo(valore) {
 
 const endpointAzure = "https://yume-consulenze.azurewebsites.net/api/get-slots";
 
-const campoData = document.getElementById("data_calendario");
-const slotSelect = document.getElementById("data_slot_select");
+document.addEventListener("DOMContentLoaded", () => {
+  const campoData = document.getElementById("data_calendario");
+  const slotSelect = document.getElementById("data_slot_select");
 
-if (campoData && slotSelect) {
-  campoData.addEventListener("focus", async () => {
+  if (!campoData || !slotSelect) {
+    console.warn("⚠️ Non trovati #data_calendario o #data_slot_select nel DOM");
+    return;
+  }
+
+  // Funzione per caricare gli slot
+  async function caricaSlotDisponibili() {
     const rawDate = campoData.value;
     const giorno = rawDate?.split("T")[0];
-    if (!giorno) return;
+    if (!giorno) {
+      console.warn("⛔️ Data non valida:", rawDate);
+      return;
+    }
+
+    const url = `${endpointAzure}?giorno=${giorno}`;
+    console.log("📡 FETCH:", url);
 
     try {
-      const res = await fetch(`${endpointAzure}?giorno=${giorno}`);
+      const res = await fetch(url);
       const slots = await res.json();
+      console.log("✅ SLOT:", slots);
 
       slotSelect.innerHTML = "";
-      if (slots.length === 0) {
+      if (!Array.isArray(slots) || slots.length === 0) {
         const opt = document.createElement("option");
         opt.textContent = "Nessuno slot disponibile";
         opt.disabled = true;
@@ -873,6 +886,7 @@ if (campoData && slotSelect) {
         return;
       }
 
+      // Popola la select
       slots.forEach(slot => {
         const opt = document.createElement("option");
         opt.value = slot;
@@ -880,10 +894,16 @@ if (campoData && slotSelect) {
         slotSelect.appendChild(opt);
       });
     } catch (err) {
-      console.error("Errore nel recupero slot:", err);
+      console.error("❌ Errore fetch slot:", err);
     }
+  }
+
+  // Attiva la chiamata su focus e change
+  ["focus", "change"].forEach(event => {
+    campoData.addEventListener(event, caricaSlotDisponibili);
   });
 
+  // Quando selezioni uno slot → aggiorna datetime-local
   slotSelect.addEventListener("change", () => {
     const giorno = campoData.value?.split("T")[0];
     const orario = slotSelect.value;
@@ -891,5 +911,5 @@ if (campoData && slotSelect) {
       campoData.value = `${giorno}T${orario}`;
     }
   });
-}
+});
 
