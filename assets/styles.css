@@ -4321,3 +4321,42 @@ body .indice-info-utili {
   box-shadow: 0 0 0 3px rgba(139, 44, 43, 0.15);
 }
 
+/* FullCalendar container styling */
+#fullcalendar {
+  background-color: #fff;
+  border: 1px solid #C9A86A;
+  border-radius: 12px;
+  padding: 20px;
+  font-family: 'Raleway', sans-serif;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+/* Colorazione dinamica slot occupati */
+.fc-event {
+  font-size: 0.85rem;
+  border: none;
+  border-radius: 6px;
+}
+
+/* Testo "Occupato" più discreto */
+.fc-event-title {
+  color: #8B2C2B;
+  font-weight: 600;
+}
+
+/* Disabilita selezione e cursore interazione */
+.fc-event.fc-event-background {
+  pointer-events: none;
+}
+
+/* Styling migliorato dei giorni */
+.fc-daygrid-day {
+  background-color: #FDFBF7;
+}
+
+/* Hover effetto su giorno */
+.fc-daygrid-day:hover {
+  background-color: #F4F0E2;
+}
+
