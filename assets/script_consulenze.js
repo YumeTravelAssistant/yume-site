@@ -856,47 +856,62 @@ document.addEventListener("DOMContentLoaded", () => {
   const slotSelect = document.getElementById("data_slot_select");
 
   if (!campoData || !slotSelect) {
-    console.warn("⚠️ Non trovati #data_calendario o #data_slot_select nel DOM");
+    console.warn("⛔️ Non trovati #data_calendario o #data_slot_select nel DOM");
     return;
   }
 
-  // Funzione per caricare gli slot
-async function caricaSlotDisponibili() {
-  const rawDate = campoData.value;
-  const giorno = rawDate?.split("T")[0];
-  if (!giorno) {
-    console.warn("⛔️ Data non valida:", rawDate);
-    return;
-  }
-
-  const durata = getDurataSlot(); // 🔥 durata dinamica
-  const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}`;
-  console.log("📡 FETCH:", url);
-
-  try {
-    const res = await fetch(url);
-    const slots = await res.json();
-    console.log("✅ SLOT:", slots);
-
-    slotSelect.innerHTML = "";
-    if (!Array.isArray(slots) || slots.length === 0) {
-      const opt = document.createElement("option");
-      opt.textContent = "Nessuno slot disponibile";
-      opt.disabled = true;
-      slotSelect.appendChild(opt);
+  // Funzione per caricare gli slot disponibili
+  async function caricaSlotDisponibili() {
+    const rawDate = campoData.value;
+    const giorno = rawDate?.split("T")[0];
+    if (!giorno) {
+      console.warn("⛔️ Data non valida:", rawDate);
       return;
     }
 
-    slots.forEach(slot => {
-      const opt = document.createElement("option");
-      opt.value = slot;
-      opt.textContent = slot;
-      slotSelect.appendChild(opt);
-    });
-  } catch (err) {
-    console.error("❌ Errore fetch slot:", err);
+    const durata = getDurataSlot(); // 🔥 durata dinamica
+    const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}`;
+    console.log("📡 FETCH:", url);
+
+    try {
+      const res = await fetch(url);
+      const slots = await res.json();
+      console.log("✅ SLOT:", slots);
+
+      slotSelect.innerHTML = "";
+      if (!Array.isArray(slots) || slots.length === 0) {
+        const opt = document.createElement("option");
+        opt.textContent = "Nessuno slot disponibile";
+        opt.disabled = true;
+        slotSelect.appendChild(opt);
+        return;
+      }
+
+      slots.forEach(slot => {
+        const opt = document.createElement("option");
+        opt.value = slot;
+        opt.textContent = slot;
+        slotSelect.appendChild(opt);
+      });
+    } catch (err) {
+      console.error("❌ Errore fetch slot:", err);
+    }
   }
-}
+
+  // Attiva fetch su focus e cambio data
+  ["focus", "change"].forEach(event => {
+    campoData.addEventListener(event, caricaSlotDisponibili);
+  });
+
+  // Al cambio slot, aggiorna input datetime-local
+  slotSelect.addEventListener("change", () => {
+    const giorno = campoData.value?.split("T")[0];
+    const orario = slotSelect.value;
+    if (giorno && orario) {
+      campoData.value = `${giorno}T${orario}`;
+    }
+  });
+});
 
 function getDurataSlot() {
   const url = window.location.pathname;
