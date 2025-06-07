@@ -1037,19 +1037,28 @@ document.addEventListener('DOMContentLoaded', function () {
             const res = await fetch(url);
             const slotDisponibili = await res.json();
 
-            for (let h = 9; h < 20; h++) {
-              for (let m = 0; m < 60; m += 20) {
-                const ora = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
-                if (!slotDisponibili.includes(ora)) {
-                  tuttiGliSlot.push({
-                    title: 'Occupato',
-                    start: `${giorno}T${ora}`,
-                    display: 'background',
-                    classNames: ['inverse-slot']
-                  });
-                }
-              }
-            }
+            const start = new Date(`${giorno}T09:00:00`);
+const end = new Date(`${giorno}T20:00:00`);
+
+for (
+  let slot = new Date(start);
+  slot.getTime() + durata * 60000 <= end.getTime();
+  slot = new Date(slot.getTime() + durata * 60000)
+) {
+  const ora = slot.toTimeString().substring(0, 5);
+  if (!slotDisponibili.includes(ora)) {
+    const endSlot = new Date(slot.getTime() + durata * 60000);
+
+    tuttiGliSlot.push({
+      title: 'Occupato',
+      start: slot.toISOString(),
+      end: endSlot.toISOString(),
+      display: 'background',
+      classNames: ['inverse-slot']
+    });
+  }
+}
+
           }
 
           successCallback(tuttiGliSlot);
