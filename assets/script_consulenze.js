@@ -956,7 +956,44 @@ document.addEventListener('DOMContentLoaded', function () {
     height: 500,
     locale: 'it',
     firstDay: 1,
-    selectable: false,
+    selectable: true, // ✅ attivo per cliccare sui giorni
+    dateClick: async function (info) {
+      const giorno = info.dateStr;
+      const tipoFunnel = window.location.pathname.includes("prenota") ? "freddo" : "caldo";
+      const durata = getDurataSlot();
+      const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
+
+      try {
+        const res = await fetch(url);
+        const slotDisponibili = await res.json();
+
+        const campoData = document.getElementById("data_calendario");
+        const slotSelect = document.getElementById("data_slot_select");
+
+        if (campoData && slotSelect) {
+          slotSelect.innerHTML = "";
+
+          if (!slotDisponibili.length) {
+            const opt = document.createElement("option");
+            opt.textContent = "Nessuno slot disponibile";
+            opt.disabled = true;
+            slotSelect.appendChild(opt);
+            return;
+          }
+
+          slotDisponibili.forEach(ora => {
+            const opt = document.createElement("option");
+            opt.value = ora;
+            opt.textContent = ora;
+            slotSelect.appendChild(opt);
+          });
+
+          campoData.value = `${giorno}T${slotDisponibili[0]}`;
+        }
+      } catch (err) {
+        console.error("❌ Errore caricamento slot da click calendario:", err);
+      }
+    },
     eventSources: [{
       events: async function (fetchInfo, successCallback, failureCallback) {
         try {
