@@ -4295,3 +4295,29 @@ body .indice-info-utili {
   box-shadow: 0 0 10px #C9A86A;
 }
 
+#data_slot_select,
+#data_calendario {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #C9A86A;
+  border-radius: 10px;
+  background-color: #F4F0E2;
+  color: #333;
+  font-family: 'Raleway', sans-serif;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+}
+
+#data_slot_select:hover,
+#data_calendario:hover {
+  border-color: #8B2C2B;
+}
+
+#data_slot_select:focus,
+#data_calendario:focus {
+  outline: none;
+  border-color: #8B2C2B;
+  box-shadow: 0 0 0 3px rgba(139, 44, 43, 0.15);
+}
+

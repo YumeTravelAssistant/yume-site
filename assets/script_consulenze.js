@@ -869,9 +869,11 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const durata = getDurataSlot(); // 🔥 durata dinamica
-    const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}`;
-    console.log("📡 FETCH:", url);
+  const durata = getDurataSlot(); // 🔥 durata dinamica
+  const tipoFunnel = window.location.pathname.includes("prenota") ? "freddo" : "caldo";
+  const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
+  console.log("📡 FETCH:", url);
+  console.log("🌡️ Funnel:", tipoFunnel);
 
     try {
       const res = await fetch(url);
@@ -939,7 +941,7 @@ function getDurataSlot() {
     "Consulenza Yume Experience Coppia": 195,
     "Consulenza Yume Experience Famiglia": 195,
     "Consulenza Yume Experience Mini Gruppo": 195,
-    "Consulenza Yume Experience Yume Atelier": 195
+    "Consulenza Yume Experience Yume Atelier": 20,
   };
 
   return mappaDurate[tipoTematica] || mappaDurate[tipoExperience] || 195;
