@@ -4370,11 +4370,4 @@ body .indice-info-utili {
   background-color: rgba(139, 44, 43, 0.3) !important; /* rosso trasparente */
 }
 
-.fc-event.slot-counter {
-  background-color: #C9A86A33 !important;
-  color: #8B2C2B;
-  font-weight: bold;
-  border: none;
-  text-align: center;
-}
 
