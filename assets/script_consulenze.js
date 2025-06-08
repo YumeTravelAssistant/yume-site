@@ -976,9 +976,9 @@ document.addEventListener('DOMContentLoaded', function () {
     },
 
     dateClick: async function (info) {
-    const giorno = info.date.getFullYear() + "-" +
-          String(info.date.getMonth() + 1).padStart(2, '0') + "-" +
-          String(info.date.getDate()).padStart(2, '0');
+      const giorno = info.date.getFullYear() + "-" +
+        String(info.date.getMonth() + 1).padStart(2, '0') + "-" +
+        String(info.date.getDate()).padStart(2, '0');
       calendar.changeView('timeGridDay', giorno);
 
       const tipoFunnel = window.location.pathname.includes("prenota") ? "freddo" : "caldo";
@@ -988,9 +988,6 @@ document.addEventListener('DOMContentLoaded', function () {
       try {
         const res = await fetch(url);
         const slotDisponibili = await res.json();
-
-    // 🔍 Log visibile in console browser
-    console.log(`📅 Slot disponibili per ${giorno} (${tipoFunnel}, ${durata} min):`, slotDisponibili);
 
         const campoData = document.getElementById("data_calendario");
         const slotSelect = document.getElementById("data_slot_select");
@@ -1020,80 +1017,76 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     },
 
-eventSources: [{
-  events: async function (fetchInfo, successCallback, failureCallback) {
-    try {
-      const tipoFunnel = window.location.pathname.includes("prenota") ? "freddo" : "caldo";
-      const durata = getDurataSlot();
-      const giornoInizio = new Date(fetchInfo.start);
-      const giornoFine = new Date(fetchInfo.end);
-      const eventi = [];
+    eventSources: [{
+      events: async function (fetchInfo, successCallback, failureCallback) {
+        try {
+          const tipoFunnel = window.location.pathname.includes("prenota") ? "freddo" : "caldo";
+          const durata = getDurataSlot();
+          const giornoInizio = new Date(fetchInfo.start);
+          const giornoFine = new Date(fetchInfo.end);
+          const eventi = [];
 
-      // ⏱ Ricava la vista attiva (es. "dayGridMonth" o "timeGridDay")
-      let vistaAttiva = 'dayGridMonth';
-try {
-  vistaAttiva = calendar.view.type;
-} catch (e) {}
-
-
-      for (
-        let d = new Date(giornoInizio);
-        d < giornoFine;
-        d.setDate(d.getDate() + 1)
-      ) {
-        const giorno = d.getFullYear() + "-" +
-          String(d.getMonth() + 1).padStart(2, '0') + "-" +
-          String(d.getDate()).padStart(2, '0');
-
-        const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
-        const res = await fetch(url);
-        const slotDisponibili = await res.json();
-
-        // ✅ SOLO nella vista mensile → mostra quanti slot ci sono
-        if (vistaAttiva === "dayGridMonth") {
-          eventi.push({
-            title: `${slotDisponibili.length} slot disponibili`,
-            start: giorno,
-            allDay: true,
-            display: 'block',
-            classNames: ['yume-slot-count']
-          });
-        }
-
-        // ✅ SOLO nella vista giornaliera → mostra blocchi "Occupato"
-        if (vistaAttiva === "timeGridDay") {
-          const start = new Date(`${giorno}T09:00:00`);
-          const end = new Date(`${giorno}T20:00:00`);
+          // Determina la vista attiva (safe fallback)
+          let vistaAttiva = 'dayGridMonth';
+          try {
+            vistaAttiva = calendar.view.type;
+          } catch (e) {}
 
           for (
-            let slot = new Date(start);
-            slot.getTime() + durata * 60000 <= end.getTime();
-            slot = new Date(slot.getTime() + durata * 60000)
+            let d = new Date(giornoInizio);
+            d <= giornoFine;
+            d.setDate(d.getDate() + 1)
           ) {
-            const ora = slot.toTimeString().substring(0, 5);
-            if (!slotDisponibili.includes(ora)) {
-              const endSlot = new Date(slot.getTime() + durata * 60000);
+            const giorno = d.getFullYear() + "-" +
+              String(d.getMonth() + 1).padStart(2, '0') + "-" +
+              String(d.getDate()).padStart(2, '0');
+
+            const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
+            const res = await fetch(url);
+            const slotDisponibili = await res.json();
+
+            if (vistaAttiva === "dayGridMonth") {
               eventi.push({
-                title: `Occupato`,
-                start: slot.toISOString(),
-                end: endSlot.toISOString(),
+                title: `${slotDisponibili.length} slot disponibili`,
+                start: giorno,
+                allDay: true,
                 display: 'block',
-                classNames: ['inverse-slot'],
-                editable: false
+                classNames: ['yume-slot-count']
               });
             }
+
+            if (vistaAttiva === "timeGridDay") {
+              const start = new Date(`${giorno}T09:00:00`);
+              const end = new Date(`${giorno}T20:00:00`);
+
+              for (
+                let slot = new Date(start);
+                slot.getTime() + durata * 60000 <= end.getTime();
+                slot = new Date(slot.getTime() + durata * 60000)
+              ) {
+                const ora = slot.toTimeString().substring(0, 5);
+                if (!slotDisponibili.includes(ora)) {
+                  const endSlot = new Date(slot.getTime() + durata * 60000);
+                  eventi.push({
+                    title: `Occupato`,
+                    start: slot.toISOString(),
+                    end: endSlot.toISOString(),
+                    display: 'block',
+                    classNames: ['inverse-slot'],
+                    editable: false
+                  });
+                }
+              }
+            }
           }
+
+          successCallback(eventi);
+        } catch (err) {
+          console.error("❌ Errore caricamento eventi calendario:", err);
+          failureCallback(err);
         }
       }
-
-      successCallback(eventi);
-    } catch (err) {
-      console.error("❌ Errore caricamento eventi calendario:", err);
-      failureCallback(err);
-    }
-  }
-}]
-
+    }]
   });
 
   calendar.render();
