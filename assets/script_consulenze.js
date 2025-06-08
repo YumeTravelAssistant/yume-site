@@ -853,6 +853,8 @@ const endpointAzure = "https://yume-consulenze.azurewebsites.net/api/get-slots";
 let calendar;
 let eventoSelezionato = null;
 
+let calendarioAcquisti;
+
 function getDurataSlot() {
   const url = window.location.pathname;
 
