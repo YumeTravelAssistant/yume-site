@@ -935,31 +935,43 @@ function inizializzaCalendario(cal, tipoFunnel) {
       cal.changeView("timeGridDay", info.dateStr);
       setTimeout(() => cal.refetchEvents(), 100);
     },
-    eventClick(info) {
-      if (!info.event.extendedProps.clickableSlot) return;
-      if (!isAcquisto) eventoSelezionato?.remove();
 
-      const start = info.event.start;
-      const end = info.event.end;
+eventClick(info) {
+  if (!info.event.extendedProps.clickableSlot) return;
 
-eventoSelezionato?.remove();
+  const start = info.event.start;
+  const end = info.event.end;
+  const startISO = start.toISOString();
 
-eventoSelezionato = cal.addEvent({
-  title: `${start.toTimeString().slice(0, 5)} – selezionato`,
-  start,
-  end,
-  display: "block",
-  classNames: ["yume-scelta"],
-  editable: false,
-  extendedProps: { clickableSlot: true }
-});
+  // ✅ Se clicchi sullo stesso slot già selezionato → deseleziona
+  if (eventoSelezionato && eventoSelezionato.start.toISOString() === startISO) {
+    eventoSelezionato.remove();
+    eventoSelezionato = null;
+    campoData.value = "";
+    console.log("🗑️ Slot deselezionato:", startISO);
+    return;
+  }
 
-      const localISO = new Date(start.getTime() - start.getTimezoneOffset() * 60000)
-        .toISOString().slice(0, 16);
+  // 🔁 Altrimenti seleziona il nuovo
+  eventoSelezionato?.remove();
 
-      campoData.value = localISO;
-      console.log("✅ Slot selezionato:", localISO);
-    },
+  eventoSelezionato = cal.addEvent({
+    title: `${start.toTimeString().slice(0, 5)} – selezionato`,
+    start,
+    end,
+    display: "block",
+    classNames: ["yume-scelta"],
+    editable: false,
+    extendedProps: { clickableSlot: true }
+  });
+
+  const localISO = new Date(start.getTime() - start.getTimezoneOffset() * 60000)
+    .toISOString().slice(0, 16);
+
+  campoData.value = localISO;
+  console.log("✅ Slot selezionato:", localISO);
+}
+
     eventSources: [{
       events: async (fetchInfo, successCallback, failureCallback) => {
         try {
