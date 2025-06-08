@@ -267,30 +267,27 @@
       groupatelier: "Consulenza Yume Experience Yume Atelier"
     };
 
-    if (tematici[pacchetto]) {
-      selectCategoria.value = "tematica";
-      aggiornaTipoServizio(); // mostra sezione_tematica
+    let isTematica = tematici[pacchetto];
+    let isEsperienziale = esperienziali[pacchetto];
+
+    if (isTematica || isEsperienziale) {
+      selectCategoria.value = isTematica ? "tematica" : "experience";
+      aggiornaTipoServizio(); // mostra la sezione corretta
 
       setTimeout(() => {
-        selectTematica.value = tematici[pacchetto];
-        selectTematica.dispatchEvent(new Event("change"));
+        if (isTematica) {
+          selectTematica.value = tematici[pacchetto];
+          selectTematica.dispatchEvent(new Event("change"));
+        } else {
+          selectExperience.value = esperienziali[pacchetto];
+          selectExperience.dispatchEvent(new Event("change"));
+        }
+        // 🔁 Solo 1 aggiornamento calendario
         aggiornaCalendarioConDurata();
-      }, 100);
-    }
-
-    if (esperienziali[pacchetto]) {
-      selectCategoria.value = "experience";
-      aggiornaTipoServizio(); // mostra sezione_experience
-
-      setTimeout(() => {
-        selectExperience.value = esperienziali[pacchetto];
-        selectExperience.dispatchEvent(new Event("change"));
-        aggiornaCalendarioConDurata();
-      }, 100);
+      }, 150);
     }
   });
 </script>
-
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
  <script src="assets/script.js"></script>
