@@ -1049,7 +1049,7 @@ eventSources: [{
             start: giorno,
             allDay: true,
             display: 'block',
-            classNames: ['slot-count']
+            classNames: ['yume-slot-count']
           });
         }
 
