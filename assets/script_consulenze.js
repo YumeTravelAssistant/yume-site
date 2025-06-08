@@ -917,14 +917,14 @@ document.addEventListener("DOMContentLoaded", function () {
       const start = info.event.start;
       const end = info.event.end;
 
-      eventoSelezionato = calendar.addEvent({
-        title: `${start.toTimeString().slice(0,5)} – selezionato`,
-        start,
-        end,
-        display: 'block',
-        classNames: ['yume-scelta'],
-        editable: false
-      });
+eventoSelezionato = calendar.addEvent({
+  title: `${start.toTimeString().slice(0,5)} – selezionato`,
+  start,
+  end,
+  display: 'block',
+  classNames: ['inverse-slot', 'yume-scelta'],
+  editable: false
+});
 
       const localISO = new Date(start.getTime() - (start.getTimezoneOffset() * 60000))
         .toISOString().slice(0, 16);
