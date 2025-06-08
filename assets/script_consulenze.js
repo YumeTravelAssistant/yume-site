@@ -1032,7 +1032,10 @@ document.addEventListener('DOMContentLoaded', function () {
             d < giornoFine;
             d.setDate(d.getDate() + 1)
           ) {
-            const giorno = d.toISOString().split("T")[0];
+            const giorno = d.getFullYear() + "-" +
+               String(d.getMonth() + 1).padStart(2, '0') + "-" +
+               String(d.getDate()).padStart(2, '0');
+
             const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
             const res = await fetch(url);
             const slotDisponibili = await res.json();
