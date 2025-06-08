@@ -4391,29 +4391,28 @@ body .indice-info-utili {
   color: #000000 !important;
 }
 
-/* SLOT SELEZIONATO – Forza occupazione piena e stile Yume */
+/* SLOT SELEZIONATO – correzione finale centratura */
 .fc-timegrid-event-harness .fc-event.yume-scelta {
   position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
+  inset: 0 !important;
   width: 100% !important;
   height: 100% !important;
   margin: 0 !important;
   padding: 6px 10px;
   box-sizing: border-box;
 
-  background-color: #009879 !important;   /* Verde smeraldo */
-  color: #C9A86A !important;              /* Oro Yume */
-  border: 2px solid #C9A86A !important;
+  background-color: #009879 !important;  /* Verde smeraldo */
+  color: #C9A86A !important;
+  border: 2px solid #C9A86A;
   font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 0 4px rgba(0,0,0,0.15);
+  transform: none !important;         /* 💥 forza centratura */
 }
 
-/* Testo dello slot selezionato */
+/* Titolo selezionato */
 .fc-event.yume-scelta .fc-event-title {
   color: #C9A86A !important;
 }
