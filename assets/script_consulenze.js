@@ -895,7 +895,7 @@ calendarioAcquisti = new FullCalendar.Calendar(calendarEl, {
     allDaySlot: false,
     slotMinTime: "09:00:00",
     slotMaxTime: "20:00:00",
-    slotDuration: "00:15:00",
+    slotDuration: `00:${durata.toString().padStart(2, '0')}:00`,
     headerToolbar: {
       left: "prev,next today",
       center: "title",
