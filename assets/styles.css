@@ -4414,3 +4414,54 @@ body .indice-info-utili {
   text-align: center;
 }
 
+/* 🔧 Reset completo dei colori FullCalendar per eventi */
+.fc-event {
+  background-color: transparent !important;
+  color: inherit !important;
+  border: none !important;
+}
+
+/* ✅ SLOT DISPONIBILE (giorno) */
+.fc-timeGridDay .fc-event.libero-slot {
+  background-color: #F4F0E2 !important;  /* Beige */
+  color: #000000 !important;             /* Nero leggibile */
+  border: 1px solid #C9A86A;
+  font-weight: 500;
+}
+
+/* ✅ SLOT SELEZIONATO */
+.fc-event.yume-scelta {
+  background-color: #009879 !important;  /* Verde smeraldo */
+  color: #C9A86A !important;             /* Oro Yume */
+  border: 2px solid #C9A86A !important;
+  font-weight: 700;
+}
+.fc-event.yume-scelta .fc-event-title {
+  color: #C9A86A !important;
+}
+
+/* ✅ SLOT OCCUPATO */
+.fc-event.inverse-slot {
+  background-color: rgba(139, 44, 43, 0.25) !important; /* Rosso Yume tenue */
+  color: #8B2C2B !important;
+  font-weight: 600;
+}
+
+/* ✅ SLOT CONTEGGIO (vista mese) */
+.fc-dayGridMonth .fc-event.yume-slot-count {
+  background-color: #F4F0E2 !important;  /* Beige */
+  color: #8B2C2B !important;             /* Rosso Yume */
+  font-weight: 600;
+  border: 2px solid #C9A86A;
+  border-radius: 8px;
+  padding: 3px 8px;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* 🧽 Opzionale: reset forzato dei link (alcuni temi FC li rendono blu) */
+.fc-event a {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
