@@ -856,10 +856,11 @@ let calendarioAcquisti;
 
 function getDurataSlot() {
   const url = window.location.pathname;
+
   if (url.includes("prenota-consulenza.html")) return 20;
 
-  const tipoTematica = document.getElementById("tipo_servizio_tematica")?.value;
-  const tipoExperience = document.getElementById("tipo_servizio_experience")?.value;
+  const tipoTematica = document.getElementById("tipo_servizio_tematica")?.value?.trim();
+  const tipoExperience = document.getElementById("tipo_servizio_experience")?.value?.trim();
 
   const mappaDurate = {
     "Consulenza Yume Lite": 75,
@@ -872,35 +873,35 @@ function getDurataSlot() {
     "Consulenza Yume Experience Yume Atelier": 30,
   };
 
-  const durata = mappaDurate[tipoTematica] || mappaDurate[tipoExperience] || 195;
-  console.log("⏱ getDurataSlot restituisce:", durata);
+  const durata = mappaDurate[tipoTematica] || mappaDurate[tipoExperience] || 75;
+  console.log("🧠 Durata slot attuale:", durata, "minuti");
   return durata;
 }
 
 function formatSlotDuration(durata) {
-  const ore = String(Math.floor(durata / 60)).padStart(2, "0");
-  const minuti = String(durata % 60).padStart(2, "0");
-  const durataFinale = `${ore}:${minuti}:00`;
-  console.log("🔧 SlotDuration formattata:", durataFinale);
-  return durataFinale;
+  const ore = Math.floor(durata / 60).toString().padStart(2, "0");
+  const minuti = (durata % 60).toString().padStart(2, "0");
+  return `${ore}:${minuti}:00`;
 }
 
 function aggiornaCalendarioConDurata() {
   const durata = getDurataSlot();
+  const durataFormatted = formatSlotDuration(durata);
+  console.log("🔁 SlotDuration aggiornata dinamicamente:", durataFormatted);
+
   if (calendarioAcquisti) {
-    console.log("🔁 Aggiorno slotDuration calendarioAcquisti con:", durata);
-    calendarioAcquisti.setOption("slotDuration", formatSlotDuration(durata));
+    calendarioAcquisti.setOption("slotDuration", durataFormatted);
     calendarioAcquisti.getEvents().forEach(e => e.remove());
     calendarioAcquisti.refetchEvents();
   }
 }
 
-function inizializzaCalendario(el, tipoFunnel) {
+function inizializzaCalendario(cal, tipoFunnel) {
   const campoData = document.getElementById("data_calendario");
   const durata = getDurataSlot();
   const isAcquisto = tipoFunnel === "caldo";
 
-  const calendario = new FullCalendar.Calendar(el, {
+  cal = new FullCalendar.Calendar(cal, {
     initialView: "dayGridMonth",
     height: 500,
     locale: "it",
@@ -924,18 +925,19 @@ function inizializzaCalendario(el, tipoFunnel) {
       }
     },
     dateClick(info) {
-      calendario.changeView("timeGridDay", info.dateStr);
-      setTimeout(() => calendario.refetchEvents(), 100);
+      cal.changeView("timeGridDay", info.dateStr);
+      setTimeout(() => cal.refetchEvents(), 100);
     },
     eventClick(info) {
       if (!info.event.extendedProps.clickableSlot) return;
       if (!isAcquisto) eventoSelezionato?.remove();
 
-      const { start, end } = info.event;
-      const ev = calendario.addEvent({
+      const start = info.event.start;
+      const end = info.event.end;
+
+      const ev = cal.addEvent({
         title: `${start.toTimeString().slice(0, 5)} – selezionato`,
-        start,
-        end,
+        start, end,
         display: "block",
         classNames: [isAcquisto ? "acquisto-scelta" : "yume-scelta"],
         editable: false,
@@ -943,19 +945,25 @@ function inizializzaCalendario(el, tipoFunnel) {
       });
 
       if (!isAcquisto) eventoSelezionato = ev;
-      campoData.value = new Date(start.getTime() - start.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+
+      const localISO = new Date(start.getTime() - start.getTimezoneOffset() * 60000)
+        .toISOString().slice(0, 16);
+
+      campoData.value = localISO;
+      console.log("✅ Slot selezionato:", localISO);
     },
     eventSources: [{
       events: async (fetchInfo, successCallback, failureCallback) => {
         try {
           const eventi = [];
-          const vista = calendario.view?.type || "dayGridMonth";
+          const vista = cal.view?.type || "dayGridMonth";
           const oggi = new Date(); oggi.setHours(0, 0, 0, 0);
           const inizio = new Date(Math.max(fetchInfo.start, oggi));
           const fine = fetchInfo.end;
+          const durata = getDurataSlot();
 
           for (let d = new Date(inizio); d <= fine; d.setDate(d.getDate() + 1)) {
-            const giorno = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+            const giorno = `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, "0")}-${d.getDate().toString().padStart(2, "0")}`;
             const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
             const res = await fetch(url);
             const slotDisponibili = await res.json();
@@ -972,8 +980,9 @@ function inizializzaCalendario(el, tipoFunnel) {
 
             if (vista === "timeGridDay") {
               const start = new Date(`${giorno}T09:00:00`);
-              const end = new Date(`${giorno}T20:00:00`);
-              for (let slot = new Date(start); slot.getTime() + durata * 60000 <= end.getTime(); slot = new Date(slot.getTime() + durata * 60000)) {
+              const fine = new Date(`${giorno}T20:00:00`);
+
+              for (let slot = new Date(start); slot.getTime() + durata * 60000 <= fine.getTime(); slot = new Date(slot.getTime() + durata * 60000)) {
                 const ora = slot.toTimeString().slice(0, 5);
                 const endSlot = new Date(slot.getTime() + durata * 60000);
                 const disponibile = slotDisponibili.includes(ora);
@@ -999,12 +1008,14 @@ function inizializzaCalendario(el, tipoFunnel) {
     }]
   });
 
-  calendario.on("datesSet", () => calendario.refetchEvents());
-  calendario.render();
-  return calendario;
+  cal.on("datesSet", () => cal.refetchEvents());
+  cal.render();
+  return cal;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("📄 Pagina caricata:", window.location.pathname);
+
   const campoData = document.getElementById("data_calendario");
   const elPrenota = document.getElementById("fullcalendar");
   const elAcquisto = document.getElementById("fullcalendarAcquisto");
@@ -1015,6 +1026,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (elAcquisto && campoData) {
     calendarioAcquisti = inizializzaCalendario(elAcquisto, "caldo");
+
     document.getElementById("tipo_servizio_experience")?.addEventListener("change", aggiornaCalendarioConDurata);
     document.getElementById("tipo_servizio_tematica")?.addEventListener("change", aggiornaCalendarioConDurata);
   }
