@@ -918,11 +918,11 @@ document.addEventListener("DOMContentLoaded", function () {
       const end = info.event.end;
 
 eventoSelezionato = calendar.addEvent({
-  title: `${start.toTimeString().slice(0,5)} – selezionato`,
+  title: "Slot selezionato",
   start,
   end,
   display: 'block',
-  classNames: ['fc-timegrid-event', 'yume-scelta'],
+  classNames: ['yume-scelta-slot'],
   editable: false
 });
 
