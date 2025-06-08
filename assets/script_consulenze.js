@@ -922,7 +922,7 @@ eventoSelezionato = calendar.addEvent({
   start,
   end,
   display: 'block',
-  classNames: ['inverse-slot', 'yume-scelta'],
+  classNames: ['fc-timegrid-event', 'yume-scelta'],
   editable: false
 });
 
