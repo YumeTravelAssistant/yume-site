@@ -4529,15 +4529,16 @@ body .indice-info-utili {
 }
 
 .fc .fc-button-primary {
-  background-color: #8B2C2B !important; /* rosso Yume */
-  border-color: #8B2C2B !important;     /* bordo rosso Yume */
-  color: #C9A86A !important;            /* testo oro Yume */
+  background-color: #8B2C2B !important;   /* rosso Yume */
+  border: 2px solid #C9A86A !important;   /* bordo oro */
+  color: #C9A86A !important;              /* testo oro */
   font-weight: 600;
+  border-radius: 8px;
 }
 
 .fc .fc-button-primary:not(:disabled):hover {
-  background-color: #732321 !important; /* variante più scura al passaggio mouse */
-  border-color: #732321 !important;
-  color: #F4F0E2 !important;            /* beige chiaro per leggibilità */
+  background-color: #732321 !important;   /* variante più scura al passaggio mouse */
+  border: 2px solid #C9A86A !important;   /* bordo oro */
+  color: #F4F0E2 !important;              /* beige chiaro */
 }
 
