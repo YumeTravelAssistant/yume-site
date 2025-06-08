@@ -4321,77 +4321,98 @@ body .indice-info-utili {
   box-shadow: 0 0 0 3px rgba(139, 44, 43, 0.15);
 }
 
-/* FullCalendar container styling */
+/* Container FullCalendar */
 #fullcalendar {
   background-color: #fff;
   border: 1px solid #C9A86A;
   border-radius: 12px;
   padding: 20px;
   font-family: 'Raleway', sans-serif;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   margin-bottom: 20px;
 }
 
-/* Colorazione dinamica slot occupati */
+/* Eventi generici */
 .fc-event {
   font-size: 0.85rem;
-  border: none;
   border-radius: 6px;
+  border: none;
+  padding: 4px 6px;
 }
 
-/* Testo "Occupato" più discreto */
-.fc-event-title {
-  color: #8B2C2B;
+/* Testo "Occupato" più discreto (valido solo se classe 'inverse-slot') */
+.fc-event.inverse-slot .fc-event-title {
+  color: #8B2C2B !important;
   font-weight: 600;
 }
 
-/* Disabilita selezione e cursore interazione */
-.fc-event.fc-event-background {
-  pointer-events: none;
-}
-
-/* Styling migliorato dei giorni */
+/* Giorni della griglia mese */
 .fc-daygrid-day {
   background-color: #FDFBF7;
 }
 
-/* Hover effetto su giorno */
 .fc-daygrid-day:hover {
   background-color: #F4F0E2;
 }
 
-/* Sfondo base per griglia giornaliera */
+/* Slot orari sfondo */
 .fc-timegrid-slot {
-  background-color: #F4F0E2 !important; /* beige */
+  background-color: #F4F0E2 !important;
 }
 
-/* Slot occupati (override) */
+/* ----------------------
+   SLOT OCCUPATO
+----------------------- */
 .fc-event.inverse-slot {
-  background-color: rgba(139, 44, 43, 0.3) !important; /* rosso trasparente */
+  background-color: rgba(139, 44, 43, 0.25) !important;
+  font-weight: 500;
 }
 
-.fc-event.yume-slot-count {
-  background-color: #F4F0E2 !important; /* beige Yume */
-  font-weight: 600;
-  border-radius: 8px;
-  padding: 2px 6px;
-  font-size: 0.85rem;
-  border: 2px solid #C9A86A;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-/* Slot disponibile: beige */
+/* ----------------------
+   SLOT DISPONIBILE
+----------------------- */
 .fc-event.libero-slot {
   background-color: #F4F0E2 !important;
   color: #000 !important;
   border: 1px solid #C9A86A;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
-/* Slot selezionato dall’utente */
+.fc-event.libero-slot:hover {
+  background-color: #FDFBF7 !important;
+  border: 1px solid #8B2C2B;
+  cursor: pointer;
+}
+
+/* ----------------------
+   SLOT SELEZIONATO
+----------------------- */
 .fc-event.yume-scelta {
-  background-color: #009879 !important; /* verde smeraldo */
-  color: #fff8dc !important;            /* oro chiaro/bianco */
-  border: 2px solid #C9A86A;
+  background-color: #009879 !important;         /* verde smeraldo */
+  color: #C9A86A !important;                    /* oro per il testo */
+  border: 2px solid #C9A86A !important;
   font-weight: bold;
+  box-shadow: 0 0 4px rgba(0,0,0,0.15);
+}
+
+/* Forza colore titolo dentro slot selezionato */
+.fc-event.yume-scelta .fc-event-title {
+  color: #C9A86A !important;
+}
+
+/* ----------------------
+   SLOT CONTEGGIO (mese)
+----------------------- */
+.fc-event.yume-slot-count {
+  background-color: #F4F0E2 !important;
+  color: #8B2C2B !important;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 3px 8px;
+  font-size: 0.85rem;
+  border: 2px solid #C9A86A;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  text-align: center;
 }
 
