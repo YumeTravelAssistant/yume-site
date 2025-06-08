@@ -1156,6 +1156,17 @@ document.addEventListener("DOMContentLoaded", function () {
   // CASO 2: inizializza calendario acquisto se serve
   if (calendarAcquistoEl && campoData) {
     inizializzaCalendarioAcquisti();
+
+    document.getElementById("tipo_servizio_experience")?.addEventListener("change", aggiornaCalendarioConDurata);
+    document.getElementById("tipo_servizio_tematica")?.addEventListener("change", aggiornaCalendarioConDurata);
   }
 });
+
+function aggiornaCalendarioConDurata() {
+  const durata = getDurataSlot();
+  if (calendarioAcquisti) {
+    calendarioAcquisti.setOption('slotDuration', `00:${durata.toString().padStart(2, '0')}:00`);
+    calendarioAcquisti.refetchEvents();
+  }
+}
 
