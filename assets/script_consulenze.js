@@ -1165,6 +1165,11 @@ function aggiornaCalendarioConDurata() {
   const durata = getDurataSlot();
   if (calendarioAcquisti) {
     calendarioAcquisti.setOption('slotDuration', `00:${durata.toString().padStart(2, '0')}:00`);
+
+    // Rimuovi tutti gli eventi attuali (compresi quelli selezionati)
+    calendarioAcquisti.getEvents().forEach(e => e.remove());
+
+    // Ricarica gli eventi da sorgente con nuova durata
     calendarioAcquisti.refetchEvents();
   }
 }
