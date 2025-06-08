@@ -4380,3 +4380,18 @@ body .indice-info-utili {
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
+/* Slot disponibile: beige */
+.fc-event.libero-slot {
+  background-color: #F4F0E2 !important;
+  color: #000 !important;
+  border: 1px solid #C9A86A;
+}
+
+/* Slot selezionato dall’utente */
+.fc-event.yume-scelta {
+  background-color: #009879 !important; /* verde smeraldo */
+  color: #fff8dc !important;            /* oro chiaro/bianco */
+  border: 2px solid #C9A86A;
+  font-weight: bold;
+}
+

@@ -100,21 +100,17 @@
           </select>
         </div>
 
-<label for="data_calendario" class="mt-2">Data e ora:</label>
-<input type="datetime-local" id="data_calendario" name="calendario" required>
-
-<label for="data_slot_select">Seleziona orario disponibile:</label>
-<select id="data_slot_select">
-  <option>Seleziona una data sopra</option>
-</select>
-
 <div class="calendar-preview mt-3">
   <p>
-    <strong><i class="fas fa-calendar-day"></i> Consulta la disponibilità generale:</strong><br>
-    I giorni occupati non saranno disponibili negli slot.
+    <strong><i class="fas fa-calendar-day"></i> Consulta la disponibilità e seleziona uno slot:</strong><br>
+    Clicca un giorno, poi scegli uno slot orario disponibile tra le 09:00 e le 20:00.<br>
+    Lo slot selezionato verrà evidenziato e sarà l’unico valido.
   </p>
 
   <div id="fullcalendar" style="margin-top: 1rem; border: 1px solid #C9A86A; border-radius: 12px;"></div>
+
+  <!-- ✅ Campo nascosto mantenuto identico a prima -->
+  <input type="hidden" id="data_calendario" name="calendario" required>
 </div>
        
        <button class="btn-step" onclick="vaiAlStep0()">Indietro</button>
