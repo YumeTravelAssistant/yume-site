@@ -961,7 +961,7 @@ document.addEventListener('DOMContentLoaded', function () {
     allDaySlot: false,
     slotMinTime: "09:00:00",
     slotMaxTime: "20:00:00",
-    slotDuration: "00:15:00",
+    slotDuration: "00:20:00",
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
@@ -1025,12 +1025,7 @@ document.addEventListener('DOMContentLoaded', function () {
           const giornoInizio = new Date(fetchInfo.start);
           const giornoFine = new Date(fetchInfo.end);
           const eventi = [];
-
-          // Determina la vista attiva (safe fallback)
-          let vistaAttiva = 'dayGridMonth';
-          try {
-            vistaAttiva = calendar.view.type;
-          } catch (e) {}
+          const vistaAttiva = fetchInfo.view.type;
 
           for (
             let d = new Date(giornoInizio);
