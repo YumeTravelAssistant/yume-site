@@ -4383,7 +4383,12 @@ body .indice-info-utili {
 .fc-event.libero-slot {
   background-color: #F4F0E2 !important;
   color: #000000 !important;
-  border: 1px solid #C9A86A;
+  --fc-event-text-color: #000 !important;
+}
+
+/* Forza colore nero nel titolo degli slot liberi */
+.fc-event.libero-slot .fc-event-title {
+  color: #000000 !important;
 }
 
 /* Slot selezionato dall’utente */
