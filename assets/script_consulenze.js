@@ -1017,71 +1017,74 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     },
 
-    eventSources: [{
-      events: async function (fetchInfo, successCallback, failureCallback) {
-        try {
-          const tipoFunnel = window.location.pathname.includes("prenota") ? "freddo" : "caldo";
-          const durata = getDurataSlot();
-          const giornoInizio = new Date(fetchInfo.start);
-          const giornoFine = new Date(fetchInfo.end);
-          const eventi = [];
-          const vistaAttiva = fetchInfo.view.type;
+eventSources: [{
+  events: async function (fetchInfo, successCallback, failureCallback) {
+    try {
+      const tipoFunnel = window.location.pathname.includes("prenota") ? "freddo" : "caldo";
+      const durata = getDurataSlot();
+      const giornoInizio = new Date(fetchInfo.start);
+      const giornoFine = new Date(fetchInfo.end);
+      const eventi = [];
+      const vistaAttiva = fetchInfo.view?.type || 'dayGridMonth';
+
+      for (
+        let d = new Date(giornoInizio);
+        d <= giornoFine;
+        d.setDate(d.getDate() + 1)
+      ) {
+        const giorno = d.getFullYear() + "-" +
+          String(d.getMonth() + 1).padStart(2, '0') + "-" +
+          String(d.getDate()).padStart(2, '0');
+
+        const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
+        const res = await fetch(url);
+        const slotDisponibili = await res.json();
+
+        // ✅ Mostra il numero di slot nella vista mensile
+        if (vistaAttiva === "dayGridMonth") {
+          eventi.push({
+            title: `${slotDisponibili.length} slot disponibili`,
+            start: giorno,
+            allDay: true,
+            display: 'block',
+            classNames: ['yume-slot-count']
+          });
+        }
+
+        // ✅ Mostra gli "Occupato" nella vista giornaliera
+        if (vistaAttiva === "timeGridDay") {
+          const start = new Date(`${giorno}T09:00:00`);
+          const fine = new Date(`${giorno}T20:00:00`);
 
           for (
-            let d = new Date(giornoInizio);
-            d <= giornoFine;
-            d.setDate(d.getDate() + 1)
+            let slot = new Date(start);
+            slot.getTime() + durata * 60000 <= fine.getTime();
+            slot = new Date(slot.getTime() + durata * 60000)
           ) {
-            const giorno = d.getFullYear() + "-" +
-              String(d.getMonth() + 1).padStart(2, '0') + "-" +
-              String(d.getDate()).padStart(2, '0');
-
-            const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
-            const res = await fetch(url);
-            const slotDisponibili = await res.json();
-
-            if (vistaAttiva === "dayGridMonth") {
+            const ora = slot.toTimeString().substring(0, 5);
+            if (!slotDisponibili.includes(ora)) {
+              const endSlot = new Date(slot.getTime() + durata * 60000);
               eventi.push({
-                title: `${slotDisponibili.length} slot disponibili`,
-                start: giorno,
-                allDay: true,
+                title: `Occupato`,
+                start: slot.toISOString(),
+                end: endSlot.toISOString(),
                 display: 'block',
-                classNames: ['yume-slot-count']
+                classNames: ['inverse-slot'],
+                editable: false
               });
             }
-
-            if (vistaAttiva === "timeGridDay") {
-              const start = new Date(`${giorno}T09:00:00`);
-              const end = new Date(`${giorno}T20:00:00`);
-
-              for (
-                let slot = new Date(start);
-                slot.getTime() + durata * 60000 <= end.getTime();
-                slot = new Date(slot.getTime() + durata * 60000)
-              ) {
-                const ora = slot.toTimeString().substring(0, 5);
-                if (!slotDisponibili.includes(ora)) {
-                  const endSlot = new Date(slot.getTime() + durata * 60000);
-                  eventi.push({
-                    title: `Occupato`,
-                    start: slot.toISOString(),
-                    end: endSlot.toISOString(),
-                    display: 'block',
-                    classNames: ['inverse-slot'],
-                    editable: false
-                  });
-                }
-              }
-            }
           }
-
-          successCallback(eventi);
-        } catch (err) {
-          console.error("❌ Errore caricamento eventi calendario:", err);
-          failureCallback(err);
         }
       }
-    }]
+
+      successCallback(eventi);
+    } catch (err) {
+      console.error("❌ Errore caricamento eventi calendario:", err);
+      failureCallback(err);
+    }
+  }
+}]
+
   });
 
   calendar.render();
