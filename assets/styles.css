@@ -4391,26 +4391,33 @@ body .indice-info-utili {
   color: #000000 !important;
 }
 
-/* Slot selezionato dall’utente – stile pieno come slot occupato */
-.fc-timeGridDay .fc-event.yume-scelta {
-  background-color: #009879 !important;      /* verde smeraldo */
-  color: #fff8dc !important;                 /* oro chiaro */
-  border: 2px solid #C9A86A;
-  font-weight: bold;
+/* SLOT SELEZIONATO – Forza occupazione piena e stile Yume */
+.fc-timegrid-event-harness .fc-event.yume-scelta {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
   width: 100% !important;
   height: 100% !important;
   margin: 0 !important;
-  left: 0 !important;
+  padding: 6px 10px;
+  box-sizing: border-box;
+
+  background-color: #009879 !important;   /* Verde smeraldo */
+  color: #C9A86A !important;              /* Oro Yume */
+  border: 2px solid #C9A86A !important;
+  font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-sizing: border-box;
+  box-shadow: 0 0 4px rgba(0,0,0,0.15);
 }
 
-/* Forza colore titolo dentro slot selezionato */
+/* Testo dello slot selezionato */
 .fc-event.yume-scelta .fc-event-title {
   color: #C9A86A !important;
 }
+
 
 /* Altezza maggiore per ogni riga oraria nella vista giorno */
 .fc-timegrid-slot {
