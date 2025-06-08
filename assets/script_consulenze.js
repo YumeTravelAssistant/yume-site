@@ -1030,7 +1030,10 @@ eventSources: [{
       const eventi = [];
 
       // ⏱ Ricava la vista attiva (es. "dayGridMonth" o "timeGridDay")
-      const vistaAttiva = fetchInfo.view.type;
+      let vistaAttiva = 'dayGridMonth';
+try {
+  vistaAttiva = calendar.view.type;
+} catch (e) {}
 
 
       for (
