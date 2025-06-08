@@ -1020,63 +1020,73 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     },
 
-    eventSources: [{
-      events: async function (fetchInfo, successCallback, failureCallback) {
-        try {
-          const tipoFunnel = window.location.pathname.includes("prenota") ? "freddo" : "caldo";
-          const durata = getDurataSlot();
-          const giornoInizio = new Date(fetchInfo.start);
-          const giornoFine = new Date(fetchInfo.end);
-          const tuttiGliSlot = [];
+eventSources: [{
+  events: async function (fetchInfo, successCallback, failureCallback) {
+    try {
+      const tipoFunnel = window.location.pathname.includes("prenota") ? "freddo" : "caldo";
+      const durata = getDurataSlot();
+      const giornoInizio = new Date(fetchInfo.start);
+      const giornoFine = new Date(fetchInfo.end);
+      const eventi = [];
+
+      for (
+        let d = new Date(giornoInizio);
+        d < giornoFine;
+        d.setDate(d.getDate() + 1)
+      ) {
+        const giorno = d.getFullYear() + "-" +
+          String(d.getMonth() + 1).padStart(2, '0') + "-" +
+          String(d.getDate()).padStart(2, '0');
+
+        const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
+        const res = await fetch(url);
+        const slotDisponibili = await res.json();
+
+        // 🔢 Vista mensile: mostra il numero di slot disponibili
+        if (calendar.view.type === "dayGridMonth") {
+          eventi.push({
+            title: `${slotDisponibili.length} slot disponibili`,
+            start: giorno,
+            allDay: true,
+            display: 'block',
+            classNames: ['slot-count']
+          });
+        }
+
+        // ⛔ Vista giornaliera: mostra gli slot occupati come eventi
+        if (calendar.view.type === "timeGridDay") {
+          const start = new Date(`${giorno}T09:00:00`);
+          const end = new Date(`${giorno}T20:00:00`);
 
           for (
-            let d = new Date(giornoInizio);
-            d < giornoFine;
-            d.setDate(d.getDate() + 1)
+            let slot = new Date(start);
+            slot.getTime() + durata * 60000 <= end.getTime();
+            slot = new Date(slot.getTime() + durata * 60000)
           ) {
-            const giorno = d.getFullYear() + "-" +
-               String(d.getMonth() + 1).padStart(2, '0') + "-" +
-               String(d.getDate()).padStart(2, '0');
-
-            const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
-            const res = await fetch(url);
-            const slotDisponibili = await res.json();
-
-            const start = new Date(`${giorno}T09:00:00`);
-const end = new Date(`${giorno}T20:00:00`);
-
-for (
-  let slot = new Date(start);
-  slot.getTime() + durata * 60000 <= end.getTime();
-  slot = new Date(slot.getTime() + durata * 60000)
-) {
-  const ora = slot.toTimeString().substring(0, 5);
-  if (!slotDisponibili.includes(ora)) {
-    const endSlot = new Date(slot.getTime() + durata * 60000);
-
-tuttiGliSlot.push({
-  title: `Occupato`,
-  start: slot.toISOString(),
-  end: endSlot.toISOString(),
-  display: 'block', // 👈 mostra come evento normale
-  classNames: ['inverse-slot'],
-  editable: false,
-  overlap: false
-});
-
-
-         }
-        }
-
+            const ora = slot.toTimeString().substring(0, 5);
+            if (!slotDisponibili.includes(ora)) {
+              const endSlot = new Date(slot.getTime() + durata * 60000);
+              eventi.push({
+                title: `Occupato`,
+                start: slot.toISOString(),
+                end: endSlot.toISOString(),
+                display: 'block',
+                classNames: ['inverse-slot'],
+                editable: false
+              });
+            }
           }
-
-          successCallback(tuttiGliSlot);
-        } catch (err) {
-          console.error("❌ Errore caricamento eventi calendario:", err);
-          failureCallback(err);
         }
       }
-    }]
+
+      successCallback(eventi);
+    } catch (err) {
+      console.error("❌ Errore caricamento eventi calendario:", err);
+      failureCallback(err);
+    }
+  }
+}]
+
   });
 
   calendar.render();
