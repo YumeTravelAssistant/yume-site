@@ -951,7 +951,14 @@ function inizializzaCalendario(cal, tipoFunnel) {
         extendedProps: { clickableSlot: true }
       });
 
-      if (!isAcquisto) eventoSelezionato = ev;
+      if (isAcquisto) {
+  // Rimuove qualsiasi slot già selezionato prima
+  cal.getEvents().forEach(ev => {
+    if (ev.classNames.includes("acquisto-scelta")) ev.remove();
+  });
+} else {
+  eventoSelezionato?.remove();
+}
 
       const localISO = new Date(start.getTime() - start.getTimezoneOffset() * 60000)
         .toISOString().slice(0, 16);
