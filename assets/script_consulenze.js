@@ -885,7 +885,7 @@ function inizializzaCalendarioAcquisti() {
 
   const durata = 15;
 
-let calendarioAcquisti = new FullCalendar.Calendar(calendarEl, {
+calendarioAcquisti = new FullCalendar.Calendar(calendarEl, {
     initialView: "dayGridMonth",
     height: 500,
     locale: "it",
