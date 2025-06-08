@@ -918,7 +918,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const end = info.event.end;
 
       eventoSelezionato = calendar.addEvent({
-        title: `${start.toTimeString().slice(0,5)} – selezionato`,Add commentMore actions
+        title: `${start.toTimeString().slice(0,5)} – selezionato`,
         start,
         end,Add commentMore actions
         display: 'block',
