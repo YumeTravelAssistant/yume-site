@@ -883,7 +883,7 @@ function inizializzaCalendarioAcquisti() {
   const campoData = document.getElementById("data_calendario");
   if (!calendarEl || !campoData) return;
 
-  const durata = 15;
+const durata = getDurataSlot();
 
 calendarioAcquisti = new FullCalendar.Calendar(calendarEl, {
     initialView: "dayGridMonth",
