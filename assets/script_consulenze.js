@@ -976,7 +976,9 @@ document.addEventListener('DOMContentLoaded', function () {
     },
 
     dateClick: async function (info) {
-      const giorno = info.date.toISOString().split("T")[0];
+    const giorno = info.date.getFullYear() + "-" +
+          String(info.date.getMonth() + 1).padStart(2, '0') + "-" +
+          String(info.date.getDate()).padStart(2, '0');
       calendar.changeView('timeGridDay', giorno);
 
       const tipoFunnel = window.location.pathname.includes("prenota") ? "freddo" : "caldo";
