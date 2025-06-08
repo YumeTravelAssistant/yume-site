@@ -1054,13 +1054,16 @@ for (
   if (!slotDisponibili.includes(ora)) {
     const endSlot = new Date(slot.getTime() + durata * 60000);
 
-         tuttiGliSlot.push({
-           start: slot.toISOString(),
-           end: endSlot.toISOString(),
-           display: 'background',
-           classNames: ['inverse-slot'],
-           interactive: false // ✅ forza il click anche se l’area è occupata
-         });
+tuttiGliSlot.push({
+  title: `Occupato`,
+  start: slot.toISOString(),
+  end: endSlot.toISOString(),
+  display: 'block', // 👈 mostra come evento normale
+  classNames: ['inverse-slot'],
+  editable: false,
+  overlap: false
+});
+
 
          }
         }
