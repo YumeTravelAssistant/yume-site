@@ -4528,3 +4528,16 @@ body .indice-info-utili {
   height: 48px !important;
 }
 
+.fc .fc-button-primary {
+  background-color: #8B2C2B !important; /* rosso Yume */
+  border-color: #8B2C2B !important;     /* bordo rosso Yume */
+  color: #C9A86A !important;            /* testo oro Yume */
+  font-weight: 600;
+}
+
+.fc .fc-button-primary:not(:disabled):hover {
+  background-color: #732321 !important; /* variante più scura al passaggio mouse */
+  border-color: #732321 !important;
+  color: #F4F0E2 !important;            /* beige chiaro per leggibilità */
+}
+
