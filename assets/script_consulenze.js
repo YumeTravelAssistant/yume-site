@@ -947,7 +947,7 @@ function getDurataSlot() {
   return mappaDurate[tipoTematica] || mappaDurate[tipoExperience] || 195;
 }
 
-let calendar; // ✅ Variabile globale
+let calendar;
 
 document.addEventListener('DOMContentLoaded', function () {
   const calendarEl = document.getElementById('fullcalendar');
@@ -969,6 +969,7 @@ document.addEventListener('DOMContentLoaded', function () {
       center: 'title',
       right: 'dayGridMonth,timeGridDay'
     },
+
     views: {
       timeGridDay: {
         type: 'timeGrid',
@@ -978,16 +979,12 @@ document.addEventListener('DOMContentLoaded', function () {
     },
 
     dateClick: async function (info) {
-      const giorno = info.date.getFullYear() + "-" +
-        String(info.date.getMonth() + 1).padStart(2, '0') + "-" +
-        String(info.date.getDate()).padStart(2, '0');
-
+      const giorno = info.date.toISOString().split("T")[0];
       calendar.changeView('timeGridDay', giorno);
 
-      // 🔁 Delay per garantire rendering completo
       setTimeout(() => {
-        calendar.refetchEvents();
-      }, 150);
+        calendar.refetchEvents(); // solo per occupati
+      }, 100); // breve delay
 
       const tipoFunnel = window.location.pathname.includes("prenota") ? "freddo" : "caldo";
       const durata = getDurataSlot();
@@ -1030,56 +1027,63 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
           const tipoFunnel = window.location.pathname.includes("prenota") ? "freddo" : "caldo";
           const durata = getDurataSlot();
-          const giornoInizio = new Date(fetchInfo.start);
-          const giornoFine = new Date(fetchInfo.end);
           const eventi = [];
-
           const vistaAttiva = calendar?.view?.type || 'dayGridMonth';
 
-          for (
-            let d = new Date(giornoInizio);
-            d <= giornoFine;
-            d.setDate(d.getDate() + 1)
-          ) {
-            const giorno = d.getFullYear() + "-" +
-              String(d.getMonth() + 1).padStart(2, '0') + "-" +
-              String(d.getDate()).padStart(2, '0');
+          const oggi = new Date();
+          oggi.setHours(0, 0, 0, 0);
 
+          if (vistaAttiva === 'dayGridMonth') {
+            // ✅ Solo da oggi fino a fine mese visibile
+            let giornoInizio = new Date(Math.max(fetchInfo.start.getTime(), oggi.getTime()));
+            const giornoFine = new Date(fetchInfo.end);
+
+            for (
+              let d = new Date(giornoInizio);
+              d <= giornoFine;
+              d.setDate(d.getDate() + 1)
+            ) {
+              const giorno = d.toISOString().split("T")[0];
+              const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
+              const res = await fetch(url);
+              const slotDisponibili = await res.json();
+
+              eventi.push({
+                title: `${slotDisponibili.length} slot disponibili`,
+                start: giorno,
+                allDay: true,
+                display: 'block',
+                classNames: ['yume-slot-count']
+              });
+            }
+          }
+
+          if (vistaAttiva === 'timeGridDay') {
+            // ✅ Solo giorno attivo
+            const giorno = fetchInfo.startStr;
             const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
             const res = await fetch(url);
             const slotDisponibili = await res.json();
 
-            // ✅ Slot disponibili visibili sempre
-            eventi.push({
-              title: `${slotDisponibili.length} slot disponibili`,
-              start: giorno,
-              allDay: true,
-              display: 'block',
-              classNames: ['yume-slot-count']
-            });
+            const start = new Date(`${giorno}T09:00:00`);
+            const fine = new Date(`${giorno}T20:00:00`);
 
-            // ✅ Slot occupati solo nella vista giornaliera
-            if (vistaAttiva === "timeGridDay") {
-              const start = new Date(`${giorno}T09:00:00`);
-              const fine = new Date(`${giorno}T20:00:00`);
-
-              for (
-                let slot = new Date(start);
-                slot.getTime() + durata * 60000 <= fine.getTime();
-                slot = new Date(slot.getTime() + durata * 60000)
-              ) {
-                const ora = slot.toTimeString().substring(0, 5);
-                if (!slotDisponibili.includes(ora)) {
-                  const endSlot = new Date(slot.getTime() + durata * 60000);
-                  eventi.push({
-                    title: `Occupato`,
-                    start: slot.toISOString(),
-                    end: endSlot.toISOString(),
-                    display: 'block',
-                    classNames: ['inverse-slot'],
-                    editable: false
-                  });
-                }
+            for (
+              let slot = new Date(start);
+              slot.getTime() + durata * 60000 <= fine.getTime();
+              slot = new Date(slot.getTime() + durata * 60000)
+            ) {
+              const ora = slot.toTimeString().substring(0, 5);
+              if (!slotDisponibili.includes(ora)) {
+                const endSlot = new Date(slot.getTime() + durata * 60000);
+                eventi.push({
+                  title: `Occupato`,
+                  start: slot.toISOString(),
+                  end: endSlot.toISOString(),
+                  display: 'block',
+                  classNames: ['inverse-slot'],
+                  editable: false
+                });
               }
             }
           }
@@ -1093,9 +1097,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }]
   });
 
-  // 🔁 Ricarica eventi a ogni cambio vista (es. da Giorno a Mese)
-  calendar.on('datesSet', function () {
-    calendar.refetchEvents();
+  calendar.on('datesSet', () => {
+    calendar.refetchEvents(); // 🔁 ogni volta che cambi mese/vista
   });
 
   calendar.render();
