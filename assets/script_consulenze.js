@@ -978,8 +978,7 @@ document.addEventListener('DOMContentLoaded', function () {
     },
 
     dateClick: async function (info) {
-      const clickedDate = new Date(info.date.getTime() + (info.date.getTimezoneOffset() * 60000)); // locale
-      const giorno = `${clickedDate.getFullYear()}-${(clickedDate.getMonth() + 1).toString().padStart(2, '0')}-${clickedDate.getDate().toString().padStart(2, '0')}`;
+      const giorno = info.dateStr; // ✅ questo è il giorno giusto, sempre
 
       calendar.changeView('timeGridDay', giorno);
 
