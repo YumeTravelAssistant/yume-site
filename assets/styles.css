@@ -4340,12 +4340,6 @@ body .indice-info-utili {
   padding: 4px 6px;
 }
 
-/* Testo "Occupato" più discreto (valido solo se classe 'inverse-slot') */
-.fc-event.inverse-slot .fc-event-title {
-  color: #8B2C2B !important;
-  font-weight: 600;
-}
-
 /* Giorni della griglia mese */
 .fc-daygrid-day {
   background-color: #FDFBF7;
@@ -4355,7 +4349,7 @@ body .indice-info-utili {
   background-color: #F4F0E2;
 }
 
-/* Slot orari sfondo */
+/* Slot orari sfondo (griglia oraria) */
 .fc-timegrid-slot {
   background-color: #F4F0E2 !important;
 }
@@ -4368,10 +4362,15 @@ body .indice-info-utili {
   font-weight: 500;
 }
 
+.fc-event.inverse-slot .fc-event-title {
+  color: #8B2C2B !important;
+  font-weight: 600;
+}
+
 /* ----------------------
-   SLOT DISPONIBILE
+   SLOT DISPONIBILE (giorno)
 ----------------------- */
-.fc-event.libero-slot {
+.fc-timeGridDay .fc-event.libero-slot {
   background-color: #F4F0E2 !important;
   color: #000 !important;
   border: 1px solid #C9A86A;
@@ -4379,7 +4378,7 @@ body .indice-info-utili {
   transition: all 0.2s ease;
 }
 
-.fc-event.libero-slot:hover {
+.fc-timeGridDay .fc-event.libero-slot:hover {
   background-color: #FDFBF7 !important;
   border: 1px solid #8B2C2B;
   cursor: pointer;
@@ -4389,22 +4388,21 @@ body .indice-info-utili {
    SLOT SELEZIONATO
 ----------------------- */
 .fc-event.yume-scelta {
-  background-color: #009879 !important;         /* verde smeraldo */
-  color: #C9A86A !important;                    /* oro per il testo */
+  background-color: #009879 !important;
+  color: #C9A86A !important;
   border: 2px solid #C9A86A !important;
   font-weight: bold;
   box-shadow: 0 0 4px rgba(0,0,0,0.15);
 }
 
-/* Forza colore titolo dentro slot selezionato */
 .fc-event.yume-scelta .fc-event-title {
   color: #C9A86A !important;
 }
 
 /* ----------------------
-   SLOT CONTEGGIO (mese)
+   SLOT CONTEGGIO (vista mese)
 ----------------------- */
-.fc-event.yume-slot-count {
+.fc-dayGridMonth .fc-event.yume-slot-count {
   background-color: #F4F0E2 !important;
   color: #8B2C2B !important;
   font-weight: 600;
