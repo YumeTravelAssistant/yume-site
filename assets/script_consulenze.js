@@ -859,7 +859,6 @@ function getDurataSlot() {
   const url = window.location.pathname;
 
   if (url.includes("prenota-consulenza.html")) return 20;
-  if (url.includes("acquista-consulenza.html")) return 15;
 
   const tipoTematica = document.getElementById("tipo_servizio_tematica")?.value;
   const tipoExperience = document.getElementById("tipo_servizio_experience")?.value;
