@@ -947,7 +947,7 @@ function getDurataSlot() {
   return mappaDurate[tipoTematica] || mappaDurate[tipoExperience] || 195;
 }
 
-let calendar; // 🔁 Variabile globale accessibile ovunque
+let calendar; // ✅ Variabile globale
 
 document.addEventListener('DOMContentLoaded', function () {
   const calendarEl = document.getElementById('fullcalendar');
@@ -982,10 +982,12 @@ document.addEventListener('DOMContentLoaded', function () {
         String(info.date.getMonth() + 1).padStart(2, '0') + "-" +
         String(info.date.getDate()).padStart(2, '0');
 
-      calendar.once('viewDidMount', () => {
-        calendar.refetchEvents(); // ✅ ricarica eventi nella nuova vista
-      });
       calendar.changeView('timeGridDay', giorno);
+
+      // 🔁 Aspetta il cambio vista e poi ricarica eventi
+      setTimeout(() => {
+        calendar.refetchEvents();
+      }, 150);
 
       const tipoFunnel = window.location.pathname.includes("prenota") ? "freddo" : "caldo";
       const durata = getDurataSlot();
@@ -1032,7 +1034,7 @@ document.addEventListener('DOMContentLoaded', function () {
           const giornoFine = new Date(fetchInfo.end);
           const eventi = [];
 
-          const vistaAttiva = calendar?.view?.type || 'dayGridMonth'; // ✅ accesso sicuro
+          const vistaAttiva = calendar?.view?.type || 'dayGridMonth'; // ✅ Accesso sicuro
 
           for (
             let d = new Date(giornoInizio);
