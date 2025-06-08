@@ -984,7 +984,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       calendar.changeView('timeGridDay', giorno);
 
-      // 🔁 Aspetta il cambio vista e poi ricarica eventi
+      // 🔁 Delay per garantire rendering completo
       setTimeout(() => {
         calendar.refetchEvents();
       }, 150);
@@ -1034,7 +1034,7 @@ document.addEventListener('DOMContentLoaded', function () {
           const giornoFine = new Date(fetchInfo.end);
           const eventi = [];
 
-          const vistaAttiva = calendar?.view?.type || 'dayGridMonth'; // ✅ Accesso sicuro
+          const vistaAttiva = calendar?.view?.type || 'dayGridMonth';
 
           for (
             let d = new Date(giornoInizio);
@@ -1049,16 +1049,16 @@ document.addEventListener('DOMContentLoaded', function () {
             const res = await fetch(url);
             const slotDisponibili = await res.json();
 
-            if (vistaAttiva === "dayGridMonth") {
-              eventi.push({
-                title: `${slotDisponibili.length} slot disponibili`,
-                start: giorno,
-                allDay: true,
-                display: 'block',
-                classNames: ['yume-slot-count']
-              });
-            }
+            // ✅ Slot disponibili visibili sempre
+            eventi.push({
+              title: `${slotDisponibili.length} slot disponibili`,
+              start: giorno,
+              allDay: true,
+              display: 'block',
+              classNames: ['yume-slot-count']
+            });
 
+            // ✅ Slot occupati solo nella vista giornaliera
             if (vistaAttiva === "timeGridDay") {
               const start = new Date(`${giorno}T09:00:00`);
               const fine = new Date(`${giorno}T20:00:00`);
@@ -1091,6 +1091,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
     }]
+  });
+
+  // 🔁 Ricarica eventi a ogni cambio vista (es. da Giorno a Mese)
+  calendar.on('datesSet', function () {
+    calendar.refetchEvents();
   });
 
   calendar.render();
