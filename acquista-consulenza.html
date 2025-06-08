@@ -243,41 +243,55 @@
   </div>
 
   <!-- Selettore automatico pacchetto -->
-  <script>
-    window.addEventListener("DOMContentLoaded", () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const pacchetto = urlParams.get("pacchetto");
-      if (!pacchetto) return;
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const pacchetto = urlParams.get("pacchetto");
+    if (!pacchetto) return;
 
-      const selectCategoria = document.getElementById("categoria_servizio");
-      const selectTematica = document.getElementById("tipo_servizio_tematica");
-      const selectExperience = document.getElementById("tipo_servizio_experience");
+    const selectCategoria = document.getElementById("categoria_servizio");
+    const selectTematica = document.getElementById("tipo_servizio_tematica");
+    const selectExperience = document.getElementById("tipo_servizio_experience");
 
-      const tematici = {
-        lite: "Consulenza Yume Lite",
-        smart: "Consulenza Yume Smart",
-        premium: "Consulenza Yume Premium"
-      };
+    const tematici = {
+      lite: "Consulenza Yume Lite",
+      smart: "Consulenza Yume Smart",
+      premium: "Consulenza Yume Premium"
+    };
 
-      const esperienziali = {
-        singolo: "Consulenza Yume Experience Singolo",
-        coppia: "Consulenza Yume Experience Coppia",
-        famiglia: "Consulenza Yume Experience Famiglia",
-        minigruppo: "Consulenza Yume Experience Mini Gruppo",
-        groupatelier: "Consulenza Yume Experience Yume Atelier"
-      };
+    const esperienziali = {
+      singolo: "Consulenza Yume Experience Singolo",
+      coppia: "Consulenza Yume Experience Coppia",
+      famiglia: "Consulenza Yume Experience Famiglia",
+      minigruppo: "Consulenza Yume Experience Mini Gruppo",
+      groupatelier: "Consulenza Yume Experience Yume Atelier"
+    };
 
-      if (tematici[pacchetto]) {
-        selectCategoria.value = "tematica";
-        aggiornaTipoServizio();
-        if (selectTematica) selectTematica.value = tematici[pacchetto];
-      } else if (esperienziali[pacchetto]) {
-        selectCategoria.value = "experience";
-        aggiornaTipoServizio();
-        if (selectExperience) selectExperience.value = esperienziali[pacchetto];
-      }
-    });
-  </script>
+    if (tematici[pacchetto]) {
+      selectCategoria.value = "tematica";
+      aggiornaTipoServizio(); // mostra sezione_tematica
+
+      setTimeout(() => {
+        selectTematica.value = tematici[pacchetto];
+        selectTematica.dispatchEvent(new Event("change"));
+        aggiornaCalendarioConDurata();
+      }, 100);
+    }
+
+    if (esperienziali[pacchetto]) {
+      selectCategoria.value = "experience";
+      aggiornaTipoServizio(); // mostra sezione_experience
+
+      setTimeout(() => {
+        selectExperience.value = esperienziali[pacchetto];
+        selectExperience.dispatchEvent(new Event("change"));
+        aggiornaCalendarioConDurata();
+      }, 100);
+    }
+  });
+</script>
+
+
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
  <script src="assets/script.js"></script>
  <script src="assets/script_consulenze.js"></script>
