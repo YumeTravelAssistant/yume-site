@@ -855,7 +855,9 @@ let eventoSelezionato = null;
 
 function getDurataSlot() {
   const url = window.location.pathname;
+
   if (url.includes("prenota-consulenza.html")) return 20;
+  if (url.includes("acquista-consulenza.html")) return 15;
 
   const tipoTematica = document.getElementById("tipo_servizio_tematica")?.value;
   const tipoExperience = document.getElementById("tipo_servizio_experience")?.value;
@@ -868,18 +870,20 @@ function getDurataSlot() {
     "Consulenza Yume Experience Coppia": 195,
     "Consulenza Yume Experience Famiglia": 195,
     "Consulenza Yume Experience Mini Gruppo": 195,
-    "Consulenza Yume Experience Yume Atelier": 20,
+    "Consulenza Yume Experience Yume Atelier": 30,
   };
 
   return mappaDurate[tipoTematica] || mappaDurate[tipoExperience] || 195;
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  const calendarEl = document.getElementById("fullcalendar");
+function inizializzaCalendarioAcquisti() {
+  const calendarEl = document.getElementById("fullcalendarAcquisto");
   const campoData = document.getElementById("data_calendario");
   if (!calendarEl || !campoData) return;
 
-  calendar = new FullCalendar.Calendar(calendarEl, {
+  const durata = 15;
+
+  const calendarioAcquisti = new FullCalendar.Calendar(calendarEl, {
     initialView: "dayGridMonth",
     height: 500,
     locale: "it",
@@ -889,7 +893,7 @@ document.addEventListener("DOMContentLoaded", function () {
     allDaySlot: false,
     slotMinTime: "09:00:00",
     slotMaxTime: "20:00:00",
-    slotDuration: "00:20:00",
+    slotDuration: "00:15:00",
     headerToolbar: {
       left: "prev,next today",
       center: "title",
@@ -905,41 +909,42 @@ document.addEventListener("DOMContentLoaded", function () {
 
     dateClick: function (info) {
       const giorno = info.dateStr;
-      calendar.changeView("timeGridDay", giorno);
-      setTimeout(() => calendar.refetchEvents(), 100);
+      calendarioAcquisti.changeView("timeGridDay", giorno);
+      setTimeout(() => calendarioAcquisti.refetchEvents(), 100);
     },
 
     eventClick: function (info) {
       if (!info.event.extendedProps.clickableSlot) return;
 
-      if (eventoSelezionato) eventoSelezionato.remove();
+      calendarioAcquisti.getEvents().forEach(ev => {
+        if (ev.classNames.includes("acquisto-scelta")) ev.remove();
+      });
 
       const start = info.event.start;
       const end = info.event.end;
 
-      eventoSelezionato = calendar.addEvent({
+      calendarioAcquisti.addEvent({
         title: `${start.toTimeString().slice(0,5)} – selezionato`,
         start,
         end,
         display: 'block',
-        classNames: ['yume-scelta'],
+        classNames: ['acquisto-scelta'],
         editable: false
       });
-     
- const localISO = new Date(start.getTime() - (start.getTimezoneOffset() * 60000))
+
+      const localISO = new Date(start.getTime() - (start.getTimezoneOffset() * 60000))
         .toISOString().slice(0, 16);
 
       campoData.value = localISO;
-      console.log("✅ Slot selezionato:", localISO);
+      console.log("✅ Slot ACQUISTO selezionato:", localISO);
     },
 
     eventSources: [{
       events: async function (fetchInfo, successCallback, failureCallback) {
         try {
-          const tipoFunnel = window.location.pathname.includes("prenota") ? "freddo" : "caldo";
-          const durata = getDurataSlot();
+          const tipoFunnel = "caldo";
           const eventi = [];
-          const vistaAttiva = calendar?.view?.type || "dayGridMonth";
+          const vistaAttiva = calendarioAcquisti?.view?.type || "dayGridMonth";
 
           const oggi = new Date();
           oggi.setHours(0, 0, 0, 0);
@@ -977,7 +982,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     start: slot.toISOString(),
                     end: endSlot.toISOString(),
                     display: 'block',
-                    classNames: ['libero-slot'],
+                    classNames: ['acquisto-slot'],
                     extendedProps: { clickableSlot: true }
                   });
                 } else {
@@ -996,16 +1001,159 @@ document.addEventListener("DOMContentLoaded", function () {
 
           successCallback(eventi);
         } catch (err) {
-          console.error("❌ Errore caricamento eventi calendario:", err);
+          console.error("❌ Errore calendario ACQUISTO:", err);
           failureCallback(err);
         }
       }
     }]
   });
 
-  calendar.on("datesSet", () => {
-    calendar.refetchEvents();
+  calendarioAcquisti.on("datesSet", () => {
+    calendarioAcquisti.refetchEvents();
   });
 
-  calendar.render();
+  calendarioAcquisti.render();
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const campoData = document.getElementById("data_calendario");
+
+  const calendarEl = document.getElementById("fullcalendar");
+  const calendarAcquistoEl = document.getElementById("fullcalendarAcquisto");
+
+  if (calendarEl && campoData) {
+    calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: "dayGridMonth",
+      height: 500,
+      locale: "it",
+      firstDay: 1,
+      selectable: true,
+      expandRows: true,
+      allDaySlot: false,
+      slotMinTime: "09:00:00",
+      slotMaxTime: "20:00:00",
+      slotDuration: "00:20:00",
+      headerToolbar: {
+        left: "prev,next today",
+        center: "title",
+        right: "dayGridMonth,timeGridDay"
+      },
+      views: {
+        timeGridDay: {
+          type: "timeGrid",
+          duration: { days: 1 },
+          buttonText: "Giorno"
+        }
+      },
+
+      dateClick: function (info) {
+        const giorno = info.dateStr;
+        calendar.changeView("timeGridDay", giorno);
+        setTimeout(() => calendar.refetchEvents(), 100);
+      },
+
+      eventClick: function (info) {
+        if (!info.event.extendedProps.clickableSlot) return;
+        if (eventoSelezionato) eventoSelezionato.remove();
+
+        const start = info.event.start;
+        const end = info.event.end;
+
+        eventoSelezionato = calendar.addEvent({
+          title: `${start.toTimeString().slice(0, 5)} – selezionato`,
+          start,
+          end,
+          display: 'block',
+          classNames: ['yume-scelta'],
+          editable: false
+        });
+
+        const localISO = new Date(start.getTime() - (start.getTimezoneOffset() * 60000))
+          .toISOString().slice(0, 16);
+        campoData.value = localISO;
+        console.log("✅ Slot selezionato:", localISO);
+      },
+
+      eventSources: [{
+        events: async function (fetchInfo, successCallback, failureCallback) {
+          try {
+            const tipoFunnel = "freddo";
+            const durata = getDurataSlot();
+            const eventi = [];
+            const vistaAttiva = calendar?.view?.type || "dayGridMonth";
+
+            const oggi = new Date();
+            oggi.setHours(0, 0, 0, 0);
+            const giornoInizio = new Date(Math.max(fetchInfo.start.getTime(), oggi.getTime()));
+            const giornoFine = new Date(fetchInfo.end);
+
+            for (let d = new Date(giornoInizio); d <= giornoFine; d.setDate(d.getDate() + 1)) {
+              const giorno = `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`;
+              const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
+              const res = await fetch(url);
+              const slotDisponibili = await res.json();
+
+              if (vistaAttiva === "dayGridMonth") {
+                eventi.push({
+                  title: `${slotDisponibili.length} slot disponibili`,
+                  start: giorno,
+                  allDay: true,
+                  display: "block",
+                  classNames: ["yume-slot-count"]
+                });
+              }
+
+              if (vistaAttiva === "timeGridDay") {
+                const start = new Date(`${giorno}T09:00:00`);
+                const fine = new Date(`${giorno}T20:00:00`);
+
+                for (let slot = new Date(start); slot.getTime() + durata * 60000 <= fine.getTime(); slot = new Date(slot.getTime() + durata * 60000)) {
+                  const ora = slot.toTimeString().slice(0, 5);
+                  const endSlot = new Date(slot.getTime() + durata * 60000);
+                  const disponibile = slotDisponibili.includes(ora);
+
+                  if (disponibile) {
+                    eventi.push({
+                      title: ora,
+                      start: slot.toISOString(),
+                      end: endSlot.toISOString(),
+                      display: 'block',
+                      classNames: ['libero-slot'],
+                      extendedProps: { clickableSlot: true }
+                    });
+                  } else {
+                    eventi.push({
+                      title: "Occupato",
+                      start: slot.toISOString(),
+                      end: endSlot.toISOString(),
+                      display: "block",
+                      classNames: ["inverse-slot"],
+                      editable: false
+                    });
+                  }
+                }
+              }
+            }
+
+            successCallback(eventi);
+          } catch (err) {
+            console.error("❌ Errore calendario PRENOTA:", err);
+            failureCallback(err);
+          }
+        }
+      }]
+    });
+
+    calendar.on("datesSet", () => {
+      calendar.refetchEvents();
+    });
+
+    calendar.render();
+  }
+
+  // CASO 2: inizializza calendario acquisto se serve
+  if (calendarAcquistoEl && campoData) {
+    inizializzaCalendarioAcquisti();
+  }
 });
+
