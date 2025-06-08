@@ -970,7 +970,7 @@ eventClick(info) {
 
   campoData.value = localISO;
   console.log("✅ Slot selezionato:", localISO);
-}
+},
 
     eventSources: [{
       events: async (fetchInfo, successCallback, failureCallback) => {
