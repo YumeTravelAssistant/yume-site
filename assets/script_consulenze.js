@@ -947,13 +947,13 @@ function getDurataSlot() {
   return mappaDurate[tipoTematica] || mappaDurate[tipoExperience] || 195;
 }
 
-let calendarioGlobale; // 1. Variabile globale
+let calendar; // 🔁 Variabile globale accessibile ovunque
 
 document.addEventListener('DOMContentLoaded', function () {
   const calendarEl = document.getElementById('fullcalendar');
   if (!calendarEl) return;
 
-  const calendar = new FullCalendar.Calendar(calendarEl, {
+  calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: 'dayGridMonth',
     height: 500,
     locale: 'it',
@@ -983,7 +983,7 @@ document.addEventListener('DOMContentLoaded', function () {
         String(info.date.getDate()).padStart(2, '0');
 
       calendar.once('viewDidMount', () => {
-        calendar.refetchEvents(); // ✅ attendi cambio vista completo
+        calendar.refetchEvents(); // ✅ ricarica eventi nella nuova vista
       });
       calendar.changeView('timeGridDay', giorno);
 
@@ -1032,7 +1032,7 @@ document.addEventListener('DOMContentLoaded', function () {
           const giornoFine = new Date(fetchInfo.end);
           const eventi = [];
 
-          const vistaAttiva = calendarioGlobale.view.type; // ✅ accesso sicuro
+          const vistaAttiva = calendar?.view?.type || 'dayGridMonth'; // ✅ accesso sicuro
 
           for (
             let d = new Date(giornoInizio);
@@ -1091,7 +1091,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }]
   });
 
-  calendarioGlobale = calendar; // 🔁 salva per usarla globalmente
   calendar.render();
 });
 
