@@ -947,6 +947,8 @@ function getDurataSlot() {
   return mappaDurate[tipoTematica] || mappaDurate[tipoExperience] || 195;
 }
 
+let calendarioGlobale; // 1. Variabile globale
+
 document.addEventListener('DOMContentLoaded', function () {
   const calendarEl = document.getElementById('fullcalendar');
   if (!calendarEl) return;
@@ -980,10 +982,10 @@ document.addEventListener('DOMContentLoaded', function () {
         String(info.date.getMonth() + 1).padStart(2, '0') + "-" +
         String(info.date.getDate()).padStart(2, '0');
 
+      calendar.once('viewDidMount', () => {
+        calendar.refetchEvents(); // ✅ attendi cambio vista completo
+      });
       calendar.changeView('timeGridDay', giorno);
-
-      // 🔁 Forza il ricaricamento degli eventi nella nuova vista
-      setTimeout(() => calendar.refetchEvents(), 0);
 
       const tipoFunnel = window.location.pathname.includes("prenota") ? "freddo" : "caldo";
       const durata = getDurataSlot();
@@ -992,9 +994,6 @@ document.addEventListener('DOMContentLoaded', function () {
       try {
         const res = await fetch(url);
         const slotDisponibili = await res.json();
-
-        // ✅ Log slot disponibili
-        console.log(`📅 Slot disponibili per ${giorno} (${tipoFunnel}, ${durata} min):`, slotDisponibili);
 
         const campoData = document.getElementById("data_calendario");
         const slotSelect = document.getElementById("data_slot_select");
@@ -1032,7 +1031,8 @@ document.addEventListener('DOMContentLoaded', function () {
           const giornoInizio = new Date(fetchInfo.start);
           const giornoFine = new Date(fetchInfo.end);
           const eventi = [];
-          const vistaAttiva = fetchInfo.view?.type || 'dayGridMonth';
+
+          const vistaAttiva = calendarioGlobale.view.type; // ✅ accesso sicuro
 
           for (
             let d = new Date(giornoInizio);
@@ -1091,6 +1091,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }]
   });
 
+  calendarioGlobale = calendar; // 🔁 salva per usarla globalmente
   calendar.render();
 });
 
