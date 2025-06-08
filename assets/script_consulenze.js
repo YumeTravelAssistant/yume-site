@@ -856,11 +856,18 @@ let calendarioAcquisti;
 
 function getDurataSlot() {
   const url = window.location.pathname;
-
   if (url.includes("prenota-consulenza.html")) return 20;
 
-  const tipoTematica = document.getElementById("tipo_servizio_tematica")?.value?.trim();
-  const tipoExperience = document.getElementById("tipo_servizio_experience")?.value?.trim();
+  const sezioneTematicaVisibile = !document.getElementById("sezione_tematica")?.classList.contains("hidden");
+  const sezioneExperienceVisibile = !document.getElementById("sezione_experience")?.classList.contains("hidden");
+
+  let tipoSelezionato = "";
+
+  if (sezioneTematicaVisibile) {
+    tipoSelezionato = document.getElementById("tipo_servizio_tematica")?.value?.trim();
+  } else if (sezioneExperienceVisibile) {
+    tipoSelezionato = document.getElementById("tipo_servizio_experience")?.value?.trim();
+  }
 
   const mappaDurate = {
     "Consulenza Yume Lite": 75,
@@ -873,7 +880,7 @@ function getDurataSlot() {
     "Consulenza Yume Experience Yume Atelier": 30,
   };
 
-  const durata = mappaDurate[tipoTematica] || mappaDurate[tipoExperience] || 75;
+  const durata = mappaDurate[tipoSelezionato] || 75;
   console.log("🧠 Durata slot attuale:", durata, "minuti");
   return durata;
 }
