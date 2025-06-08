@@ -1029,6 +1029,9 @@ eventSources: [{
       const giornoFine = new Date(fetchInfo.end);
       const eventi = [];
 
+      // ⏱ Ricava la vista attiva (es. "dayGridMonth" o "timeGridDay")
+      const vistaAttiva = calendar.view.type;
+
       for (
         let d = new Date(giornoInizio);
         d < giornoFine;
@@ -1042,35 +1045,39 @@ eventSources: [{
         const res = await fetch(url);
         const slotDisponibili = await res.json();
 
-        // 🔴 Vista mensile: mostra quanti slot disponibili
-        eventi.push({
-          title: `${slotDisponibili.length} slot disponibili`,
-          start: giorno,
-          allDay: true,
-          display: 'block',
-          classNames: ['yume-slot-count']
-        });
+        // ✅ SOLO nella vista mensile → mostra quanti slot ci sono
+        if (vistaAttiva === "dayGridMonth") {
+          eventi.push({
+            title: `${slotDisponibili.length} slot disponibili`,
+            start: giorno,
+            allDay: true,
+            display: 'block',
+            classNames: ['yume-slot-count']
+          });
+        }
 
-        // 🔒 Vista giornaliera: blocca gli slot occupati
-        const start = new Date(`${giorno}T09:00:00`);
-        const end = new Date(`${giorno}T20:00:00`);
+        // ✅ SOLO nella vista giornaliera → mostra blocchi "Occupato"
+        if (vistaAttiva === "timeGridDay") {
+          const start = new Date(`${giorno}T09:00:00`);
+          const end = new Date(`${giorno}T20:00:00`);
 
-        for (
-          let slot = new Date(start);
-          slot.getTime() + durata * 60000 <= end.getTime();
-          slot = new Date(slot.getTime() + durata * 60000)
-        ) {
-          const ora = slot.toTimeString().substring(0, 5);
-          if (!slotDisponibili.includes(ora)) {
-            const endSlot = new Date(slot.getTime() + durata * 60000);
-            eventi.push({
-              title: `Occupato`,
-              start: slot.toISOString(),
-              end: endSlot.toISOString(),
-              display: 'block',
-              classNames: ['inverse-slot'],
-              editable: false
-            });
+          for (
+            let slot = new Date(start);
+            slot.getTime() + durata * 60000 <= end.getTime();
+            slot = new Date(slot.getTime() + durata * 60000)
+          ) {
+            const ora = slot.toTimeString().substring(0, 5);
+            if (!slotDisponibili.includes(ora)) {
+              const endSlot = new Date(slot.getTime() + durata * 60000);
+              eventi.push({
+                title: `Occupato`,
+                start: slot.toISOString(),
+                end: endSlot.toISOString(),
+                display: 'block',
+                classNames: ['inverse-slot'],
+                editable: false
+              });
+            }
           }
         }
       }
