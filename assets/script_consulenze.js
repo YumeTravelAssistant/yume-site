@@ -942,23 +942,17 @@ function inizializzaCalendario(cal, tipoFunnel) {
       const start = info.event.start;
       const end = info.event.end;
 
-      const ev = cal.addEvent({
-        title: `${start.toTimeString().slice(0, 5)} – selezionato`,
-        start, end,
-        display: "block",
-        classNames: [isAcquisto ? "acquisto-scelta" : "yume-scelta"],
-        editable: false,
-        extendedProps: { clickableSlot: true }
-      });
+eventoSelezionato?.remove();
 
-      if (isAcquisto) {
-  // Rimuove qualsiasi slot già selezionato prima
-  cal.getEvents().forEach(ev => {
-    if (ev.classNames.includes("acquisto-scelta")) ev.remove();
-  });
-} else {
-  eventoSelezionato?.remove();
-}
+eventoSelezionato = cal.addEvent({
+  title: `${start.toTimeString().slice(0, 5)} – selezionato`,
+  start,
+  end,
+  display: "block",
+  classNames: ["yume-scelta"],
+  editable: false,
+  extendedProps: { clickableSlot: true }
+});
 
       const localISO = new Date(start.getTime() - start.getTimezoneOffset() * 60000)
         .toISOString().slice(0, 16);
