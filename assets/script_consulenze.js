@@ -860,25 +860,18 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // Funzione per caricare gli slot disponibili
   async function caricaSlotDisponibili() {
     const rawDate = campoData.value;
     const giorno = rawDate?.split("T")[0];
-    if (!giorno) {
-      console.warn("⛔️ Data non valida:", rawDate);
-      return;
-    }
+    if (!giorno) return;
 
-  const durata = getDurataSlot(); // 🔥 durata dinamica
-  const tipoFunnel = window.location.pathname.includes("prenota") ? "freddo" : "caldo";
-  const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
-  console.log("📡 FETCH:", url);
-  console.log("🌡️ Funnel:", tipoFunnel);
+    const durata = getDurataSlot();
+    const tipoFunnel = window.location.pathname.includes("prenota") ? "freddo" : "caldo";
+    const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
 
     try {
       const res = await fetch(url);
       const slots = await res.json();
-      console.log("✅ SLOT:", slots);
 
       slotSelect.innerHTML = "";
       if (!Array.isArray(slots) || slots.length === 0) {
@@ -900,36 +893,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Attiva fetch su focus e cambio data
   ["focus", "change"].forEach(event => {
     campoData.addEventListener(event, caricaSlotDisponibili);
   });
 
-  // Al cambio slot, aggiorna input datetime-local
-slotSelect.addEventListener("change", () => {
-  const selectedDate = campoData.value?.split("T")[0]; // solo la data
-  const selectedTime = slotSelect.value; // orario dallo slot
+  slotSelect.addEventListener("change", () => {
+    const selectedDate = campoData.value?.split("T")[0];
+    const selectedTime = slotSelect.value;
 
-  if (selectedDate && selectedTime) {
-    // Forza reset del campo (Safari fix)
-    campoData.type = "text"; // disconnette temporaneamente il binding
-    campoData.value = "";    // pulisce campo
-    campoData.type = "datetime-local"; // riattiva
-    campoData.value = `${selectedDate}T${selectedTime}`; // imposta nuova data completa
-
-    console.log("🕒 Data finale aggiornata (Safari fix):", campoData.value);
-  }
-});
-
+    if (selectedDate && selectedTime) {
+      campoData.type = "text";
+      campoData.value = "";
+      campoData.type = "datetime-local";
+      campoData.value = `${selectedDate}T${selectedTime}`;
+    }
+  });
 });
 
 function getDurataSlot() {
   const url = window.location.pathname;
-
-  // Prenota → durata fissa 20 minuti
   if (url.includes("prenota-consulenza.html")) return 20;
 
-  // Acquista → durata in base al tipo
   const tipoTematica = document.getElementById("tipo_servizio_tematica")?.value;
   const tipoExperience = document.getElementById("tipo_servizio_experience")?.value;
 
@@ -949,14 +933,14 @@ function getDurataSlot() {
 
 let calendar;
 
-document.addEventListener('DOMContentLoaded', function () {
-  const calendarEl = document.getElementById('fullcalendar');
+document.addEventListener("DOMContentLoaded", function () {
+  const calendarEl = document.getElementById("fullcalendar");
   if (!calendarEl) return;
 
   calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'dayGridMonth',
+    initialView: "dayGridMonth",
     height: 500,
-    locale: 'it',
+    locale: "it",
     firstDay: 1,
     selectable: true,
     expandRows: true,
@@ -965,26 +949,22 @@ document.addEventListener('DOMContentLoaded', function () {
     slotMaxTime: "20:00:00",
     slotDuration: "00:20:00",
     headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'dayGridMonth,timeGridDay'
+      left: "prev,next today",
+      center: "title",
+      right: "dayGridMonth,timeGridDay"
     },
     views: {
       timeGridDay: {
-        type: 'timeGrid',
+        type: "timeGrid",
         duration: { days: 1 },
-        buttonText: 'Giorno'
+        buttonText: "Giorno"
       }
     },
 
     dateClick: async function (info) {
-      const giorno = info.dateStr; // ✅ questo è il giorno giusto, sempre
-
-      calendar.changeView('timeGridDay', giorno);
-
-      setTimeout(() => {
-        calendar.refetchEvents();
-      }, 100);
+      const giorno = info.dateStr;
+      calendar.changeView("timeGridDay", giorno);
+      setTimeout(() => calendar.refetchEvents(), 100);
 
       const tipoFunnel = window.location.pathname.includes("prenota") ? "freddo" : "caldo";
       const durata = getDurataSlot();
@@ -1028,34 +1008,33 @@ document.addEventListener('DOMContentLoaded', function () {
           const tipoFunnel = window.location.pathname.includes("prenota") ? "freddo" : "caldo";
           const durata = getDurataSlot();
           const eventi = [];
-          const vistaAttiva = calendar?.view?.type || 'dayGridMonth';
+          const vistaAttiva = calendar?.view?.type || "dayGridMonth";
 
           const oggi = new Date();
           oggi.setHours(0, 0, 0, 0);
-          let giornoInizio = new Date(Math.max(fetchInfo.start.getTime(), oggi.getTime()));
+          const giornoInizio = new Date(Math.max(fetchInfo.start.getTime(), oggi.getTime()));
           const giornoFine = new Date(fetchInfo.end);
+          const da = giornoInizio.toISOString().split("T")[0];
+          const fino = giornoFine.toISOString().split("T")[0];
 
-          for (
-            let d = new Date(giornoInizio);
-            d <= giornoFine;
-            d.setDate(d.getDate() + 1)
-          ) {
-            const giorno = `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`;
-            const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
-            const res = await fetch(url);
-            const slotDisponibili = await res.json();
+          const url = `${endpointAzure}?da=${da}&fino=${fino}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
+          const res = await fetch(url);
+          const datiGiorni = await res.json(); // oggetto: { "2025-06-08": ["10:00", "11:00", ...] }
 
-            if (vistaAttiva === 'dayGridMonth') {
+          for (const giorno in datiGiorni) {
+            const slotDisponibili = datiGiorni[giorno];
+
+            if (vistaAttiva === "dayGridMonth") {
               eventi.push({
                 title: `${slotDisponibili.length} slot disponibili`,
                 start: giorno,
                 allDay: true,
-                display: 'block',
-                classNames: ['yume-slot-count']
+                display: "block",
+                classNames: ["yume-slot-count"]
               });
             }
 
-            if (vistaAttiva === 'timeGridDay') {
+            if (vistaAttiva === "timeGridDay") {
               const start = new Date(`${giorno}T09:00:00`);
               const fine = new Date(`${giorno}T20:00:00`);
 
@@ -1068,11 +1047,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (!slotDisponibili.includes(ora)) {
                   const endSlot = new Date(slot.getTime() + durata * 60000);
                   eventi.push({
-                    title: `Occupato`,
+                    title: "Occupato",
                     start: slot.toISOString(),
                     end: endSlot.toISOString(),
-                    display: 'block',
-                    classNames: ['inverse-slot'],
+                    display: "block",
+                    classNames: ["inverse-slot"],
                     editable: false
                   });
                 }
@@ -1089,7 +1068,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }]
   });
 
-  calendar.on('datesSet', () => {
+  calendar.on("datesSet", () => {
     calendar.refetchEvents();
   });
 
