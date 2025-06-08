@@ -4371,13 +4371,12 @@ body .indice-info-utili {
 }
 
 .fc-event.yume-slot-count {
-  background-color: #8B2C2B !important; /* rosso scuro Yume */
-  color: #C9A86A !important;            /* testo oro */
+  background-color: #F4F0E2 !important; /* beige Yume */
   font-weight: 600;
   border-radius: 8px;
   padding: 2px 6px;
   font-size: 0.85rem;
-  border: 1px solid #C9A86A;
+  border: 2px solid #C9A86A;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
