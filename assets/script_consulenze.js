@@ -920,7 +920,7 @@ document.addEventListener("DOMContentLoaded", function () {
       eventoSelezionato = calendar.addEvent({
         title: `${start.toTimeString().slice(0,5)} – selezionato`,
         start,
-        end,Add commentMore actions
+        end,
         display: 'block',
         classNames: ['yume-scelta'],
         editable: false
