@@ -4391,19 +4391,25 @@ body .indice-info-utili {
   color: #000000 !important;
 }
 
-/* SLOT SELEZIONATO come OCCUPATO ma con colori Yume */
-.fc-event.inverse-slot.yume-scelta {
+.fc-timegrid-event-harness .fc-event.inverse-slot.yume-scelta {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  box-sizing: border-box;
+
   background-color: #009879 !important;  /* verde smeraldo */
-  color: #C9A86A !important;              /* oro Yume */
+  color: #C9A86A !important;
   border: 2px solid #C9A86A !important;
   font-weight: bold;
-  box-shadow: 0 0 4px rgba(0,0,0,0.15);
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 0 4px rgba(0,0,0,0.15);
 }
 
-/* Testo dentro */
+/* Testo interno */
 .fc-event.inverse-slot.yume-scelta .fc-event-title {
   color: #C9A86A !important;
 }
