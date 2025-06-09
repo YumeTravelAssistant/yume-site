@@ -391,6 +391,22 @@
 <script async src="https://www.viator.com/orion/partner/widget.js"></script>
 
 <script>
+  // Dopo il caricamento del widget Viator
+  window.addEventListener("load", () => {
+    const viatorDiv = document.querySelector("[data-vi-widget-ref]");
+    if (viatorDiv) {
+      setTimeout(() => {
+        // Forza un ridisegno del layout (repaint/reflow)
+        viatorDiv.style.display = "none";
+        void viatorDiv.offsetHeight; // trigger reflow
+        viatorDiv.style.display = "";
+      }, 800); // attesa per assicurarsi che il widget sia stato montato
+    }
+  });
+</script>
+
+
+<script>
   window.addEventListener("DOMContentLoaded", function () {
     const el = document.querySelector('#yuki-chat-avatar');
     if (!el) return;
