@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kodai Kansai – Pacchetto Giappone</title>
+  <link rel="icon" type="image/png" href="favicon.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Raleway:wght@300;500;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="assets/styles_pacchetti.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="navbar-left">
+      <img src="assets/logo-yume.jpg" alt="Logo YUME" class="logo-navbar">
+    </div>
+    <button class="hamburger" onclick="toggleSidebar()">☰</button>
+  </nav>
+
+  <!-- SIDEBAR -->
+  <div id="sidebar" class="sidebar hidden">
+    <div class="sidebar-logo">
+      <img src="assets/logo_bar.png" alt="Logo Yume" class="logo-sidebar">
+    </div>
+    <a href="index.html">Home</a>
+    <a href="pacchetti.html">Pacchetti flessibili</a>
+    <a href="consulenze.html">Consulenze</a>
+    <a href="faq.html">FAQ</a>
+    <a href="info-utili.html">Informazioni utili</a>
+    <a href="contatti.html">Contatti</a>
+    <a href="profilo.html">Registrazione</a>
+    <a href="log-in.html">Area Personale</a>
+  </div>
+
+  <!-- COPERTINA GRANDE -->
+<header class="hero-banner">
+  <picture>
+    <source srcset="kodai/kodai_mob.jpg" media="(max-width: 768px)">
+    <img src="kodai/kodai_desk.jpg" alt="Kodai Kansai" class="hero-banner-img">
+  </picture>
+
+  <div class="hero-overlay">
+    <h1 class="hero-title">Kodai Kansai</h1>
+    <p class="hero-subtitle">Un Giappone profondo, senza stress da spostamenti</p>
+  </div>
+
+  <div class="scroll-indicator" onclick="scrollToMain()">
+    <span class="arrow-down"></span>
+  </div>
+</header>
+
+<!-- CONTENUTO PRINCIPALE -->
+<!-- Introduzione -->
+<div class="main-wrapper">
+<section class="hajimete-intro slide-in">
+  <h1>Kodai Kansai – Il saggio Kansai</h1>
+  <p class="lead">Un'immersione nella culla culturale del Giappone, tra spiritualità, storia e tradizioni secolari.</p>
+  <p class="intro-desc">Pensato per chi desidera vivere il Giappone più autentico e colto, evitando il turismo frenetico delle metropoli e concentrandosi sulle sue radici classiche.</p>
+  <ul class="icon-list">
+    <li><i class="fa fa-calendar"></i> Durata: da 8 a 18 notti</li>
+    <li><i class="fa fa-map-marker"></i> Città visitabili: Kyoto, Osaka, Nara, Himeji, Hiroshima, Uji, Kobe, Kurashiki, Okayama, Tottori</li>
+    <li><i class="fa fa-balance-scale"></i> Ideale per: amanti della cultura classica e spirituale</li>
+  </ul>
+  <p class="price-tag">A partire da 2.390€</p>
+</section>
+
+<section class="mappa-overview slide-in">
+  <h2 class="section-title">Panoramica del viaggio</h2>
+  <div id="map-overview" style="height: 450px; border-radius: 12px; overflow: hidden;"></div>
+</section>
+
+<div class="mappa-legend">
+  <p><i class="fa fa-map" aria-hidden="true"></i> <strong>Come usare la mappa</strong></p>
+  <ul>
+    <li><i class="fa fa-location-arrow"></i> Clicca sui torii <img src="kodai/marker-yume.png" alt="marker" class="mini-marker"> per scoprire le tappe del viaggio</li>
+    <li><i class="fa fa-arrows-alt"></i> Trascina per esplorare liberamente la mappa</li>
+    <li><i class="fa fa-search-plus"></i> Usa lo zoom per avvicinarti alle zone locali</li>
+  </ul>
+</div>
+
+<section class="focus-tags slide-in">
+  <div class="focus-item">
+    <div class="focus-icon"><i class="fa fa-cutlery"></i></div>
+    <p class="focus-label">Gastronomia</p>
+    <div class="focus-bar">
+      <div class="bar-fill" style="width: 90%; background-color: #C9A86A;"></div>
+    </div>
+    <div class="score-text">90%</div>
+  </div>
+
+  <div class="focus-item">
+    <div class="focus-icon"><i class="fa fa-book"></i></div>
+    <p class="focus-label">Cultura</p>
+    <div class="focus-bar">
+      <div class="bar-fill" style="width: 90%; background-color: #C9A86A;"></div>
+    </div>
+    <div class="score-text">90%</div>
+  </div>
+
+  <div class="focus-item">
+    <div class="focus-icon"><i class="fa fa-leaf"></i></div>
+    <p class="focus-label">Natura</p>
+    <div class="focus-bar">
+      <div class="bar-fill" style="width: 80%; background-color: #C9A86A;"></div>
+    </div>
+    <div class="score-text">80%</div>
+  </div>
+
+  <div class="focus-item">
+    <div class="focus-icon"><i class="fa fa-leaf"></i></div>
+    <p class="focus-label">Spiritualità</p>
+    <div class="focus-bar">
+      <div class="bar-fill" style="width: 80%; background-color: #C9A86A;"></div>
+    </div>
+    <div class="score-text">80%</div>
+  </div>
+
+  <div class="focus-item">
+    <div class="focus-icon"><i class="fa fa-building"></i></div>
+    <p class="focus-label">City Life</p>
+    <div class="focus-bar">
+      <div class="bar-fill" style="width: 60%; background-color: #C9A86A;"></div>
+    </div>
+    <div class="score-text">60%</div>
+  </div>
+</section>
+
+
+<!-- ITINERARIO – segnaposto -->
+<section class="itinerario-esteso slide-in">
+  <h2>Itinerario tipo – 12 notti</h2>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 1 – Partenza dall’Italia</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Partenza con volo notturno per il Giappone.</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 2 – Arrivo a Osaka e trasferimento a Kyoto</button>
+    <div class="giorno-content">
+      <p><strong>Pomeriggio:</strong> Arrivo all’aeroporto del Kansai. Trasferimento diretto a Kyoto e sistemazione in ryokan moderno in zona centrale.</p>
+      <p><strong>Sera:</strong> Passeggiata rilassata lungo il fiume Kamogawa e prima cena a Pontocho.</p>
+      <p><i class="fa fa-star"></i> Kamogawa, Pontocho</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 3 – Kyoto Ovest: Daikaku-ji, Ryoan-ji e Ninna-ji</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Visita al <strong>Daikaku-ji</strong> e al vicino <strong>Ryoan-ji</strong>, celebre per il giardino zen.</p>
+      <p><strong>Pomeriggio:</strong> Esplorazione del <strong>Ninna-ji</strong>, con le sue pagode e sentieri silenziosi.</p>
+      <p><strong>Sera:</strong> Cena tradizionale in zona Kitano Tenmangu.</p>
+      <p><i class="fa fa-star"></i> Daikaku-ji, Ryoan-ji, Ninna-ji</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 4 – Kyoto Nord: Shugakuin, Ginkaku-ji e sentiero del filosofo</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Passeggiata nel quartiere di Shugakuin, visita al <strong>giardino imperiale</strong> (su prenotazione) o templi minori nei dintorni.</p>
+      <p><strong>Pomeriggio:</strong> Visita al <strong>Ginkaku-ji</strong> e camminata lungo il <strong>sentiero del filosofo</strong>.</p>
+      <p><strong>Sera:</strong> Sosta a Gion per dolci giapponesi e atmosfera antica.</p>
+      <p><i class="fa fa-star"></i> Shugakuin, Ginkaku-ji, Sentiero del Filosofo, Gion</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 5 – Kyoto Sud: Tofuku-ji, Fushimi Inari e sake</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Visita al <strong>Tofuku-ji</strong>, tempio zen con giardini stagionali.</p>
+      <p><strong>Pomeriggio:</strong> Percorso a Fushimi Inari e visita a sake brewery nel quartiere Fushimi.</p>
+      <p><strong>Sera:</strong> Cena in izakaya di quartiere.</p>
+      <p><i class="fa fa-star"></i> Tofuku-ji, Fushimi Inari, distretto del sake</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 6 – Uji e Nara</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Visita al <strong>Byodo-in</strong> di Uji e degustazione di tè.</p>
+      <p><strong>Pomeriggio:</strong> Escursione a Nara: Todai-ji, cervi e sentieri laterali.</p>
+      <p><strong>Sera:</strong> Rientro a Kyoto.</p>
+      <p><i class="fa fa-star"></i> Byodo-in, Uji Matcha, Todai-ji, Kasuga Taisha</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 7 – Da Kyoto a Kurashiki via Okayama</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Treno per Okayama e visita al <strong>Koraku-en</strong>.</p>
+      <p><strong>Pomeriggio:</strong> Passeggiata a Kurashiki nel quartiere Bikan.</p>
+      <p><strong>Sera:</strong> Cena locale e pernottamento a Kurashiki.</p>
+      <p><i class="fa fa-star"></i> Koraku-en, Bikan Historical Quarter</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 8 – Hiroshima e Miyajima</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Visita al <strong>Peace Memorial Park</strong> di Hiroshima.</p>
+      <p><strong>Pomeriggio:</strong> Escursione a Miyajima e santuario Itsukushima.</p>
+      <p><strong>Sera:</strong> Rientro a Kurashiki o Hiroshima.</p>
+      <p><i class="fa fa-star"></i> Hiroshima Peace Park, Itsukushima Shrine</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 9 – Himeji e rientro a Osaka</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Visita al <strong>Castello di Himeji</strong> e ai giardini Koko-en.</p>
+      <p><strong>Pomeriggio:</strong> Rientro a Osaka e sistemazione a Tennoji.</p>
+      <p><strong>Sera:</strong> Serata a Tsutenkaku.</p>
+      <p><i class="fa fa-star"></i> Castello di Himeji, Koko-en, Tsutenkaku</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 10 – Osaka: quartieri nascosti e street food</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Visita a <strong>Nakazakicho</strong> e al <strong>Sumiyoshi Taisha</strong>.</p>
+      <p><strong>Pomeriggio:</strong> Tour gastronomico a <strong>Kuromon Ichiba</strong>.</p>
+      <p><strong>Sera:</strong> Cena a Dotonbori.</p>
+      <p><i class="fa fa-star"></i> Nakazakicho, Sumiyoshi Taisha, Kuromon, Dotonbori</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 11 – Templi, parchi e relax a Osaka</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Visita a <strong>Shitenno-ji</strong> e al <strong>Parco Tennoji</strong>.</p>
+      <p><strong>Pomeriggio:</strong> Tempo libero o onsen urbano.</p>
+      <p><strong>Sera:</strong> Cena d’addio con kushikatsu o kaiseki.</p>
+      <p><i class="fa fa-star"></i> Shitenno-ji, Tennoji Park, Shinsekai</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 12 – Rientro in Italia</button>
+    <div class="giorno-content">
+      <p>Trasferimento verso l’aeroporto del Kansai e volo di ritorno.</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 13 – Rientro in Italia</button>
+    <div class="giorno-content">
+      <p>Rientro in Italia nella giornata.</p>
+    </div>
+  </div>
+</section>
+
+<section class="mappa-itinerario slide-in">
+  <h2 class="section-title">Itinerario tipo – su mappa</h2>
+  <div id="map-itinerario" style="height: 500px; border-radius: 12px; overflow: hidden;"></div>
+</section>
+
+<div class="mappa-legend">
+  <p><i class="fa fa-map" aria-hidden="true"></i> <strong>Come usare la mappa</strong></p>
+  <ul>
+    <li><i class="fa fa-location-arrow"></i> Clicca sui torii <img src="kodai/marker-yume.png" alt="marker" class="mini-marker"> per scoprire le tappe del viaggio</li>
+    <li><i class="fa fa-arrows-alt"></i> Trascina per esplorare liberamente la mappa</li>
+    <li><i class="fa fa-search-plus"></i> Usa lo zoom per avvicinarti alle zone locali</li>
+  </ul>
+</div>
+
+<section class="foto-slider-section slide-in">
+  <h2 class="foto-slider-title">I luoghi del viaggio Kodai Kansai</h2>
+  <div class="foto-slider-wrapper">
+    <button class="slider-arrow left" onclick="scrollFotoSlider(-1)"></button>
+
+    <div class="foto-slider-container" id="fotoSlider">
+      <div class="foto-box"><img src="kodai/1.jpg" alt="Foto 1" loading="lazy" onclick="apriFotoFullscreen(0)"></div>
+      <div class="foto-box"><img src="kodai/2.jpg" alt="Foto 2" loading="lazy" onclick="apriFotoFullscreen(1)"></div>
+      <div class="foto-box"><img src="kodai/3.jpg" alt="Foto 3" loading="lazy" onclick="apriFotoFullscreen(2)"></div>
+      <div class="foto-box"><img src="kodai/4.jpg" alt="Foto 4" loading="lazy" onclick="apriFotoFullscreen(3)"></div>
+      <div class="foto-box"><img src="kodai/5.jpg" alt="Foto 5" loading="lazy" onclick="apriFotoFullscreen(4)"></div>
+      <div class="foto-box"><img src="kodai/6.jpg" alt="Foto 6" loading="lazy" onclick="apriFotoFullscreen(5)"></div>
+      <div class="foto-box"><img src="kodai/7.jpg" alt="Foto 7" loading="lazy" onclick="apriFotoFullscreen(6)"></div>
+      <div class="foto-box"><img src="kodai/8.jpg" alt="Foto 8" loading="lazy" onclick="apriFotoFullscreen(7)"></div>
+      <div class="foto-box"><img src="kodai/9.jpg" alt="Foto 9" loading="lazy" onclick="apriFotoFullscreen(8)"></div>
+    </div>
+
+    <button class="slider-arrow right" onclick="scrollFotoSlider(1)"></button>
+  </div>
+</section>
+
+<!-- ACCORDION -->
+<section class="accordion-section slide-in">
+  <div class="info-boxes-container">
+    <div class="info-box">
+      <button class="info-toggle"><span class="info-number">1.</span> Cosa include il pacchetto <i class="fa fa-chevron-down toggle-icon"></i></button>
+      <div class="info-content">
+        <ul>
+          <li>Alloggi centrali in categoria standard o superiore</li>
+          <li>Voli andata/ritorno da principali aeroporti italiani</li>
+          <li>Assicurazione medica, bagaglio e annullamento</li>
+          <li>Guide digitali generali e tematiche in PDF</li>
+          <li>Accesso gratuito al nostro travel assistant di viaggio</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <button class="info-toggle"><span class="info-number">2.</span> Cosa non è incluso <i class="fa fa-chevron-down toggle-icon"></i></button>
+      <div class="info-content">
+        <ul>
+          <li>Pasti e bevande</li>
+          <li>Attività, ingressi o escursioni non specificati</li>
+          <li>Servizi non espressamente indicati come inclusi</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <button class="info-toggle"><span class="info-number">3.</span> Extra su richiesta <i class="fa fa-chevron-down toggle-icon"></i></button>
+      <div class="info-content">
+        <ul>
+          <li>Esperienza in ryokan tradizionale con cena kaiseki</li>
+          <li>Onsen privati o naturali</li>
+          <li>Guide locali per Kyoto, Nara o Hiroshima</li>
+          <li>Biglietti per castelli storici o treni panoramici</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <button class="info-toggle"><span class="info-number">4.</span> Note importanti <i class="fa fa-chevron-down toggle-icon"></i></button>
+      <div class="info-content">
+        <p>I prezzi indicati si riferiscono al soggiorno minimo in bassa stagione.</p>
+        <p>Consigliamo di prenotare almeno 3–4 mesi prima per assicurarsi disponibilità, offerte e personalizzazione.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CALL TO ACTION -->
+<section class="call-to-action slide-in">
+  <a href="pacchetti.html?pacchetto=kodai#formPacchetto" class="modern-btn">Richiedi questo pacchetto</a>
+</section>
+
+<!-- VIATOR -->
+<section class="viator-widget-section">
+  <h2 class="section-title visible">Respira il viaggio – Kodai Kansai</h2>
+  <div data-vi-partner-id="U00663494" data-vi-widget-ref="W-223166c1-4243-4098-abec-2e7367e4d07a"></div>
+</section>
+
+<!-- CALL TO ACTION FINALE -->
+<section class="call-to-action slide-in">
+  <a href="pacchetti.html?pacchetto=kodai#formPacchetto" class="modern-btn">Richiedi questo pacchetto</a>
+</section>
+
+<!-- FOOTER -->
+<footer class="main-footer">
+  <div class="footer-social">
+    <p><strong>Seguici su:</strong></p>
+    <a href="https://www.instagram.com/yumeviaggi" target="_blank" aria-label="Instagram" class="fa fa-instagram"></a>
+    <a href="https://yuta-travel.com" target="_blank" aria-label="Sito YUTA" class="fa fa-globe"></a>
+  </div>
+  <p class="footer-copy">© 2025 Yume Travel Tech – Tutti i diritti riservati.</p>
+</footer>
+
+<!-- Avatar Chatbot Yuki -->
+<div id="yuki-chat-avatar" onclick="toggleYukiChat()" title="Hai bisogno di aiuto?">
+  <img src="assets/yuki-avatar.png" alt="Yuki" />
+</div>
+
+<!-- Finestra Chat -->
+<div id="yuki-chatbox" class="hidden">
+  <div class="chatbox-header">
+    <span>Yuki, assistente AI</span>
+    <button onclick="toggleYukiChat()">✕</button>
+  </div>
+  <div class="chatbox-messages" id="chatbox-messages"></div>
+  <div class="chatbox-input">
+    <input type="text" id="userMessage" placeholder="Scrivi qui..." />
+    <button onclick="sendMessage()">Invia</button>
+  </div>
+</div>
+
+<script async src="https://www.viator.com/orion/partner/widget.js"></script>
+
+<script>
+  // Dopo il caricamento del widget Viator
+  window.addEventListener("load", () => {
+    const viatorDiv = document.querySelector("[data-vi-widget-ref]");
+    if (viatorDiv) {
+      setTimeout(() => {
+        viatorDiv.style.display = "none";
+        void viatorDiv.offsetHeight;
+        viatorDiv.style.display = "";
+      }, 800);
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    const el = document.querySelector('#yuki-chat-avatar');
+    if (!el) return;
+
+    el.style.position = 'fixed';
+    el.style.bottom = '25px';
+    el.style.right = '25px';
+    el.style.width = '90px';
+    el.style.height = '90px';
+    el.style.zIndex = '9999';
+    el.style.borderRadius = '50%';
+    el.style.overflow = 'hidden';
+    el.style.boxShadow = '0 4px 10px rgba(0,0,0,0.2)';
+    el.style.backgroundColor = '#fff';
+
+    const img = el.querySelector('img');
+    if (img) {
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.objectFit = 'cover';
+      img.style.borderRadius = '50%';
+    }
+  });
+</script>
+
+<script src="assets/script.js"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const profilo = JSON.parse(sessionStorage.getItem("profiloUtente"));
+    if (profilo) {
+      document.querySelectorAll("a[href='log-in.html']").forEach(link => {
+        link.href = "area-clienti.html";
+      });
+      const sidebar = document.querySelector(".sidebar");
+      if (sidebar && !document.getElementById("userBox")) {
+        const userBox = document.createElement("div");
+        userBox.id = "userBox";
+        userBox.style.marginTop = "30px";
+        userBox.style.padding = "10px";
+        userBox.style.textAlign = "center";
+        userBox.style.borderTop = "1px solid #ccc";
+        const avatar = document.createElement("img");
+        avatar.src = localStorage.getItem("userAvatar") || "https://api.dicebear.com/7.x/avataaars/svg?seed=yume";
+        avatar.alt = "Avatar";
+        avatar.style.width = "60px";
+        avatar.style.height = "60px";
+        avatar.style.borderRadius = "50%";
+        avatar.style.objectFit = "cover";
+        avatar.style.border = "2px solid #C9A86A";
+        avatar.style.marginBottom = "8px";
+        const logoutBtn = document.createElement("button");
+        logoutBtn.textContent = "Logout";
+        logoutBtn.style.marginTop = "6px";
+        logoutBtn.style.background = "#8B2C2B";
+        logoutBtn.style.color = "#fff";
+        logoutBtn.style.border = "none";
+        logoutBtn.style.padding = "6px 12px";
+        logoutBtn.style.borderRadius = "20px";
+        logoutBtn.style.cursor = "pointer";
+        logoutBtn.onclick = () => {
+          sessionStorage.removeItem("profiloUtente");
+          localStorage.removeItem("userAvatar");
+          window.location.href = "index.html";
+        };
+        userBox.appendChild(avatar);
+        userBox.appendChild(logoutBtn);
+        sidebar.appendChild(userBox);
+      }
+    }
+  });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const barObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const bars = entry.target.querySelectorAll(".bar-fill");
+          bars.forEach(bar => {
+            const width = bar.getAttribute("data-fill");
+            if (width) bar.style.width = width;
+          });
+          barObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll(".focus-item").forEach(item => {
+      const bar = item.querySelector(".bar-fill");
+      if (bar) {
+        const widthMatch = bar.getAttribute("style")?.match(/width:\s*(\d+%)/);
+        if (widthMatch) {
+          bar.setAttribute("data-fill", widthMatch[1]);
+          bar.style.width = "0";
+        }
+        barObserver.observe(item);
+      }
+    });
+  });
+</script>
+
+<script>
+  // Toggle per sezione itinerario
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('.giorno-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.parentElement.classList.toggle('active');
+      });
+    });
+  });
+</script>
+
+<script>
+  function scrollFotoSlider(direction) {
+    const container = document.getElementById("fotoSlider");
+    const scrollAmount = 280;
+    if (container) {
+      container.scrollBy({
+        left: direction * scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  }
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const dynamicObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          dynamicObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.foto-box img, .foto-slider-title').forEach(el => {
+      dynamicObserver.observe(el);
+    });
+  });
+</script>
+
+<script>
+  const immagini = [
+    "kodai/1.jpg",
+    "kodai/2.jpg",
+    "kodai/3.jpg",
+    "kodai/4.jpg",
+    "kodai/5.jpg",
+    "kodai/6.jpg",
+    "kodai/7.jpg",
+    "kodai/8.jpg",
+    "kodai/9.jpg"
+  ];
+
+  let indexAttuale = 0;
+  let startX = 0;
+
+  function apriFotoFullscreen(index) {
+    indexAttuale = index;
+
+    const overlay = document.createElement('div');
+    overlay.classList.add('fullscreen-overlay');
+
+    const img = document.createElement('img');
+    img.src = immagini[index];
+    img.alt = "Foto " + (index + 1);
+    img.classList.add("fullscreen-img");
+
+    const btnChiudi = document.createElement('span');
+    btnChiudi.innerHTML = "&times;";
+    btnChiudi.classList.add("btn-close");
+    btnChiudi.onclick = () => document.body.removeChild(overlay);
+
+    const frecciaSx = document.createElement('button');
+    frecciaSx.classList.add('fullscreen-arrow', 'left');
+    frecciaSx.innerHTML = '<i class="fa fa-chevron-left"></i>';
+    frecciaSx.onclick = (e) => {
+      e.stopPropagation();
+      cambiaFoto(-1);
+    };
+
+    const frecciaDx = document.createElement('button');
+    frecciaDx.classList.add('fullscreen-arrow', 'right');
+    frecciaDx.innerHTML = '<i class="fa fa-chevron-right"></i>';
+    frecciaDx.onclick = (e) => {
+      e.stopPropagation();
+      cambiaFoto(1);
+    };
+
+    overlay.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+    });
+
+    overlay.addEventListener('touchend', (e) => {
+      const endX = e.changedTouches[0].clientX;
+      const diff = startX - endX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) {
+          cambiaFoto(1);
+        } else {
+          cambiaFoto(-1);
+        }
+      }
+    });
+
+    overlay.appendChild(btnChiudi);
+    overlay.appendChild(frecciaSx);
+    overlay.appendChild(img);
+    overlay.appendChild(frecciaDx);
+    document.body.appendChild(overlay);
+  }
+
+  function cambiaFoto(direz) {
+    indexAttuale = (indexAttuale + direz + immagini.length) % immagini.length;
+    const img = document.querySelector(".fullscreen-img");
+    img.src = immagini[indexAttuale];
+    img.alt = "Foto " + (indexAttuale + 1);
+  }
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const customMarker = L.icon({
+      iconUrl: 'kodai/marker-yume.png',
+      iconSize: [32, 42],
+      iconAnchor: [16, 42],
+      popupAnchor: [0, -36]
+    });
+
+    const map1 = L.map('map-overview').setView([34.7, 135.5], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map1);
+
+    const tappe = [
+      { nome: "Kyoto", lat: 35.0116, lon: 135.7681 },
+      { nome: "Osaka", lat: 34.6937, lon: 135.5023 },
+      { nome: "Nara", lat: 34.6851, lon: 135.8048 },
+      { nome: "Himeji", lat: 34.8394, lon: 134.6939 },
+      { nome: "Hiroshima", lat: 34.3853, lon: 132.4553 },
+      { nome: "Kobe", lat: 34.6901, lon: 135.1955 },
+      { nome: "Uji", lat: 34.8894, lon: 135.7996 },
+      { nome: "Kurashiki", lat: 34.5850, lon: 133.7717 },
+      { nome: "Okayama", lat: 34.6550, lon: 133.9190 },
+      { nome: "Tottori", lat: 35.5011, lon: 134.2351 }
+    ];
+
+    tappe.forEach(t => {
+      L.marker([t.lat, t.lon], { icon: customMarker })
+        .addTo(map1)
+        .bindPopup(`<strong>${t.nome}</strong>`);
+    });
+
+    L.polyline(tappe.map(t => [t.lat, t.lon]), {
+      color: '#C9A86A',
+      weight: 4,
+      opacity: 0.8
+    }).addTo(map1);
+
+    const map2 = L.map('map-itinerario').setView([34.7, 135.5], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map2);
+
+    const tappeFittizie = [
+      ["Kyoto", 35.0116, 135.7681],
+      ["Osaka", 34.6937, 135.5023],
+      ["Nara", 34.6851, 135.8048],
+      ["Himeji", 34.8394, 134.6939],
+      ["Hiroshima", 34.3853, 132.4553],
+      ["Kurashiki", 34.5850, 133.7717],
+      ["Uji", 34.8894, 135.7996],
+      ["Kobe", 34.6901, 135.1955]
+    ];
+
+    tappeFittizie.forEach(([nome, lat, lon]) => {
+      L.marker([lat, lon], { icon: customMarker })
+        .addTo(map2)
+        .bindPopup(`<strong>${nome}</strong>`);
+    });
+
+    L.polyline(tappeFittizie.map(t => [t[1], t[2]]), {
+      color: '#8B2C2B',
+      weight: 4,
+      opacity: 0.8
+    }).addTo(map2);
+  });
+</script>
+
+</body>
+</html>
+
