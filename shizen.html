@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shizen no Fūkei – Pacchetto Giappone</title>
+  <link rel="icon" type="image/png" href="favicon.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Raleway:wght@300;500;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="assets/styles_pacchetti.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="navbar-left">
+      <img src="assets/logo-yume.jpg" alt="Logo YUME" class="logo-navbar">
+    </div>
+    <button class="hamburger" onclick="toggleSidebar()">☰</button>
+  </nav>
+
+  <!-- SIDEBAR -->
+  <div id="sidebar" class="sidebar hidden">
+    <div class="sidebar-logo">
+      <img src="assets/logo_bar.png" alt="Logo Yume" class="logo-sidebar">
+    </div>
+    <a href="index.html">Home</a>
+    <a href="pacchetti.html">Pacchetti flessibili</a>
+    <a href="consulenze.html">Consulenze</a>
+    <a href="faq.html">FAQ</a>
+    <a href="info-utili.html">Informazioni utili</a>
+    <a href="contatti.html">Contatti</a>
+    <a href="profilo.html">Registrazione</a>
+    <a href="log-in.html">Area Personale</a>
+  </div>
+
+  <!-- COPERTINA GRANDE -->
+  <header class="hero-banner">
+    <picture>
+      <source srcset="shizen/shizen_mob.jpg" media="(max-width: 768px)">
+      <img src="shizen/shizen_desk.jpg" alt="Pacchetti Yume Travel" class="hero-banner-img">
+    </picture>
+
+    <div class="hero-overlay">
+      <h1 class="hero-title">Shizen no Fūkei</h1>
+      <p class="hero-subtitle">Armonia nei laghi, nei parchi e nei santuari naturali</p>
+    </div>
+
+    <div class="scroll-indicator" onclick="scrollToMain()">
+      <span class="arrow-down"></span>
+    </div>
+  </header>
+
+  <!-- CONTENUTO PRINCIPALE -->
+  <div class="main-wrapper">
+    <section class="hajimete-intro slide-in">
+      <h1>Shizen no Fūkei – Scenario Naturale</h1>
+      <p class="lead">Armonia nei laghi, nei parchi e nei santuari naturali.</p>
+      <p class="intro-desc">Pensato per chi desidera respirare la bellezza dei paesaggi giapponesi in armonia con la spiritualità del luogo. Ideale per gli amanti della natura e dei ritmi lenti.</p>
+      <ul class="icon-list">
+        <li><i class="fa fa-calendar"></i> Durata: da 8 a 18 notti</li>
+        <li><i class="fa fa-map-marker"></i> Città visitabili: Kawaguchiko, Hakone, Nara, Okayama, Miyajima, Nikko, Shirakawa-go, Kanazawa, Takayama, Kiso-dani, Gifu</li>
+        <li><i class="fa fa-tree"></i> Ideale per: chi ama la natura</li>
+      </ul>
+      <p class="price-tag">A partire da 2.490€</p>
+    </section>
+
+    <section class="mappa-overview slide-in">
+      <h2 class="section-title">Panoramica del viaggio</h2>
+      <div id="map-overview" style="height: 450px; border-radius: 12px; overflow: hidden;"></div>
+    </section>
+
+    <div class="mappa-legend">
+      <p><i class="fa fa-map" aria-hidden="true"></i> <strong>Come usare la mappa</strong></p>
+      <ul>
+        <li><i class="fa fa-location-arrow"></i> Clicca sui torii <img src="shizen/marker-yume.png" alt="marker" class="mini-marker"> per scoprire le tappe del viaggio</li>
+        <li><i class="fa fa-arrows-alt"></i> Trascina per esplorare liberamente la mappa</li>
+        <li><i class="fa fa-search-plus"></i> Usa lo zoom per avvicinarti alle zone locali</li>
+      </ul>
+    </div>
+
+    <section class="focus-tags slide-in">
+      <div class="focus-item">
+        <div class="focus-icon"><i class="fa fa-leaf"></i></div>
+        <p class="focus-label">Natura</p>
+        <div class="focus-bar">
+          <div class="bar-fill" style="width: 100%; background-color: #C9A86A;"></div>
+        </div>
+        <div class="score-text">100%</div>
+      </div>
+
+      <div class="focus-item">
+        <div class="focus-icon"><i class="fa fa-leaf"></i></div>
+        <p class="focus-label">Spiritualità</p>
+        <div class="focus-bar">
+          <div class="bar-fill" style="width: 80%; background-color: #C9A86A;"></div>
+        </div>
+        <div class="score-text">80%</div>
+      </div>
+
+      <div class="focus-item">
+        <div class="focus-icon"><i class="fa fa-star"></i></div>
+        <p class="focus-label">Esperienze</p>
+        <div class="focus-bar">
+          <div class="bar-fill" style="width: 70%; background-color: #C9A86A;"></div>
+        </div>
+        <div class="score-text">70%</div>
+      </div>
+
+      <div class="focus-item">
+        <div class="focus-icon"><i class="fa fa-cutlery"></i></div>
+        <p class="focus-label">Gastronomia</p>
+        <div class="focus-bar">
+          <div class="bar-fill" style="width: 60%; background-color: #C9A86A;"></div>
+        </div>
+        <div class="score-text">60%</div>
+      </div>
+
+      <div class="focus-item">
+        <div class="focus-icon"><i class="fa fa-universal-access"></i></div>
+        <p class="focus-label">Relax</p>
+        <div class="focus-bar">
+          <div class="bar-fill" style="width: 60%; background-color: #C9A86A;"></div>
+        </div>
+        <div class="score-text">60%</div>
+      </div>
+    </section>
+
+<!-- ITINERARIO -->
+<section class="itinerario-esteso slide-in">
+  <h2>Itinerario tipo – 12 notti</h2>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 1 – Partenza dall’Italia</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Partenza con volo intercontinentale.</p>
+      <p><strong>Pernottamento:</strong> in volo.</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 2 – Arrivo a Tokyo</button>
+    <div class="giorno-content">
+      <p><strong>Pomeriggio:</strong> Arrivo in Giappone, sistemazione in zona tranquilla (es. Yanaka o Ueno).</p>
+      <p><strong>Sera:</strong> Passeggiata serale nel quartiere di Asakusa o Nakameguro.</p>
+      <p><strong>Pernottamento:</strong> Tokyo.</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 3 – Verso Nikko tra foreste e templi sacri</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Treno per Nikko (circa 2h), visita al Toshogu, ponte Shinkyo e templi immersi nel verde.</p>
+      <p><strong>Pomeriggio:</strong> Lago Chuzenji e cascata Kegon.</p>
+      <p><strong>Pernottamento:</strong> Nikko.</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 4 – Passeggiate e natura a Nikko</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Escursione alla valle Kanmangafuchi e al giardino botanico.</p>
+      <p><strong>Pomeriggio:</strong> Relax alle terme o camminata nei boschi del parco nazionale.</p>
+      <p><strong>Pernottamento:</strong> Nikko.</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 5 – Parchi cittadini di Tokyo</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Treno di ritorno a Tokyo.</p>
+      <p><strong>Pomeriggio:</strong> Visita a Shinjuku Gyoen, giardini Hamarikyu e parchi verdi della zona Minato (es. Shiba Park, Kyu Shiba Rikyu).</p>
+      <p><strong>Sera:</strong> Relax o cena panoramica a Roppongi Hills.</p>
+      <p><strong>Pernottamento:</strong> Tokyo.</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 6 – Kanazawa e i giardini giapponesi</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Shinkansen per Kanazawa (circa 2h30).</p>
+      <p><strong>Pomeriggio:</strong> Visita al Kenrokuen, giardino samurai e castello.</p>
+      <p><strong>Pernottamento:</strong> Kanazawa.</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 7 – Escursione a Shirakawa-go</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Bus per Shirakawa-go (1h30), villaggio tradizionale UNESCO tra natura e legno.</p>
+      <p><strong>Pomeriggio:</strong> Salita al punto panoramico e passeggiata tra le case gassho-zukuri.</p>
+      <p><strong>Pernottamento:</strong> Kanazawa.</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 8 – Verso Osaka via Kyoto</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Shinkansen verso Osaka, con tappa intermedia a Kyoto per giardino zen o Nishiki Market.</p>
+      <p><strong>Pomeriggio:</strong> Sistemazione a Osaka e relax nel parco del Castello o zona Nakanoshima.</p>
+      <p><strong>Pernottamento:</strong> Osaka.</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 9 – Nara, il parco dei cervi</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Treno per Nara (40 min), visita al Parco dei Cervi, Todai-ji e giardino Isuien.</p>
+      <p><strong>Pomeriggio:</strong> Camminata fino al santuario Kasuga Taisha nel bosco sacro.</p>
+      <p><strong>Pernottamento:</strong> Osaka.</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 10 – Okayama e giardino Korakuen</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Shinkansen per Okayama, visita al Korakuen (tra i tre grandi giardini del Giappone).</p>
+      <p><strong>Pomeriggio:</strong> Passeggiata lungo il fiume e vista del castello.</p>
+      <p><strong>Pernottamento:</strong> Osaka.</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 11 – Hiroshima e Miyajima</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Treno per Hiroshima, visita al Peace Memorial Park e museo.</p>
+      <p><strong>Pomeriggio:</strong> Traghetto per Miyajima, santuario galleggiante e monte Misen.</p>
+      <p><strong>Pernottamento:</strong> Osaka.</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 12 – Rientro</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Ultimo shopping o passeggiata nel parco di Namba Yasaka o Tennoji.</p>
+      <p><strong>Pomeriggio:</strong> Trasferimento in aeroporto e volo di ritorno dall’aeroporto del Kansai (Osaka).</p>
+    </div>
+  </div>
+</section>
+
+<section class="mappa-itinerario slide-in">
+  <h2 class="section-title">Itinerario tipo – su mappa</h2>
+  <div id="map-itinerario" style="height: 500px; border-radius: 12px; overflow: hidden;"></div>
+</section>
+
+<div class="mappa-legend">
+  <p><i class="fa fa-map" aria-hidden="true"></i> <strong>Come usare la mappa</strong></p>
+  <ul>
+    <li><i class="fa fa-location-arrow"></i> Clicca sui torii <img src="shizen/marker-yume.png" alt="marker" class="mini-marker"> per scoprire le tappe del viaggio</li>
+    <li><i class="fa fa-arrows-alt"></i> Trascina per esplorare liberamente la mappa</li>
+    <li><i class="fa fa-search-plus"></i> Usa lo zoom per avvicinarti alle zone locali</li>
+  </ul>
+</div>
+
+<section class="foto-slider-section slide-in">
+  <h2 class="foto-slider-title">I luoghi del viaggio Shizen</h2>
+  <div class="foto-slider-wrapper">
+    <button class="slider-arrow left" onclick="scrollFotoSlider(-1)"></button>
+    <div class="foto-slider-container" id="fotoSlider">
+      <div class="foto-box"><img src="shizen/1.jpg" alt="Foto 1" loading="lazy" onclick="apriFotoFullscreen(0)"></div>
+      <div class="foto-box"><img src="shizen/2.jpg" alt="Foto 2" loading="lazy" onclick="apriFotoFullscreen(1)"></div>
+      <div class="foto-box"><img src="shizen/3.jpg" alt="Foto 3" loading="lazy" onclick="apriFotoFullscreen(2)"></div>
+      <div class="foto-box"><img src="shizen/4.jpg" alt="Foto 4" loading="lazy" onclick="apriFotoFullscreen(3)"></div>
+      <div class="foto-box"><img src="shizen/5.jpg" alt="Foto 5" loading="lazy" onclick="apriFotoFullscreen(4)"></div>
+      <div class="foto-box"><img src="shizen/6.jpg" alt="Foto 6" loading="lazy" onclick="apriFotoFullscreen(5)"></div>
+      <div class="foto-box"><img src="shizen/7.jpg" alt="Foto 7" loading="lazy" onclick="apriFotoFullscreen(6)"></div>
+      <div class="foto-box"><img src="shizen/8.jpg" alt="Foto 8" loading="lazy" onclick="apriFotoFullscreen(7)"></div>
+      <div class="foto-box"><img src="shizen/9.jpg" alt="Foto 9" loading="lazy" onclick="apriFotoFullscreen(8)"></div>
+    </div>
+    <button class="slider-arrow right" onclick="scrollFotoSlider(1)"></button>
+  </div>
+</section>
+
+<!-- ACCORDION -->
+<section class="accordion-section slide-in">
+<div class="info-boxes-container">
+  <div class="info-box">
+    <button class="info-toggle"><span class="info-number">1.</span> Cosa include il pacchetto <i class="fa fa-chevron-down toggle-icon"></i></button>
+    <div class="info-content">
+      <ul>
+        <li>Alloggi centrali in categoria standard o superiore</li>
+        <li>Voli andata/ritorno da principali aeroporti italiani</li>
+        <li>Assicurazione medica, bagaglio e annullamento</li>
+        <li>Guide digitali generali e tematiche in PDF</li>
+        <li>Accesso gratuito al nostro travel assistant di viaggio</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <button class="info-toggle"><span class="info-number">2.</span> Cosa non è incluso <i class="fa fa-chevron-down toggle-icon"></i></button>
+    <div class="info-content">
+      <ul>
+        <li>Pasti e bevande</li>
+        <li>Attività, ingressi o escursioni non specificati</li>
+        <li>Servizi non espressamente indicati come inclusi</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <button class="info-toggle"><span class="info-number">3.</span> Extra su richiesta <i class="fa fa-chevron-down toggle-icon"></i></button>
+    <div class="info-content">
+      <ul>
+        <li>Esperienza in ryokan tradizionale con cena kaiseki</li>
+        <li>Onsen privati o naturali</li>
+        <li>Guide locali per Tokyo o Kyoto</li>
+        <li>Biglietti Ghibli Park o Shinkansen extra</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <button class="info-toggle"><span class="info-number">4.</span> Note importanti <i class="fa fa-chevron-down toggle-icon"></i></button>
+    <div class="info-content">
+      <p>I prezzi indicati si riferiscono al soggiorno minimo in bassa stagione.</p>
+      <p>Consigliamo di prenotare almeno 3–4 mesi prima per assicurarsi disponibilità, offerte e personalizzazione.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="call-to-action slide-in">
+<a href="pacchetti.html?pacchetto=shizen#formPacchetto" class="modern-btn">Richiedi questo pacchetto</a>
+</section>
+
+<section class="viator-widget-section">
+  <h2 class="section-title visible">Respira il viaggio - Shizen</h2>
+<div data-vi-partner-id=U00663494 data-vi-widget-ref=W-620b0bbb-f9eb-4fc6-bb02-5adc7ed5cffe ></div>
+</section>
+
+<section class="call-to-action slide-in">
+<a href="pacchetti.html?pacchetto=shizen#formPacchetto" class="modern-btn">Richiedi questo pacchetto</a>
+</section>
+
+<!-- FOOTER -->
+<footer class="main-footer">
+  <div class="footer-social">
+    <p><strong>Seguici su:</strong></p>
+    <a href="https://www.instagram.com/yumeviaggi" target="_blank" aria-label="Instagram" class="fa fa-instagram"></a>
+    <a href="https://yuta-travel.com" target="_blank" aria-label="Sito YUTA" class="fa fa-globe"></a>
+  </div>
+  <p class="footer-copy">© 2025 Yume Travel Tech – Tutti i diritti riservati.</p>
+</footer>
+
+<!-- Avatar Chatbot Yuki -->
+<div id="yuki-chat-avatar" onclick="toggleYukiChat()" title="Hai bisogno di aiuto?">
+  <img src="assets/yuki-avatar.png" alt="Yuki" />
+</div>
+
+<!-- Finestra Chat -->
+<div id="yuki-chatbox" class="hidden">
+  <div class="chatbox-header">
+    <span>Yuki, assistente AI</span>
+    <button onclick="toggleYukiChat()">✕</button>
+  </div>
+  <div class="chatbox-messages" id="chatbox-messages"></div>
+  <div class="chatbox-input">
+    <input type="text" id="userMessage" placeholder="Scrivi qui..." />
+    <button onclick="sendMessage()">Invia</button>
+  </div>
+</div>
+
+<script async src="https://www.viator.com/orion/partner/widget.js"></script>
+
+<script>
+  window.addEventListener("load", () => {
+    const viatorDiv = document.querySelector("[data-vi-widget-ref]");
+    if (viatorDiv) {
+      setTimeout(() => {
+        viatorDiv.style.display = "none";
+        void viatorDiv.offsetHeight;
+        viatorDiv.style.display = "";
+      }, 800);
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    const el = document.querySelector('#yuki-chat-avatar');
+    if (!el) return;
+    el.style.position = 'fixed';
+    el.style.bottom = '25px';
+    el.style.right = '25px';
+    el.style.width = '90px';
+    el.style.height = '90px';
+    el.style.zIndex = '9999';
+    el.style.borderRadius = '50%';
+    el.style.overflow = 'hidden';
+    el.style.boxShadow = '0 4px 10px rgba(0,0,0,0.2)';
+    el.style.backgroundColor = '#fff';
+    const img = el.querySelector('img');
+    if (img) {
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.objectFit = 'cover';
+      img.style.borderRadius = '50%';
+    }
+  });
+</script>
+
+<script src="assets/script.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const profilo = JSON.parse(sessionStorage.getItem("profiloUtente"));
+    if (profilo) {
+      document.querySelectorAll("a[href='log-in.html']").forEach(link => {
+        link.href = "area-clienti.html";
+      });
+      const sidebar = document.querySelector(".sidebar");
+      if (sidebar && !document.getElementById("userBox")) {
+        const userBox = document.createElement("div");
+        userBox.id = "userBox";
+        userBox.style.marginTop = "30px";
+        userBox.style.padding = "10px";
+        userBox.style.textAlign = "center";
+        userBox.style.borderTop = "1px solid #ccc";
+        const avatar = document.createElement("img");
+        avatar.src = localStorage.getItem("userAvatar") || "https://api.dicebear.com/7.x/avataaars/svg?seed=yume";
+        avatar.alt = "Avatar";
+        avatar.style.width = "60px";
+        avatar.style.height = "60px";
+        avatar.style.borderRadius = "50%";
+        avatar.style.objectFit = "cover";
+        avatar.style.border = "2px solid #C9A86A";
+        avatar.style.marginBottom = "8px";
+        const logoutBtn = document.createElement("button");
+        logoutBtn.textContent = "Logout";
+        logoutBtn.style.marginTop = "6px";
+        logoutBtn.style.background = "#8B2C2B";
+        logoutBtn.style.color = "#fff";
+        logoutBtn.style.border = "none";
+        logoutBtn.style.padding = "6px 12px";
+        logoutBtn.style.borderRadius = "20px";
+        logoutBtn.style.cursor = "pointer";
+        logoutBtn.onclick = () => {
+          sessionStorage.removeItem("profiloUtente");
+          localStorage.removeItem("userAvatar");
+          window.location.href = "index.html";
+        };
+        userBox.appendChild(avatar);
+        userBox.appendChild(logoutBtn);
+        sidebar.appendChild(userBox);
+      }
+    }
+  });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const barObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const bars = entry.target.querySelectorAll(".bar-fill");
+          bars.forEach(bar => {
+            const width = bar.getAttribute("data-fill");
+            if (width) bar.style.width = width;
+          });
+          barObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll(".focus-item").forEach(item => {
+      const bar = item.querySelector(".bar-fill");
+      if (bar) {
+        const widthMatch = bar.getAttribute("style")?.match(/width:\s*(\d+%)/);
+        if (widthMatch) {
+          bar.setAttribute("data-fill", widthMatch[1]);
+          bar.style.width = "0";
+        }
+        barObserver.observe(item);
+      }
+    });
+  });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('.giorno-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.parentElement.classList.toggle('active');
+      });
+    });
+  });
+</script>
+
+<script>
+  function scrollFotoSlider(direction) {
+    const container = document.getElementById("fotoSlider");
+    const scrollAmount = 280;
+    if (container) {
+      container.scrollBy({
+        left: direction * scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  }
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const dynamicObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          dynamicObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.foto-box img, .foto-slider-title').forEach(el => {
+      dynamicObserver.observe(el);
+    });
+  });
+</script>
+
+<script>
+  const immagini = [
+    "shizen/1.jpg",
+    "shizen/2.jpg",
+    "shizen/3.jpg",
+    "shizen/4.jpg",
+    "shizen/5.jpg",
+    "shizen/6.jpg",
+    "shizen/7.jpg",
+    "shizen/8.jpg",
+    "shizen/9.jpg"
+  ];
+
+  let indexAttuale = 0;
+  let startX = 0;
+
+  function apriFotoFullscreen(index) {
+    indexAttuale = index;
+    const overlay = document.createElement('div');
+    overlay.classList.add('fullscreen-overlay');
+    const img = document.createElement('img');
+    img.src = immagini[index];
+    img.alt = "Foto " + (index + 1);
+    img.classList.add("fullscreen-img");
+    const btnChiudi = document.createElement('span');
+    btnChiudi.innerHTML = "&times;";
+    btnChiudi.classList.add("btn-close");
+    btnChiudi.onclick = () => document.body.removeChild(overlay);
+    const frecciaSx = document.createElement('button');
+    frecciaSx.classList.add('fullscreen-arrow', 'left');
+    frecciaSx.innerHTML = '<i class="fa fa-chevron-left"></i>';
+    frecciaSx.onclick = (e) => { e.stopPropagation(); cambiaFoto(-1); };
+    const frecciaDx = document.createElement('button');
+    frecciaDx.classList.add('fullscreen-arrow', 'right');
+    frecciaDx.innerHTML = '<i class="fa fa-chevron-right"></i>';
+    frecciaDx.onclick = (e) => { e.stopPropagation(); cambiaFoto(1); };
+    overlay.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; });
+    overlay.addEventListener('touchend', (e) => {
+      const endX = e.changedTouches[0].clientX;
+      const diff = startX - endX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) cambiaFoto(1);
+        else cambiaFoto(-1);
+      }
+    });
+    overlay.appendChild(btnChiudi);
+    overlay.appendChild(frecciaSx);
+    overlay.appendChild(img);
+    overlay.appendChild(frecciaDx);
+    document.body.appendChild(overlay);
+  }
+
+  function cambiaFoto(direz) {
+    indexAttuale = (indexAttuale + direz + immagini.length) % immagini.length;
+    const img = document.querySelector(".fullscreen-img");
+    img.src = immagini[indexAttuale];
+    img.alt = "Foto " + (indexAttuale + 1);
+  }
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const customMarker = L.icon({
+      iconUrl: 'shizen/marker-yume.png',
+      iconSize: [32, 42],
+      iconAnchor: [16, 42],
+      popupAnchor: [0, -36]
+    });
+
+    const map1 = L.map('map-overview').setView([35.0, 135.7], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map1);
+
+    const tappe = [
+      { nome: "Kawaguchiko", lat: 35.4946, lon: 138.6886 },
+      { nome: "Hakone", lat: 35.2328, lon: 139.1065 },
+      { nome: "Nikko", lat: 36.7484, lon: 139.5980 },
+      { nome: "Miyajima", lat: 34.2950, lon: 132.3190 },
+      { nome: "Takayama", lat: 36.1456, lon: 137.2510 },
+      { nome: "Kanazawa", lat: 36.5613, lon: 136.6562 },
+      { nome: "Shirakawa-go", lat: 36.2609, lon: 136.8964 },
+      { nome: "Okayama", lat: 34.6551, lon: 133.9195 },
+      { nome: "Kiso-dani", lat: 35.7596, lon: 137.6928 },
+      { nome: "Nara", lat: 34.6851, lon: 135.8048 },
+      { nome: "Gifu", lat: 35.4233, lon: 136.7606 }
+    ];
+
+    tappe.forEach(t => {
+      L.marker([t.lat, t.lon], { icon: customMarker })
+        .addTo(map1)
+        .bindPopup(`<strong>${t.nome}</strong>`);
+    });
+
+    L.polyline(tappe.map(t => [t.lat, t.lon]), {
+      color: '#C9A86A',
+      weight: 4,
+      opacity: 0.8
+    }).addTo(map1);
+
+    const map2 = L.map('map-itinerario').setView([35.0, 135.7], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map2);
+
+const tappe12notti = [
+  ["Tokyo", 35.682839, 139.759455],
+  ["Nikko", 36.7484, 139.5980],
+  ["Kanazawa", 36.5613, 136.6562],
+  ["Shirakawa-go", 36.2609, 136.8964],
+  ["Kyoto", 35.0116, 135.7681],
+  ["Osaka", 34.6937, 135.5023],
+  ["Nara", 34.6851, 135.8048],
+  ["Okayama", 34.6551, 133.9195],
+  ["Hiroshima", 34.3853, 132.4553],
+  ["Miyajima", 34.2950, 132.3190]
+];
+
+    tappe12notti.forEach(([nome, lat, lon]) => {
+      L.marker([lat, lon], { icon: customMarker })
+        .addTo(map2)
+        .bindPopup(`<strong>${nome}</strong>`);
+    });
+
+    L.polyline(tappe12notti.map(t => [t[1], t[2]]), {
+      color: '#8B2C2B',
+      weight: 4,
+      opacity: 0.8
+    }).addTo(map2);
+  });
+</script>
+
+</body>
+</html>
+
