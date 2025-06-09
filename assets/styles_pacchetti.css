@@ -95,6 +95,7 @@
 .call-to-action {
   text-align: center;
   padding-bottom: 80px;
+  margin-top: 40px;
 }
 .call-to-action .modern-btn {
   background-color: #8B2C2B;
@@ -110,6 +111,13 @@
   background-color: #6e1c1c;
 }
 
+@media (max-width: 400px) {
+  .call-to-action .modern-btn {
+    padding: 10px 24px;
+    font-size: 0.95rem;
+    border-radius: 40px;
+  }
+}
 
 .focus-tags {
   display: flex;
