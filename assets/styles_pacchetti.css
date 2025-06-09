@@ -406,7 +406,7 @@
 
 .hero-title {
   font-family: 'Playfair Display', serif;
-  font-size: 3rem;
+  font-size: 3.2rem;
   font-weight: 700;
   margin: 0;
   text-shadow: 1px 1px 4px rgba(0,0,0,0.4);
@@ -415,7 +415,7 @@
 
 .hero-subtitle {
   font-family: 'Raleway', sans-serif;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   margin-top: 12px;
   font-weight: 300;
   color: #F4F0E2;
@@ -424,11 +424,11 @@
 
 @media (max-width: 768px) {
   .hero-title {
-    font-size: 2.2rem;
+    font-size: 2.4rem;
   }
 
   .hero-subtitle {
-    font-size: 1.1rem;
+    font-size: 1.4rem;
   }
 }
 
@@ -499,5 +499,54 @@
 .section-title.visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Responsive map section: adattamento sotto i 768px */
+@media (max-width: 768px) {
+  .mappa-legend {
+    padding: 16px;
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+
+  .section-title {
+    font-size: 1.6rem;
+    padding: 0 16px;
+    line-height: 1.3;
+  }
+
+  .mini-marker {
+    height: 16px;
+  }
+}
+
+/* Ulteriore adattamento sotto i 400px */
+@media (max-width: 400px) {
+  .mappa-legend {
+    padding: 14px;
+    margin-left: 12px;
+    margin-right: 12px;
+    font-size: 0.88rem;
+  }
+
+  .section-title {
+    font-size: 1.4rem;
+  }
+
+  .mappa-legend li {
+    font-size: 0.9rem;
+    gap: 8px;
+    line-height: 1.3;
+    flex-wrap: wrap;
+  }
+
+  .mappa-legend i {
+    font-size: 0.95rem;
+  }
+
+  .mini-marker {
+    height: 14px;
+    margin: 0 3px;
+  }
 }
 
