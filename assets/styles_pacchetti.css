@@ -95,7 +95,6 @@
 .call-to-action {
   text-align: center;
   padding-bottom: 80px;
-  margin-top: 40px;
 }
 .call-to-action .modern-btn {
   background-color: #8B2C2B;
@@ -279,7 +278,8 @@
 
 .foto-box {
   flex: 0 0 auto;
-  width: 280px;
+  width: 180px;
+  height: 280px;
   border-radius: 12px;
   overflow: hidden;
   position: relative;
