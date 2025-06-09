@@ -509,12 +509,21 @@
   transform: translateY(0);
 }
 
-/* Responsive map section: adattamento sotto i 768px */
+/* ✅ Adattamento sotto i 768px */
 @media (max-width: 768px) {
   .mappa-legend {
     padding: 16px;
     margin-left: 16px;
     margin-right: 16px;
+    font-size: 0.95rem;
+  }
+
+  .mappa-legend i {
+    font-size: 1rem;
+  }
+
+  .mappa-legend li {
+    font-size: 0.9rem;
   }
 
   .section-title {
