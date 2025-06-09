@@ -4541,3 +4541,7 @@ body .indice-info-utili {
   color: #F4F0E2 !important;              /* beige chiaro */
 }
 
+@media (max-width: 768px) {
+  .slider-arrow { display: none; }
+}
+

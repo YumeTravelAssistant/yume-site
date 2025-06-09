@@ -331,27 +331,27 @@ function scrollSartoriaSlider(direction) {
 const pacchettiScoring = [
   {
     id: 'hajimete',
-    scores: { natura: 6, spiritualita: 4, shopping: 6, gastronomia: 5, citylife: 7, collezionismo: 5, relax: 5, cultura: 6, esperienze: 6, avventura: 5 }
+    scores: { natura: 7, spiritualita: 8, shopping: 8, gastronomia: 7, citylife: 9, collezionismo: 6, relax: 5, cultura: 6, esperienze: 6, avventura: 5 }
   },
   {
     id: 'tetsugaku',
-    scores: { natura: 5, spiritualita: 9, shopping: 2, gastronomia: 6, citylife: 3, collezionismo: 4, relax: 7, cultura: 10, esperienze: 8, avventura: 3 }
+    scores: { natura: 8, spiritualita: 9, shopping: 2, gastronomia: 7, citylife: 3, collezionismo: 4, relax: 7, cultura: 10, esperienze: 8, avventura: 3 }
   },
   {
     id: 'shizen',
-    scores: { natura: 10, spiritualita: 6, shopping: 2, gastronomia: 4, citylife: 2, collezionismo: 3, relax: 8, cultura: 7, esperienze: 6, avventura: 6 }
+    scores: { natura: 10, spiritualita: 8, shopping: 2, gastronomia: 6, citylife: 2, collezionismo: 3, relax: 7, cultura: 7, esperienze: 6, avventura: 7 }
   },
   {
     id: 'kodai',
-    scores: { natura: 5, spiritualita: 8, shopping: 3, gastronomia: 8, citylife: 5, collezionismo: 4, relax: 6, cultura: 9, esperienze: 6, avventura: 4 }
+    scores: { natura: 8, spiritualita: 8, shopping: 3, gastronomia: 9, citylife: 5, collezionismo: 4, relax: 6, cultura: 9, esperienze: 6, avventura: 6 }
   },
   {
     id: 'kataware',
-    scores: { natura: 7, spiritualita: 7, shopping: 2, gastronomia: 7, citylife: 3, collezionismo: 3, relax: 10, cultura: 7, esperienze: 9, avventura: 2 }
+    scores: { natura: 7, spiritualita: 7, shopping: 7, gastronomia: 7, citylife: 6, collezionismo: 3, relax: 10, cultura: 7, esperienze: 9, avventura: 2 }
   },
   {
     id: 'hagane',
-    scores: { natura: 6, spiritualita: 6, shopping: 7, gastronomia: 7, citylife: 9, collezionismo: 6, relax: 5, cultura: 7, esperienze: 6, avventura: 5 }
+    scores: { natura: 7, spiritualita: 6, shopping: 7, gastronomia: 7, citylife: 9, collezionismo: 6, relax: 5, cultura: 7, esperienze: 6, avventura: 5 }
   }
 ];
 
