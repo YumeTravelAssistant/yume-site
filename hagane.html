@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hagane to Ki – Pacchetto Giappone</title>
+  <link rel="icon" type="image/png" href="favicon.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Raleway:wght@300;500;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="assets/styles_pacchetti.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+  .hero-banner {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-banner::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.5));
+    z-index: 2;
+  }
+
+h1.hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 5vw, 3.5rem);
+    font-weight: 700;
+    color: #C9A86A;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+</style>
+
+</head>
+
+<body>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-left">
+    <img src="assets/logo-yume.jpg" alt="Logo YUME" class="logo-navbar">
+  </div>
+  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+</nav>
+
+<!-- SIDEBAR -->
+<div id="sidebar" class="sidebar hidden">
+  <div class="sidebar-logo">
+    <img src="assets/logo_bar.png" alt="Logo Yume" class="logo-sidebar">
+  </div>
+  <a href="index.html">Home</a>
+  <a href="pacchetti.html">Pacchetti flessibili</a>
+  <a href="consulenze.html">Consulenze</a>
+  <a href="faq.html">FAQ</a>
+  <a href="info-utili.html">Informazioni utili</a>
+  <a href="contatti.html">Contatti</a>
+  <a href="profilo.html">Registrazione</a>
+  <a href="log-in.html">Area Personale</a>
+</div>
+
+<!-- COPERTINA GRANDE -->
+<header class="hero-banner">
+  <picture>
+    <source srcset="hagane/hagane_mob.jpg" media="(max-width: 768px)">
+    <img src="hagane/hagane_desk.jpg" alt="Pacchetti Yume Travel" class="hero-banner-img">
+  </picture>
+
+  <div class="hero-overlay">
+    <h1 class="hero-title">Hagane to Ki</h1>
+    <p class="hero-subtitle">Acciaio e Legno</p>
+  </div>
+
+  <div class="scroll-indicator" onclick="scrollToMain()">
+    <span class="arrow-down"></span>
+  </div>
+</header>
+
+<!-- CONTENUTO PRINCIPALE -->
+<div class="main-wrapper">
+<section class="hajimete-intro slide-in">
+  <h1>Hagane to Ki – Acciaio e Legno</h1>
+  <p class="lead">Metropoli futuristiche e sacralità naturalistica.</p>
+  <p class="intro-desc">Un itinerario tra architettura d'avanguardia e spiritualità ancestrale, passando da Tokyo ipertecnologica alle foreste sacre di Nikko. Ideale per chi cerca un forte contrasto fra cemento e natura, fra acciaio e legno.</p>
+  <ul class="icon-list">
+    <li><i class="fa fa-calendar"></i> Durata: da 8 a 18 notti</li>
+    <li><i class="fa fa-map-marker"></i> Città visitabili: Tokyo, Kawaguchiko, Yokohama, Hakone, Chichibu, Odawara, Enoshima, Kamakura, Atami, Nikko</li>
+    <li><i class="fa fa-building"></i> Ideale per: chi cerca contrasto e suggestioni opposte</li>
+  </ul>
+  <p class="price-tag">A partire da 2.390€</p>
+</section>
+
+<section class="mappa-overview slide-in">
+  <h2 class="section-title">Panoramica del viaggio</h2>
+  <div id="map-overview" style="height: 450px; border-radius: 12px; overflow: hidden;"></div>
+</section>
+
+<div class="mappa-legend">
+  <p><i class="fa fa-map" aria-hidden="true"></i> <strong>Come usare la mappa</strong></p>
+  <ul>
+    <li><i class="fa fa-location-arrow"></i> Clicca sui torii <img src="hagane/marker-yume.png" alt="marker" class="mini-marker"> per scoprire le tappe del viaggio</li>
+    <li><i class="fa fa-arrows-alt"></i> Trascina per esplorare liberamente la mappa</li>
+    <li><i class="fa fa-search-plus"></i> Usa lo zoom per avvicinarti alle zone locali</li>
+  </ul>
+</div>
+
+<section class="focus-tags slide-in">
+  <div class="focus-item">
+    <div class="focus-icon"><i class="fa fa-building"></i></div>
+    <p class="focus-label">City Life</p>
+    <div class="focus-bar">
+      <div class="bar-fill" style="width: 90%; background-color: #C9A86A;"></div>
+    </div>
+    <div class="score-text">90%</div>
+  </div>
+
+  <div class="focus-item">
+    <div class="focus-icon"><i class="fa fa-shopping-bag"></i></div>
+    <p class="focus-label">Shopping</p>
+    <div class="focus-bar">
+      <div class="bar-fill" style="width: 70%; background-color: #C9A86A;"></div>
+    </div>
+    <div class="score-text">70%</div>
+  </div>
+
+  <div class="focus-item">
+    <div class="focus-icon"><i class="fa fa-cutlery"></i></div>
+    <p class="focus-label">Gastronomia</p>
+    <div class="focus-bar">
+      <div class="bar-fill" style="width: 70%; background-color: #C9A86A;"></div>
+    </div>
+    <div class="score-text">70%</div>
+  </div>
+
+  <div class="focus-item">
+    <div class="focus-icon"><i class="fa fa-university"></i></div>
+    <p class="focus-label">Cultura</p>
+    <div class="focus-bar">
+      <div class="bar-fill" style="width: 70%; background-color: #C9A86A;"></div>
+    </div>
+    <div class="score-text">70%</div>
+  </div>
+
+  <div class="focus-item">
+    <div class="focus-icon"><i class="fa fa-leaf"></i></div>
+    <p class="focus-label">Spiritualità</p>
+    <div class="focus-bar">
+      <div class="bar-fill" style="width: 60%; background-color: #C9A86A;"></div>
+    </div>
+    <div class="score-text">60%</div>
+  </div>
+</section>
+
+<section class="foto-slider-section slide-in">
+  <h2 class="foto-slider-title">I luoghi del viaggio Hagane to Ki</h2>
+  <div class="foto-slider-wrapper">
+    <button class="slider-arrow left" onclick="scrollFotoSlider(-1)"></button>
+
+    <div class="foto-slider-container" id="fotoSlider">
+      <div class="foto-box"><img src="hagane/1.jpg" alt="Foto 1" loading="lazy" onclick="apriFotoFullscreen(0)"></div>
+      <div class="foto-box"><img src="hagane/2.jpg" alt="Foto 2" loading="lazy" onclick="apriFotoFullscreen(1)"></div>
+      <div class="foto-box"><img src="hagane/3.jpg" alt="Foto 3" loading="lazy" onclick="apriFotoFullscreen(2)"></div>
+      <div class="foto-box"><img src="hagane/4.jpg" alt="Foto 4" loading="lazy" onclick="apriFotoFullscreen(3)"></div>
+      <div class="foto-box"><img src="hagane/5.jpg" alt="Foto 5" loading="lazy" onclick="apriFotoFullscreen(4)"></div>
+      <div class="foto-box"><img src="hagane/6.jpg" alt="Foto 6" loading="lazy" onclick="apriFotoFullscreen(5)"></div>
+      <div class="foto-box"><img src="hagane/7.jpg" alt="Foto 7" loading="lazy" onclick="apriFotoFullscreen(6)"></div>
+      <div class="foto-box"><img src="hagane/8.jpg" alt="Foto 8" loading="lazy" onclick="apriFotoFullscreen(7)"></div>
+      <div class="foto-box"><img src="hagane/9.jpg" alt="Foto 9" loading="lazy" onclick="apriFotoFullscreen(8)"></div>
+    </div>
+
+    <button class="slider-arrow right" onclick="scrollFotoSlider(1)"></button>
+  </div>
+</section>
+
+<!-- ITINERARIO -->
+<section class="itinerario-esteso slide-in">
+  <h2>Itinerario tipo – 12 notti</h2>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 1 – Partenza dall’Italia</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Partenza con volo notturno per il Giappone.</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 2 – Arrivo a Tokyo</button>
+    <div class="giorno-content">
+      <p><strong>Pomeriggio:</strong> Arrivo a Tokyo. Sistemazione in zona futuristica (Shiodome o Shinjuku).</p>
+      <p><strong>Sera:</strong> Passeggiata serale tra i grattacieli di Shinjuku e visita al Tokyo Metropolitan Government Building.</p>
+      <p><i class="fa fa-star"></i> Shinjuku, Shiodome skyline</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 3 – Tokyo: Akihabara e Asakusa</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Full immersion ad <strong>Akihabara</strong>: tech store, manga, robot caffè.</p>
+      <p><strong>Pomeriggio:</strong> Contrasto con la spiritualità di <strong>Asakusa</strong> e il tempio <strong>Senso-ji</strong>.</p>
+      <p><strong>Sera:</strong> Izakaya tradizionale sotto le lanterne rosse.</p>
+      <p><i class="fa fa-star"></i> Akihabara, Senso-ji, Asakusa</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 4 – Kamakura ed Enoshima</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Treno per Kamakura, visita al <strong>Daibutsu</strong> e ai templi di Hase-dera.</p>
+      <p><strong>Pomeriggio:</strong> Escursione a <strong>Enoshima</strong>: grotte e panorama oceanico.</p>
+      <p><strong>Sera:</strong> Rientro a Tokyo con sosta a Yokohama Chinatown per cena.</p>
+      <p><i class="fa fa-star"></i> Grande Buddha, Hase-dera, Enoshima</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 5 – Nikko: spiritualità e foreste sacre</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Treno per Nikko. Visita al complesso UNESCO di <strong>Toshogu</strong>.</p>
+      <p><strong>Pomeriggio:</strong> Passeggiata nella foresta e <strong>Shinkyo Bridge</strong>.</p>
+      <p><strong>Sera:</strong> Rientro a Tokyo.</p>
+      <p><i class="fa fa-star"></i> Toshogu, Shinkyo, foreste sacre</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 6 – Tokyo: Meiji, Omotesando, teamLab</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Visita al <strong>Meiji Jingu</strong>, contrasto fra spiritualità e moda a Omotesando.</p>
+      <p><strong>Pomeriggio:</strong> Immersione sensoriale al <strong>teamLab Planets</strong>.</p>
+      <p><strong>Sera:</strong> Cena moderna in zona Shibuya.</p>
+      <p><i class="fa fa-star"></i> Meiji Jingu, teamLab, Shibuya</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 7 – Kawaguchiko: spiritualità e natura</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Bus per Kawaguchiko. Salita alla <strong>Chureito Pagoda</strong>.</p>
+      <p><strong>Pomeriggio:</strong> Visita al <strong>villaggio Iyashi no Sato</strong>.</p>
+      <p><strong>Sera:</strong> Ryokan e onsen con vista sul Fuji.</p>
+      <p><i class="fa fa-star"></i> Chureito, Iyashi no Sato</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 8 – Kawaguchiko: natura e relax</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Escursione a <strong>Oshino Hakkai</strong>.</p>
+      <p><strong>Pomeriggio:</strong> Degustazione di sake locale e passeggiata sul lungolago.</p>
+      <p><strong>Sera:</strong> Cena in izakaya e seconda notte con vista monte Fuji.</p>
+      <p><i class="fa fa-star"></i> Oshino Hakkai, Lago Kawaguchi</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 9 – Hakone: arte e vulcani</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Spostamento a Hakone. Navigazione sul Lago Ashi, funivia per <strong>Owakudani</strong>.</p>
+      <p><strong>Pomeriggio:</strong> Museo all’aperto <strong>Open-Air Museum</strong>.</p>
+      <p><strong>Sera:</strong> Onsen serale immersi nella natura.</p>
+      <p><i class="fa fa-star"></i> Owakudani, Open Air Museum</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 10 – Hakone: cultura e silenzi</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Visita al <strong>Santuario Hakone</strong> nel bosco.</p>
+      <p><strong>Pomeriggio:</strong> Relax nei giardini Gora Park o al museo di Okada.</p>
+      <p><strong>Sera:</strong> Ultimo onsen e cena kaiseki.</p>
+      <p><i class="fa fa-star"></i> Santuario Hakone, Gora Park</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 11 – Rientro a Tokyo e tempo libero</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Ritorno a Tokyo. Check-in in hotel zona tranquilla (Daikanyama, Nakameguro).</p>
+      <p><strong>Pomeriggio:</strong> Tempo libero per shopping o relax in un café sul fiume.</p>
+      <p><strong>Sera:</strong> Ultima cena con vista città.</p>
+      <p><i class="fa fa-star"></i> Nakameguro, Tokyo finale</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 12 – Rientro</button>
+    <div class="giorno-content">
+      <p>Trasferimento all’aeroporto di Haneda o Narita. Partenza per l’Italia.</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 13 – Arrivo in Italia</button>
+    <div class="giorno-content">
+      <p>Arrivo previsto in giornata. Fine dei servizi.</p>
+    </div>
+  </div>
+</section>
+
+<section class="mappa-itinerario slide-in">
+  <h2 class="section-title">Itinerario tipo – su mappa</h2>
+  <div id="map-itinerario" style="height: 500px; border-radius: 12px; overflow: hidden;"></div>
+</section>
+
+<div class="mappa-legend">
+  <p><i class="fa fa-map" aria-hidden="true"></i> <strong>Come usare la mappa</strong></p>
+  <ul>
+    <li><i class="fa fa-location-arrow"></i> Clicca sui torii <img src="hagane/marker-yume.png" alt="marker" class="mini-marker"> per scoprire le tappe del viaggio</li>
+    <li><i class="fa fa-arrows-alt"></i> Trascina per esplorare liberamente la mappa</li>
+    <li><i class="fa fa-search-plus"></i> Usa lo zoom per avvicinarti alle zone locali</li>
+  </ul>
+</div>
+
+<section class="accordion-section slide-in">
+  <div class="info-boxes-container">
+    <div class="info-box">
+      <button class="info-toggle"><span class="info-number">1.</span> Cosa include il pacchetto <i class="fa fa-chevron-down toggle-icon"></i></button>
+      <div class="info-content">
+        <ul>
+          <li>Alloggi centrali in categoria standard o superiore</li>
+          <li>Voli andata/ritorno da principali aeroporti italiani</li>
+          <li>Assicurazione medica, bagaglio e annullamento</li>
+          <li>Guide digitali generali e tematiche in PDF</li>
+          <li>Accesso gratuito al nostro travel assistant di viaggio</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <button class="info-toggle"><span class="info-number">2.</span> Cosa non è incluso <i class="fa fa-chevron-down toggle-icon"></i></button>
+      <div class="info-content">
+        <ul>
+          <li>Pasti e bevande</li>
+          <li>Attività, ingressi o escursioni non specificati</li>
+          <li>Servizi non espressamente indicati come inclusi</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <button class="info-toggle"><span class="info-number">3.</span> Extra su richiesta <i class="fa fa-chevron-down toggle-icon"></i></button>
+      <div class="info-content">
+        <ul>
+          <li>Esperienza in ryokan tradizionale con cena kaiseki</li>
+          <li>Onsen privati o naturali</li>
+          <li>Guide locali per Tokyo o Nikko</li>
+          <li>Biglietti Ghibli Park o Shinkansen extra</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <button class="info-toggle"><span class="info-number">4.</span> Note importanti <i class="fa fa-chevron-down toggle-icon"></i></button>
+      <div class="info-content">
+        <p>I prezzi indicati si riferiscono al soggiorno minimo in bassa stagione.</p>
+        <p>Consigliamo di prenotare almeno 3–4 mesi prima per assicurarsi disponibilità, offerte e personalizzazione.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="call-to-action slide-in">
+  <a href="pacchetti.html?pacchetto=hagane#formPacchetto" class="modern-btn">Richiedi questo pacchetto</a>
+</section>
+
+<section class="viator-widget-section">
+  <h2 class="section-title visible">Respira il viaggio – Hagane to Ki</h2>
+<div data-vi-partner-id=U00663494 data-vi-widget-ref=W-d815b5db-b804-4bc8-953a-bc4103e845b8 ></div>
+</section>
+
+<section class="call-to-action slide-in">
+  <a href="pacchetti.html?pacchetto=hagane#formPacchetto" class="modern-btn">Richiedi questo pacchetto</a>
+</section>
+
+</div> <!-- CHIUSURA main-wrapper -->
+
+
+<!-- FOOTER -->
+<footer class="main-footer">
+  <div class="footer-social">
+    <p><strong>Seguici su:</strong></p>
+    <a href="https://www.instagram.com/yumeviaggi" target="_blank" aria-label="Instagram" class="fa fa-instagram"></a>
+    <a href="https://yuta-travel.com" target="_blank" aria-label="Sito YUTA" class="fa fa-globe"></a>
+  </div>
+  <p class="footer-copy">© 2025 Yume Travel Tech – Tutti i diritti riservati.</p>
+</footer>
+
+<!-- Avatar Chatbot Yuki -->
+<div id="yuki-chat-avatar" onclick="toggleYukiChat()" title="Hai bisogno di aiuto?">
+  <img src="assets/yuki-avatar.png" alt="Yuki" />
+</div>
+
+<!-- Finestra Chat -->
+<div id="yuki-chatbox" class="hidden">
+  <div class="chatbox-header">
+    <span>Yuki, assistente AI</span>
+    <button onclick="toggleYukiChat()">✕</button>
+  </div>
+  <div class="chatbox-messages" id="chatbox-messages"></div>
+  <div class="chatbox-input">
+    <input type="text" id="userMessage" placeholder="Scrivi qui..." />
+    <button onclick="sendMessage()">Invia</button>
+  </div>
+</div>
+
+<script async src="https://www.viator.com/orion/partner/widget.js"></script>
+
+<script>
+  // Dopo il caricamento del widget Viator
+  window.addEventListener("load", () => {
+    const viatorDiv = document.querySelector("[data-vi-widget-ref]");
+    if (viatorDiv) {
+      setTimeout(() => {
+        viatorDiv.style.display = "none";
+        void viatorDiv.offsetHeight;
+        viatorDiv.style.display = "";
+      }, 800);
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    const el = document.querySelector('#yuki-chat-avatar');
+    if (!el) return;
+
+    el.style.position = 'fixed';
+    el.style.bottom = '25px';
+    el.style.right = '25px';
+    el.style.width = '90px';
+    el.style.height = '90px';
+    el.style.zIndex = '9999';
+    el.style.borderRadius = '50%';
+    el.style.overflow = 'hidden';
+    el.style.boxShadow = '0 4px 10px rgba(0,0,0,0.2)';
+    el.style.backgroundColor = '#fff';
+
+    const img = el.querySelector('img');
+    if (img) {
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.objectFit = 'cover';
+      img.style.borderRadius = '50%';
+    }
+  });
+</script>
+
+<script>
+  function scrollFotoSlider(direction) {
+    const container = document.getElementById("fotoSlider");
+    const scrollAmount = 280;
+    if (container) {
+      container.scrollBy({
+        left: direction * scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  }
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const dynamicObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          dynamicObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.foto-box img, .foto-slider-title').forEach(el => {
+      dynamicObserver.observe(el);
+    });
+  });
+</script>
+
+<script>
+  const immagini = [
+    "hagane/1.jpg", "hagane/2.jpg", "hagane/3.jpg",
+    "hagane/4.jpg", "hagane/5.jpg", "hagane/6.jpg",
+    "hagane/7.jpg", "hagane/8.jpg", "hagane/9.jpg"
+  ];
+
+  let indexAttuale = 0;
+  let startX = 0;
+
+  function apriFotoFullscreen(index) {
+    indexAttuale = index;
+
+    const overlay = document.createElement('div');
+    overlay.classList.add('fullscreen-overlay');
+
+    const img = document.createElement('img');
+    img.src = immagini[index];
+    img.alt = "Foto " + (index + 1);
+    img.classList.add("fullscreen-img");
+
+    const btnChiudi = document.createElement('span');
+    btnChiudi.innerHTML = "&times;";
+    btnChiudi.classList.add("btn-close");
+    btnChiudi.onclick = () => document.body.removeChild(overlay);
+
+    const frecciaSx = document.createElement('button');
+    frecciaSx.classList.add('fullscreen-arrow', 'left');
+    frecciaSx.innerHTML = '<i class="fa fa-chevron-left"></i>';
+    frecciaSx.onclick = (e) => {
+      e.stopPropagation();
+      cambiaFoto(-1);
+    };
+
+    const frecciaDx = document.createElement('button');
+    frecciaDx.classList.add('fullscreen-arrow', 'right');
+    frecciaDx.innerHTML = '<i class="fa fa-chevron-right"></i>';
+    frecciaDx.onclick = (e) => {
+      e.stopPropagation();
+      cambiaFoto(1);
+    };
+
+    overlay.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+    });
+
+    overlay.addEventListener('touchend', (e) => {
+      const endX = e.changedTouches[0].clientX;
+      const diff = startX - endX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) cambiaFoto(1);
+        else cambiaFoto(-1);
+      }
+    });
+
+    overlay.appendChild(btnChiudi);
+    overlay.appendChild(frecciaSx);
+    overlay.appendChild(img);
+    overlay.appendChild(frecciaDx);
+    document.body.appendChild(overlay);
+  }
+
+  function cambiaFoto(direz) {
+    indexAttuale = (indexAttuale + direz + immagini.length) % immagini.length;
+    const img = document.querySelector(".fullscreen-img");
+    img.src = immagini[indexAttuale];
+    img.alt = "Foto " + (indexAttuale + 1);
+  }
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const customMarker = L.icon({
+      iconUrl: 'hagane/marker-yume.png',
+      iconSize: [32, 42],
+      iconAnchor: [16, 42],
+      popupAnchor: [0, -36]
+    });
+
+    // MAPPA 1: Panoramica
+    const map1 = L.map('map-overview').setView([35.5, 139.3], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map1);
+
+    const tappe = [
+      { nome: "Tokyo", lat: 35.682839, lon: 139.759455 },
+      { nome: "Kawaguchiko", lat: 35.4946, lon: 138.6886 },
+      { nome: "Yokohama", lat: 35.4437, lon: 139.6380 },
+      { nome: "Hakone", lat: 35.2329, lon: 139.1065 },
+      { nome: "Chichibu", lat: 35.9943, lon: 139.0857 },
+      { nome: "Odawara", lat: 35.2556, lon: 139.1550 },
+      { nome: "Enoshima", lat: 35.3081, lon: 139.4802 },
+      { nome: "Kamakura", lat: 35.3191, lon: 139.5466 },
+      { nome: "Atami", lat: 35.0976, lon: 139.0745 },
+      { nome: "Nikko", lat: 36.7484, lon: 139.5980 }
+    ];
+
+    tappe.forEach(t => {
+      L.marker([t.lat, t.lon], { icon: customMarker })
+        .addTo(map1)
+        .bindPopup(`<strong>${t.nome}</strong>`);
+    });
+
+    L.polyline(tappe.map(t => [t.lat, t.lon]), {
+      color: '#C9A86A',
+      weight: 4,
+      opacity: 0.8
+    }).addTo(map1);
+
+    // MAPPA 2: Itinerario 12 notti – 8 tappe
+    const map2 = L.map('map-itinerario').setView([35.5, 139.3], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map2);
+
+const tappeItinerario = [
+  ["Tokyo", 35.682839, 139.759455],
+  ["Kamakura", 35.3191, 139.5466],
+  ["Enoshima", 35.3081, 139.4802],
+  ["Yokohama", 35.4437, 139.6380],
+  ["Nikko", 36.7484, 139.5980],
+  ["Kawaguchiko", 35.4946, 138.6886],
+  ["Hakone", 35.2329, 139.1065],
+  ["Chichibu", 35.9943, 139.0857]
+];
+
+    tappeItinerario.forEach(([nome, lat, lon]) => {
+      L.marker([lat, lon], { icon: customMarker })
+        .addTo(map2)
+        .bindPopup(`<strong>${nome}</strong>`);
+    });
+
+    L.polyline(tappeItinerario.map(t => [t[1], t[2]]), {
+      color: '#8B2C2B',
+      weight: 4,
+      opacity: 0.8
+    }).addTo(map2);
+  });
+</script>
+
+<script src="assets/script.js"></script>
+
+
+</body>
+</html>
+
