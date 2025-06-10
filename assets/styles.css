@@ -37,7 +37,6 @@ a {
   font-family: 'Quicksand', sans-serif;
 }
 
-
 .sidebar {
   position: fixed;
   top: 0;
@@ -2235,6 +2234,20 @@ h2.slide-in.visible {
 
 .sartoria-slider-wrapper {
   position: relative;
+}
+
+@media (min-width: 769px) and (max-width: 1399px) {
+  #sartoriaSliderGruppo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    padding: 0 20px;
+  }
+
+  #sartoriaSliderGruppo .sartoria-box {
+    flex: none;
+    scroll-snap-align: unset;
+  }
 }
 
 @media (min-width: 769px) and (max-width: 1399px) {
