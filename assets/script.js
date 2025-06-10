@@ -339,15 +339,15 @@ const pacchettiScoring = [
   },
   {
     id: 'shizen',
-    scores: { natura: 10, spiritualita: 8, shopping: 2, gastronomia: 6, citylife: 2, collezionismo: 3, relax: 7, cultura: 7, esperienze: 6, avventura: 7 }
+    scores: { natura: 10, spiritualita: 8, shopping: 2, gastronomia: 6, citylife: 2, collezionismo: 3, relax: 7, cultura: 8, esperienze: 7, avventura: 7 }
   },
   {
     id: 'kodai',
-    scores: { natura: 8, spiritualita: 8, shopping: 3, gastronomia: 9, citylife: 5, collezionismo: 4, relax: 6, cultura: 9, esperienze: 6, avventura: 6 }
+    scores: { natura: 8, spiritualita: 8, shopping: 6, gastronomia: 9, citylife: 6, collezionismo: 4, relax: 6, cultura: 9, esperienze: 6, avventura: 6 }
   },
   {
     id: 'kataware',
-    scores: { natura: 7, spiritualita: 7, shopping: 7, gastronomia: 7, citylife: 6, collezionismo: 3, relax: 10, cultura: 7, esperienze: 9, avventura: 2 }
+    scores: { natura: 7, spiritualita: 7, shopping: 8, gastronomia: 8, citylife: 6, collezionismo: 3, relax: 10, cultura: 7, esperienze: 9, avventura: 2 }
   },
   {
     id: 'hagane',
@@ -1034,8 +1034,7 @@ async function getProfiloOperatore() {
   }
 }
 
-
-function aggiornaProfiloOperatore() {
+async function aggiornaProfiloOperatore() {
   const codice_operatore = localStorage.getItem("codice_operatore");
   const nome = document.getElementById("nome").value.trim();
   const cognome = document.getElementById("cognome").value.trim();
@@ -1049,25 +1048,31 @@ function aggiornaProfiloOperatore() {
     return;
   }
 
-  const password_attuale_hash = sha256(password_attuale);
-  const nuovo_hash = nuova_password ? sha256(nuova_password) : null;
+  const payload = {
+    tipoRichiesta: "update_operatore",
+    codice_operatore,
+    nome,
+    cognome,
+    email
+  };
 
-  Promise.all([password_attuale_hash, nuovo_hash]).then(hashes => {
-    fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        tipoRichiesta: "update_operatore",
-        codice_operatore,
-        nome,
-        cognome,
-        email,
-        password_attuale_hash: hashes[0],
-        password_hash: nuova_password ? hashes[1] : undefined
-      })
-    })
+  if (password_attuale || nuova_password || conferma_password) {
+    if (!password_attuale || !nuova_password || !conferma_password) {
+      alert("Compila tutti i campi della sezione password.");
+      return;
+    }
+
+    payload.password_attuale_hash = await sha256(password_attuale);
+    payload.password_hash = await sha256(nuova_password);
+  }
+
+  fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  })
     .then(res => res.json())
     .then(data => {
       if (data.status === "ok") {
@@ -1076,7 +1081,6 @@ function aggiornaProfiloOperatore() {
         alert(data.message || "Errore durante l'aggiornamento.");
       }
     });
-  });
 }
 
 function caricaPDFCliente() {
