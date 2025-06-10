@@ -558,6 +558,43 @@ ul {
   background-color: #721F1E;
 }
 
+/* Link contatti e suggerimenti chatbot */
+.contact-links {
+  margin-top: 60px;
+  text-align: center;
+}
+
+.social-icons {
+  list-style: none;
+  padding: 0;
+  margin: 20px auto 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.social-icons a {
+  color: #8B2C2B;
+  text-decoration: none;
+  font-size: 1.2em;
+}
+
+.chatbot-tips {
+  margin-top: 60px;
+  text-align: left;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.chatbot-tips ul {
+  padding-left: 20px;
+  list-style-type: disc;
+}
+
+
 .navbar {
   position: fixed;
   top: 0;
