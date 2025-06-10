@@ -1265,6 +1265,7 @@ function checkPasswordMatchOperatore() {
 function apriBannerCookie() {
   document.getElementById('cookie-banner').style.display = 'block';
 }
+
 function apriPreferenze() {
   const sessionId = localStorage.getItem('sessionId') || crypto.randomUUID();
   localStorage.setItem('sessionId', sessionId);
@@ -1277,27 +1278,15 @@ function apriPreferenze() {
       sessionId
     })
   })
-    .then(async res => {
-      const text = await res.text();
-      try {
-        const data = JSON.parse(text);
-
-        if (data.status === "ok") {
-          document.getElementById("cookie-analytics").checked = data.analytics === true;
-          document.getElementById("cookie-marketing").checked = data.marketing === true;
-        }
-
-        // Mostra modale in ogni caso
-        document.getElementById("cookie-banner").style.display = 'none';
-        document.getElementById("cookie-preferenze").style.display = 'grid';
-      } catch (err) {
-        console.warn("❌ Risposta non valida JSON:", text);
-        document.getElementById("cookie-banner").style.display = 'none';
-        document.getElementById("cookie-preferenze").style.display = 'grid';
-      }
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("cookie-analytics").checked = data.analytics === true;
+      document.getElementById("cookie-marketing").checked = data.marketing === true;
+      document.getElementById("cookie-banner").style.display = 'none';
+      document.getElementById("cookie-preferenze").style.display = 'grid';
     })
     .catch(err => {
-      console.warn("❌ Errore fetch:", err);
+      console.warn("❌ Errore recupero preferenze:", err);
       document.getElementById("cookie-banner").style.display = 'none';
       document.getElementById("cookie-preferenze").style.display = 'grid';
     });
@@ -1323,19 +1312,6 @@ function rifiutaCookie() {
   document.getElementById('cookie-banner').style.display = 'none';
   inviaConsensoCookie(scelta);
 }
-
-document.getElementById('cookie-preferenze-form')?.addEventListener('submit', function (e) {
-  e.preventDefault();
-  const analytics = document.getElementById('cookie-analytics')?.checked || false;
-  const marketing = document.getElementById('cookie-marketing')?.checked || false;
-
-  const scelta = { analytics, marketing };
-  localStorage.setItem('cookieConsent', JSON.stringify(scelta));
-  document.getElementById('cookie-preferenze').style.display = 'none';
-
-  if (analytics) caricaAnalytics();
-  inviaConsensoCookie(scelta);
-});
 
 function caricaAnalytics() {
   const script = document.createElement('script');
@@ -1380,6 +1356,22 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   } catch (e) {
     apriBannerCookie();
+  }
+
+  const form = document.getElementById('cookie-preferenze-form');
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const analytics = document.getElementById('cookie-analytics')?.checked || false;
+      const marketing = document.getElementById('cookie-marketing')?.checked || false;
+
+      const scelta = { analytics, marketing };
+      localStorage.setItem('cookieConsent', JSON.stringify(scelta));
+      document.getElementById('cookie-preferenze').style.display = 'none';
+
+      if (analytics) caricaAnalytics();
+      inviaConsensoCookie(scelta);
+    });
   }
 });
 
