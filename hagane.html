@@ -418,13 +418,15 @@ h1.hero-title {
     const viatorDiv = document.querySelector("[data-vi-widget-ref]");
     if (viatorDiv) {
       setTimeout(() => {
+        // Forza un ridisegno del layout (repaint/reflow)
         viatorDiv.style.display = "none";
-        void viatorDiv.offsetHeight;
+        void viatorDiv.offsetHeight; // trigger reflow
         viatorDiv.style.display = "";
-      }, 800);
+      }, 800); // attesa per assicurarsi che il widget sia stato montato
     }
   });
 </script>
+
 
 <script>
   window.addEventListener("DOMContentLoaded", function () {
@@ -452,7 +454,68 @@ h1.hero-title {
   });
 </script>
 
+  <script src="assets/script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const profilo = JSON.parse(sessionStorage.getItem("profiloUtente"));
+      if (profilo) {
+        document.querySelectorAll("a[href='log-in.html']").forEach(link => {
+          link.href = "area-clienti.html";
+        });
+
+
+          };
+          userBox.appendChild(avatar);
+          userBox.appendChild(logoutBtn);
+          sidebar.appendChild(userBox);
+        }
+      }
+    });
+  </script>
+
 <script>
+  // Animazione barra percentuale (focus-item)
+  document.addEventListener("DOMContentLoaded", function () {
+    const barObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const bars = entry.target.querySelectorAll(".bar-fill");
+          bars.forEach(bar => {
+            const width = bar.getAttribute("data-fill");
+            if (width) bar.style.width = width;
+          });
+          barObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll(".focus-item").forEach(item => {
+      const bar = item.querySelector(".bar-fill");
+      if (bar) {
+        const widthMatch = bar.getAttribute("style")?.match(/width:\s*(\d+%)/);
+        if (widthMatch) {
+          bar.setAttribute("data-fill", widthMatch[1]);
+          bar.style.width = "0";
+        }
+        barObserver.observe(item);
+      }
+    });
+  });
+</script>
+
+<script>
+  // Toggle per sezione itinerario
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('.giorno-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.parentElement.classList.toggle('active');
+      });
+    });
+  });
+</script>
+
+<script>
+  // Scroll slider orizzontale
   function scrollFotoSlider(direction) {
     const container = document.getElementById("fotoSlider");
     const scrollAmount = 280;
@@ -465,7 +528,10 @@ h1.hero-title {
   }
 </script>
 
+</script>
+
 <script>
+  // Entrata dinamica per titolo slider e immagini
   document.addEventListener("DOMContentLoaded", function () {
     const dynamicObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -519,11 +585,15 @@ h1.hero-title {
     const frecciaDx = document.createElement('button');
     frecciaDx.classList.add('fullscreen-arrow', 'right');
     frecciaDx.innerHTML = '<i class="fa fa-chevron-right"></i>';
+
+
+    frecciaDx.innerHTML = '<i class="fa fa-chevron-right"></i>';
     frecciaDx.onclick = (e) => {
       e.stopPropagation();
       cambiaFoto(1);
     };
 
+    // Touch events per swipe mobile
     overlay.addEventListener('touchstart', (e) => {
       startX = e.touches[0].clientX;
     });
@@ -532,8 +602,11 @@ h1.hero-title {
       const endX = e.changedTouches[0].clientX;
       const diff = startX - endX;
       if (Math.abs(diff) > 50) {
-        if (diff > 0) cambiaFoto(1);
-        else cambiaFoto(-1);
+        if (diff > 0) {
+          cambiaFoto(1); // swipe sinistra → avanti
+        } else {
+          cambiaFoto(-1); // swipe destra → indietro
+        }
       }
     });
 
