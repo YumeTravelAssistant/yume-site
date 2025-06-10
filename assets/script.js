@@ -1260,15 +1260,36 @@ function checkPasswordMatchOperatore() {
   }
 }
 
-// ✅ Script GDPR cookie – Yume Travel Tech
+//   Script GDPR cookie – Yume Travel Tech
 
 function apriBannerCookie() {
   document.getElementById('cookie-banner').style.display = 'block';
 }
 
 function apriPreferenze() {
-  document.getElementById('cookie-banner').style.display = 'none';
-  document.getElementById('cookie-preferenze').style.display = 'grid';
+  const sessionId = localStorage.getItem('sessionId') || crypto.randomUUID();
+  localStorage.setItem('sessionId', sessionId);
+
+  fetch("https://yume-gdpr.azurewebsites.net/api/log-cookie", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      tipoRichiesta: "get_cookie_consent",
+      sessionId
+    })
+  })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("cookie-analytics").checked = data.analytics === true;
+      document.getElementById("cookie-marketing").checked = data.marketing === true;
+      document.getElementById("cookie-banner").style.display = 'none';
+      document.getElementById("cookie-preferenze").style.display = 'grid';
+    })
+    .catch(err => {
+      console.warn("❌ Errore recupero preferenze:", err);
+      document.getElementById("cookie-banner").style.display = 'none';
+      document.getElementById("cookie-preferenze").style.display = 'grid';
+    });
 }
 
 function accettaCookie() {
@@ -1307,7 +1328,7 @@ document.getElementById('cookie-preferenze-form')?.addEventListener('submit', fu
 
 function caricaAnalytics() {
   const script = document.createElement('script');
-  script.src = "https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"; // <-- sostituisci con il tuo ID GA4
+  script.src = "https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"; // <-- Sostituisci con il tuo ID GA4
   script.async = true;
 
   script.onload = function () {
@@ -1315,7 +1336,7 @@ function caricaAnalytics() {
     function gtag() { dataLayer.push(arguments); }
     window.gtag = gtag;
     gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX'); // <-- stesso ID
+    gtag('config', 'G-XXXXXXXXXX'); // <-- Sostituisci anche qui
   };
 
   document.head.appendChild(script);
@@ -1335,7 +1356,7 @@ function inviaConsensoCookie({ analytics, marketing }) {
       page: window.location.pathname,
       userAgent: navigator.userAgent
     })
-  }).catch((err) => console.warn("⚠️ Invio consenso fallito:", err));
+  }).catch((err) => console.warn("❌ Invio consenso fallito:", err));
 }
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -1344,10 +1365,10 @@ window.addEventListener("DOMContentLoaded", () => {
     if (scelta?.analytics === true) {
       caricaAnalytics();
     } else if (!scelta) {
-      document.getElementById('cookie-banner').style.display = 'block';
+      apriBannerCookie();
     }
   } catch (e) {
-    document.getElementById('cookie-banner').style.display = 'block';
+    apriBannerCookie();
   }
 });
 
