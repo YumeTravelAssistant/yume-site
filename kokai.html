@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kokai – Viaggio di Gruppo</title>
+  <link rel="icon" type="image/png" href="favicon.ico" />
+
+  <!-- Font Yume -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Raleway:wght@300;500;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Stili principali -->
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="assets/styles_pacchetti.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+  .hero-banner {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-banner::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.5));
+    z-index: 2;
+  }
+
+h1.hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 5vw, 3.5rem);
+    font-weight: 700;
+    color: #C9A86A;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+</style>
+
+</head>
+
+<body>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-left">
+    <img src="assets/logo-yume.jpg" alt="Logo YUME" class="logo-navbar">
+  </div>
+  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+</nav>
+
+<!-- SIDEBAR -->
+<div id="sidebar" class="sidebar hidden">
+  <div class="sidebar-logo">
+    <img src="assets/logo_bar.png" alt="Logo Yume" class="logo-sidebar">
+  </div>
+  <a href="index.html">Home</a>
+  <a href="pacchetti.html">Pacchetti flessibili</a>
+  <a href="gruppo.html">Viaggi di gruppo</a>
+  <a href="consulenze.html">Consulenze</a>
+  <a href="faq.html">FAQ</a>
+  <a href="info-utili.html">Informazioni utili</a>
+  <a href="contatti.html">Contatti</a>
+  <a href="profilo.html">Registrazione</a>
+  <a href="log-in.html">Area Personale</a>
+</div>
+
+<!-- COPERTINA -->
+<header class="hero-banner">
+  <picture>
+    <source srcset="kokai/kokai_mob.jpg" media="(max-width: 768px)">
+    <img src="kokai/kokai_desk.jpg" alt="Viaggio di gruppo Kokai" class="hero-banner-img">
+  </picture>
+  <div class="hero-overlay">
+    <h1 class="hero-title">Kokai</h1>
+    <p class="hero-subtitle">Il tuo viaggio condiviso in Giappone</p>
+  </div>
+  <div class="scroll-indicator" onclick="scrollToMain()">
+    <span class="arrow-down"></span>
+  </div>
+</header>
+
+<!-- CONTENUTO PRINCIPALE -->
+<div class="main-wrapper">
+  <section class="hajimete-intro slide-in">
+    <h1>Kokai – Viaggio di Gruppo</h1>
+    <p class="lead">Un'esperienza condivisa tra natura, cultura, emozioni.</p>
+    <p class="intro-desc">Pensato per chi vuole scoprire il Giappone in gruppo, a data fissa e con servizi inclusivi, accompagnati da un tour leader Yume.</p>
+    <ul class="icon-list">
+      <li><i class="fa fa-calendar"></i> Date: 7–21 Novembre 2025</li>
+      <li><i class="fa fa-map-marker"></i> Città: Tokyo, Yokohama, Kamakura, Kawaguchiko, Kyoto, Osaka, Nara</li>
+      <li><i class="fa fa-user"></i> Gruppo max 20 persone</li>
+    </ul>
+    <p class="price-tag">2990€ volo incluso</p>
+  </section>
+
+  <section class="focus-tags slide-in">
+    <div class="focus-item">
+      <div class="focus-icon"><i class="fa fa-star"></i></div>
+      <p class="focus-label">Esperienza</p>
+      <div class="focus-bar"><div class="bar-fill" style="width: 90%; background-color: #C9A86A;"></div></div>
+      <div class="score-text">90%</div>
+    </div>
+    <div class="focus-item">
+      <div class="focus-icon"><i class="fa fa-balance-scale"></i></div>
+      <p class="focus-label">Cultura</p>
+      <div class="focus-bar"><div class="bar-fill" style="width: 80%; background-color: #C9A86A;"></div></div>
+      <div class="score-text">80%</div>
+    </div>
+    <div class="focus-item">
+      <div class="focus-icon"><i class="fa fa-cutlery"></i></div>
+      <p class="focus-label">Gastronomia</p>
+      <div class="focus-bar"><div class="bar-fill" style="width: 80%; background-color: #C9A86A;"></div></div>
+      <div class="score-text">80%</div>
+    </div>
+    <div class="focus-item">
+      <div class="focus-icon"><i class="fa fa-leaf"></i></div>
+      <p class="focus-label">Natura</p>
+      <div class="focus-bar"><div class="bar-fill" style="width: 70%; background-color: #C9A86A;"></div></div>
+      <div class="score-text">70%</div>
+    </div>
+    <div class="focus-item">
+      <div class="focus-icon"><i class="fa fa-shopping-bag"></i></div>
+      <p class="focus-label">Shopping</p>
+      <div class="focus-bar"><div class="bar-fill" style="width: 70%; background-color: #C9A86A;"></div></div>
+      <div class="score-text">70%</div>
+    </div>
+  </section>
+
+<section class="itinerario-esteso slide-in">
+  <h2>Itinerario tipo – 14 notti (7–21 novembre 2025)</h2>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 1 – 7 novembre: Partenza dall’Italia</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Partenza con volo notturno per il Giappone.</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 2 – 8 novembre: Arrivo a Tokyo</button>
+    <div class="giorno-content">
+      <p><strong>Pomeriggio:</strong> Arrivo all’aeroporto di Tokyo. Trasferimento in hotel ad Asakusa.</p>
+      <p><strong>Sera:</strong> Ambientamento e prima passeggiata nei dintorni.</p>
+      <p><i class="fa fa-star"></i> Quartiere di Asakusa</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 3 – 9 novembre: Tokyo Est</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Senso-ji e Kappabashi dori.</p>
+      <p><strong>Pomeriggio:</strong> Skytree e tempo libero.</p>
+      <p><strong>Sera:</strong> Passeggiata a Shibuya e dintorni.</p>
+      <p><i class="fa fa-star"></i> Senso-ji, Skytree, Shibuya</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 4 – 10 novembre: Tokyo Nord-Ovest</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Meiji Jingu e Takeshita Street.</p>
+      <p><strong>Pomeriggio:</strong> Ueno Park e Ameyoko Market.</p>
+      <p><strong>Sera:</strong> Grattacieli e luci di Shinjuku.</p>
+      <p><i class="fa fa-star"></i> Meiji Jingu, Ueno, Shinjuku</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 5 – 11 novembre: Kamakura e Yokohama</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Grande Buddha, Tsurugaoka Hachimangu, centro storico di Kamakura.</p>
+      <p><strong>Pomeriggio:</strong> Ramen Museum, ruota panoramica e Chinatown di Yokohama.</p>
+      <p><strong>Sera:</strong> Rientro a Tokyo.</p>
+      <p><i class="fa fa-star"></i> Daibutsu, Yokohama Chinatown</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 6 – 12 novembre: Kawaguchiko</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Partenza in bus privato per Kawaguchiko, salita al Mt. Fuji Ropeway.</p>
+      <p><strong>Pomeriggio:</strong> Visita al villaggio Iyashi no Sato, passeggiata sul lago.</p>
+      <p><strong>Sera:</strong> Cena libera o in izakaya.</p>
+      <p><i class="fa fa-star"></i> Mt. Fuji Ropeway, Iyashi no Sato</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 7 – 13 novembre: Lago e Sake</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Chureito Pagoda e Oshino Hakkai.</p>
+      <p><strong>Pomeriggio:</strong> Degustazione alla Ide Sake Brewery. Possibilità di onsen.</p>
+      <p><strong>Sera:</strong> Seconda notte a Kawaguchiko.</p>
+      <p><i class="fa fa-star"></i> Chureito, Oshino Hakkai, Ide Brewery</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 8 – 14 novembre: Da Kawaguchiko a Osaka</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Partenza per Tokyo (Shibuya), poi treno veloce per Osaka.</p>
+      <p><strong>Pomeriggio:</strong> Arrivo e sistemazione in zona Namba.</p>
+      <p><strong>Sera:</strong> Giro libero a Shinsekai e Dotonbori.</p>
+      <p><i class="fa fa-star"></i> Shibuya, Dotonbori, Shinsekai</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 9 – 15 novembre: Kyoto classica</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Kinkaku-ji (Padiglione d’Oro) e Ryoan-ji.</p>
+      <p><strong>Pomeriggio:</strong> Arashiyama, Tenryu-ji e foresta di bambù.</p>
+      <p><strong>Sera:</strong> Rientro a Osaka.</p>
+      <p><i class="fa fa-star"></i> Kinkaku-ji, Arashiyama</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 10 – 16 novembre: Kyoto spirituale</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Fushimi Inari e sentiero dei torii.</p>
+      <p><strong>Pomeriggio:</strong> Kiyomizu-dera, Sannenzaka e Ninenzaka.</p>
+      <p><strong>Sera:</strong> Cena a Gion o sul fiume Kamo.</p>
+      <p><i class="fa fa-star"></i> Fushimi Inari, Kiyomizu-dera</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 11 – 17 novembre: Uji e Nara</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Visita al tempio Byodo-in e degustazione tè verde a Uji.</p>
+      <p><strong>Pomeriggio:</strong> Nara: cervi e Tempio Todai-ji.</p>
+      <p><strong>Sera:</strong> Rientro a Osaka.</p>
+      <p><i class="fa fa-star"></i> Uji, Nara</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 12 – 18 novembre: Hiroshima & Miyajima</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Hiroshima: Peace Memorial Park e museo.</p>
+      <p><strong>Pomeriggio:</strong> Escursione a Miyajima, santuario galleggiante.</p>
+      <p><strong>Sera:</strong> Rientro a Osaka.</p>
+      <p><i class="fa fa-star"></i> Hiroshima, Miyajima</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 13 – 19 novembre: Osaka libera</button>
+    <div class="giorno-content">
+      <p><strong>Mattina:</strong> Shopping, relax o esperienze opzionali.</p>
+      <p><strong>Pomeriggio:</strong> Castello di Osaka o Sky Building.</p>
+      <p><strong>Sera:</strong> Cena finale di gruppo a Dotonbori.</p>
+      <p><i class="fa fa-star"></i> Osaka Castle, Umeda</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 14 – 20 novembre: Rientro</button>
+    <div class="giorno-content">
+      <p>Trasferimento all’aeroporto Kansai (KIX) e volo di rientro per l’Italia.</p>
+    </div>
+  </div>
+
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 15 – 21 novembre: Arrivo in Italia</button>
+    <div class="giorno-content">
+      <p>Arrivo previsto in giornata. Fine dei servizi e dei ricordi da condividere.</p>
+    </div>
+  </div>
+</section>
+
+<section class="mappa-itinerario slide-in">
+  <h2 class="section-title">Itinerario tipo – su mappa</h2>
+  <div id="map-itinerario" style="height: 500px; border-radius: 12px; overflow: hidden;"></div>
+</section>
+
+<div class="mappa-legend">
+  <p><i class="fa fa-map" aria-hidden="true"></i> <strong>Come usare la mappa</strong></p>
+  <ul>
+    <li><i class="fa fa-location-arrow"></i> Clicca sui torii <img src="hajimete/marker-yume.png" alt="marker" class="mini-marker"> per scoprire le tappe del viaggio</li>
+    <li><i class="fa fa-arrows-alt"></i> Trascina per esplorare liberamente la mappa</li>
+    <li><i class="fa fa-search-plus"></i> Usa lo zoom per avvicinarti alle zone locali</li>
+  </ul>
+</div>
+
+<section class="foto-slider-section slide-in">
+  <h2 class="foto-slider-title">I luoghi del viaggio Hajimete</h2>
+  <div class="foto-slider-wrapper">
+    <button class="slider-arrow left" onclick="scrollFotoSlider(-1)"></button>
+
+<div class="foto-slider-container" id="fotoSlider">
+  <div class="foto-box"><img src="kokai/1.jpg" alt="Foto 1" loading="lazy" onclick="apriFotoFullscreen(0)"></div>
+  <div class="foto-box"><img src="kokai/2.jpg" alt="Foto 2" loading="lazy" onclick="apriFotoFullscreen(1)"></div>
+  <div class="foto-box"><img src="kokai/3.jpg" alt="Foto 3" loading="lazy" onclick="apriFotoFullscreen(2)"></div>
+  <div class="foto-box"><img src="kokai/4.jpg" alt="Foto 4" loading="lazy" onclick="apriFotoFullscreen(3)"></div>
+  <div class="foto-box"><img src="kokai/5.jpg" alt="Foto 5" loading="lazy" onclick="apriFotoFullscreen(4)"></div>
+  <div class="foto-box"><img src="kokai/6.jpg" alt="Foto 6" loading="lazy" onclick="apriFotoFullscreen(5)"></div>
+  <div class="foto-box"><img src="kokai/7.jpg" alt="Foto 7" loading="lazy" onclick="apriFotoFullscreen(6)"></div>
+  <div class="foto-box"><img src="kokai/8.jpg" alt="Foto 8" loading="lazy" onclick="apriFotoFullscreen(7)"></div>
+  <div class="foto-box"><img src="kokai/9.jpg" alt="Foto 9" loading="lazy" onclick="apriFotoFullscreen(8)"></div>
+</div>
+
+    <button class="slider-arrow right" onclick="scrollFotoSlider(1)"></button>
+  </div>
+</section>
+
+<section class="accordion-section slide-in">
+  <div class="info-boxes-container">
+    <div class="info-box">
+      <button class="info-toggle"><span class="info-number">1.</span> Cosa include il pacchetto <i class="fa fa-chevron-down toggle-icon"></i></button>
+      <div class="info-content">
+        <ul>
+          <li>Volo A/R da Milano o Roma</li>
+          <li>Hotel 3–4* in posizione strategica</li>
+          <li>Assicurazione medica, bagaglio e annullamento</li>
+          <li>Guide interattive generali e tematiche</li>
+          <li>Foto professionali e video personalizzato del viaggio</li>
+          <li>Accesso esclusivo a YUTA, l'AI inclusiva per viaggi in Giappone</li>
+          <li>Assistenza H24</li>
+          <li>Due video-incontri pre-partenza (1 mese e 1 settimana prima)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <button class="info-toggle"><span class="info-number">2.</span> Cosa non è incluso <i class="fa fa-chevron-down toggle-icon"></i></button>
+      <div class="info-content">
+        <ul>
+          <li>Pasti e bevande non indicati</li>
+          <li>Ingressi, attività o escursioni extra</li>
+          <li>Servizi non espressamente specificati</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <button class="info-toggle"><span class="info-number">3.</span> Eventi a richiesta <i class="fa fa-chevron-down toggle-icon"></i></button>
+      <div class="info-content">
+        <ul>
+          <li>Cerimonia del tè o vestizione in kimono</li>
+          <li>Onsen privato o ryokan con cena kaiseki</li>
+          <li>Workshop calligrafia, cucina o artigianato</li>
+          <li>Biglietti speciali (es. teamLab o musei)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <button class="info-toggle"><span class="info-number">4.</span> Note importanti <i class="fa fa-chevron-down toggle-icon"></i></button>
+      <div class="info-content">
+        <p>
+          I pasti durante i voli sono gestiti dalla compagnia aerea. Possiamo segnalare esigenze speciali (vegani, intolleranze, halal, ecc.).<br>
+          Chi viaggia da solo può richiedere la camera singola oppure condividere con persona compatibile.<br>
+          <strong>Acconto richiesto:</strong> 1000€ alla prenotazione, altri 1000€ 60 giorni prima della partenza, saldo finale 990€ entro 30 giorni.<br>
+          Possibilità di saldare tutto in un'unica soluzione. Il sistema è già integrato con Stripe.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-gruppo-kokai slide-in">
+  <a href="form_kokai.html" class="modern-btn dark">Prenota ora</a>
+  <a href="contatti.html" class="modern-btn light">Contattaci</a>
+</section>
+
+</div>
+
+<footer class="main-footer">
+  <div class="footer-social">
+    <p><strong>Seguici su:</strong></p>
+    <a href="https://www.instagram.com/yumeviaggi" target="_blank" aria-label="Instagram" class="fa fa-instagram"></a>
+    <a href="https://yuta-travel.com" target="_blank" aria-label="Sito YUTA" class="fa fa-globe"></a>
+  </div>
+  <p><a href="privacy.html">Privacy Policy</a>   <a href="termini-condizioni.html">Termini e Condizioni</a></p>
+  <p><a href="cookie-policy.html">Cookie Policy</a>   <a href="#" onclick="apriBannerCookie()">Modifica preferenze cookie</a></p>
+  <p class="footer-copy">© 2025 Yume Travel Tech – Tutti i diritti riservati.</p>
+</footer>
+
+<!-- Avatar Chatbot Yuki -->
+<div id="yuki-chat-avatar" onclick="toggleYukiChat()" title="Hai bisogno di aiuto?">
+  <img src="assets/yuki-avatar.png" alt="Yuki" />
+</div>
+<div id="yuki-chatbox" class="hidden">
+  <div class="chatbox-header">
+    <span>Yuki, assistente AI</span>
+    <button onclick="toggleYukiChat()">✕</button>
+  </div>
+  <div class="chatbox-messages" id="chatbox-messages"></div>
+  <div class="chatbox-input">
+    <input type="text" id="userMessage" placeholder="Scrivi qui..." />
+    <button onclick="sendMessage()">Invia</button>
+  </div>
+</div>
+
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    const el = document.querySelector('#yuki-chat-avatar');
+    if (!el) return;
+
+    el.style.position = 'fixed';
+    el.style.bottom = '25px';
+    el.style.right = '25px';
+    el.style.width = '90px';
+    el.style.height = '90px';
+    el.style.zIndex = '9999';
+    el.style.borderRadius = '50%';
+    el.style.overflow = 'hidden';
+    el.style.boxShadow = '0 4px 10px rgba(0,0,0,0.2)';
+    el.style.backgroundColor = '#fff';
+
+    const img = el.querySelector('img');
+    if (img) {
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.objectFit = 'cover';
+      img.style.borderRadius = '50%';
+    }
+  });
+</script>
+
+  <script src="assets/script.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const profilo = JSON.parse(sessionStorage.getItem("profiloUtente"));
+      if (profilo) {
+        document.querySelectorAll("a[href='log-in.html']").forEach(link => {
+          link.href = "area-clienti.html";
+        });
+        const sidebar = document.querySelector(".sidebar");
+        if (sidebar && !document.getElementById("userBox")) {
+          const userBox = document.createElement("div");
+          userBox.id = "userBox";
+          userBox.style.marginTop = "30px";
+          userBox.style.padding = "10px";
+          userBox.style.textAlign = "center";
+          userBox.style.borderTop = "1px solid #ccc";
+          const avatar = document.createElement("img");
+          avatar.src = localStorage.getItem("userAvatar") || "https://api.dicebear.com/7.x/avataaars/svg?seed=yume";
+          avatar.alt = "Avatar";
+          avatar.style.width = "60px";
+          avatar.style.height = "60px";
+          avatar.style.borderRadius = "50%";
+          avatar.style.objectFit = "cover";
+          avatar.style.border = "2px solid #C9A86A";
+          avatar.style.marginBottom = "8px";
+          const logoutBtn = document.createElement("button");
+          logoutBtn.textContent = "Logout";
+          logoutBtn.style.marginTop = "6px";
+          logoutBtn.style.background = "#8B2C2B";
+          logoutBtn.style.color = "#fff";
+          logoutBtn.style.border = "none";
+          logoutBtn.style.padding = "6px 12px";
+          logoutBtn.style.borderRadius = "20px";
+          logoutBtn.style.cursor = "pointer";
+          logoutBtn.onclick = () => {
+            sessionStorage.removeItem("profiloUtente");
+            localStorage.removeItem("userAvatar");
+            window.location.href = "index.html";
+          };
+          userBox.appendChild(avatar);
+          userBox.appendChild(logoutBtn);
+          sidebar.appendChild(userBox);
+        }
+      }
+    });
+  </script>
+
+<script>
+  // Animazione barra percentuale (focus-item)
+  document.addEventListener("DOMContentLoaded", function () {
+    const barObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const bars = entry.target.querySelectorAll(".bar-fill");
+          bars.forEach(bar => {
+            const width = bar.getAttribute("data-fill");
+            if (width) bar.style.width = width;
+          });
+          barObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll(".focus-item").forEach(item => {
+      const bar = item.querySelector(".bar-fill");
+      if (bar) {
+        const widthMatch = bar.getAttribute("style")?.match(/width:\s*(\d+%)/);
+        if (widthMatch) {
+          bar.setAttribute("data-fill", widthMatch[1]);
+          bar.style.width = "0";
+        }
+        barObserver.observe(item);
+      }
+    });
+  });
+</script>
+
+<script>
+  // Toggle per sezione itinerario
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('.giorno-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.parentElement.classList.toggle('active');
+      });
+    });
+  });
+</script>
+
+<script>
+  // Scroll slider orizzontale
+  function scrollFotoSlider(direction) {
+    const container = document.getElementById("fotoSlider");
+    const scrollAmount = 280;
+    if (container) {
+      container.scrollBy({
+        left: direction * scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  }
+</script>
+
+<script>
+  // Entrata dinamica per titolo slider e immagini
+  document.addEventListener("DOMContentLoaded", function () {
+    const dynamicObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          dynamicObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.foto-box img, .foto-slider-title').forEach(el => {
+      dynamicObserver.observe(el);
+    });
+  });
+</script>
+
+<script>
+  const immagini = [
+    "kokai/1.jpg",
+    "kokai/2.jpg",
+    "kokai/3.jpg",
+    "kokai/4.jpg",
+    "kokai/5.jpg",
+    "kokai/6.jpg",
+    "kokai/7.jpg",
+    "kokai/8.jpg",
+    "kokai/9.jpg"
+  ];
+
+  let indexAttuale = 0;
+  let startX = 0;
+
+  function apriFotoFullscreen(index) {
+    indexAttuale = index;
+
+    const overlay = document.createElement('div');
+    overlay.classList.add('fullscreen-overlay');
+
+    const img = document.createElement('img');
+    img.src = immagini[index];
+    img.alt = "Foto " + (index + 1);
+    img.classList.add("fullscreen-img");
+
+    const btnChiudi = document.createElement('span');
+    btnChiudi.innerHTML = "&times;";
+    btnChiudi.classList.add("btn-close");
+    btnChiudi.onclick = () => document.body.removeChild(overlay);
+
+    const frecciaSx = document.createElement('button');
+    frecciaSx.classList.add('fullscreen-arrow', 'left');
+    frecciaSx.innerHTML = '<i class="fa fa-chevron-left"></i>';
+    frecciaSx.onclick = (e) => {
+      e.stopPropagation();
+      cambiaFoto(-1);
+    };
+
+    const frecciaDx = document.createElement('button');
+    frecciaDx.classList.add('fullscreen-arrow', 'right');
+    frecciaDx.innerHTML = '<i class="fa fa-chevron-right"></i>';
+    frecciaDx.onclick = (e) => {
+      e.stopPropagation();
+      cambiaFoto(1);
+    };
+
+    // Touch events per swipe mobile
+    overlay.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+    });
+
+    overlay.addEventListener('touchend', (e) => {
+      const endX = e.changedTouches[0].clientX;
+      const diff = startX - endX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) {
+          cambiaFoto(1); // swipe sinistra → avanti
+        } else {
+          cambiaFoto(-1); // swipe destra → indietro
+        }
+      }
+    });
+
+    overlay.appendChild(btnChiudi);
+    overlay.appendChild(frecciaSx);
+    overlay.appendChild(img);
+    overlay.appendChild(frecciaDx);
+    document.body.appendChild(overlay);
+  }
+
+  function cambiaFoto(direz) {
+    indexAttuale = (indexAttuale + direz + immagini.length) % immagini.length;
+    const img = document.querySelector(".fullscreen-img");
+    img.src = immagini[indexAttuale];
+    img.alt = "Foto " + (indexAttuale + 1);
+  }
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const customMarker = L.icon({
+      iconUrl: 'kokai/marker-yume.png',
+      iconSize: [32, 42],
+      iconAnchor: [16, 42],
+      popupAnchor: [0, -36]
+    });
+
+    const map2 = L.map('map-itinerario').setView([35.6, 139.8], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map2);
+
+    const tappeKokai = [
+      ["Tokyo", 35.682839, 139.759455],
+      ["Kamakura", 35.3191, 139.5466],
+      ["Yokohama", 35.4437, 139.6380],
+      ["Kawaguchiko", 35.4946, 138.6886],
+      ["Osaka", 34.6937, 135.5023],
+      ["Kyoto", 35.0116, 135.7681],
+      ["Uji", 34.8894, 135.7996],
+      ["Nara", 34.6851, 135.8048],
+      ["Hiroshima", 34.3853, 132.4553],
+      ["Miyajima", 34.2956, 132.3197]
+    ];
+
+    tappeKokai.forEach(([nome, lat, lon]) => {
+      L.marker([lat, lon], { icon: customMarker })
+        .addTo(map2)
+        .bindPopup(`<strong>${nome}</strong>`);
+    });
+
+    L.polyline(tappeKokai.map(t => [t[1], t[2]]), {
+      color: '#8B2C2B',
+      weight: 4,
+      opacity: 0.8
+    }).addTo(map2);
+  });
+
+</script>
+
+<!-- Banner Cookie Yume -->
+<div id="cookie-banner" class="cookie-banner slide-up">
+  <p>
+    Utilizziamo cookie tecnici per garantire il funzionamento del sito e, previo consenso, cookie analitici e di terze parti per migliorare la tua esperienza.
+    <a href="privacy.html" target="_blank">Leggi la nostra informativa</a>.
+  </p>
+  <div class="cookie-buttons">
+    <button class="btn-accetta" onclick="accettaCookie()">Accetta</button>
+    <button class="btn-rifiuta" onclick="rifiutaCookie()">Rifiuta</button>
+    <button class="btn-gestisci" onclick="apriPreferenze()">Gestisci</button>
+  </div>
+</div>
+
+<!-- Modale Preferenze Cookie -->
+<div id="cookie-preferenze" class="cookie-modal"style="display: none;">
+  <div class="cookie-modal-box">
+    <h3>Gestisci preferenze cookie</h3>
+    <form id="cookie-preferenze-form">
+      <label><input type="checkbox" checked disabled> Cookie tecnici (obbligatori)</label><br>
+      <label><input type="checkbox" id="cookie-analytics"> Cookie analitici (Google Analytics)</label><br>
+      <label><input type="checkbox" id="cookie-marketing"> Cookie di marketing e tracciamento</label><br>
+      <div class="cookie-modal-actions">
+        <button type="submit" class="btn-salva">Salva preferenze</button>
+        <button type="button" class="btn-chiudi" onclick="document.getElementById('cookie-preferenze').style.display = 'none';">Chiudi</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>

@@ -567,3 +567,76 @@
   }
 }
 
+
+.cta-gruppo-kokai .modern-btn {
+  all: unset;
+  display: block;
+  width: 260px;
+  max-width: 90%;
+  margin: 0 auto;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 50px;
+  text-align: center;
+  transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+  text-decoration: none;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.cta-gruppo-kokai .modern-btn.dark {
+  background-color: #8B2C2B;
+  color: #fff;
+  border: none;
+}
+
+.cta-gruppo-kokai .modern-btn.dark:hover {
+  background-color: #6e1c1c;
+}
+
+.cta-gruppo-kokai .modern-btn.light {
+  background-color: transparent;
+  border: 2px solid #C9A86A;
+  color: #C9A86A;
+}
+
+.cta-gruppo-kokai .modern-btn.light:hover {
+  background-color: #C9A86A;
+  color: #fff;
+}
+
+.cta-gruppo-kokai {
+  padding: 50px 20px 60px;
+  background-color: #F4F0E2;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  z-index: 3;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .cta-gruppo-kokai {
+    padding: 40px 15px 50px;
+  }
+
+  .cta-gruppo-kokai .modern-btn {
+    font-size: 15.5px;
+  }
+}
+
+@media (max-width: 400px) {
+  .cta-gruppo-kokai .modern-btn {
+    font-size: 15px;
+    padding: 12px 20px;
+  }
+
+  .cta-gruppo-kokai {
+    gap: 16px;
+    padding: 30px 10px 40px;
+  }
+}
+

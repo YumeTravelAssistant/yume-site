@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Area Clienti - Yume Travel</title>
-  <link rel="icon" href="favicon.ico" />
+  <title>Viaggi di Gruppo - Yume Travel</title>
+  <link rel="icon" type="image/png" href="favicon.ico" />
 
-  <!-- Font Yume -->
+  <!-- Font Yume: Playfair, Raleway, Quicksand -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Raleway:wght@300;500;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
 
-  <!-- Stili -->
+  <!-- Stili e icone -->
   <link rel="stylesheet" href="assets/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-</head>
 
+</head>
 <body>
 
-<!-- NAVBAR -->
+<!-- Navbar coerente -->
 <nav class="navbar">
   <div class="navbar-left">
     <img src="assets/logo-yume.jpg" alt="Logo YUME" class="logo-navbar">
@@ -24,11 +24,11 @@
   <button class="hamburger" onclick="toggleSidebar()">☰</button>
 </nav>
 
-<!-- SIDEBAR -->
 <div id="sidebar" class="sidebar hidden">
   <div class="sidebar-logo">
     <img src="assets/logo_bar.png" alt="Logo Yume" class="logo-sidebar">
   </div>
+
   <a href="index.html">Home</a>
   <a href="pacchetti.html">Pacchetti flessibili</a>
   <a href="gruppo.html">Viaggi di gruppo</a>
@@ -40,12 +40,12 @@
   <a href="log-in.html">Area Personale</a>
 </div>
 
-<!-- HERO -->
 <header class="hero-banner">
   <picture>
-    <source srcset="assets/profilo-mob.jpg" media="(max-width: 768px)">
-    <img src="assets/profilo-desk.jpg" alt="Area Clienti" class="hero-banner-img">
+    <source srcset="assets/gruppo_mob.jpg" media="(max-width: 768px)">
+    <img src="assets/gruppo_desk.jpg" alt="Viaggi di gruppo Yume Travel" class="hero-banner-img">
   </picture>
+
   <div class="scroll-indicator" onclick="scrollToMain()">
     <span class="arrow-down"></span>
   </div>
@@ -53,105 +53,132 @@
 
 <section class="hero-section">
   <div class="hero-intro">
-    <h1 class="hero-title">Benvenuto nella tua area personale</h1>
-    <p class="hero-subtitle">Qui troverai tutti i tuoi documenti e potrai contattare il nostro team</p>
+    <h1 class="hero-title">Viaggi da ricordare</h1>
+    <p class="hero-subtitle">I nostri viaggi di gruppo: a data fissa, massimo 20 partecipanti</p>
   </div>
 </section>
 
-<!-- SEZIONE DOCUMENTI -->
-<section class="main-wrapper">
-  <div class="info-form">
-    <h3>📄 Documenti di benvenuto</h3>
-    <ul class="documenti-lista">
-      <li><a href="documenti/programma_viaggio.pdf" target="_blank"><i class="fa fa-file-pdf-o"></i> Programma viaggio</a></li>
-      <li><a href="documenti/prenotazioni.pdf" target="_blank"><i class="fa fa-file-pdf-o"></i> Riepilogo prenotazioni</a></li>
-      <li><a href="documenti/contatti_utili.pdf" target="_blank"><i class="fa fa-file-pdf-o"></i> Contatti utili</a></li>
-    </ul>
-  
-     <h3>📁 I tuoi documenti personalizzati</h3>
-     <ul id="listaPDF" class="documenti-lista"></ul>
-</div>
-</section>
+<div class="main-wrapper">
 
-<section id="sezioneMessaggi" class="main-wrapper">
-  <div class="info-form">
-    <h3>📨 Messaggi dal team Yume</h3>
-    <ul id="listaMessaggi" class="message-list"></ul>
+<section class="sartoria-section">
+  <h2 class="slide-in">Cosa rende speciali i nostri viaggi di gruppo?</h2>
+
+  <div class="sartoria-slider-wrapper">
+    <div id="sartoriaSliderGruppo" class="sartoria-slider-container slide-in">
+
+      <div class="sartoria-box" style="background-image: url('assets/inclusivita.jpg');">
+        <h3>Inclusività</h3>
+        <p>Ogni persona è benvenuta. Disegniamo esperienze accessibili, aperte a ogni età, genere, abilità e cultura.</p>
+      </div>
+
+      <div class="sartoria-box" style="background-image: url('assets/accessibilita.jpg');">
+        <h3>Accessibilità</h3>
+        <p>Dall’aeroporto alla cena finale, i nostri itinerari includono esigenze motorie, sensoriali e alimentari.</p>
+      </div>
+
+      <div class="sartoria-box" style="background-image: url('assets/cultura.jpg');">
+        <h3>Cultura</h3>
+        <p>Non turismo di massa, ma esperienze profonde e partecipate, guidate da esperti locali.</p>
+      </div>
+
+      <div class="sartoria-box" style="background-image: url('assets/tecnologia.jpg');">
+        <h3>Tecnologia</h3>
+        <p>Con YUTA – la nostra AI, in arrivo a Luglio – avrai consigli personalizzati, notifiche e supporto smart.</p>
+      </div>
+
+    </div>
   </div>
 </section>
 
-<!-- SEZIONE CONSULENZA -->
-<section class="main-wrapper">
-  <form id="formConsulenza" class="info-form">
-    <h3>🤝 Richiedi assistenza o consulenza</h3>
-    <div class="form-group">
-      <label for="messaggio">Come possiamo aiutarti?</label>
-      <textarea id="messaggio" name="messaggio" rows="4" required></textarea>
+<section class="pacchetti-flex-section">
+  <h2 class="slide-in">Prossima Partenza – Novembre 2025</h2>
+  <div class="pacchetti-slider-wrapper">
+    <div class="pacchetti-slider-container">
+      <div class="pacchetti-box slide-in">
+        <img src="assets/kokai.jpg" alt="Kokai – Viaggio di gruppo">
+        <div class="card-content">
+          <h3>Kokai – Viaggio d’autunno</h3>
+          <p><em>Un percorso tra città, laghi e spiritualità nel cuore del Giappone.</em></p>
+          <ul class="icon-list">
+            <li><i class="fa fa-calendar"></i> 7–21 Novembre 2025</li>
+            <li><i class="fa fa-map-marker"></i> Tokyo, Yokohama, Kamakura, Kawaguchiko, Kyoto, Osaka, Nara</li>
+            <li><i class="fa fa-user"></i> Max 20 partecipanti</li>
+          </ul>
+          <span class="price-tag">2990€ volo incluso</span>
+          <a href="kokai.html" class="modern-btn">Richiedi info <i class="fa fa-arrow-right"></i></a>
+        </div>
+      </div>
     </div>
-    <button type="submit" class="modern-btn form-submit">Invia richiesta</button>
-    <div id="esitoConsulenza" class="form-feedback"></div>
-  </form>
-</section>
-
-
-<!-- SEZIONE PROFILO -->
-<section class="main-wrapper">
-  <form id="formProfilo" class="info-form">
-    <h3>👤 Modifica profilo e password</h3>
-
-    <div class="form-group">
-      <label for="nome">Nome</label>
-      <input type="text" id="nome" required>
-    </div>
-
-    <div class="form-group">
-      <label for="cognome">Cognome</label>
-      <input type="text" id="cognome" required>
-    </div>
-
-    <div class="form-group">
-      <label for="email">Email</label>
-      <input type="email" id="email" required>
-    </div>
-
-<div class="form-group">
-  <label for="passwordAttuale">Password attuale</label>
-  <input type="password" id="passwordAttuale">
-  <button type="button" class="toggle-password-text" onclick="toggleVisibility('passwordAttuale', this)">Mostra password</button>
-</div>
-
-<div class="form-group">
-  <label for="nuovaPassword">Nuova password</label>
-  <input type="password" id="nuovaPassword" oninput="checkPasswordMatchAreaClienti()">
-  <button type="button" class="toggle-password-text" onclick="toggleVisibility('nuovaPassword', this)">Mostra password</button>
-</div>
-
-<div class="form-group">
-  <label for="confermaNuovaPassword">Conferma nuova password</label>
-  <input type="password" id="confermaNuovaPassword" oninput="checkPasswordMatchAreaClienti()">
-  <button type="button" class="toggle-password-text" onclick="toggleVisibility('confermaNuovaPassword', this)">Mostra password</button>
-  <div id="passwordMatchMessageAC" class="password-message"></div>
-</div>
-
-<div id="avatarSelector" style="text-align: center; margin: 30px 0;">
-  <p style="margin-bottom: 12px;">Scegli il tuo avatar:</p>
-  <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
-    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=hana" class="avatar-option" data-url="https://api.dicebear.com/7.x/avataaars/svg?seed=hana" alt="Hana" width="60">
-    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=tomo" class="avatar-option" data-url="https://api.dicebear.com/7.x/avataaars/svg?seed=tomo" alt="Tomo" width="60">
-    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=ayame" class="avatar-option" data-url="https://api.dicebear.com/7.x/avataaars/svg?seed=ayame" alt="Ayame" width="60">
-    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=kenta" class="avatar-option" data-url="https://api.dicebear.com/7.x/avataaars/svg?seed=kenta" alt="Kenta" width="60">
-    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=shiro" class="avatar-option" data-url="https://api.dicebear.com/7.x/avataaars/svg?seed=shiro" alt="Shiro" width="60">
-    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=yume" class="avatar-option" data-url="https://api.dicebear.com/7.x/avataaars/svg?seed=yume" alt="Yume" width="60">
   </div>
-  <p style="margin-top: 8px;"><em>Verrà mostrato nel menu dopo il login</em></p>
-</div>
-
-    <button type="submit" class="modern-btn form-submit">Salva modifiche</button>
-  </form>
 </section>
 
+<section class="info-section">
+  <h2 class="slide-in">FAQ – Viaggi di Gruppo</h2>
+  <div class="info-boxes-container">
 
-<!-- FOOTER -->
+    <div class="info-box">
+      <button class="info-toggle">
+        <span class="info-number">1.</span> Come funzionano i viaggi di gruppo Yume?
+        <i class="fa fa-chevron-down toggle-icon"></i>
+      </button>
+      <div class="info-content">
+        <p>
+          I nostri viaggi di gruppo sono a data fissa, con massimo 20 partecipanti, e costruiti attorno a un itinerario culturale, accessibile e autentico. Sono accompagnati da un <strong>tour leader Yume</strong>, che funge da punto di riferimento e supporto durante l’intera esperienza. Tutti i dettagli logistici e organizzativi vengono curati da noi, così da permetterti di vivere il viaggio con serenità.
+        </p>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <button class="info-toggle">
+        <span class="info-number">2.</span> Chi partecipa ai viaggi di gruppo?
+        <i class="fa fa-chevron-down toggle-icon"></i>
+      </button>
+      <div class="info-content">
+        <p>
+          I gruppi sono composti da persone curiose, rispettose e appassionate del Giappone, spesso tra i 20 e i 45 anni, ma non ci sono limiti di età. Cerchiamo sempre di formare gruppi equilibrati, dove ognuno possa sentirsi incluso e valorizzato.
+        </p>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <button class="info-toggle">
+        <span class="info-number">3.</span> I pasti sono inclusi nel viaggio?
+        <i class="fa fa-chevron-down toggle-icon"></i>
+      </button>
+      <div class="info-content">
+        <p>
+          I pasti non sono inclusi <strong>salvo dove espressamente indicato</strong> (es. cena di benvenuto o pranzo tradizionale). Questa scelta ci permette di offrire flessibilità a chi ha gusti, esigenze alimentari o budget differenti. Forniamo sempre consigli e supporto grazie a YUTA per trovare le migliori opzioni sul posto.
+        </p>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <button class="info-toggle">
+        <span class="info-number">4.</span> È previsto un accompagnatore durante il viaggio?
+        <i class="fa fa-chevron-down toggle-icon"></i>
+      </button>
+      <div class="info-content">
+        <p>
+          Sì, ogni gruppo è accompagnato da un <strong>tour leader Yume</strong>: una figura esperta che conosce bene il territorio, coordina il gruppo e fornisce assistenza costante durante il viaggio, senza sostituirsi a una guida turistica abilitata.
+        </p>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <button class="info-toggle">
+        <span class="info-number">5.</span> Posso partire da solo/a?
+        <i class="fa fa-chevron-down toggle-icon"></i>
+      </button>
+      <div class="info-content">
+        <p>
+          Assolutamente sì. I viaggi di gruppo Yume sono aperti anche a chi parte in autonomia. Cerchiamo sempre la soluzione più adatta: <strong>camera singola</strong> oppure <strong>condivisione con una persona compatibile</strong> in base al profilo. L’importante è sentirsi accolti e parte del gruppo.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <footer class="main-footer">
   <div class="footer-social">
     <p><strong>Seguici su:</strong></p>
@@ -159,11 +186,11 @@
     <a href="https://yuta-travel.com" target="_blank" aria-label="Sito YUTA" class="fa fa-globe"></a>
   </div>
   <p><a href="privacy.html">Privacy Policy</a>   <a href="termini-condizioni.html">Termini e Condizioni</a></p>
- <p><a href="cookie-policy.html">Cookie Policy</a>   <a href="#" onclick="apriBannerCookie()">Modifica preferenze cookie</a></p>
+  <p><a href="cookie-policy.html">Cookie Policy</a>   <a href="#" onclick="apriBannerCookie()">Modifica preferenze cookie</a></p>
   <p class="footer-copy">© 2025 Yume Travel Tech – Tutti i diritti riservati.</p>
 </footer>
 
-<!-- YUKI CHAT -->
+<!-- Avatar Chatbot Yuki -->
 <div id="yuki-chat-avatar" onclick="toggleYukiChat()" title="Hai bisogno di aiuto?">
   <img src="assets/yuki-avatar.png" alt="Yuki" />
 </div>
@@ -259,30 +286,11 @@
   });
 </script>
 
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const avatars = document.querySelectorAll(".avatar-option");
-    const selectedUrl = localStorage.getItem("userAvatar");
-
-    avatars.forEach(img => {
-      if (img.dataset.url === selectedUrl) {
-        img.classList.add("selected-avatar");
-      }
-
-      img.addEventListener("click", () => {
-        localStorage.setItem("userAvatar", img.dataset.url);
-        avatars.forEach(a => a.classList.remove("selected-avatar"));
-        img.classList.add("selected-avatar");
-        alert("✅ Avatar aggiornato! Sarà visibile nel menu al prossimo accesso.");
-      });
-    });
-  });
-</script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="assets/script.js"></script>
 
-<!-- Banner Cookie Yume -->
+<!-- Banner Cookie -->
 <div id="cookie-banner" class="cookie-banner slide-up">
   <p>
     Utilizziamo cookie tecnici per garantire il funzionamento del sito e, previo consenso, cookie analitici e di terze parti per migliorare la tua esperienza.
@@ -295,8 +303,7 @@
   </div>
 </div>
 
-<!-- Modale Preferenze Cookie -->
-<div id="cookie-preferenze" class="cookie-modal"style="display: none;">
+<div id="cookie-preferenze" class="cookie-modal" style="display: none;">
   <div class="cookie-modal-box">
     <h3>Gestisci preferenze cookie</h3>
     <form id="cookie-preferenze-form">
