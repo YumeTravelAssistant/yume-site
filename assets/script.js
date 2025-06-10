@@ -1241,7 +1241,6 @@ function checkPasswordMatchAreaClienti() {
   }
 }
 
-
 function checkPasswordMatchOperatore() {
   const nuova = document.getElementById("nuovaPasswordOperatore").value;
   const conferma = document.getElementById("confermaPasswordOperatore").value;
@@ -1260,4 +1259,95 @@ function checkPasswordMatchOperatore() {
     msg.className = "password-message ko";
   }
 }
+
+// ✅ Script GDPR cookie – Yume Travel Tech
+
+function apriBannerCookie() {
+  document.getElementById('cookie-banner').style.display = 'block';
+}
+
+function apriPreferenze() {
+  document.getElementById('cookie-banner').style.display = 'none';
+  document.getElementById('cookie-preferenze').style.display = 'grid';
+}
+
+function accettaCookie() {
+  const scelta = {
+    analytics: true,
+    marketing: true
+  };
+  localStorage.setItem('cookieConsent', JSON.stringify(scelta));
+  document.getElementById('cookie-banner').style.display = 'none';
+  caricaAnalytics();
+  inviaConsensoCookie(scelta);
+}
+
+function rifiutaCookie() {
+  const scelta = {
+    analytics: false,
+    marketing: false
+  };
+  localStorage.setItem('cookieConsent', JSON.stringify(scelta));
+  document.getElementById('cookie-banner').style.display = 'none';
+  inviaConsensoCookie(scelta);
+}
+
+document.getElementById('cookie-preferenze-form')?.addEventListener('submit', function (e) {
+  e.preventDefault();
+  const analytics = document.getElementById('cookie-analytics')?.checked || false;
+  const marketing = document.getElementById('cookie-marketing')?.checked || false;
+
+  const scelta = { analytics, marketing };
+  localStorage.setItem('cookieConsent', JSON.stringify(scelta));
+  document.getElementById('cookie-preferenze').style.display = 'none';
+
+  if (analytics) caricaAnalytics();
+  inviaConsensoCookie(scelta);
+});
+
+function caricaAnalytics() {
+  const script = document.createElement('script');
+  script.src = "https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"; // <-- sostituisci con il tuo ID GA4
+  script.async = true;
+
+  script.onload = function () {
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    window.gtag = gtag;
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX'); // <-- stesso ID
+  };
+
+  document.head.appendChild(script);
+}
+
+function inviaConsensoCookie({ analytics, marketing }) {
+  const sessionId = localStorage.getItem('sessionId') || crypto.randomUUID();
+  localStorage.setItem('sessionId', sessionId);
+
+  fetch("https://yume-gdpr.azurewebsites.net/api/log-cookie", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      sessionId,
+      analytics,
+      marketing,
+      page: window.location.pathname,
+      userAgent: navigator.userAgent
+    })
+  }).catch((err) => console.warn("⚠️ Invio consenso fallito:", err));
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  try {
+    const scelta = JSON.parse(localStorage.getItem('cookieConsent') || 'null');
+    if (scelta?.analytics === true) {
+      caricaAnalytics();
+    } else if (!scelta) {
+      document.getElementById('cookie-banner').style.display = 'block';
+    }
+  } catch (e) {
+    document.getElementById('cookie-banner').style.display = 'block';
+  }
+});
 

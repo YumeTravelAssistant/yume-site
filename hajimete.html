@@ -367,7 +367,9 @@
       <a href="https://www.instagram.com/yumeviaggi" target="_blank" aria-label="Instagram" class="fa fa-instagram"></a>
       <a href="https://yuta-travel.com" target="_blank" aria-label="Sito YUTA" class="fa fa-globe"></a>
     </div>
-    <p class="footer-copy">© 2025 Yume Travel Tech – Tutti i diritti riservati.</p>
+  <p><a href="privacy.html">Privacy Policy</a>   <a href="termini-condizioni.html">Termini e Condizioni</a></p>
+ <p><a href="cookie-policy.html">Cookie Policy</a>   <a href="#" onclick="apriBannerCookie()">Modifica preferenze cookie</a></p>
+  <p class="footer-copy">© 2025 Yume Travel Tech – Tutti i diritti riservati.</p>
   </footer>
 
   <!-- Avatar Chatbot Yuki -->
@@ -703,6 +705,35 @@
     }).addTo(map2);
   });
 </script>
+
+<!-- Banner Cookie Yume -->
+<div id="cookie-banner" class="cookie-banner slide-up">
+  <p>
+    Utilizziamo cookie tecnici per garantire il funzionamento del sito e, previo consenso, cookie analitici e di terze parti per migliorare la tua esperienza.
+    <a href="privacy.html" target="_blank">Leggi la nostra informativa</a>.
+  </p>
+  <div class="cookie-buttons">
+    <button class="btn-accetta" onclick="accettaCookie()">Accetta</button>
+    <button class="btn-rifiuta" onclick="rifiutaCookie()">Rifiuta</button>
+    <button class="btn-gestisci" onclick="apriPreferenze()">Gestisci</button>
+  </div>
+</div>
+
+<!-- Modale Preferenze Cookie -->
+<div id="cookie-preferenze" class="cookie-modal"style="display: none;">
+  <div class="cookie-modal-box">
+    <h3>Gestisci preferenze cookie</h3>
+    <form id="cookie-preferenze-form">
+      <label><input type="checkbox" checked disabled> Cookie tecnici (obbligatori)</label><br>
+      <label><input type="checkbox" id="cookie-analytics"> Cookie analitici (Google Analytics)</label><br>
+      <label><input type="checkbox" id="cookie-marketing"> Cookie di marketing e tracciamento</label><br>
+      <div class="cookie-modal-actions">
+        <button type="submit" class="btn-salva">Salva preferenze</button>
+        <button type="button" class="btn-chiudi" onclick="document.getElementById('cookie-preferenze').style.display = 'none';">Chiudi</button>
+      </div>
+    </form>
+  </div>
+</div>
 
 </body>
 </html>

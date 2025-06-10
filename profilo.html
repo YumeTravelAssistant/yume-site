@@ -96,11 +96,22 @@
 </div>
 
 
-    <div class="form-group checkbox-group">
-      <label><input type="checkbox" id="privacy" required> Accetto l'informativa privacy*</label>
-      <label><input type="checkbox" id="termini" required> Accetto termini e condizioni*</label>
-      <label><input type="checkbox" id="newsletter"> Iscrivimi alla newsletter</label>
-    </div>
+<div class="form-group checkbox-group">
+  <label>
+    <input type="checkbox" id="privacy" required>
+    Accetto <a href="privacy.html" target="_blank">l'informativa privacy</a>*
+  </label>
+  
+  <label>
+    <input type="checkbox" id="termini" required>
+    Accetto <a href="termini-condizioni.html" target="_blank">termini e condizioni</a>*
+  </label>
+  
+  <label>
+    <input type="checkbox" id="newsletter">
+    Iscrivimi alla newsletter
+  </label>
+</div>
 
    <button type="submit" class="modern-btn form-submit">Registrati</button>
    <div id="esitoRegistrazione" class="form-feedback"></div>
@@ -116,6 +127,8 @@
     <a href="https://www.instagram.com/yumeviaggi" target="_blank" aria-label="Instagram" class="fa fa-instagram"></a>
     <a href="https://yuta-travel.com" target="_blank" aria-label="Sito YUTA" class="fa fa-globe"></a>
   </div>
+  <p><a href="privacy.html">Privacy Policy</a>   <a href="termini-condizioni.html">Termini e Condizioni</a></p>
+ <p><a href="cookie-policy.html">Cookie Policy</a>   <a href="#" onclick="apriBannerCookie()">Modifica preferenze cookie</a></p>
   <p class="footer-copy">© 2025 Yume Travel Tech – Tutti i diritti riservati.</p>
 </footer>
 
@@ -218,6 +231,37 @@
 <!-- SCRIPT -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="assets/script.js"></script>
+
+<!-- Banner Cookie Yume -->
+<div id="cookie-banner" class="cookie-banner slide-up">
+  <p>
+    Utilizziamo cookie tecnici per garantire il funzionamento del sito e, previo consenso, cookie analitici e di terze parti per migliorare la tua esperienza.
+    <a href="privacy.html" target="_blank">Leggi la nostra informativa</a>.
+  </p>
+  <div class="cookie-buttons">
+    <button class="btn-accetta" onclick="accettaCookie()">Accetta</button>
+    <button class="btn-rifiuta" onclick="rifiutaCookie()">Rifiuta</button>
+    <button class="btn-gestisci" onclick="apriPreferenze()">Gestisci</button>
+  </div>
+</div>
+
+<!-- Modale Preferenze Cookie -->
+<div id="cookie-preferenze" class="cookie-modal"style="display: none;">
+  <div class="cookie-modal-box">
+    <h3>Gestisci preferenze cookie</h3>
+    <form id="cookie-preferenze-form">
+      <label><input type="checkbox" checked disabled> Cookie tecnici (obbligatori)</label><br>
+      <label><input type="checkbox" id="cookie-analytics"> Cookie analitici (Google Analytics)</label><br>
+      <label><input type="checkbox" id="cookie-marketing"> Cookie di marketing e tracciamento</label><br>
+      <div class="cookie-modal-actions">
+        <button type="submit" class="btn-salva">Salva preferenze</button>
+        <button type="button" class="btn-chiudi" onclick="document.getElementById('cookie-preferenze').style.display = 'none';">Chiudi</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
 
 </body>
 </html>

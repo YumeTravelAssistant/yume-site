@@ -2,21 +2,14 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login Operatori – Yume Travel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Informativa Privacy - Yume Travel Tech</title>
   <link rel="icon" type="image/png" href="favicon.ico" />
-
-  <!-- Font Yume -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Raleway:wght@300;500;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
-
-  <!-- Stili -->
   <link rel="stylesheet" href="assets/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-
 <body>
-
-<!-- NAVBAR -->
 <nav class="navbar">
   <div class="navbar-left">
     <img src="assets/logo-yume.jpg" alt="Logo YUME" class="logo-navbar">
@@ -24,7 +17,6 @@
   <button class="hamburger" onclick="toggleSidebar()">☰</button>
 </nav>
 
-<!-- SIDEBAR (visibile ma senza link pubblici) -->
 <div id="sidebar" class="sidebar hidden">
   <div class="sidebar-logo">
     <img src="assets/logo_bar.png" alt="Logo Yume" class="logo-sidebar">
@@ -39,44 +31,38 @@
   <a href="log-in.html">Area Personale</a>
 </div>
 
-<!-- HERO -->
-<header class="hero-banner">
-  <picture>
-    <source srcset="assets/profilo-mob.jpg" media="(max-width: 768px)">
-    <img src="assets/profilo-desk.jpg" alt="Login Operatori" class="hero-banner-img">
-  </picture>
-  <div class="scroll-indicator" onclick="scrollToMain()">
-    <span class="arrow-down"></span>
-  </div>
-</header>
+<main class="privacy-wrapper">
+  <h1>Cookie Policy</h1>
+  <p>Questa Cookie Policy descrive le tipologie di cookie utilizzati da Yume Travel Tech e le modalità di gestione degli stessi.</p>
 
-<section class="hero-section">
-  <div class="hero-intro">
-    <h1 class="hero-title">Accesso Operatori Yume</h1>
-    <p class="hero-subtitle">Inserisci le credenziali per accedere all'area riservata</p>
-  </div>
-</section>
+  <h2>Che cosa sono i cookie?</h2>
+  <p>I cookie sono piccoli file di testo che i siti visitati dagli utenti inviano ai loro dispositivi, dove vengono memorizzati per essere ritrasmessi agli stessi siti alla visita successiva. Servono per migliorare la navigazione, raccogliere dati statistici e offrire contenuti personalizzati.</p>
 
-<!-- FORM LOGIN -->
-<section class="main-wrapper">
-  <form id="formLoginOperatore" class="info-form">
-    <div class="form-group">
-      <label for="codiceOperatore">Codice Operatore*</label>
-      <input type="text" id="codiceOperatore" required>
-    </div>
+  <h2>Tipologie di cookie utilizzati</h2>
 
-    <div class="form-group">
-      <label for="passwordOperatore">Password*</label>
-      <input type="password" id="passwordOperatore" required>
-      <button type="button" class="toggle-password-text" onclick="toggleVisibility('passwordOperatore', this)">Mostra password</button>
-    </div>
+  <ul>
+    <li><strong>Cookie tecnici:</strong> essenziali per il corretto funzionamento del sito (es. salvataggio sessione, navigazione).</li>
+    <li><strong>Cookie analitici:</strong> raccolgono informazioni in forma aggregata e anonima sull’uso del sito. Utilizziamo Google Analytics con IP anonimizzato.</li>
+    <li><strong>Cookie di profilazione e terze parti:</strong> utilizzati da fornitori esterni (es. Viator, widget, social) per fini di marketing o analisi approfondite. Attivati solo previo consenso.</li>
+  </ul>
 
-    <button type="submit" class="modern-btn form-submit">Accedi</button>
-    <div id="esitoLoginOperatore" class="form-feedback"></div>
-  </form>
-</section>
+  <h2>Gestione del consenso</h2>
+  <p>Al primo accesso l’utente può accettare o rifiutare i cookie non tecnici. Il consenso può essere modificato in qualsiasi momento tramite il pulsante “Modifica preferenze cookie” presente nel footer del sito.</p>
 
-<!-- FOOTER -->
+  <h2>Come disattivare i cookie manualmente</h2>
+  <p>L’utente può configurare il browser per accettare, rifiutare o cancellare tutti o alcuni cookie, anche tecnici. Disabilitare i cookie tecnici può compromettere il corretto funzionamento del sito.</p>
+
+  <ul>
+    <li><a href="https://support.google.com/chrome/answer/95647?hl=it">Google Chrome</a></li>
+    <li><a href="https://support.mozilla.org/it/kb/Gestione%20dei%20cookie">Mozilla Firefox</a></li>
+    <li><a href="https://support.apple.com/it-it/guide/safari/sfri11471/mac">Apple Safari</a></li>
+    <li><a href="https://support.microsoft.com/it-it/help/17442">Microsoft Edge</a></li>
+  </ul>
+
+  <h2>Responsabile del trattamento</h2>
+  <p>Yume Travel Tech – info@yumetraveltech.com</p>
+</main>
+
 <footer class="main-footer">
   <div class="footer-social">
     <p><strong>Seguici su:</strong></p>
@@ -88,11 +74,12 @@
   <p class="footer-copy">© 2025 Yume Travel Tech – Tutti i diritti riservati.</p>
 </footer>
 
-<!-- CHAT YUKI -->
+<!-- Avatar Chatbot Yuki -->
 <div id="yuki-chat-avatar" onclick="toggleYukiChat()" title="Hai bisogno di aiuto?">
   <img src="assets/yuki-avatar.png" alt="Yuki" />
 </div>
 
+<!-- Finestra Chat -->
 <div id="yuki-chatbox" class="hidden">
   <div class="chatbox-header">
     <span>Yuki, assistente AI</span>
@@ -109,7 +96,6 @@
   window.addEventListener("DOMContentLoaded", function () {
     const el = document.querySelector('#yuki-chat-avatar');
     if (!el) return;
-
     el.style.position = 'fixed';
     el.style.bottom = '25px';
     el.style.right = '25px';
@@ -120,7 +106,6 @@
     el.style.overflow = 'hidden';
     el.style.boxShadow = '0 4px 10px rgba(0,0,0,0.2)';
     el.style.backgroundColor = '#fff';
-
     const img = el.querySelector('img');
     if (img) {
       img.style.width = '100%';
@@ -131,7 +116,52 @@
   });
 </script>
 
-<!-- SCRIPT -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const profilo = JSON.parse(sessionStorage.getItem("profiloUtente"));
+      if (profilo) {
+        document.querySelectorAll("a[href='log-in.html']").forEach(link => {
+          link.href = "area-clienti.html";
+        });
+        const sidebar = document.querySelector(".sidebar");
+        if (sidebar && !document.getElementById("userBox")) {
+          const userBox = document.createElement("div");
+          userBox.id = "userBox";
+          userBox.style.marginTop = "30px";
+          userBox.style.padding = "10px";
+          userBox.style.textAlign = "center";
+          userBox.style.borderTop = "1px solid #ccc";
+          const avatar = document.createElement("img");
+          avatar.src = localStorage.getItem("userAvatar") || "https://api.dicebear.com/7.x/avataaars/svg?seed=yume";
+          avatar.alt = "Avatar";
+          avatar.style.width = "60px";
+          avatar.style.height = "60px";
+          avatar.style.borderRadius = "50%";
+          avatar.style.objectFit = "cover";
+          avatar.style.border = "2px solid #C9A86A";
+          avatar.style.marginBottom = "8px";
+          const logoutBtn = document.createElement("button");
+          logoutBtn.textContent = "Logout";
+          logoutBtn.style.marginTop = "6px";
+          logoutBtn.style.background = "#8B2C2B";
+          logoutBtn.style.color = "#fff";
+          logoutBtn.style.border = "none";
+          logoutBtn.style.padding = "6px 12px";
+          logoutBtn.style.borderRadius = "20px";
+          logoutBtn.style.cursor = "pointer";
+          logoutBtn.onclick = () => {
+            sessionStorage.removeItem("profiloUtente");
+            localStorage.removeItem("userAvatar");
+            window.location.href = "index.html";
+          };
+          userBox.appendChild(avatar);
+          userBox.appendChild(logoutBtn);
+          sidebar.appendChild(userBox);
+        }
+      }
+    });
+  </script>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="assets/script.js"></script>
 
@@ -166,4 +196,5 @@
 
 </body>
 </html>
+
 

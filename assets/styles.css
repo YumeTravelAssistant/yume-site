@@ -442,6 +442,15 @@ ul {
   }
 }
 
+.privacy-wrapper {
+  max-width: 800px;
+  margin: 100px auto 40px;
+  padding: 0 20px;
+  line-height: 1.6;
+}
+@media (max-width: 768px) {
+  .privacy-wrapper { padding: 100px 20px 40px; }
+}
 
 /* Contatti e newsletter (sfondo bianco) */
 .contatti-section {
@@ -556,6 +565,153 @@ ul {
 .newsletter-section button:hover,
 .contatti-section button:hover {
   background-color: #721F1E;
+}
+
+.cookie-banner {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #F4F0E2;
+  color: #8B2C2B;
+  font-family: 'Raleway', sans-serif;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  display: none;
+}
+
+.cookie-banner a {
+  color: #8B2C2B;
+  text-decoration: underline;
+}
+
+.cookie-buttons {
+  margin-top: 10px;
+}
+
+.btn-accetta, .btn-rifiuta, .btn-gestisci {
+  margin: 0 5px;
+  padding: 10px 18px;
+  border-radius: 30px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.btn-accetta {
+  background-color: #8B2C2B;
+  color: #fff;
+}
+
+.btn-rifiuta {
+  background-color: #fff;
+  color: #8B2C2B;
+  border: 2px solid #8B2C2B;
+}
+
+.btn-gestisci {
+  background-color: white;
+  color: #C9A86A;
+  border: 2px solid #C9A86A;
+}
+
+.cookie-modal {
+  position: fixed;
+  inset: 0; /* top: 0; right: 0; bottom: 0; left: 0 */
+  background: rgba(0,0,0,0.4);
+  z-index: 10000;
+
+  /* Centrazione anche se è display:block */
+  display: grid;
+  place-items: center;
+}
+
+.cookie-modal-box {
+  background-color: #fff;
+  color: #333;
+  padding: 30px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  font-family: 'Raleway', sans-serif;
+  position: relative;
+}
+
+.cookie-modal-actions {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.cookie-modal-box form label {
+  display: flex;
+  align-items: flex-start; /* testo su più righe se serve, ma accanto */
+  gap: 10px;
+  margin: 10px 0;
+  font-size: 1rem;
+  font-family: 'Raleway', sans-serif;
+  color: #333;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.cookie-modal-box form input[type="checkbox"] {
+  margin-top: 3px; /* riallinea visivamente il box rispetto al testo */
+  accent-color: #8B2C2B;
+  width: 18px;
+  height: 18px;
+}
+
+
+.btn-salva, .btn-chiudi {
+  margin-left: 10px;
+  padding: 8px 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-salva {
+  background-color: #8B2C2B;
+  color: #F4F0E2;
+}
+
+.btn-chiudi {
+  background-color: #ccc;
+  color: #333;
+}
+
+.btn-accetta:hover {
+  background-color: #a03b3a;
+}
+
+.btn-rifiuta:hover {
+  background-color: #D2A1A1;
+  color: #fff;
+  border: 2px solid #D2A1A1;
+}
+
+.btn-gestisci:hover {
+  background-color: #C9A86A;
+  color: #fff;
+  border-color: #C9A86A;
+}
+
+.btn-salva:hover {
+  background-color: #a03b3a;
+  color: #fff;
+}
+
+.btn-chiudi:hover {
+  background-color: #bbb;
+  color: #111;
+}
+
+.cookie-banner a:hover {
+  color: #C9A86A;
+  text-decoration: none;
 }
 
 /* Link contatti e suggerimenti chatbot */
