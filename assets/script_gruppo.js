@@ -13,6 +13,10 @@ function vaiAlStep0() {
   mostraStep(0);
 }
 
+function vaiAlStep2() {
+  mostraStep(2);
+}
+
 function toggleVisibility(idCampo, bottone) {
   const campo = document.getElementById(idCampo);
   if (!campo) return;
@@ -20,6 +24,7 @@ function toggleVisibility(idCampo, bottone) {
   campo.type = isPassword ? "text" : "password";
   bottone.textContent = isPassword ? "Nascondi password" : "Mostra password";
 }
+
 
 function aggiornaTipoCliente() {
   const tipo = document.getElementById("cliente_tipo")?.value;
