@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yume Maison - Sartoria di Viaggio</title>
+  <link rel="icon" type="image/png" href="favicon.ico">
+
+  <!-- Font Yume: Playfair, Raleway, Quicksand -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Raleway:wght@300;500;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Stili e icone -->
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="assets/styles_pacchetti.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+ <style>
+    .timeline-container {
+      position: relative;
+      margin: 60px auto;
+      padding-left: 60px;
+      max-width: 900px;
+    }
+    .timeline-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 25px;
+      width: 3px;
+      background-color: #F4F0E2;
+      z-index: 0;
+    }
+    .timeline-fill {
+      position: absolute;
+      top: 0;
+      left: 25px;
+      width: 3px;
+      height: 0;
+      background-color: #C9A86A;
+      z-index: 1;
+      transition: height 2s ease-out;
+    }
+
+.timeline-fill::after {
+  content: '';
+  position: absolute;
+  bottom: -24px; /* fa uscire l’aereo un po’ sotto la barra */
+  left: -11px;
+  width: 24px;
+  height: 24px;
+  background: url('assets/plane-down.svg') no-repeat center center;
+  background-size: contain;
+  transition: bottom 2s ease-out;
+  z-index: 2;
+}
+    .timeline-step {
+      position: relative;
+      margin-bottom: 60px;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 1.2s ease, transform 1.2s ease;
+    }
+    .timeline-step.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .timeline-icon {
+      position: absolute;
+      left: 10px;
+      top: 0;
+      width: 30px;
+      height: 30px;
+      background-color: #C9A86A;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 14px;
+      z-index: 2;
+    }
+    .timeline-text {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #8B2C2B;
+      margin-left: 40px;
+    }
+
+    .sartoria-slider-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      padding: 30px 0;
+      justify-content: center;
+      max-width: 1200px;
+      margin: 0 auto;
+
+    }
+    @media (min-width: 769px) and (max-width: 1399px) {
+      .sartoria-slider-container {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    @media (min-width: 1400px) {
+      .sartoria-slider-container {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    .sartoria-box {
+      background-color: #F4F0E2;
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      transition: transform 0.3s ease;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .sartoria-box:hover {
+      transform: translateY(-6px);
+    }
+    .sartoria-box i {
+      font-size: 28px;
+      margin-bottom: 12px;
+      color: #F4F0E2;
+    }
+    .sartoria-box h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: #C9A86A;
+      margin-bottom: 10px;
+    }
+    .sartoria-box p {
+      font-size: 0.95rem;
+      color: #F4F0E2;
+    }
+
+.hero-subtitle {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.6rem;
+    margin-top: 12px;
+    font-weight: 300;
+    color: #000000;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+
+  </style>
+
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="navbar-left">
+    <img src="assets/logo-yume.jpg" alt="Logo YUME" class="logo-navbar">
+  </div>
+  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+</nav>
+
+<div id="sidebar" class="sidebar hidden">
+  <div class="sidebar-logo">
+    <img src="assets/logo_bar.png" alt="Logo Yume" class="logo-sidebar">
+  </div>
+  <a href="index.html">Home</a>
+  <a href="pacchetti.html">Pacchetti flessibili</a>
+  <a href="gruppo.html">Viaggi di gruppo</a>
+  <a href="maison.html">Viaggi su misura</a>
+  <a href="consulenze.html">Consulenze</a>
+  <a href="faq.html">FAQ</a>
+  <a href="info-utili.html">Informazioni utili</a>
+  <a href="contatti.html">Contatti</a>
+  <a href="profilo.html">Registrazione</a>
+  <a href="log-in.html">Area Personale</a>
+</div>
+
+<header class="hero-banner">
+  <picture>
+    <source srcset="assets/maison_mob.jpg" media="(max-width: 768px)">
+    <img src="assets/maison_desk.jpg" alt="Casa Yume" class="hero-banner-img">
+  </picture>
+  <div class="scroll-indicator" onclick="scrollToMain()">
+    <span class="arrow-down"></span>
+  </div>
+</header>
+
+<section class="hero-section">
+  <div class="hero-intro">
+    <h1 class="hero-title">Yume Maison</h1>
+    <p class="hero-subtitle">La sartoria di viaggio su misura per te</p>
+  </div>
+</section>
+
+<section class="maison-section" >
+  <h2 class="slide-in">Come funziona</h2>
+  <div class="sartoria-slider-wrapper">
+    <div id="maisonSlider" class="sartoria-slider-container slide-in">
+
+  <style>
+maison-section {
+    padding: 80px 30px;
+    background-color: transparent;
+    text-align: center;
+    border-radius: 16px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+    @media (min-width: 769px) and (max-width: 1399px) {
+      .sartoria-slider-container {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    @media (min-width: 1400px) {
+      .sartoria-slider-container {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+@media (min-width: 769px) and (max-width: 1399px)
+#maisonSlider {
+    display: grid;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 30px;
+    scroll-padding: 0 20px;
+}
+.maison-section h2 {
+    font-size: 2.5rem;
+    color: #C9A86A;
+    margin-bottom: 30px;
+
+  </style>
+
+      <div class="sartoria-box" style="background-image: url('assets/1.jpg');">
+        <i class="fa fa-comments-o"></i>
+        <h3>1. Incontro personale</h3>
+        <p>Ascoltiamo sogni, budget e necessità per conoscerti a fondo.</p>
+      </div>
+
+      <div class="sartoria-box" style="background-image: url('assets/2.jpg');">
+        <i class="fa fa-scissors"></i>
+        <h3>2. Progettazione sartoriale</h3>
+        <p>Disegniamo itinerari unici, selezionando ogni servizio con cura.</p>
+      </div>
+
+      <div class="sartoria-box" style="background-image: url('assets/3.jpg');">
+        <i class="fa fa-shopping-cart"></i>
+        <h3>3. Pensiamo a tutto noi</h3>
+        <p>Dopo la tua approvazione acquistiamo voli, alloggi ed esperienze.</p>
+      </div>
+
+      <div class="sartoria-box" style="background-image: url('assets/4.jpg');">
+        <i class="fa fa-handshake-o"></i>
+        <h3>4. Assistenza dedicata</h3>
+        <p>Prima, durante e dopo il viaggio hai sempre il supporto Yume.</p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<div class="main-wrapper">
+  <section class="sartoria-section" id="ideeMaison">
+   
+     <style> 
+      .sartoria-section {
+        max-width: 1400px;
+      </style>
+    <h2 class="slide-in">Idee personalizzate</h2>
+    <div class="sartoria-slider-container">
+      <div class="sartoria-box slide-in" style="background-image: url('assets/offerta_3.jpg');">
+        <h3>Romantici & Nozze</h3>
+        <p>Proposte di matrimonio e lune di miele pensate solo per voi.</p>
+      </div>
+      <div class="sartoria-box slide-in" style="background-image: url('assets/famiglia.jpg');">
+        <h3>Famiglia e bambini</h3>
+        <p>Attività divertenti e alloggi comodi per ogni età.</p>
+      </div>
+      <div class="sartoria-box slide-in" style="background-image: url('assets/natura.jpg');">
+        <h3>Natura e avventura</h3>
+        <p>Dalle montagne sacre alle isole remote, vivi emozioni uniche.</p>
+      </div>
+      <div class="sartoria-box slide-in" style="background-image: url('assets/offerta_6.jpg');">
+        <h3>Occasioni speciali</h3>
+        <p>Anniversari, lauree o viaggi a tema: soluzioni sorprendenti.</p>
+      </div>
+    </div>
+  </section>
+
+<section id="timelineMaison" class="sartoria-servizi-section slide-in">
+  <h2 class="slide-in">Il tuo viaggio, passo dopo passo</h2>
+  <p class="sartoria-servizi-intro">Pianificare un viaggio perfetto richiede tempo: ecco la nostra timeline ideale per un'esperienza su misura senza stress.</p>
+  <div class="timeline-container">
+    <div class="timeline-line"></div>
+    <div class="timeline-fill" id="timelineFill"></div>
+    <div class="timeline-step"><div class="timeline-icon"><i class="fa fa-comments-o"></i></div><span class="timeline-text"><strong>6 mesi prima (almeno 4)</strong>: Call conoscitiva e raccolta informazioni</span></div>
+    <div class="timeline-step"><div class="timeline-icon"><i class="fa fa-plane"></i></div><span class="timeline-text"><strong>Entro 5 mesi</strong>: Definizione voli, date e collegamenti principali</span></div>
+    <div class="timeline-step"><div class="timeline-icon"><i class="fa fa-bed"></i></div><span class="timeline-text"><strong>Entro 4 mesi</strong>: Selezione alloggi, fascia e stile (ryokan, hotel, ecc.)</span></div>
+    <div class="timeline-step"><div class="timeline-icon"><i class="fa fa-ticket"></i></div><span class="timeline-text"><strong>Entro 3 mesi</strong>: Pass, abbonamenti e selezione delle attrazioni per città</span></div>
+    <div class="timeline-step"><div class="timeline-icon"><i class="fa fa-medkit"></i></div><span class="timeline-text"><strong>Entro 2 mesi</strong>: Telefonia, assicurazione, export farmaci e tax free</span></div>
+    <div class="timeline-step"><div class="timeline-icon"><i class="fa fa-star"></i></div><span class="timeline-text"><strong>Entro 1 mese</strong>: Esperienze esclusive e attività partner su misura</span></div>
+    <div class="timeline-step"><div class="timeline-icon"><i class="fa fa-android"></i></div><span class="timeline-text"><strong>Ultime settimane</strong>: Attivazione supporto YUTA – AI personalizzata per il viaggio</span></div>
+    <div class="timeline-step"><div class="timeline-icon"><i class="fa fa-file-text-o"></i></div><span class="timeline-text"><strong>2 settimane prima</strong>: Ricezione documenti digitali e personalizzati</span></div>
+    <div class="timeline-step"><div class="timeline-icon"><i class="fa fa-video-camera"></i></div><span class="timeline-text"><strong>1 settimana prima</strong>: Videochiamata finale, consigli su valigia e organizzazione</span></div>
+  </div>
+ </section>
+
+
+<section class="foto-slider-section slide-in">
+  <h2 class="foto-slider-title">Galleria Yume Maison</h2>
+  <div class="foto-slider-wrapper">
+    <button class="slider-arrow left" onclick="scrollFotoSlider(-1)"></button>
+    <div class="foto-slider-container" id="fotoSlider">
+  <div class="foto-box"><img src="maison/1.jpg" alt="Foto 1" loading="lazy" onclick="apriFotoFullscreen(0)"></div>
+  <div class="foto-box"><img src="maison/2.jpg" alt="Foto 2" loading="lazy" onclick="apriFotoFullscreen(1)"></div>
+  <div class="foto-box"><img src="maison/3.jpg" alt="Foto 3" loading="lazy" onclick="apriFotoFullscreen(2)"></div>
+  <div class="foto-box"><img src="maison/4.jpg" alt="Foto 4" loading="lazy" onclick="apriFotoFullscreen(3)"></div>
+  <div class="foto-box"><img src="maison/5.jpg" alt="Foto 5" loading="lazy" onclick="apriFotoFullscreen(4)"></div>
+  <div class="foto-box"><img src="maison/6.jpg" alt="Foto 6" loading="lazy" onclick="apriFotoFullscreen(5)"></div>
+  <div class="foto-box"><img src="maison/7.jpg" alt="Foto 7" loading="lazy" onclick="apriFotoFullscreen(6)"></div>
+  <div class="foto-box"><img src="maison/8.jpg" alt="Foto 8" loading="lazy" onclick="apriFotoFullscreen(7)"></div>
+  <div class="foto-box"><img src="maison/9.jpg" alt="Foto 9" loading="lazy" onclick="apriFotoFullscreen(8)"></div>
+</div>
+      
+    </div>
+    <button class="slider-arrow right" onclick="scrollFotoSlider(1)"></button>
+  </div>
+</section>
+
+<section class="contatti-section">
+  <h2 class="slide-in">Richiedi la tua proposta sartoriale</h2>
+  <p class="intro-text">Ogni viaggio nasce da un’intuizione. Raccontaci chi sei, cosa ami, e noi cuciremo per te un itinerario unico, fatto a mano.</p>
+
+  <form>
+    <label for="nome">Il tuo nome e cognome</label>
+    <input type="text" id="nome" name="nome" placeholder="Es. Alessio Calistri" required>
+
+    <label for="email">Contatto e-mail</label>
+    <input type="email" id="email" name="email" placeholder="Es. nome@email.com" required>
+
+    <label for="viaggio">Che tipo di viaggio immagini?</label>
+    <select id="viaggio" name="viaggio">
+      <option value="">Seleziona un'opzione</option>
+      <option value="Coppia romantica">Un’esperienza romantica in coppia</option>
+      <option value="Famiglia">Un viaggio comodo per tutta la famiglia</option>
+      <option value="Avventura e natura">Alla scoperta della natura più autentica</option>
+      <option value="Cultura e spiritualità">Tra templi, storia e tradizioni</option>
+      <option value="Altro">Un sogno completamente diverso</option>
+    </select>
+
+    <label for="msg">Come possiamo ispirarti?</label>
+    <textarea id="msg" rows="5" placeholder="Parlaci del tuo stile di viaggio, occasioni speciali o semplici desideri…"></textarea>
+
+    <button type="submit" class="btn-accetta">Invia la tua richiesta alla Maison</button>
+  </form>
+</section>
+
+
+<!-- FOOTER + CHATBOT -->
+<footer class="main-footer">
+  <div class="footer-social">
+    <p><strong>Seguici su:</strong></p>
+    <a href="https://www.instagram.com/yumeviaggi" target="_blank" class="fa fa-instagram"></a>
+    <a href="https://yuta-travel.com" target="_blank" class="fa fa-globe"></a>
+  </div>
+  <p><a href="privacy.html">Privacy Policy</a> <a href="termini-condizioni.html">Termini e Condizioni</a></p>
+  <p><a href="cookie-policy.html">Cookie Policy</a> <a href="#" onclick="apriBannerCookie()">Modifica preferenze cookie</a></p>
+  <p class="footer-copy">© 2025 Yume Travel Tech – Tutti i diritti riservati.</p>
+</footer>
+
+<div id="yuki-chat-avatar" onclick="toggleYukiChat()" title="Hai bisogno di aiuto?">
+  <img src="assets/yuki-avatar.png" alt="Yuki" />
+</div>
+
+<div id="yuki-chatbox" class="hidden">
+  <div class="chatbox-header">
+    <span>Yuki, assistente AI</span>
+    <button onclick="toggleYukiChat()">✕</button>
+  </div>
+  <div class="chatbox-messages" id="chatbox-messages"></div>
+  <div class="chatbox-input">
+    <input type="text" id="userMessage" placeholder="Scrivi qui...">
+    <button onclick="sendMessage()">Invia</button>
+  </div>
+</div>
+
+<!-- SCRIPT BASE -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="assets/script.js"></script>
+
+<script>
+  // Avatar posizione fissa
+  window.addEventListener("DOMContentLoaded", function () {
+    const el = document.querySelector('#yuki-chat-avatar');
+    if (!el) return;
+    el.style.position = 'fixed';
+    el.style.bottom = '25px';
+    el.style.right = '25px';
+    el.style.width = '90px';
+    el.style.height = '90px';
+    el.style.zIndex = '9999';
+    el.style.borderRadius = '50%';
+    el.style.overflow = 'hidden';
+    el.style.boxShadow = '0 4px 10px rgba(0,0,0,0.2)';
+    el.style.backgroundColor = '#fff';
+
+    const img = el.querySelector('img');
+    if (img) {
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.objectFit = 'cover';
+      img.style.borderRadius = '50%';
+    }
+  });
+</script>
+
+<script>
+  // Slider foto orizzontale
+  function scrollFotoSlider(direction) {
+    const container = document.getElementById("fotoSlider");
+    const scrollAmount = 280;
+    if (container) {
+      container.scrollBy({
+        left: direction * scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  }
+</script>
+
+<script>
+  // Appare animazione immagini
+  document.addEventListener("DOMContentLoaded", function () {
+    const dynamicObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          dynamicObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.foto-box img, .foto-slider-title').forEach(el => {
+      dynamicObserver.observe(el);
+    });
+  });
+</script>
+
+<script>
+  // Galleria fullscreen
+  const immagini = [
+    "maison/1.jpg", "maison/2.jpg", "maison/3.jpg",
+    "maison/4.jpg", "maison/5.jpg", "maison/6.jpg",
+    "maison/7.jpg", "maison/8.jpg", "maison/9.jpg"
+  ];
+  let indexAttuale = 0;
+  let startX = 0;
+
+  function apriFotoFullscreen(index) {
+    indexAttuale = index;
+    const overlay = document.createElement('div');
+    overlay.classList.add('fullscreen-overlay');
+
+    const img = document.createElement('img');
+    img.src = immagini[index];
+    img.alt = "Foto " + (index + 1);
+    img.classList.add("fullscreen-img");
+
+    const btnChiudi = document.createElement('span');
+    btnChiudi.innerHTML = "&times;";
+    btnChiudi.classList.add("btn-close");
+    btnChiudi.onclick = () => document.body.removeChild(overlay);
+
+    const frecciaSx = document.createElement('button');
+    frecciaSx.classList.add('fullscreen-arrow', 'left');
+    frecciaSx.innerHTML = '<i class="fa fa-chevron-left"></i>';
+    frecciaSx.onclick = (e) => { e.stopPropagation(); cambiaFoto(-1); };
+
+    const frecciaDx = document.createElement('button');
+    frecciaDx.classList.add('fullscreen-arrow', 'right');
+    frecciaDx.innerHTML = '<i class="fa fa-chevron-right"></i>';
+    frecciaDx.onclick = (e) => { e.stopPropagation(); cambiaFoto(1); };
+
+    // swipe mobile
+    overlay.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+    });
+    overlay.addEventListener('touchend', (e) => {
+      const diff = startX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) diff > 0 ? cambiaFoto(1) : cambiaFoto(-1);
+    });
+
+    overlay.appendChild(btnChiudi);
+    overlay.appendChild(frecciaSx);
+    overlay.appendChild(img);
+    overlay.appendChild(frecciaDx);
+    document.body.appendChild(overlay);
+  }
+
+  function cambiaFoto(direz) {
+    indexAttuale = (indexAttuale + direz + immagini.length) % immagini.length;
+    const img = document.querySelector(".fullscreen-img");
+    img.src = immagini[indexAttuale];
+    img.alt = "Foto " + (indexAttuale + 1);
+  }
+</script>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      const steps = document.querySelectorAll('.timeline-step');
+      const fill = document.getElementById('timelineFill');
+      const container = document.querySelector('.timeline-container');
+      const triggerBottom = window.innerHeight * 0.9;
+      let lastVisibleIndex = -1;
+      steps.forEach((step, index) => {
+        const boxTop = step.getBoundingClientRect().top;
+        if (boxTop < triggerBottom && !step.classList.contains('visible')) {
+          step.classList.add('visible');
+          lastVisibleIndex = index;
+        }
+      });
+      if (lastVisibleIndex >= 0) {
+        const fillHeight = steps[lastVisibleIndex].offsetTop + 15;
+        fill.style.height = fillHeight + 'px';
+      }
+    });
+  </script>
+
+<!-- COOKIE BANNER -->
+<div id="cookie-banner" class="cookie-banner slide-up">
+  <p>
+    Utilizziamo cookie tecnici per garantire il funzionamento del sito e, previo consenso, cookie analitici e di terze parti per migliorare la tua esperienza.
+    <a href="privacy.html" target="_blank">Leggi la nostra informativa</a>.
+  </p>
+  <div class="cookie-buttons">
+    <button class="btn-accetta" onclick="accettaCookie()">Accetta</button>
+    <button class="btn-rifiuta" onclick="rifiutaCookie()">Rifiuta</button>
+    <button class="btn-gestisci" onclick="apriPreferenze()">Gestisci</button>
+  </div>
+</div>
+
+<div id="cookie-preferenze" class="cookie-modal" style="display: none;">
+  <div class="cookie-modal-box">
+    <h3>Gestisci preferenze cookie</h3>
+    <form id="cookie-preferenze-form">
+      <label><input type="checkbox" checked disabled> Cookie tecnici (obbligatori)</label><br>
+      <label><input type="checkbox" id="cookie-analytics"> Cookie analitici (Google Analytics)</label><br>
+      <label><input type="checkbox" id="cookie-marketing"> Cookie di marketing e tracciamento</label><br>
+      <div class="cookie-modal-actions">
+        <button type="submit" class="btn-salva">Salva preferenze</button>
+        <button type="button" class="btn-chiudi" onclick="document.getElementById('cookie-preferenze').style.display = 'none';">Chiudi</button>
+      </div>
+    </form>
+  </div>
+</div>
