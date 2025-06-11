@@ -1,13 +1,33 @@
 let carrello = [];
 
+document.addEventListener("DOMContentLoaded", () => {
+  const carrelloSalvato = JSON.parse(sessionStorage.getItem("carrello")) || [];
+  console.log("🛒 Carrello salvato:", carrelloSalvato);
+
+  if (carrelloSalvato.length > 0) {
+    carrello = carrelloSalvato;
+    aggiornaCarrelloUI();
+    console.log("✅ Carrello ripristinato e UI aggiornata.");
+  } else {
+    console.log("⚠️ Nessun prodotto trovato nel carrello.");
+  }
+});
+
 function toggleCarrello() {
   document.getElementById("carrelloContainer").classList.toggle("hidden");
 }
 
 function aggiornaCarrelloUI() {
+  console.log("🔄 aggiornaCarrelloUI() avviata");
+
   const lista = document.getElementById("listaCarrello");
   const totale = document.getElementById("carrelloTotale");
   const badge = document.getElementById("cartCount");
+
+  if (!lista || !totale || !badge) {
+    console.warn("⚠️ Uno o più elementi DOM mancanti (#listaCarrello, #carrelloTotale, #cartCount)");
+    return;
+  }
 
   lista.innerHTML = "";
   let somma = 0;
@@ -16,7 +36,7 @@ function aggiornaCarrelloUI() {
     const li = document.createElement("li");
     li.innerHTML = `
       ${prodotto.nome} – <strong>€${prodotto.prezzo.toFixed(2)}</strong>
-      <button onclick="rimuoviDalCarrello(${index})" style="background:none;border:none;color:#8B2C2B;cursor:pointer;">×</button>
+      <button onclick="rimuoviDalCarrello(${index})" style="background:none;border:none;color:#8B2C2B;cursor:pointer">🗑</button>
     `;
     lista.appendChild(li);
     somma += prodotto.prezzo;
@@ -24,6 +44,9 @@ function aggiornaCarrelloUI() {
 
   totale.textContent = `€${somma.toFixed(2)}`;
   badge.textContent = carrello.length;
+
+  console.log(`📦 ${carrello.length} prodotti nel carrello`);
+  console.log(`💰 Totale aggiornato: €${somma.toFixed(2)}`);
 }
 
 function aggiungiAlCarrello(nome, prezzo) {
