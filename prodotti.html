@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Prodotti Digitali – Yume Travel Tech</title>
+  <link rel="icon" type="image/png" href="favicon.ico" />
+
+  <!-- Font Yume: Playfair, Raleway, Quicksand -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Raleway:wght@300;500;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Stili e icone -->
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+/* Sezione pacchetti/prodotti */
+.sezione-pacchetti {
+  padding: 60px 20px;
+  background-color: #F4F0E2;
+  text-align: center;
+}
+
+.pacchetti-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 40px;
+}
+
+.pacchetti-box {
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  width: 300px;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.pacchetti-box:hover {
+  transform: translateY(-8px);
+}
+
+.pacchetti-box img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 20px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-content h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  color: #8B2C2B;
+  margin-bottom: 12px;
+}
+
+.card-content p {
+  font-size: 0.95rem;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.icon-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px 0;
+  text-align: left;
+}
+
+.icon-list li {
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  color: #555;
+}
+
+.icon-list i {
+  margin-right: 8px;
+  color: #C9A86A;
+}
+
+.prodotto-prezzo {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #C9A86A;
+  margin: 12px 0;
+}
+
+/* Bottone stile pacchetti */
+.modern-btn {
+  background-color: #8B2C2B;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 16px;
+  font-weight: bold;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modern-btn:hover {
+  background-color: #6e2322;
+}
+
+</style>
+
+</head>
+<body>
+
+<!-- Navbar coerente con index -->
+<nav class="navbar">
+  <div class="navbar-left">
+    <img src="assets/logo-yume.jpg" alt="Logo YUME" class="logo-navbar">
+  </div>
+  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+</nav>
+
+<div id="sidebar" class="sidebar hidden">
+  <div class="sidebar-logo">
+    <img src="assets/logo_bar.png" alt="Logo Yume" class="logo-sidebar">
+  </div>
+
+  <a href="index.html">Home</a>
+  <a href="pacchetti.html">Pacchetti flessibili</a>
+  <a href="gruppo.html">Viaggi di gruppo</a>
+  <a href="maison.html">Viaggi su misura</a>
+  <a href="consulenze.html">Consulenze</a>
+  <a href="prodotti.html">Prodotti</a>
+  <a href="faq.html">FAQ</a>
+  <a href="info-utili.html">Informazioni utili</a>
+  <a href="contatti.html">Contatti</a>
+  <a href="profilo.html">Registrazione</a>
+  <a href="log-in.html">Area Personale</a>
+</div>
+
+<header class="hero-banner">
+  <picture>
+    <source srcset="assets/prodotti_mob.jpg" media="(max-width: 768px)">
+    <img src="assets/prodotti_desk.jpg" alt="Prodotti Yume" class="hero-banner-img">
+  </picture>
+
+  <div class="scroll-indicator" onclick="scrollToMain()">
+    <span class="arrow-down"></span>
+  </div>
+</header>
+
+<section class="hero-section">
+  <div class="hero-intro">
+    <h1 class="hero-title">Prodotti Digitali e Servizi Esclusivi</h1>
+    <p class="hero-subtitle">Esperienze, guide e risorse per il tuo viaggio perfetto</p>
+  </div>
+</section>
+
+<section class="sezione-pacchetti">
+  <h2 class="slide-in">Prodotti digitali Yume</h2>
+  <p class="slide-in">Esplora le nostre guide esclusive per scoprire il Giappone con occhi nuovi, ovunque tu sia.</p>
+
+  <div class="pacchetti-wrapper">
+    
+    <!-- Guida Tokyo e Dintorni -->
+    <div class="pacchetti-box slide-in">
+      <img src="assets/prodotti/tokyo-dintorni.jpg" alt="Guida Tokyo e Dintorni">
+      <div class="card-content">
+        <h3>Guida Tokyo e Dintorni</h3>
+        <p>Un itinerario ragionato tra i quartieri più iconici, luoghi nascosti e gite perfette da Tokyo.</p>
+        <ul class="icon-list">
+          <li><i class="fa fa-map"></i> 90+ pagine PDF</li>
+          <li><i class="fa fa-bolt"></i> Accesso immediato</li>
+        </ul>
+        <div class="prodotto-prezzo">€29,00</div>
+        <button class="modern-btn" onclick="aggiungiAlCarrello('Guida Tokyo e Dintorni', 29)">Aggiungi al carrello</button>
+      </div>
+    </div>
+
+    <!-- Guida Giappone Inclusivo -->
+    <div class="pacchetti-box slide-in">
+      <img src="assets/prodotti/giappone-inclusivo.jpg" alt="Guida Giappone Inclusivo">
+      <div class="card-content">
+        <h3>Guida Giappone Inclusivo</h3>
+        <p>Accessibilità, disabilità, neurodivergenze e percorsi personalizzati: il Giappone che accoglie tutti.</p>
+        <ul class="icon-list">
+          <li><i class="fa fa-universal-access"></i> Guida inclusiva</li>
+          <li><i class="fa fa-heart"></i> Pensata per ogni esigenza</li>
+        </ul>
+        <div class="prodotto-prezzo">€25,00</div>
+        <button class="modern-btn" onclick="aggiungiAlCarrello('Guida Giappone Inclusivo', 25)">Aggiungi al carrello</button>
+      </div>
+    </div>
+
+    <!-- Guida Usi e Costumi Giapponesi -->
+    <div class="pacchetti-box slide-in">
+      <img src="assets/prodotti/usi-costumi.jpg" alt="Guida Usi e Costumi Giapponesi">
+      <div class="card-content">
+        <h3>Guida Usi e Costumi Giapponesi</h3>
+        <p>Comportamenti, regole, espressioni utili e situazioni reali per non sentirti mai fuori posto.</p>
+        <ul class="icon-list">
+          <li><i class="fa fa-language"></i> Frasario e contesto</li>
+          <li><i class="fa fa-lightbulb-o"></i> Conoscere per rispettare</li>
+        </ul>
+        <div class="prodotto-prezzo">€19,00</div>
+        <button class="modern-btn" onclick="aggiungiAlCarrello('Guida Usi e Costumi Giapponesi', 19)">Aggiungi al carrello</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Carrello Laterale Yume -->
+<div id="carrelloContainer" class="yume-cart hidden">
+  <div class="cart-header">
+    <h3>Il tuo carrello</h3>
+    <button onclick="toggleCarrello()" class="close-cart" aria-label="Chiudi il carrello">×</button>
+  </div>
+
+  <ul id="listaCarrello" class="cart-list"></ul>
+
+  <div class="cart-footer">
+    <div class="cart-total">
+      Totale: <span id="carrelloTotale">€0,00</span>
+    </div>
+    <button class="negozio btn" onclick="vaiAllaCassa()">Procedi al pagamento</button>
+  </div>
+</div>
+
+<!-- Pulsante flottante fisso con icona -->
+<button id="toggleCarrelloBtn" class="yume-cart-toggle" onclick="toggleCarrello()" aria-label="Apri il carrello">
+  <i class="fa fa-shopping-bag fa-lg"></i>
+  <span id="cartCount" class="cart-count-badge">0</span>
+</button>
+
+
+<footer class="main-footer">
+  <div class="footer-social">
+    <p><strong>Seguici su:</strong></p>
+    <a href="https://www.instagram.com/yumeviaggi" target="_blank" aria-label="Instagram" class="fa fa-instagram"></a>
+    <a href="https://yuta-travel.com" target="_blank" aria-label="Sito YUTA" class="fa fa-globe"></a>
+  </div>
+  <p><a href="privacy.html">Privacy Policy</a>   <a href="termini-condizioni.html">Termini e Condizioni</a></p>
+ <p><a href="cookie-policy.html">Cookie Policy</a>   <a href="#" onclick="apriBannerCookie()">Modifica preferenze cookie</a></p>
+
+  <p class="footer-copy">© 2025 Yume Travel Tech – Tutti i diritti riservati.</p>
+</footer>
+
+
+<!-- Avatar Chatbot Yuki -->
+<div id="yuki-chat-avatar" onclick="toggleYukiChat()" title="Hai bisogno di aiuto?">
+  <img src="assets/yuki-avatar.png" alt="Yuki" />
+</div>
+
+<!-- Finestra Chat -->
+<div id="yuki-chatbox" class="hidden">
+  <div class="chatbox-header">
+    <span>Yuki, assistente AI</span>
+    <button onclick="toggleYukiChat()">✕</button>
+  </div>
+  <div class="chatbox-messages" id="chatbox-messages"></div>
+  <div class="chatbox-input">
+    <input type="text" id="userMessage" placeholder="Scrivi qui..." />
+    <button onclick="sendMessage()">Invia</button>
+  </div>
+</div>
+
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    const el = document.querySelector('#yuki-chat-avatar');
+    if (!el) return;
+
+    el.style.position = 'fixed';
+    el.style.bottom = '25px';
+    el.style.right = '25px';
+    el.style.width = '90px';
+    el.style.height = '90px';
+    el.style.zIndex = '9999';
+    el.style.borderRadius = '50%';
+    el.style.overflow = 'hidden';
+    el.style.boxShadow = '0 4px 10px rgba(0,0,0,0.2)';
+    el.style.backgroundColor = '#fff';
+
+    const img = el.querySelector('img');
+    if (img) {
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.objectFit = 'cover';
+      img.style.borderRadius = '50%';
+    }
+  });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const profilo = JSON.parse(sessionStorage.getItem("profiloUtente"));
+    if (profilo) {
+      // 🔁 Reindirizza "Area Personale" direttamente ad area-clienti
+      document.querySelectorAll("a[href='log-in.html']").forEach(link => {
+        link.href = "area-clienti.html";
+      });
+
+      // 👤 Mostra avatar + logout nella sidebar
+      const sidebar = document.querySelector(".sidebar");
+      if (sidebar && !document.getElementById("userBox")) {
+        const userBox = document.createElement("div");
+        userBox.id = "userBox";
+        userBox.style.marginTop = "30px";
+        userBox.style.padding = "10px";
+        userBox.style.textAlign = "center";
+        userBox.style.borderTop = "1px solid #ccc";
+
+        const avatar = document.createElement("img");
+        avatar.src = localStorage.getItem("userAvatar") || "https://api.dicebear.com/7.x/avataaars/svg?seed=yume";
+        avatar.alt = "Avatar";
+        avatar.style.width = "60px";
+        avatar.style.height = "60px";
+        avatar.style.borderRadius = "50%";
+        avatar.style.objectFit = "cover";
+        avatar.style.border = "2px solid #C9A86A";
+        avatar.style.marginBottom = "8px";
+
+        const logoutBtn = document.createElement("button");
+        logoutBtn.textContent = "Logout";
+        logoutBtn.style.marginTop = "6px";
+        logoutBtn.style.background = "#8B2C2B";
+        logoutBtn.style.color = "#fff";
+        logoutBtn.style.border = "none";
+        logoutBtn.style.padding = "6px 12px";
+        logoutBtn.style.borderRadius = "20px";
+        logoutBtn.style.cursor = "pointer";
+
+        logoutBtn.onclick = () => {
+          sessionStorage.removeItem("profiloUtente");
+          localStorage.removeItem("userAvatar");
+          window.location.href = "index.html";
+        };
+
+        userBox.appendChild(avatar);
+        userBox.appendChild(logoutBtn);
+        sidebar.appendChild(userBox);
+      }
+    }
+  });
+</script>
+
+
+<!-- jQuery PRIMA -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- roundSlider DOPO -->
+<script src="https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.js"></script>
+
+<!-- tuo script.js ULTIMO -->
+<script src="assets/script.js"></script>
+
+<script src="assets/script_prodotti.js"></script>
+
+<!-- SOLO per pacchetti.html -->
+<script src="assets/script_form.js"></script>
+
+<!-- Banner Cookie Yume -->
+<div id="cookie-banner" class="cookie-banner slide-up">
+  <p>
+    Utilizziamo cookie tecnici per garantire il funzionamento del sito e, previo consenso, cookie analitici e di terze parti per migliorare la tua esperienza.
+    <a href="privacy.html" target="_blank">Leggi la nostra informativa</a>.
+  </p>
+  <div class="cookie-buttons">
+    <button class="btn-accetta" onclick="accettaCookie()">Accetta</button>
+    <button class="btn-rifiuta" onclick="rifiutaCookie()">Rifiuta</button>
+    <button class="btn-gestisci" onclick="apriPreferenze()">Gestisci</button>
+  </div>
+</div>
+
+<!-- Modale Preferenze Cookie -->
+<div id="cookie-preferenze" class="cookie-modal"style="display: none;">
+  <div class="cookie-modal-box">
+    <h3>Gestisci preferenze cookie</h3>
+    <form id="cookie-preferenze-form">
+      <label><input type="checkbox" checked disabled> Cookie tecnici (obbligatori)</label><br>
+      <label><input type="checkbox" id="cookie-analytics"> Cookie analitici (Google Analytics)</label><br>
+      <label><input type="checkbox" id="cookie-marketing"> Cookie di marketing e tracciamento</label><br>
+      <div class="cookie-modal-actions">
+        <button type="submit" class="btn-salva">Salva preferenze</button>
+        <button type="button" class="btn-chiudi" onclick="document.getElementById('cookie-preferenze').style.display = 'none';">Chiudi</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>
