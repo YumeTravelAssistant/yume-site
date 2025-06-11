@@ -33,6 +33,7 @@
   <a href="gruppo.html">Viaggi di gruppo</a>
   <a href="maison.html">Viaggi su misura</a>
   <a href="consulenze.html">Consulenze</a>
+  <a href="prodotti.html">Prodotti</a>
   <a href="faq.html">FAQ</a>
   <a href="info-utili.html">Informazioni utili</a>
   <a href="contatti.html">Contatti</a>
@@ -548,6 +549,29 @@
   </section>
 </div>
 
+<!-- Carrello Laterale Yume -->
+<div id="carrelloContainer" class="yume-cart hidden">
+  <div class="cart-header">
+    <h3>Il tuo carrello</h3>
+    <button onclick="toggleCarrello()" class="close-cart" aria-label="Chiudi il carrello">×</button>
+  </div>
+
+  <ul id="listaCarrello" class="cart-list"></ul>
+
+  <div class="cart-footer">
+    <div class="cart-total">
+      Totale: <span id="carrelloTotale">€0,00</span>
+    </div>
+    <button class="negozio btn" onclick="vaiAllaCassa()">Procedi al pagamento</button>
+  </div>
+</div>
+
+<!-- Pulsante flottante fisso con icona -->
+<button id="toggleCarrelloBtn" class="yume-cart-toggle" onclick="toggleCarrello()" aria-label="Apri il carrello">
+  <i class="fa fa-shopping-bag fa-lg"></i>
+  <span id="cartCount" class="cart-count-badge">0</span>
+</button>
+
 <!-- FOOTER -->
 <footer class="main-footer">
   <div class="footer-social">
@@ -659,6 +683,8 @@
 <!-- SCRIPT -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="assets/script.js"></script>
+
+<script src="assets/script_prodotti.js"></script>
 
 <!-- Banner Cookie Yume -->
 <div id="cookie-banner" class="cookie-banner slide-up">
