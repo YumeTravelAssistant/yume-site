@@ -1,0 +1,140 @@
+<!-- form_kokai.html -->
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pagamento Viaggio di Gruppo - Yume Travel</title>
+  <link rel="icon" type="image/png" href="favicon.ico" />
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  <style>
+    .step { display: none; }
+    .step.active { display: block; }
+    .form-group { margin-bottom: 1rem; }
+    .btn-step {
+      background-color: #C9A86A;
+      color: #fff;
+      font-weight: bold;
+      padding: 0.8rem 2rem;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+    .btn-step:hover {
+      background-color: #a8824f;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="main-wrapper">
+    <section class="step-container">
+
+      <!-- STEP 0: Login -->
+      <div class="step active" id="step0">
+        <h2>Accedi al tuo account</h2>
+
+        <label for="emailLogin">Email o Codice Cliente:</label>
+        <input type="text" id="emailLogin" placeholder="Inserisci email o codice" required>
+
+        <label for="passwordLogin">Password:</label>
+        <div class="form-group">
+          <input type="password" id="passwordLogin" placeholder="Password" required>
+          <button type="button" class="toggle-password-text" onclick="toggleVisibility('passwordLogin', this)">Mostra password</button>
+        </div>
+
+        <div id="esitoLogin" class="email-message"></div>
+
+        <button class="btn-step" onclick="effettuaLogin()">Accedi</button>
+        <p class="mt-4">Non hai un account?
+          <a href="#" onclick="event.preventDefault(); vaiAlStep2()">Continua senza login</a>
+        </p>
+      </div>
+
+      <!-- STEP 2: Fatturazione -->
+      <div class="step hidden" id="step2">
+        <h2>Dati di fatturazione per acconto €1000</h2>
+
+        <label for="cliente_tipo">Tipologia cliente:</label>
+        <select id="cliente_tipo" onchange="aggiornaTipoCliente(); popolaCampiProfiloInStep2();">
+          <option value="">-- Seleziona --</option>
+          <option value="privato">Privato</option>
+          <option value="azienda">Azienda</option>
+        </select>
+
+        <div id="sezione_privato" class="hidden mt-2">
+          <input type="text" id="nome" placeholder="Nome" required>
+          <input type="text" id="cognome" placeholder="Cognome" required>
+          <input type="email" id="email" placeholder="Email" oninput="checkEmailMatchAndRegistrazione()" required>
+          <input type="email" id="confermaEmail" placeholder="Conferma Email" oninput="checkEmailMatchAndRegistrazione()" required>
+          <div id="emailMatchMessage" class="email-message"></div>
+
+          <input type="password" id="password" placeholder="Password">
+          <input type="password" id="confermaPassword" placeholder="Conferma Password">
+          <input type="text" id="cf" placeholder="Codice Fiscale">
+          <input type="tel" id="telefono" placeholder="Telefono">
+
+          <div class="campo-doppio">
+            <input type="text" id="via" placeholder="Via">
+            <input type="text" id="numero_civico" placeholder="Numero civico">
+          </div>
+
+          <div class="campo-doppio">
+            <input type="text" id="cap" placeholder="CAP">
+            <input type="text" id="citta" placeholder="Città">
+          </div>
+
+          <div class="campo-doppio">
+            <input type="text" id="provincia" placeholder="Provincia">
+            <input type="text" id="stato" placeholder="Stato">
+          </div>
+        </div>
+
+        <div id="sezione_azienda" class="hidden mt-2">
+          <input type="text" id="ragione_sociale" placeholder="Ragione Sociale" required>
+          <input type="email" id="email_azienda" placeholder="Email">
+          <input type="email" id="confermaEmail_azienda" placeholder="Conferma Email">
+          <input type="password" id="password_azienda" placeholder="Password">
+          <input type="password" id="confermaPassword_azienda" placeholder="Conferma Password">
+          <input type="text" id="piva" placeholder="Partita IVA">
+          <input type="text" id="cf_azienda" placeholder="Codice Fiscale">
+          <input type="email" id="pec" placeholder="PEC">
+          <input type="text" id="codice_destinatario" placeholder="Codice SDI">
+          <input type="text" id="referente_nome" placeholder="Nome Referente">
+          <input type="text" id="referente_cognome" placeholder="Cognome Referente">
+          <input type="tel" id="telefono_azienda" placeholder="Telefono">
+
+          <div class="campo-doppio">
+            <input type="text" id="via_azienda" placeholder="Via">
+            <input type="text" id="numero_civico_azienda" placeholder="Numero civico">
+          </div>
+
+          <div class="campo-doppio">
+            <input type="text" id="cap_azienda" placeholder="CAP">
+            <input type="text" id="citta_azienda" placeholder="Città">
+          </div>
+
+          <div class="campo-doppio">
+            <input type="text" id="provincia_azienda" placeholder="Provincia">
+            <input type="text" id="stato_azienda" placeholder="Stato">
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <button class="btn-step" onclick="vaiAlStep0()">Indietro</button>
+          <button class="btn-step" onclick="eseguiAcquistoEInvio()">Paga acconto €1000</button>
+        </div>
+      </div>
+
+    </section>
+  </div>
+
+  <script src="assets/script.js"></script>
+  <script src="assets/script_gruppo.js"></script>
+</body>
+</html>
+
