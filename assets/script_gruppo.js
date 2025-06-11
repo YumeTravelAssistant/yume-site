@@ -6,8 +6,13 @@ function mostraStep(numero) {
   console.log("🔁 Passo attivato:", numero);
   document.querySelectorAll(".step").forEach(step => {
     step.classList.add("hidden");
+    step.classList.remove("active");
   });
-  document.getElementById("step" + numero)?.classList.remove("hidden");
+  const attuale = document.getElementById("step" + numero);
+  if (attuale) {
+    attuale.classList.remove("hidden");
+    attuale.classList.add("active");
+  }
 }
 
 function vaiAlStep0() {
