@@ -7,11 +7,16 @@ document.addEventListener("DOMContentLoaded", () => {
   if (carrelloSalvato.length > 0) {
     carrello = carrelloSalvato;
     aggiornaCarrelloUI();
-    console.log("✅ Carrello ripristinato e UI aggiornata.");
+    console.log("  Carrello ripristinato e UI aggiornata.");
+
+    if (window.location.pathname.includes("acquista-prodotti")) {
+      mostraCarrelloInStep1();  // ✅ qui aggiorna anche lo STEP 1
+    }
   } else {
-    console.log("⚠️ Nessun prodotto trovato nel carrello.");
+    console.log(" ️ Nessun prodotto trovato nel carrello.");
   }
 });
+
 
 function toggleCarrello() {
   document.getElementById("carrelloContainer").classList.toggle("hidden");
@@ -120,6 +125,36 @@ function vaiAlStep3() {
   }
   mostraStep(3);
 }
+
+function mostraCarrelloInStep1() {
+  const container = document.getElementById("carrello-prodotti");
+  if (!container) return;
+
+  container.innerHTML = ""; // pulizia
+
+  if (carrello.length === 0) {
+    container.innerHTML = "<p>Il carrello è vuoto.</p>";
+    return;
+  }
+
+  const ul = document.createElement("ul");
+  ul.classList.add("riepilogo-lista");
+
+  let somma = 0;
+
+  carrello.forEach(prodotto => {
+    const li = document.createElement("li");
+    li.textContent = `${prodotto.nome} – €${prodotto.prezzo.toFixed(2)}`;
+    ul.appendChild(li);
+    somma += prodotto.prezzo;
+  });
+
+  const totale = document.createElement("p");
+  totale.innerHTML = `<strong>Totale: €${somma.toFixed(2)}</strong>`;
+  container.appendChild(ul);
+  container.appendChild(totale);
+}
+
 
 async function effettuaLogin() {
   const identificatore = document.getElementById("emailLogin")?.value.trim();
