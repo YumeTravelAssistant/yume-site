@@ -27,6 +27,17 @@
     .btn-step:hover {
       background-color: #a8824f;
     }
+
+.riepilogo-list {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 1rem;
+}
+.riepilogo-list li {
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
   </style>
 </head>
 
@@ -55,80 +66,87 @@
         </p>
       </div>
 
-      <!-- STEP 2: Fatturazione -->
-      <div class="step hidden" id="step2">
-        <h2>Dati di fatturazione per acconto €1000</h2>
+<!-- STEP 2: Fatturazione -->
+<div class="step hidden" id="step2">
+  <h2>Dati di fatturazione per acconto €1000</h2>
 
-        <label for="cliente_tipo">Tipologia cliente:</label>
-        <select id="cliente_tipo" onchange="aggiornaTipoCliente(); popolaCampiProfiloInStep2();">
-          <option value="">-- Seleziona --</option>
-          <option value="privato">Privato</option>
-          <option value="azienda">Azienda</option>
-        </select>
+  <label for="cliente_tipo">Tipologia cliente:</label>
+  <select id="cliente_tipo" onchange="aggiornaTipoCliente(); popolaCampiProfiloInStep2(); mostraRiepilogoFatturazione();">
+    <option value="">-- Seleziona --</option>
+    <option value="privato">Privato</option>
+    <option value="azienda">Azienda</option>
+  </select>
 
-        <div id="sezione_privato" class="hidden mt-2">
-          <input type="text" id="nome" placeholder="Nome" required>
-          <input type="text" id="cognome" placeholder="Cognome" required>
-          <input type="email" id="email" placeholder="Email" oninput="checkEmailMatchAndRegistrazione()" required>
-          <input type="email" id="confermaEmail" placeholder="Conferma Email" oninput="checkEmailMatchAndRegistrazione()" required>
-          <div id="emailMatchMessage" class="email-message"></div>
+  <div id="sezione_privato" class="hidden mt-2">
+    <input type="text" id="nome" placeholder="Nome" required>
+    <input type="text" id="cognome" placeholder="Cognome" required>
+    <input type="email" id="email" placeholder="Email" oninput="checkEmailMatchAndRegistrazione()" required>
+    <input type="email" id="confermaEmail" placeholder="Conferma Email" oninput="checkEmailMatchAndRegistrazione()" required>
+    <div id="emailMatchMessage" class="email-message"></div>
 
-          <input type="password" id="password" placeholder="Password">
-          <input type="password" id="confermaPassword" placeholder="Conferma Password">
-          <input type="text" id="cf" placeholder="Codice Fiscale">
-          <input type="tel" id="telefono" placeholder="Telefono">
+    <input type="password" id="password" placeholder="Password">
+    <input type="password" id="confermaPassword" placeholder="Conferma Password">
+    <input type="text" id="cf" placeholder="Codice Fiscale">
+    <input type="tel" id="telefono" placeholder="Telefono">
 
-          <div class="campo-doppio">
-            <input type="text" id="via" placeholder="Via">
-            <input type="text" id="numero_civico" placeholder="Numero civico">
-          </div>
+    <div class="campo-doppio">
+      <input type="text" id="via" placeholder="Via">
+      <input type="text" id="numero_civico" placeholder="Numero civico">
+    </div>
 
-          <div class="campo-doppio">
-            <input type="text" id="cap" placeholder="CAP">
-            <input type="text" id="citta" placeholder="Città">
-          </div>
+    <div class="campo-doppio">
+      <input type="text" id="cap" placeholder="CAP">
+      <input type="text" id="citta" placeholder="Città">
+    </div>
 
-          <div class="campo-doppio">
-            <input type="text" id="provincia" placeholder="Provincia">
-            <input type="text" id="stato" placeholder="Stato">
-          </div>
-        </div>
+    <div class="campo-doppio">
+      <input type="text" id="provincia" placeholder="Provincia">
+      <input type="text" id="stato" placeholder="Stato">
+    </div>
+  </div>
 
-        <div id="sezione_azienda" class="hidden mt-2">
-          <input type="text" id="ragione_sociale" placeholder="Ragione Sociale" required>
-          <input type="email" id="email_azienda" placeholder="Email">
-          <input type="email" id="confermaEmail_azienda" placeholder="Conferma Email">
-          <input type="password" id="password_azienda" placeholder="Password">
-          <input type="password" id="confermaPassword_azienda" placeholder="Conferma Password">
-          <input type="text" id="piva" placeholder="Partita IVA">
-          <input type="text" id="cf_azienda" placeholder="Codice Fiscale">
-          <input type="email" id="pec" placeholder="PEC">
-          <input type="text" id="codice_destinatario" placeholder="Codice SDI">
-          <input type="text" id="referente_nome" placeholder="Nome Referente">
-          <input type="text" id="referente_cognome" placeholder="Cognome Referente">
-          <input type="tel" id="telefono_azienda" placeholder="Telefono">
+  <div id="sezione_azienda" class="hidden mt-2">
+    <input type="text" id="ragione_sociale" placeholder="Ragione Sociale" required>
+    <input type="email" id="email_azienda" placeholder="Email">
+    <input type="email" id="confermaEmail_azienda" placeholder="Conferma Email">
+    <input type="password" id="password_azienda" placeholder="Password">
+    <input type="password" id="confermaPassword_azienda" placeholder="Conferma Password">
+    <input type="text" id="piva" placeholder="Partita IVA">
+    <input type="text" id="cf_azienda" placeholder="Codice Fiscale">
+    <input type="email" id="pec" placeholder="PEC">
+    <input type="text" id="codice_destinatario" placeholder="Codice SDI">
+    <input type="text" id="referente_nome" placeholder="Nome Referente">
+    <input type="text" id="referente_cognome" placeholder="Cognome Referente">
+    <input type="tel" id="telefono_azienda" placeholder="Telefono">
 
-          <div class="campo-doppio">
-            <input type="text" id="via_azienda" placeholder="Via">
-            <input type="text" id="numero_civico_azienda" placeholder="Numero civico">
-          </div>
+    <div class="campo-doppio">
+      <input type="text" id="via_azienda" placeholder="Via">
+      <input type="text" id="numero_civico_azienda" placeholder="Numero civico">
+    </div>
 
-          <div class="campo-doppio">
-            <input type="text" id="cap_azienda" placeholder="CAP">
-            <input type="text" id="citta_azienda" placeholder="Città">
-          </div>
+    <div class="campo-doppio">
+      <input type="text" id="cap_azienda" placeholder="CAP">
+      <input type="text" id="citta_azienda" placeholder="Città">
+    </div>
 
-          <div class="campo-doppio">
-            <input type="text" id="provincia_azienda" placeholder="Provincia">
-            <input type="text" id="stato_azienda" placeholder="Stato">
-          </div>
-        </div>
+    <div class="campo-doppio">
+      <input type="text" id="provincia_azienda" placeholder="Provincia">
+      <input type="text" id="stato_azienda" placeholder="Stato">
+    </div>
+  </div>
 
-        <div class="mt-4">
-          <button class="btn-step" onclick="vaiAlStep0()">Indietro</button>
-          <button class="btn-step" onclick="eseguiAcquistoEInvio()">Paga acconto €1000</button>
-        </div>
-      </div>
+  <!-- ✅ BOX RIEPILOGO -->
+  <div id="riepilogo-box" class="hidden mt-4">
+    <h3>Riepilogo dati inseriti</h3>
+    <ul id="riepilogo" class="riepilogo-list"></ul>
+  </div>
+
+  <div class="mt-4">
+    <button class="btn-step" onclick="vaiAlStep0()">Indietro</button>
+    <button class="btn-step" onclick="mostraRiepilogoFatturazione(); eseguiAcquistoEInvio()">Paga acconto €1000</button>
+  </div>
+</div>
+
 
     </section>
   </div>
