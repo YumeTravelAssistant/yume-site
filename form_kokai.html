@@ -38,6 +38,23 @@
   line-height: 1.4;
 }
 
+  .spinner {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-style: italic;
+    font-size: 1rem;
+    color: #8B2C2B; /* rosso Yume */
+    transition: opacity 0.3s ease;
+  }
+
+  .spinner.hidden {
+    display: none;
+  }
+
+  .fa-spin {
+    margin-right: 8px;
+  }
+
   </style>
 </head>
 
@@ -64,7 +81,10 @@
         <p class="mt-4">Non hai un account?
           <a href="#" onclick="event.preventDefault(); vaiAlStep2()">Continua senza login</a>
         </p>
-      </div>
+
+ <button class="btn-step" onclick="window.location.href='kokai.html'">Indietro</button>
+
+</div>
 
 <!-- STEP 2: Fatturazione -->
 <div class="step hidden" id="step2">
@@ -141,10 +161,22 @@
     <ul id="riepilogo" class="riepilogo-list"></ul>
   </div>
 
-  <div class="mt-4">
-    <button class="btn-step" onclick="vaiAlStep0()">Indietro</button>
-    <button class="btn-step" onclick="mostraRiepilogoFatturazione(); eseguiAcquistoEInvio()">Paga acconto €1000</button>
+<!-- Fase 1: Pulsanti iniziali -->
+<div id="step2-pulsanti-iniziali" class="mt-4">
+  <button class="btn-step" onclick="vaiAlStep0()">Indietro</button>
+  <button class="btn-step" onclick="mostraRiepilogoEFase2()">Avanti</button>
+</div>
+
+<!-- Fase 2: Riepilogo + conferma e pagamento -->
+<div id="step2-conferma-pagamento" class="hidden mt-4">
+  <p><strong>Controlla i dati sopra prima di procedere.</strong></p>
+  <button class="btn-step" onclick="vaiAlStep2()">Modifica dati</button>
+  <button class="btn-step" onclick="eseguiAcquistoEInvio()">Procedi e paga €1000</button>
+  <div id="spinner" class="spinner hidden">
+    <i class="fas fa-circle-notch fa-spin"></i> Attendi, reindirizzamento al pagamento...
   </div>
+</div>
+
 </div>
 
 

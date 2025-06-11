@@ -3,6 +3,7 @@
 let invioInCorso = false;
 
 function mostraStep(numero) {
+  console.log("🔁 Passo attivato:", numero);
   document.querySelectorAll(".step").forEach(step => {
     step.classList.add("hidden");
   });
@@ -438,5 +439,15 @@ function mostraRiepilogoFatturazione() {
 
   const box = document.getElementById("riepilogo-box");
   if (box) box.classList.remove("hidden");
+}
+
+function mostraRiepilogoEFase2() {
+  mostraRiepilogoFatturazione();
+
+  // Nascondi pulsanti iniziali
+  document.getElementById("step2-pulsanti-iniziali")?.classList.add("hidden");
+
+  // Mostra conferma e pagamento
+  document.getElementById("step2-conferma-pagamento")?.classList.remove("hidden");
 }
 
