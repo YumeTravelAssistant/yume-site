@@ -95,12 +95,6 @@ a {
   opacity: 1;
 }
 
-.sidebar {
-  overflow-y: auto;
-  max-height: 100vh;
-  -webkit-overflow-scrolling: touch;
-}
-
 .main-wrapper {
   flex-grow: 1;
   padding: 100px 30px 40px; /* spazio per la navbar */
@@ -167,7 +161,6 @@ footer {
   margin: 0;     /* ✅ elimina lo sfasamento verticale */
 }
 
-
 @media (max-width: 768px) {
   .hamburger {
     display: block;
@@ -198,7 +191,41 @@ footer {
   .main-content {
     padding: 25px 20px;
   }
+  .sidebar a {
+    font-size: 0.88em;          /* ridotto di circa il 20% da 1.1em */
+    padding: 10px 16px;         /* meno spazio verticale, più compatto */
+  }
 }
+
+@media (min-width: 769px) and (max-width: 1399px) {
+  .sidebar a {
+    font-size: 1.15em;          /* un po' più grande rispetto al default */
+    padding: 12px 20px;         /* padding leggermente aumentato */
+  }
+}
+
+@media (max-width: 400px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 180px;
+    height: 100%;
+    background-color: #8B2C2B;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    z-index: 10000;
+    flex-direction: column;
+    padding-top: 130px;
+    display: flex;
+}
+  .sidebar a {
+    font-size: 0.78em;         /* ancora più piccolo */
+    padding: 6px 12px;         /* compattato per schermi strettissimi */
+  }
+}
+
+
 label {
   display: block;
   margin-top: 16px;
