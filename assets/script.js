@@ -268,14 +268,28 @@ document.addEventListener('DOMContentLoaded', () => {
     caricaPDFCliente();      // ✅ recupera PDF personalizzati da Sheets
   }
 
-  // 7. Aggiorna profilo, se bottone esiste
-  const formProfilo = document.getElementById("formProfilo");
-  if (formProfilo) {
-    formProfilo.addEventListener("submit", e => {
-      e.preventDefault();
-      aggiornaProfiloCliente();
+// 7. Aggiorna profilo, se bottone esiste
+const formProfilo = document.getElementById("formProfilo");
+if (formProfilo) {
+
+  // Submit del form
+  formProfilo.addEventListener("submit", e => {
+    e.preventDefault();
+    aggiornaProfiloCliente();
+  });
+
+  // 🔓 Pulsante per abilitare la modifica dei dati anagrafici
+  const btn = document.getElementById("btnModificaProfilo");
+  if (btn) {
+    btn.addEventListener("click", () => {
+      ["nome", "cognome", "email"].forEach(id => {
+        const campo = document.getElementById(id);
+        if (campo) campo.readOnly = false;
+      });
+      btn.disabled = true; // facoltativo: disattiva il pulsante per evitare ri-click
     });
   }
+}
  
   // 8. Area Operatori – carica richieste e abilita form risposta
   if (window.location.pathname.includes("area-operatori")) {
@@ -691,7 +705,10 @@ async function inviaRichiestaConsulenza() {
 
 async function getProfiloCliente() {
   const codice_cliente = localStorage.getItem("codice_cliente");
-  if (!codice_cliente) return console.warn("Codice cliente non trovato nel localStorage");
+  if (!codice_cliente) {
+    console.warn("Codice cliente non trovato nel localStorage");
+    return;
+  }
 
   try {
     const res = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
@@ -705,10 +722,19 @@ async function getProfiloCliente() {
 
     const data = await res.json();
     if (data.status === "ok" && data.profilo) {
-      // Esempio: popola il form in area-clienti.html
-      for (const [chiave, valore] of Object.entries(data.profilo)) {
+      const profilo = data.profilo;
+      sessionStorage.setItem("profiloUtente", JSON.stringify(profilo));
+
+      for (const [chiave, valore] of Object.entries(profilo)) {
         const campo = document.getElementById(chiave);
-        if (campo) campo.value = valore;
+        if (campo) {
+          campo.value = valore;
+
+          // 🔒 Blocca i campi nome, cognome ed email
+          if (["nome", "cognome", "email"].includes(chiave)) {
+            campo.readOnly = true;
+          }
+        }
       }
     } else {
       console.error("Errore nel recupero profilo:", data.message);
@@ -745,14 +771,15 @@ async function aggiornaProfiloCliente() {
     return;
   }
 
+  // ⚠️ Conferme su cambi nome/email
   if (profilo) {
     if (nome !== profilo.nome || cognome !== profilo.cognome) {
-      const confermaNome = confirm("⚠️ Stai cambiando il tuo nome o cognome. Vuoi procedere?");
+      const confermaNome = confirm("✏️ Stai cambiando il tuo nome o cognome. Vuoi procedere?");
       if (!confermaNome) return;
     }
 
     if (email !== profilo.email) {
-      const confermaEmail = confirm("⚠️ Stai cambiando l'email. Sei sicuro?");
+      const confermaEmail = confirm("📧 Stai cambiando l'email. Sei sicuro?");
       if (!confermaEmail) return;
 
       const checkEmail = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
@@ -763,7 +790,7 @@ async function aggiornaProfiloCliente() {
 
       const result = await checkEmail.json();
       if (result.status === "trovata") {
-        alert("❌ L'email è già registrata da un altro utente.");
+        alert("⚠️ L'email è già registrata da un altro utente.");
         return;
       }
     }
@@ -777,7 +804,7 @@ async function aggiornaProfiloCliente() {
     email
   };
 
-  // Cambio password
+  // 🔐 Cambio password
   if (passwordAttuale || nuovaPassword || confermaNuovaPassword) {
     if (!passwordAttuale || !nuovaPassword || !confermaNuovaPassword) {
       alert("Compila tutti i campi della sezione password.");
@@ -785,7 +812,7 @@ async function aggiornaProfiloCliente() {
     }
 
     if (nuovaPassword !== confermaNuovaPassword) {
-      alert("❌ Le nuove password non coincidono.");
+      alert("Le nuove password non coincidono.");
       return;
     }
 
@@ -803,19 +830,26 @@ async function aggiornaProfiloCliente() {
     const data = await res.json();
     if (data.status === "ok") {
       alert("✅ Dati aggiornati con successo!");
-      document.getElementById("formProfilo").reset();
 
-      // aggiorna sessione localmente
-      sessionStorage.setItem("profiloUtente", JSON.stringify({
-        ...profilo,
-        nome,
-        cognome,
-        email
-        // ⚠️ non aggiornare mai il password_hash lato client
-      }));
+      // 🔄 Ricarica dati aggiornati nel form
+      await getProfiloCliente();
+
+      // 🔒 Riblocca i campi nome, cognome, email
+      ["nome", "cognome", "email"].forEach(id => {
+        const campo = document.getElementById(id);
+        if (campo) campo.readOnly = true;
+      });
+
+      // ♻️ Reset dei campi password
+      ["passwordAttuale", "nuovaPassword", "confermaNuovaPassword"].forEach(id => {
+        const campo = document.getElementById(id);
+        if (campo) campo.value = "";
+      });
+
     } else {
-      alert("❌ Errore: " + data.message);
+      alert("Errore: " + data.message);
     }
+
   } catch (err) {
     console.error("Errore rete:", err);
     alert("Errore di rete. Riprova.");
