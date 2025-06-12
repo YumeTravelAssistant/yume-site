@@ -734,20 +734,17 @@ async function aggiornaProfiloCliente() {
 
   const profilo = JSON.parse(sessionStorage.getItem("profiloUtente"));
 
-  // 🔒 Controlli campi vuoti
   if (!nome || !cognome || !email) {
     alert("Compila tutti i campi del profilo.");
     return;
   }
 
-  // 📧 Verifica email valida
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     alert("Inserisci un'email valida.");
     return;
   }
 
-  // ❓ Conferma modifica nome o email
   if (profilo) {
     if (nome !== profilo.nome || cognome !== profilo.cognome) {
       const confermaNome = confirm("⚠️ Stai cambiando il tuo nome o cognome. Vuoi procedere?");
@@ -758,7 +755,6 @@ async function aggiornaProfiloCliente() {
       const confermaEmail = confirm("⚠️ Stai cambiando l'email. Sei sicuro?");
       if (!confermaEmail) return;
 
-      // 🔍 Controllo se email è già registrata
       const checkEmail = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -781,7 +777,7 @@ async function aggiornaProfiloCliente() {
     email
   };
 
-  // 🔐 Se vuole cambiare password
+  // Cambio password
   if (passwordAttuale || nuovaPassword || confermaNuovaPassword) {
     if (!passwordAttuale || !nuovaPassword || !confermaNuovaPassword) {
       alert("Compila tutti i campi della sezione password.");
@@ -793,17 +789,10 @@ async function aggiornaProfiloCliente() {
       return;
     }
 
-    const hashAttuale = await generaSHA256(passwordAttuale);
-    if (hashAttuale !== profilo.password_hash) {
-      alert("❌ La password attuale non è corretta.");
-      return;
-    }
-
-    const nuovaHash = await generaSHA256(nuovaPassword);
-    payload.password_hash = nuovaHash;
+    payload.password_attuale_hash = await generaSHA256(passwordAttuale);
+    payload.nuova_password_hash = await generaSHA256(nuovaPassword);
   }
 
-  // 📤 Invio dati
   try {
     const res = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
       method: "POST",
@@ -816,13 +805,13 @@ async function aggiornaProfiloCliente() {
       alert("✅ Dati aggiornati con successo!");
       document.getElementById("formProfilo").reset();
 
-      // 🔁 aggiorna sessione
+      // aggiorna sessione localmente
       sessionStorage.setItem("profiloUtente", JSON.stringify({
         ...profilo,
         nome,
         cognome,
-        email,
-        password_hash: payload.password_hash || profilo.password_hash
+        email
+        // ⚠️ non aggiornare mai il password_hash lato client
       }));
     } else {
       alert("❌ Errore: " + data.message);
@@ -832,6 +821,7 @@ async function aggiornaProfiloCliente() {
     alert("Errore di rete. Riprova.");
   }
 }
+
 
 function caricaMessaggi() {
   const codiceCliente = localStorage.getItem("codice_cliente");
