@@ -732,6 +732,47 @@ async function aggiornaProfiloCliente() {
   const nuovaPassword = document.getElementById("nuovaPassword").value.trim();
   const confermaNuovaPassword = document.getElementById("confermaNuovaPassword").value.trim();
 
+  const profilo = JSON.parse(sessionStorage.getItem("profiloUtente"));
+
+  // 🔒 Controlli campi vuoti
+  if (!nome || !cognome || !email) {
+    alert("Compila tutti i campi del profilo.");
+    return;
+  }
+
+  // 📧 Verifica email valida
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    alert("Inserisci un'email valida.");
+    return;
+  }
+
+  // ❓ Conferma modifica nome o email
+  if (profilo) {
+    if (nome !== profilo.nome || cognome !== profilo.cognome) {
+      const confermaNome = confirm("⚠️ Stai cambiando il tuo nome o cognome. Vuoi procedere?");
+      if (!confermaNome) return;
+    }
+
+    if (email !== profilo.email) {
+      const confermaEmail = confirm("⚠️ Stai cambiando l'email. Sei sicuro?");
+      if (!confermaEmail) return;
+
+      // 🔍 Controllo se email è già registrata
+      const checkEmail = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tipoRichiesta: "verifica_email", email })
+      });
+
+      const result = await checkEmail.json();
+      if (result.status === "trovata") {
+        alert("❌ L'email è già registrata da un altro utente.");
+        return;
+      }
+    }
+  }
+
   const payload = {
     tipoRichiesta: "update",
     codice_cliente,
@@ -740,6 +781,7 @@ async function aggiornaProfiloCliente() {
     email
   };
 
+  // 🔐 Se vuole cambiare password
   if (passwordAttuale || nuovaPassword || confermaNuovaPassword) {
     if (!passwordAttuale || !nuovaPassword || !confermaNuovaPassword) {
       alert("Compila tutti i campi della sezione password.");
@@ -747,14 +789,21 @@ async function aggiornaProfiloCliente() {
     }
 
     if (nuovaPassword !== confermaNuovaPassword) {
-      alert("La nuova password e la conferma non coincidono.");
+      alert("❌ Le nuove password non coincidono.");
       return;
     }
 
-    payload.password_attuale_hash = await generaSHA256(passwordAttuale);
-    payload.nuova_password_hash = await generaSHA256(nuovaPassword);
+    const hashAttuale = await generaSHA256(passwordAttuale);
+    if (hashAttuale !== profilo.password_hash) {
+      alert("❌ La password attuale non è corretta.");
+      return;
+    }
+
+    const nuovaHash = await generaSHA256(nuovaPassword);
+    payload.password_hash = nuovaHash;
   }
 
+  // 📤 Invio dati
   try {
     const res = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
       method: "POST",
@@ -766,6 +815,15 @@ async function aggiornaProfiloCliente() {
     if (data.status === "ok") {
       alert("✅ Dati aggiornati con successo!");
       document.getElementById("formProfilo").reset();
+
+      // 🔁 aggiorna sessione
+      sessionStorage.setItem("profiloUtente", JSON.stringify({
+        ...profilo,
+        nome,
+        cognome,
+        email,
+        password_hash: payload.password_hash || profilo.password_hash
+      }));
     } else {
       alert("❌ Errore: " + data.message);
     }
