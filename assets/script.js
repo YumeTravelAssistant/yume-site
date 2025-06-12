@@ -609,6 +609,37 @@ async function verificaLogin() {
     });
 }
 
+async function inviaRecuperoPassword() {
+  const email = prompt("Inserisci la tua email per ricevere una nuova password temporanea:");
+  if (!email || !email.includes("@")) {
+    alert("Inserisci un'email valida.");
+    return;
+  }
+
+  try {
+    const res = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tipoRichiesta: "recupero_password",
+        email
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.status === "ok") {
+      alert("✅ Ti abbiamo inviato una nuova password temporanea via email.");
+    } else {
+      alert("❌ Errore: " + (data.message || "Email non trovata."));
+    }
+  } catch (err) {
+    console.error("Errore recupero password:", err);
+    alert("Errore di rete. Riprova.");
+  }
+}
+
+
 async function inviaRichiestaConsulenza() {
   const messaggio = document.getElementById("messaggio").value.trim();
   const esito = document.getElementById("esitoConsulenza");
