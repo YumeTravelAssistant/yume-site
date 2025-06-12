@@ -95,6 +95,12 @@ a {
   opacity: 1;
 }
 
+.sidebar {
+  overflow-y: auto;
+  max-height: 100vh;
+  -webkit-overflow-scrolling: touch;
+}
+
 .main-wrapper {
   flex-grow: 1;
   padding: 100px 30px 40px; /* spazio per la navbar */
