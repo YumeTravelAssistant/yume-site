@@ -80,11 +80,51 @@
       z-index: 2;
     }
     .timeline-text {
-      font-size: 1rem;
+      font-size: 1.3rem;
       font-weight: 500;
       color: #8B2C2B;
       margin-left: 40px;
     }
+
+@media (max-width: 450px) {
+  .timeline-step {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 50px;
+    margin-bottom: 40px;
+  }
+
+  .timeline-icon {
+    position: relative;
+    left: 0;
+    margin-bottom: 8px;
+    width: 36px;
+    height: 36px;
+    font-size: 12px;
+  }
+
+  .timeline-text {
+    margin-left: 0;
+    font-size: 0.78rem;
+    line-height: 1.4;
+    text-align: left;
+    max-width: 90%;
+  }
+}
+
+
+@media (min-width: 451px) and (max-width: 768px) {
+  .timeline-text {
+    font-size: 0.92rem;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1399px) {
+  .timeline-text {
+    font-size: 1rem;
+  }
+}
 
     .sartoria-slider-container {
       display: grid;
@@ -96,16 +136,19 @@
       margin: 0 auto;
 
     }
+
     @media (min-width: 769px) and (max-width: 1399px) {
       .sartoria-slider-container {
         grid-template-columns: 1fr 1fr;
       }
     }
+
     @media (min-width: 1400px) {
       .sartoria-slider-container {
         grid-template-columns: repeat(4, 1fr);
       }
     }
+
     .sartoria-box {
       background-color: #F4F0E2;
       border-radius: 16px;
