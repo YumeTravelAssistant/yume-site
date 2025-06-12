@@ -176,7 +176,7 @@ footer {
     background-color: #8B2C2B;
     transform: translateX(100%); /* ✅ parte fuori a destra */
     transition: transform 0.3s ease;
-    z-index: 999;
+    z-index: 10000;
     flex-direction: column;
     padding-top: 130px;
     display: flex;
