@@ -192,8 +192,8 @@ footer {
     padding: 25px 20px;
   }
   .sidebar a {
-    font-size: 0.88em;          /* ridotto di circa il 20% da 1.1em */
-    padding: 10px 16px;         /* meno spazio verticale, più compatto */
+    font-size: 0.95em;          /* ridotto di circa il 20% da 1.1em */
+    padding: 12px 16px;         /* meno spazio verticale, più compatto */
   }
 }
 
@@ -220,8 +220,8 @@ footer {
     display: flex;
 }
   .sidebar a {
-    font-size: 0.78em;         /* ancora più piccolo */
-    padding: 6px 12px;         /* compattato per schermi strettissimi */
+    font-size: 0.88em;         /* ancora più piccolo */
+    padding: 10px 14px;         /* compattato per schermi strettissimi */
   }
 }
 
