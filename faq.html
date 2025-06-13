@@ -21,6 +21,11 @@
   <div class="navbar-left">
     <img src="assets/logo-yume.jpg" alt="Logo YUME" class="logo-navbar">
   </div>
+<button id="toggleNotificheBtn" class="notif-btn" onclick="toggleNotifiche()" aria-label="Notifiche">
+  <i class="fa fa-bell fa-lg"></i>
+  <span id="notifCount" class="notif-count">0</span>
+</button>
+   
   <button class="hamburger" onclick="toggleSidebar()">☰</button>
 </nav>
 
@@ -713,6 +718,14 @@
       </div>
     </form>
   </div>
+</div>
+
+<div id="notificheContainer" class="notifiche-container hidden">
+  <h3><i class="fa fa-envelope-open"></i> Messaggi ricevuti</h3>
+  <ul id="listaNotifiche" class="notifiche-lista"></ul>
+  <button onclick="vaiASezioneMessaggi()" class="btn-messaggi">
+    <i class="fa fa-inbox"></i> Vai ai messaggi
+  </button>
 </div>
 
 </body>
