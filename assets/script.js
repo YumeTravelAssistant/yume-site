@@ -976,20 +976,18 @@ function vaiASezioneMessaggi() {
 }
 
 function caricaAnteprimaNotifiche() {
-  const profilo = sessionStorage.getItem("profiloUtente");
-  if (!profilo) {
+  const codiceCliente = localStorage.getItem("codice_cliente");
+  if (!codiceCliente) {
     document.getElementById("toggleNotificheBtn")?.classList.add("hidden");
     return;
   }
-
-  const { email, codice } = JSON.parse(profilo);
 
   fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      tipoRichiesta: "get_messaggi",
-      codice_cliente: codiceCliente
+      tipoRichiesta: "get_messaggi", // ✅ stesso tipo usato da caricaMessaggi
+      codice_cliente: codiceCliente  // ✅ stesso campo
     })
   })
   .then(res => res.json())
