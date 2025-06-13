@@ -22,6 +22,20 @@ function toggleCarrello() {
   document.getElementById("carrelloContainer").classList.toggle("hidden");
 }
 
+document.addEventListener("click", function (event) {
+  const carrelloBox = document.getElementById("carrelloContainer");
+  const carrelloBtn = document.getElementById("toggleCarrelloBtn");
+
+  if (
+    carrelloBox &&
+    !carrelloBox.classList.contains("hidden") &&
+    !carrelloBox.contains(event.target) &&
+    !carrelloBtn.contains(event.target)
+  ) {
+    carrelloBox.classList.add("hidden");
+  }
+});
+
 function aggiornaCarrelloUI() {
   console.log("🔄 aggiornaCarrelloUI() avviata");
 

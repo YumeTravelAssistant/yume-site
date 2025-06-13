@@ -958,6 +958,10 @@ function toggleNotifiche() {
   box.classList.toggle("hidden");
 }
 
+function vaiASezioneMessaggi() {
+  window.location.href = "area-clienti.html#sezioneMessaggi";
+}
+
 function caricaAnteprimaNotifiche() {
   const profilo = sessionStorage.getItem("profiloUtente");
   if (!profilo) {
@@ -1297,6 +1301,21 @@ function toggleYukiChat() {
     yukiWelcomeShown = true;
   }
 }
+
+// Chiude il chatbot YUKI cliccando fuori
+document.addEventListener("click", function (event) {
+  const chatbox = document.getElementById("yuki-chatbox");
+  const toggleBtn = document.getElementById("toggleYukiBtn"); // se esiste
+
+  if (
+    chatbox &&
+    !chatbox.classList.contains("hidden") &&
+    !chatbox.contains(event.target) &&
+    (!toggleBtn || !toggleBtn.contains(event.target))
+  ) {
+    chatbox.classList.add("hidden");
+  }
+});
 
 function sendMessage() {
   const input = document.getElementById("userMessage");

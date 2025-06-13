@@ -874,7 +874,7 @@ ul {
 
 .notifiche-container {
   position: fixed;
-  bottom: 80px;
+  top: 110px;
   right: 20px;
   width: 280px;
   background-color: #F4F0E2;
