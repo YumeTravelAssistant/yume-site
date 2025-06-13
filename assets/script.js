@@ -959,7 +959,21 @@ function toggleNotifiche() {
 }
 
 function vaiASezioneMessaggi() {
-  window.location.href = "area-clienti.html#sezioneMessaggi";
+  // Chiudi sempre il box delle notifiche
+  const box = document.getElementById("notificheContainer");
+  if (box) box.classList.add("hidden");
+
+  // Poi reindirizza o scrolla
+  if (window.location.pathname.includes("area-clienti.html")) {
+    // Se già sulla pagina giusta, scrolla solo
+    const target = document.getElementById("sezioneMessaggi");
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth" });
+    }
+  } else {
+    // Altrimenti, vai alla sezione della pagina
+    window.location.href = "area-clienti.html#sezioneMessaggi";
+  }
 }
 
 function caricaAnteprimaNotifiche() {
@@ -1303,15 +1317,16 @@ function toggleYukiChat() {
 }
 
 // Chiude il chatbot YUKI cliccando fuori
+// Chiude il chatbot YUKI cliccando fuori
 document.addEventListener("click", function (event) {
   const chatbox = document.getElementById("yuki-chatbox");
-  const toggleBtn = document.getElementById("toggleYukiBtn"); // se esiste
+  const toggleBtn = document.getElementById("yuki-chat-avatar"); // ✅ corretto
 
   if (
     chatbox &&
     !chatbox.classList.contains("hidden") &&
     !chatbox.contains(event.target) &&
-    (!toggleBtn || !toggleBtn.contains(event.target))
+    !event.target.closest("#yuki-chat-avatar")
   ) {
     chatbox.classList.add("hidden");
   }
