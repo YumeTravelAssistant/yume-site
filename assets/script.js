@@ -983,13 +983,14 @@ function caricaAnteprimaNotifiche() {
     return;
   }
 
-  const email = JSON.parse(profilo).email;
+  const { email, codice } = JSON.parse(profilo);
+
   fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       tipoRichiesta: "lettura_messaggi",
-      email: email
+      codice // ✅ usa il codice cliente
     })
   })
   .then(res => res.json())
