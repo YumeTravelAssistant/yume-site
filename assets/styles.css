@@ -846,6 +846,78 @@ ul {
 .navbar.hidden {
   transform: translateY(-100%);
 }
+
+/* Notifiche su Navbar */
+.notif-btn {
+  background: none;
+  border: none;
+  color: #C9A86A;
+  font-size: 1.4rem;
+  position: absolute;
+  right: 50px;
+  bottom: 20px;
+  cursor: pointer;
+}
+
+.notif-count-badge {
+  position: absolute;
+  top: -6px;
+  right: -10px;
+  background-color: #8B2C2B;
+  color: #F4F0E2;
+  font-size: 0.7rem;
+  border-radius: 10px;
+  padding: 2px 6px;
+  font-weight: bold;
+  display: none;
+}
+
+.notifiche-container {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 280px;
+  background-color: #F4F0E2;
+  color: #8B2C2B;
+  border: 1px solid #C9A86A;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  z-index: 9999;
+  padding: 12px;
+}
+
+.notifiche-container h3 {
+  margin-top: 0;
+  font-size: 1rem;
+  color: #8B2C2B;
+}
+
+.notifiche-lista {
+  list-style: none;
+  padding-left: 0;
+  max-height: 160px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+.notifiche-lista li {
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+  border-bottom: 1px solid #C9A86A;
+  padding-bottom: 4px;
+}
+
+.btn-messaggi {
+  width: 100%;
+  background-color: #8B2C2B;
+  color: #F4F0E2;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
 .slide-in {
   opacity: 0;
   transform: translateY(40px);
@@ -916,8 +988,6 @@ ul {
     font-size: 2.2rem;
   }
 }
-
-
 
 .slogan-black {
   color: #000000;

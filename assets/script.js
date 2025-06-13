@@ -261,6 +261,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // 5bis. Caricamento anteprima notifiche (campanella)
+  caricaAnteprimaNotifiche();
+
   // 6. Area Clienti – caricamento profilo se presente
   if (window.location.pathname.includes("area-clienti")) {
     getProfiloCliente();     // recupera dati da Sheets via codice cliente salvato
@@ -324,7 +327,6 @@ if (window.location.pathname.includes("area-operatori")) {
 }
 
 });
-
 
 // 🎯 Slider per sezione sartoria
 function scrollSartoriaSlider(direction) {
@@ -447,7 +449,6 @@ if (bottoneInvia) {
     aggiornaOrdinePacchetti();
   });
 }
-
 
 
 // 🎯 Info Utili – Toggle Apri/Chiudi
@@ -951,6 +952,61 @@ li.innerHTML = `
       if (lista) lista.innerHTML = "<li>Errore nel recupero dei messaggi.</li>";
     });
 }
+
+function caricaAnteprimaNotifiche() {
+  const profilo = sessionStorage.getItem("profiloUtente");
+  if (!profilo) {
+    document.getElementById("toggleNotificheBtn")?.classList.add("hidden");
+    return;
+  }
+
+  const email = JSON.parse(profilo).email;
+  fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      tipoRichiesta: "lettura_messaggi",
+      email: email
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    const messaggi = (data.messaggi || []).filter(m => m.da?.toLowerCase() !== "cliente");
+    const badge = document.getElementById("notifCount");
+    const lista = document.getElementById("listaNotifiche");
+
+    if (messaggi.length > 0) {
+      badge.textContent = messaggi.length;
+      badge.style.display = "inline-block";
+
+      lista.innerHTML = "";
+      messaggi.slice(0, 2).forEach(m => {
+        const li = document.createElement("li");
+        li.textContent = m.testo.length > 60 ? m.testo.slice(0, 60) + "..." : m.testo;
+        lista.appendChild(li);
+      });
+    }
+  })
+  .catch(err => {
+    console.warn("Errore nel caricamento notifiche:", err);
+  });
+}
+
+// Chiude il pannello notifiche cliccando fuori
+document.addEventListener("click", function (event) {
+  const pannello = document.getElementById("notificheContainer");
+  const bottone = document.getElementById("toggleNotificheBtn");
+
+  // Se il click è fuori dal pannello e non è sulla campanella
+  if (
+    pannello && 
+    !pannello.classList.contains("hidden") &&
+    !pannello.contains(event.target) &&
+    !bottone.contains(event.target)
+  ) {
+    pannello.classList.add("hidden");
+  }
+});
 
 
 // 🔁 CARICA RICHIESTE CLIENTI (area operatori)
@@ -1487,4 +1543,15 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+function scrollToMessaggi() {
+  const sezione = document.getElementById("sezioneMessaggi");
+  if (sezione) {
+    sezione.scrollIntoView({ behavior: "smooth" });
+    // ✅ Reset visuale dopo visualizzazione
+    const badge = document.getElementById("badgeNotifiche");
+    badge.textContent = "0";
+    badge.style.display = "none";
+  }
+}
 
