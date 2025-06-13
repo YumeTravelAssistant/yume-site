@@ -857,7 +857,6 @@ async function aggiornaProfiloCliente() {
   }
 }
 
-
 function caricaMessaggi() {
   const codiceCliente = localStorage.getItem("codice_cliente");
   if (!codiceCliente) return;
@@ -989,8 +988,8 @@ function caricaAnteprimaNotifiche() {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      tipoRichiesta: "lettura_messaggi",
-      codice // ✅ usa il codice cliente
+      tipoRichiesta: "get_messaggi",
+      codice_cliente: codiceCliente
     })
   })
   .then(res => res.json())
