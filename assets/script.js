@@ -266,6 +266,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 6. Area Clienti – caricamento profilo se presente
   if (window.location.pathname.includes("area-clienti")) {
+  // ✅ Registra l'orario di ultimo accesso all'area clienti
+  localStorage.setItem("ultimoAccessoClienti", new Date().toISOString());
+
     getProfiloCliente();     // recupera dati da Sheets via codice cliente salvato
     caricaMessaggi();        // recupera i messaggi da Sheets e li mostra
     caricaPDFCliente();      // ✅ recupera PDF personalizzati da Sheets
@@ -986,13 +989,19 @@ function caricaAnteprimaNotifiche() {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      tipoRichiesta: "get_messaggi", // ✅ stesso tipo usato da caricaMessaggi
-      codice_cliente: codiceCliente  // ✅ stesso campo
+      tipoRichiesta: "get_messaggi",
+      codice_cliente: codiceCliente
     })
   })
   .then(res => res.json())
   .then(data => {
-    const messaggi = (data.messaggi || []).filter(m => m.da?.toLowerCase() !== "cliente");
+    const ultimoAccesso = localStorage.getItem("ultimoAccessoClienti");
+    const messaggi = (data.messaggi || []).filter(m => {
+      const daStaff = m.da?.toLowerCase() !== "cliente";
+      const èNuovo = !ultimoAccesso || new Date(m.timestamp) > new Date(ultimoAccesso);
+      return daStaff && èNuovo;
+    });
+
     const badge = document.getElementById("notifCount");
     const lista = document.getElementById("listaNotifiche");
 
@@ -1006,6 +1015,10 @@ function caricaAnteprimaNotifiche() {
         li.textContent = m.testo.length > 60 ? m.testo.slice(0, 60) + "..." : m.testo;
         lista.appendChild(li);
       });
+    } else {
+      // Se non ci sono nuovi messaggi, nasconde badge e lista
+      badge.style.display = "none";
+      lista.innerHTML = "<li>Nessun nuovo messaggio</li>";
     }
   })
   .catch(err => {
