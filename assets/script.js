@@ -953,6 +953,11 @@ li.innerHTML = `
     });
 }
 
+function toggleNotifiche() {
+  const box = document.getElementById("notificheContainer");
+  box.classList.toggle("hidden");
+}
+
 function caricaAnteprimaNotifiche() {
   const profilo = sessionStorage.getItem("profiloUtente");
   if (!profilo) {
