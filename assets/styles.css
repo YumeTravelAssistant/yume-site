@@ -225,7 +225,7 @@ footer {
   }
 }
 
-@media (max-width: 1023px) and (orientation: landscape) {
+@media (max-width: 1200px) and (orientation: landscape) {
   .sidebar {
     display: flex;
     flex-wrap: wrap;
