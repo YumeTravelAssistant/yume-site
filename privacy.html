@@ -188,17 +188,28 @@
           logoutBtn.style.padding = "6px 12px";
           logoutBtn.style.borderRadius = "20px";
           logoutBtn.style.cursor = "pointer";
-          logoutBtn.onclick = () => {
-            sessionStorage.removeItem("profiloUtente");
-            localStorage.removeItem("userAvatar");
-            window.location.href = "index.html";
-          };
+
+logoutBtn.onclick = () => {
+  sessionStorage.removeItem("profiloUtente");
+  localStorage.removeItem("userAvatar");
+  localStorage.removeItem("codice_cliente"); // ✅ nuovo
+  window.location.href = "index.html";
+};
+
           userBox.appendChild(avatar);
           userBox.appendChild(logoutBtn);
           sidebar.appendChild(userBox);
-        }
-      }
+    }
+  } else {
+    // 🔁 Se non loggato, reimposta i link a log-in.html
+    document.querySelectorAll("a[href='area-clienti.html']").forEach(link => {
+      link.href = "log-in.html";
     });
+
+    // 🔕 Nasconde la campanella se non loggato
+    document.getElementById("toggleNotificheBtn")?.classList.add("hidden");
+  }
+});
   </script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
