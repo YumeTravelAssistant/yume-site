@@ -1019,6 +1019,17 @@ ul {
   font-family: 'Quicksand', sans-serif;
 }
 
+@media (max-width: 450px) {
+.founders-text {
+    flex: 1 1 50%;
+    min-width: 0;
+    max-width: 100%;
+    font-size: clamp(0.8em, 2vw, 0.8em);
+    line-height: 1.6;
+    font-family: 'Quicksand', sans-serif;
+ }
+}
+
 .mission-image,
 .founders-image {
   flex: 1 1 50%;
@@ -1038,6 +1049,28 @@ ul {
   object-fit: contain;
   border-radius: 16px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+@media (min-width: 451px) and (max-width: 600px) {
+.founders-image .group-photo {
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+    object-fit: contain;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+ }
+}
+
+@media (max-width: 450px) {
+.founders-image .group-photo {
+    width: 100%;
+    max-width: 250px;
+    height: auto;
+    object-fit: contain;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+ }
 }
 
 .main-footer {
