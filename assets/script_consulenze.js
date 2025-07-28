@@ -977,17 +977,13 @@ eventSources: [{
     try {
       const eventi = [];
       const vista = cal.view?.type || "dayGridMonth";
-      const oggi = new Date(); oggi.setHours(0, 0, 0, 0);
-      const inizio = new Date(Math.max(fetchInfo.start, oggi));
-      const fine = fetchInfo.end;
       const durata = getDurataSlot();
-
-      const da = inizio.toISOString().slice(0, 10);
-      const fino = fine.toISOString().slice(0, 10);
+      const da = fetchInfo.start.toISOString().slice(0, 10);
+      const fino = fetchInfo.end.toISOString().slice(0, 10);
       const url = `${endpointAzure}?da=${da}&fino=${fino}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
 
       const res = await fetch(url);
-      const tuttiGliSlot = await res.json(); // formato: { "YYYY-MM-DD": ["09:00", "09:30", ...], ... }
+      const tuttiGliSlot = await res.json();
 
       for (const [giorno, slotDisponibili] of Object.entries(tuttiGliSlot)) {
         if (vista === "dayGridMonth") {
@@ -996,14 +992,19 @@ eventSources: [{
             start: giorno,
             allDay: true,
             display: "block",
-            classNames: ["yume-slot-count"]
+            classNames: ["yume-slot-count"],
+            extendedProps: { dayHasSlot: slotDisponibili.length > 0 }
           });
         }
 
         if (vista === "timeGridDay") {
           const start = new Date(`${giorno}T09:00:00`);
-          const fine = new Date(`${giorno}T20:00:00`);
-          for (let slot = new Date(start); slot.getTime() + durata * 60000 <= fine.getTime(); slot = new Date(slot.getTime() + durata * 60000)) {
+          const end = new Date(`${giorno}T20:00:00`);
+          for (
+            let slot = new Date(start);
+            slot.getTime() + durata * 60000 <= end.getTime();
+            slot = new Date(slot.getTime() + durata * 60000)
+          ) {
             const ora = slot.toTimeString().slice(0, 5);
             const endSlot = new Date(slot.getTime() + durata * 60000);
             const disponibile = slotDisponibili.includes(ora);
@@ -1022,7 +1023,7 @@ eventSources: [{
 
       successCallback(eventi);
     } catch (err) {
-      console.error("  Errore calendario:", err);
+      console.error("Errore calendario:", err);
       failureCallback(err);
     }
   }
