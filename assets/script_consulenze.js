@@ -972,60 +972,62 @@ eventClick(info) {
   console.log("✅ Slot selezionato:", localISO);
 },
 
-    eventSources: [{
-      events: async (fetchInfo, successCallback, failureCallback) => {
-        try {
-          const eventi = [];
-          const vista = cal.view?.type || "dayGridMonth";
-          const oggi = new Date(); oggi.setHours(0, 0, 0, 0);
-          const inizio = new Date(Math.max(fetchInfo.start, oggi));
-          const fine = fetchInfo.end;
-          const durata = getDurataSlot();
+eventSources: [{
+  events: async (fetchInfo, successCallback, failureCallback) => {
+    try {
+      const eventi = [];
+      const vista = cal.view?.type || "dayGridMonth";
+      const oggi = new Date(); oggi.setHours(0, 0, 0, 0);
+      const inizio = new Date(Math.max(fetchInfo.start, oggi));
+      const fine = fetchInfo.end;
+      const durata = getDurataSlot();
 
-          for (let d = new Date(inizio); d <= fine; d.setDate(d.getDate() + 1)) {
-            const giorno = `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, "0")}-${d.getDate().toString().padStart(2, "0")}`;
-            const url = `${endpointAzure}?giorno=${giorno}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
-            const res = await fetch(url);
-            const slotDisponibili = await res.json();
+      const da = inizio.toISOString().slice(0, 10);
+      const fino = fine.toISOString().slice(0, 10);
+      const url = `${endpointAzure}?da=${da}&fino=${fino}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
 
-            if (vista === "dayGridMonth") {
-              eventi.push({
-                title: `${slotDisponibili.length} slot disponibili`,
-                start: giorno,
-                allDay: true,
-                display: "block",
-                classNames: ["yume-slot-count"]
-              });
-            }
+      const res = await fetch(url);
+      const tuttiGliSlot = await res.json(); // formato: { "YYYY-MM-DD": ["09:00", "09:30", ...], ... }
 
-            if (vista === "timeGridDay") {
-              const start = new Date(`${giorno}T09:00:00`);
-              const fine = new Date(`${giorno}T20:00:00`);
+      for (const [giorno, slotDisponibili] of Object.entries(tuttiGliSlot)) {
+        if (vista === "dayGridMonth") {
+          eventi.push({
+            title: `${slotDisponibili.length} slot disponibili`,
+            start: giorno,
+            allDay: true,
+            display: "block",
+            classNames: ["yume-slot-count"]
+          });
+        }
 
-              for (let slot = new Date(start); slot.getTime() + durata * 60000 <= fine.getTime(); slot = new Date(slot.getTime() + durata * 60000)) {
-                const ora = slot.toTimeString().slice(0, 5);
-                const endSlot = new Date(slot.getTime() + durata * 60000);
-                const disponibile = slotDisponibili.includes(ora);
+        if (vista === "timeGridDay") {
+          const start = new Date(`${giorno}T09:00:00`);
+          const fine = new Date(`${giorno}T20:00:00`);
+          for (let slot = new Date(start); slot.getTime() + durata * 60000 <= fine.getTime(); slot = new Date(slot.getTime() + durata * 60000)) {
+            const ora = slot.toTimeString().slice(0, 5);
+            const endSlot = new Date(slot.getTime() + durata * 60000);
+            const disponibile = slotDisponibili.includes(ora);
 
-                eventi.push({
-                  title: disponibile ? ora : "Occupato",
-                  start: slot.toISOString(),
-                  end: endSlot.toISOString(),
-                  display: "block",
-                  classNames: [disponibile ? (isAcquisto ? "acquisto-slot" : "libero-slot") : "inverse-slot"],
-                  extendedProps: { clickableSlot: disponibile }
-                });
-              }
-            }
+            eventi.push({
+              title: disponibile ? ora : "Occupato",
+              start: slot.toISOString(),
+              end: endSlot.toISOString(),
+              display: "block",
+              classNames: [disponibile ? (isAcquisto ? "acquisto-slot" : "libero-slot") : "inverse-slot"],
+              extendedProps: { clickableSlot: disponibile }
+            });
           }
-
-          successCallback(eventi);
-        } catch (err) {
-          console.error("❌ Errore calendario:", err);
-          failureCallback(err);
         }
       }
-    }]
+
+      successCallback(eventi);
+    } catch (err) {
+      console.error("  Errore calendario:", err);
+      failureCallback(err);
+    }
+  }
+}]
+
   });
 
   cal.on("datesSet", () => cal.refetchEvents());
