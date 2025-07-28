@@ -986,6 +986,12 @@ eventSources: [{
       const tuttiGliSlot = await res.json();
 
       for (const [giorno, slotDisponibili] of Object.entries(tuttiGliSlot)) {
+        const oggi = new Date();
+        oggi.setHours(0, 0, 0, 0);
+
+       const giornoCorrente = new Date(giorno);
+       if (giornoCorrente <= oggi) continue; // ⛔️ Salta oggi e giorni precedenti
+
         if (vista === "dayGridMonth") {
           eventi.push({
             title: `${slotDisponibili.length} slot disponibili`,
