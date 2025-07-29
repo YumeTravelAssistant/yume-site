@@ -1351,10 +1351,21 @@ function sendMessage() {
   appendMessage("Tu", message);
   input.value = "";
 
+  // ✅ Recupera o genera un sessionId
+  let sessionId = localStorage.getItem("sessionId");
+  if (!sessionId) {
+    sessionId = crypto.randomUUID();
+    localStorage.setItem("sessionId", sessionId);
+  }
+
+  // ✅ Invia la domanda + sessionId
   fetch("https://yuki-chat.azurewebsites.net/api/invio-chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ domanda: message })
+    body: JSON.stringify({
+      domanda: message,
+      sessionId: sessionId
+    })
   })
     .then(res => res.json())
     .then(data => {
