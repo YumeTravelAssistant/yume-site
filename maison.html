@@ -379,7 +379,7 @@ maison-section {
   <h2 class="slide-in">Richiedi la tua proposta sartoriale</h2>
   <p class="intro-text">Ogni viaggio nasce da un’intuizione. Raccontaci chi sei, cosa ami, e noi cuciremo per te un itinerario unico, fatto a mano.</p>
 
-  <form>
+  <form id="maison-form" novalidate>
     <label for="nome">Il tuo nome e cognome</label>
     <input type="text" id="nome" name="nome" placeholder="Es. Alessio Calistri" required>
 
@@ -397,9 +397,25 @@ maison-section {
     </select>
 
     <label for="msg">Come possiamo ispirarti?</label>
-    <textarea id="msg" rows="5" placeholder="Parlaci del tuo stile di viaggio, occasioni speciali o semplici desideri…"></textarea>
+    <textarea id="msg" name="messaggio" rows="5" placeholder="Parlaci del tuo stile di viaggio, occasioni speciali o semplici desideri…"></textarea>
+
+    <!-- GDPR -->
+    <div class="checkbox-gdpr" style="margin-top:15px; display:flex; align-items:center; gap:8px;">
+      <input type="checkbox" id="consensoGDPR" name="consensoGDPR" required>
+      <label for="consensoGDPR">
+        Acconsento al trattamento dei miei dati personali ai sensi del
+        <a href="privacy.html" target="_blank" style="color:#C9A86A; text-decoration:underline;">
+          Regolamento (UE) 2016/679 (GDPR)
+        </a>.
+      </label>
+    </div>
+
+    <!-- honeypot antispam -->
+    <input type="text" name="website" tabindex="-1" autocomplete="off"
+           style="position:absolute;left:-9999px;opacity:0;pointer-events:none">
 
     <button type="submit" class="btn-accetta">Invia la tua richiesta alla Maison</button>
+    <p id="maison-stato" role="status" aria-live="polite" style="margin-top:8px;"></p>
   </form>
 </section>
 
@@ -457,6 +473,8 @@ maison-section {
 <!-- SCRIPT BASE -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="assets/script.js"></script>
+
+<script src="assets/script_maison.js"></script>
 
 <script>
   // Avatar posizione fissa
