@@ -399,6 +399,7 @@ function validaForm() {
   const trasporto = document.getElementById("trasporto").value;
   const connettivita = document.getElementById("connettivita").value;
   const citta = document.getElementById("citta").selectedOptions;
+  const consensoGDPR = document.getElementById("consensoGDPR");
 
   const errorePartecipanti = document.getElementById("errorePartecipanti");
   const erroreCitta = document.getElementById("erroreCitta");
@@ -464,6 +465,11 @@ function validaForm() {
   if (!citta || citta.length === 0) {
     erroreCitta.textContent = "Devi selezionare almeno una città.";
     return false;
+  }
+
+  if (!consensoGDPR.checked) {
+  alert("Devi acconsentire al trattamento dei dati personali per procedere.");
+  return false;
   }
 
   return true;

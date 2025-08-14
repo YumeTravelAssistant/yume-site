@@ -5061,3 +5061,24 @@ body .indice-info-utili {
     position: relative;
     margin-left: 70px;
   }
+
+.checkbox-gdpr {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.checkbox-gdpr input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.checkbox-gdpr label {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  cursor: pointer;
+}
+

@@ -400,6 +400,16 @@
     <label for="richieste">Richieste Aggiuntive (facoltativo):</label>
     <textarea id="richieste" name="richieste" rows="3" maxlength="250" placeholder="Scrivi qui eventuali esigenze, richieste o preferenze..."></textarea>
 
+<div class="checkbox-gdpr" style="margin-top:15px; display:flex; align-items:center; gap:8px;">
+  <input type="checkbox" id="consensoGDPR" name="consensoGDPR" required>
+  <label for="consensoGDPR">
+    Acconsento al trattamento dei miei dati personali ai sensi del
+    <a href="privacy.html" target="_blank" style="color:#C9A86A; text-decoration:underline;">
+      Regolamento (UE) 2016/679 (GDPR)
+    </a>.
+  </label>
+</div>
+
     <button type="submit" class="modern-btn">Invia richiesta</button>
     <div id="formFeedback" class="form-feedback-msg"></div>
   </form>
@@ -527,6 +537,7 @@
         logoutBtn.onclick = () => {
           sessionStorage.removeItem("profiloUtente");
           localStorage.removeItem("userAvatar");
+          localStorage.removeItem("codice_cliente"); // ✅ nuovo
           window.location.href = "index.html";
         };
 
@@ -534,9 +545,18 @@
         userBox.appendChild(logoutBtn);
         sidebar.appendChild(userBox);
       }
+    } else {
+      // 🔁 Se non loggato, reimposta i link a log-in.html
+      document.querySelectorAll("a[href='area-clienti.html']").forEach(link => {
+        link.href = "log-in.html";
+      });
+
+      // 🔕 Nasconde la campanella se non loggato
+      document.getElementById("toggleNotificheBtn")?.classList.add("hidden");
     }
   });
 </script>
+
 <script src="assets/script_prodotti.js"></script>
 
 <!-- jQuery PRIMA -->
