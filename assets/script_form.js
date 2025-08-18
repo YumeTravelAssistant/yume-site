@@ -1,3 +1,17 @@
+// === Consenso privacy: identifica la versione del testo che mostri nel link ===
+const POLICY_PRIVACY_KEY = 'privacy';
+const POLICY_PRIVACY_VERSION = 'v1.0-2025-08-19'; // <-- aggiorna quando cambi l'informativa
+const POLICY_PRIVACY_URL = 'https://tuodominio/policy/privacy-v1.html'; // opzionale, solo per check/debug
+
+document.addEventListener('DOMContentLoaded', () => {
+  const ver = document.getElementById('privacyVer');
+  if (ver) ver.textContent = POLICY_PRIVACY_VERSION;
+  const link = document.getElementById('privacyLink');
+  if (link && typeof POLICY_PRIVACY_URL === 'string' && POLICY_PRIVACY_URL) {
+    link.href = POLICY_PRIVACY_URL;
+  }
+});
+
 const cittaPerPacchetto = {
   hajimete: [
     "Tokyo", "Kyoto", "Osaka", "Hakone", "Nara",
@@ -330,30 +344,40 @@ document.getElementById("formPacchetto").addEventListener("submit", function (e)
   document.getElementById("confermaInvio").addEventListener("click", () => {
     document.body.removeChild(modal);
 
-    const dati = {
-      nome: form.get("nome"),
-      cognome: form.get("cognome"),
-      email: form.get("email"),
-      pacchetto: form.get("pacchetto"),
-      dataPartenza: form.get("dataPartenza"),
-      dataRitorno: form.get("dataRitorno"),
-      tipologiaGruppo: form.get("tipologiaGruppo"),
-      dettagliGruppo: form.get("dettagliGruppo"),
-      partecipanti: form.get("partecipanti"),
-      adulti: form.get("adulti"),
-      bambini: form.get("bambini"),
-      fasciaPrezzo: form.get("fasciaPrezzo"),
-      trasporto: form.get("trasporto"),
-      connettivita: form.get("connettivita"),
-      citta: form.getAll("citta[]"),
-     camere: [...document.querySelectorAll('.camera-box')].map(box => {
-       const tipo = box.querySelector(".tipo-camera")?.selectedOptions[0]?.text || "";
-       const ospiti = box.querySelector(".ospiti-camera")?.value || "";
-       return `${tipo} x ${ospiti}`;
-     }),
+const dati = {
+  // --- dati form ---
+  nome: form.get("nome"),
+  cognome: form.get("cognome"),
+  email: form.get("email"),
+  pacchetto: form.get("pacchetto"),
+  dataPartenza: form.get("dataPartenza"),
+  dataRitorno: form.get("dataRitorno"),
+  tipologiaGruppo: form.get("tipologiaGruppo"),
+  dettagliGruppo: form.get("dettagliGruppo"),
+  partecipanti: form.get("partecipanti"),
+  adulti: form.get("adulti"),
+  bambini: form.get("bambini"),
+  fasciaPrezzo: form.get("fasciaPrezzo"),
+  trasporto: form.get("trasporto"),
+  connettivita: form.get("connettivita"),
+  citta: form.getAll("citta[]"),
+  camere: [...document.querySelectorAll('.camera-box')].map(box => {
+    const tipo = box.querySelector(".tipo-camera")?.selectedOptions[0]?.text || "";
+    const ospiti = box.querySelector(".ospiti-camera")?.value || "";
+    return `${tipo} x ${ospiti}`;
+  }),
+  richieste: form.get("richieste"),
 
-      richieste: form.get("richieste")
-    };
+  // --- CONSENSO PRIVACY (campi unificati per GDPR) ---
+  privacy: document.getElementById("consensoGDPR")?.checked === true,   // boolean
+  policy_key: POLICY_PRIVACY_KEY,                                        // 'privacy'
+  policy_version: POLICY_PRIVACY_VERSION,                                // es. 'v1.0-2025-08-19'
+
+  // --- metadati utili (prova del consenso) ---
+  userAgent: navigator.userAgent || null,
+  lang: navigator.language || 'it',
+  referrer: document.referrer || null
+};
 
     fetch("https://yume-sito-form.azurewebsites.net/api/invia-form", {
       method: "POST",
