@@ -351,6 +351,16 @@
     <input type="text" name="website" tabindex="-1" autocomplete="off"
            style="position:absolute;left:-9999px;opacity:0;pointer-events:none">
 
+<div class="checkbox-gdpr" style="margin:12px 0; display:flex; align-items:center; gap:8px;">
+  <input type="checkbox" id="consensoGDPR_contatti" required>
+  <label for="consensoGDPR_contatti">
+    Acconsento al trattamento dei miei dati personali ai sensi del
+    <a href="privacy.html" target="_blank" style="color:#C9A86A; text-decoration:underline;">
+      Regolamento (UE) 2016/679 (GDPR)
+    </a>.
+  </label>
+</div>
+
     <button type="submit">Invia</button>
 
     <!-- area stato/accessibilità -->
@@ -368,6 +378,14 @@
 
   <form id="newsletter-form" novalidate>
     <input type="email" id="newsletter-email" name="email" placeholder="La tua email" required>
+
+<div class="checkbox-gdpr" style="margin:8px 0; display:flex; align-items:center; gap:8px;">
+  <input type="checkbox" id="consensoGDPR_newsletter" required>
+  <label for="consensoGDPR_newsletter">
+    Acconsento a ricevere comunicazioni via email da Yume Travel (newsletter).
+  </label>
+</div>
+
     <button type="submit">Iscriviti</button>
 
     <!-- honeypot antispam (invisibile) -->
