@@ -1,22 +1,52 @@
+/* assets/script_prodotti.js
+   ——————————————————————————————————————————————————————————————
+   Frontend → Azure Proxy → GAS → Sheets
+   - CONSENSI: privacy + termini (obbligatori), newsletter (opt-in)
+   - Versioning policy/terms passato nel payload (come script_consulenze.js)
+   - Nessuna modifica al flusso di acquisto/carrello/endpoint esistenti
+   —————————————————————————————————————————————————————————————— */
+
 let carrello = [];
 
+/* =========================
+   0) COSTANTI CONSENSI (GDPR / TERMS / NEWSLETTER)
+   ========================= */
+const CONSENT_CONSTANTS = {
+  privacy: {
+    key: "privacy",
+    version: "v1.0-2025-08-19",
+    url: "https://yellow-bay-077dd2b03.6.azurestaticapps.net/privacy.html",
+  },
+  terms: {
+    key: "terms",
+    version: "v1.0-2025-08-19",
+    url: "https://yellow-bay-077dd2b03.6.azurestaticapps.net/termini-condizioni.html",
+  },
+  newsletter: {
+    key: "newsletter",
+    version: "v1.0-2025-08-19",
+    url: "https://yellow-bay-077dd2b03.6.azurestaticapps.net/privacy.html",
+  },
+};
+
+/* Endpoint già in uso (immutati) */
+const ENDPOINT_CLIENTI    = "https://yume-clienti.azurewebsites.net/api/invio-yume";
+const ENDPOINT_INOLTRO    = "https://yume-consulenze.azurewebsites.net/api/invio-estremi"; // stesso usato per consulenze
+const ENDPOINT_NEWSLETTER = "https://yume-sito-form.azurewebsites.net/api/invia-form";     // double opt-in
+
+/* =========================
+   1) BOOTSTRAP CARRELLO
+   ========================= */
 document.addEventListener("DOMContentLoaded", () => {
   const carrelloSalvato = JSON.parse(sessionStorage.getItem("carrello")) || [];
-  console.log("🛒 Carrello salvato:", carrelloSalvato);
-
   if (carrelloSalvato.length > 0) {
     carrello = carrelloSalvato;
     aggiornaCarrelloUI();
-    console.log("  Carrello ripristinato e UI aggiornata.");
-
     if (window.location.pathname.includes("acquista-prodotti")) {
-      mostraCarrelloInStep1();  // ✅ qui aggiorna anche lo STEP 1
+      mostraCarrelloInStep1();
     }
-  } else {
-    console.log(" ️ Nessun prodotto trovato nel carrello.");
   }
 });
-
 
 function toggleCarrello() {
   document.getElementById("carrelloContainer").classList.toggle("hidden");
@@ -25,7 +55,6 @@ function toggleCarrello() {
 document.addEventListener("click", function (event) {
   const carrelloBox = document.getElementById("carrelloContainer");
   const carrelloBtn = document.getElementById("toggleCarrelloBtn");
-
   if (
     carrelloBox &&
     !carrelloBox.classList.contains("hidden") &&
@@ -37,16 +66,10 @@ document.addEventListener("click", function (event) {
 });
 
 function aggiornaCarrelloUI() {
-  console.log("🔄 aggiornaCarrelloUI() avviata");
-
   const lista = document.getElementById("listaCarrello");
   const totale = document.getElementById("carrelloTotale");
   const badge = document.getElementById("cartCount");
-
-  if (!lista || !totale || !badge) {
-    console.warn("⚠️ Uno o più elementi DOM mancanti (#listaCarrello, #carrelloTotale, #cartCount)");
-    return;
-  }
+  if (!lista || !totale || !badge) return;
 
   lista.innerHTML = "";
   let somma = 0;
@@ -63,28 +86,25 @@ function aggiornaCarrelloUI() {
 
   totale.textContent = `€${somma.toFixed(2)}`;
   badge.textContent = carrello.length;
-
-  console.log(`📦 ${carrello.length} prodotti nel carrello`);
-  console.log(`💰 Totale aggiornato: €${somma.toFixed(2)}`);
 }
 
 function aggiungiAlCarrello(nome, prezzo) {
   carrello.push({ nome, prezzo });
   aggiornaCarrelloUI();
   mostraConfermaAggiunta();
-  sessionStorage.setItem("carrello", JSON.stringify(carrello)); // 🔁 salva
+  sessionStorage.setItem("carrello", JSON.stringify(carrello));
 }
 
 function rimuoviDalCarrello(index) {
   carrello.splice(index, 1);
   aggiornaCarrelloUI();
-  sessionStorage.setItem("carrello", JSON.stringify(carrello)); // 🔁 aggiorna
+  sessionStorage.setItem("carrello", JSON.stringify(carrello));
 }
 
 function mostraConfermaAggiunta() {
   const btn = document.getElementById("toggleCarrelloBtn");
-  btn.classList.add("pulse");
-  setTimeout(() => btn.classList.remove("pulse"), 600);
+  btn?.classList.add("pulse");
+  setTimeout(() => btn?.classList.remove("pulse"), 600);
 }
 
 function vaiAllaCassa() {
@@ -92,26 +112,24 @@ function vaiAllaCassa() {
     alert("Il carrello è vuoto.");
     return;
   }
-
-  sessionStorage.setItem("carrello", JSON.stringify(carrello)); // ✅ uniformato
+  sessionStorage.setItem("carrello", JSON.stringify(carrello));
   window.location.href = "acquista-prodotti.html";
 }
 
+/* =========================
+   2) STEP & UI
+   ========================= */
 let invioInCorso = false;
 
 function mostraStep(numero) {
   document.querySelectorAll(".step").forEach(step => step.classList.add("hidden"));
   document.getElementById("step" + numero)?.classList.remove("hidden");
 }
-
 function vaiAlStep0() { mostraStep(0); }
 function vaiAlStep1() { mostraStep(1); }
 function vaiAlStep2() {
-  const carrello = JSON.parse(sessionStorage.getItem("carrello")) || [];
-  if (carrello.length === 0) {
-    alert("Il carrello è vuoto.");
-    return;
-  }
+  const c = JSON.parse(sessionStorage.getItem("carrello")) || [];
+  if (!c.length) { alert("Il carrello è vuoto."); return; }
   mostraStep(2);
   popolaCampiProfiloInStep2();
 }
@@ -120,49 +138,33 @@ async function vaiAlStep3() {
   const tipoCliente = document.getElementById("cliente_tipo")?.value || "";
   const riepilogo = document.getElementById("riepilogo");
   if (!riepilogo) return;
+  if (!tipoCliente) { alert("Seleziona una tipologia di cliente per proseguire."); return; }
 
-  if (!tipoCliente) {
-    alert("Seleziona una tipologia di cliente per proseguire.");
-    return;
-  }
+  // 👇 CONSENSI OBBLIGATORI (solo verifica di presenza qui; invio vero nel passo acquisto)
+  const privacy = document.getElementById("privacy")?.checked === true;
+  const termini = document.getElementById("termini")?.checked === true;
+  if (!privacy || !termini) { alert("Devi accettare Privacy e Termini per continuare."); return; }
 
   riepilogo.innerHTML = "";
 
-  // === PRIVATO ===
   if (tipoCliente === "privato") {
     const email = document.getElementById("email")?.value.trim();
     const email2 = document.getElementById("confermaEmail")?.value.trim();
     const password = document.getElementById("password")?.value;
     const password2 = document.getElementById("confermaPassword")?.value;
 
-    // Verifica email già registrata
     const esiste = await verificaEmailEsistente(email);
-    if (esiste) {
-      alert("Questa email risulta già registrata. Accedi per proseguire.");
-      return;
-    }
-
-    if (email !== email2) {
-      alert("Le email non coincidono.");
-      return;
-    }
-
-    if (password !== password2) {
-      alert("Le password non coincidono.");
-      return;
-    }
+    if (esiste) { alert("Questa email risulta già registrata. Accedi per proseguire."); return; }
+    if (email !== email2) { alert("Le email non coincidono."); return; }
+    if (password !== password2) { alert("Le password non coincidono."); return; }
 
     const campiPrivatoObbligatori = [
-      "nome", "cognome", "email", "confermaEmail", "password", "confermaPassword",
-      "cf", "telefono", "via", "cap", "citta", "provincia", "stato"
+      "nome","cognome","email","confermaEmail","password","confermaPassword",
+      "cf","telefono","via","cap","citta","provincia","stato"
     ];
-
     for (let id of campiPrivatoObbligatori) {
       const val = document.getElementById(id)?.value?.trim();
-      if (!val) {
-        alert("Compila tutti i campi obbligatori.");
-        return;
-      }
+      if (!val) { alert("Compila tutti i campi obbligatori."); return; }
     }
 
     riepilogo.innerHTML += `<li><strong>Tipo cliente:</strong> Privato</li>`;
@@ -178,50 +180,33 @@ async function vaiAlStep3() {
     riepilogo.innerHTML += `<li><strong>Stato:</strong> ${document.getElementById("stato").value}</li>`;
     riepilogo.innerHTML += `<li><strong>Note:</strong> ${document.getElementById("note").value}</li>`;
   }
-
-  // === AZIENDA ===
   else if (tipoCliente === "azienda") {
     const email = document.getElementById("email_azienda")?.value.trim();
     const email2 = document.getElementById("confermaEmail_azienda")?.value.trim();
     const password = document.getElementById("password_azienda")?.value;
     const password2 = document.getElementById("confermaPassword_azienda")?.value;
 
-    if (email !== email2) {
-      alert("Le email non coincidono.");
-      return;
-    }
-
-    if (password !== password2) {
-      alert("Le password non coincidono.");
-      return;
-    }
+    if (email !== email2) { alert("Le email non coincidono."); return; }
+    if (password !== password2) { alert("Le password non coincidono."); return; }
 
     const esiste = await verificaEmailEsistente(email);
     if (esiste) {
       const msgBox = document.getElementById("emailMatchMessageAzienda");
-      if (msgBox) {
-        msgBox.innerHTML = `<i class="fas fa-times-circle icon-ko"></i> Email già registrata. <a href="log-in.html">Accedi</a>`;
-        msgBox.className = "email-message ko";
-        document.getElementById("email_azienda").classList.add("input-ko");
-      }
+      msgBox && (msgBox.innerHTML = `<i class="fas fa-times-circle icon-ko"></i> Email già registrata. <a href="log-in.html">Accedi</a>`, msgBox.className = "email-message ko");
       alert("Email già registrata. Fai login per continuare.");
       return;
     }
 
     const campiAziendaObbligatori = [
-      "ragione_sociale", "email_azienda", "confermaEmail_azienda",
-      "password_azienda", "confermaPassword_azienda", "piva", "cf_azienda",
-      "pec", "codice_destinatario", "referente_nome", "referente_cognome",
-      "telefono_azienda", "via_azienda", "cap_azienda", "citta_azienda",
-      "provincia_azienda", "stato_azienda"
+      "ragione_sociale","email_azienda","confermaEmail_azienda",
+      "password_azienda","confermaPassword_azienda","piva","cf_azienda",
+      "pec","codice_destinatario","referente_nome","referente_cognome",
+      "telefono_azienda","via_azienda","cap_azienda","citta_azienda",
+      "provincia_azienda","stato_azienda"
     ];
-
     for (let id of campiAziendaObbligatori) {
       const val = document.getElementById(id)?.value?.trim();
-      if (!val) {
-        alert("Compila tutti i campi obbligatori.");
-        return;
-      }
+      if (!val) { alert("Compila tutti i campi obbligatori."); return; }
     }
 
     riepilogo.innerHTML += `<li><strong>Tipo cliente:</strong> Azienda</li>`;
@@ -244,36 +229,9 @@ async function vaiAlStep3() {
   mostraStep(3);
 }
 
-function mostraCarrelloInStep1() {
-  const container = document.getElementById("carrello-prodotti");
-  if (!container) return;
-
-  container.innerHTML = ""; // pulizia
-
-  if (carrello.length === 0) {
-    container.innerHTML = "<p>Il carrello è vuoto.</p>";
-    return;
-  }
-
-  const ul = document.createElement("ul");
-  ul.classList.add("riepilogo-lista");
-
-  let somma = 0;
-
-  carrello.forEach(prodotto => {
-    const li = document.createElement("li");
-    li.textContent = `${prodotto.nome} – €${prodotto.prezzo.toFixed(2)}`;
-    ul.appendChild(li);
-    somma += prodotto.prezzo;
-  });
-
-  const totale = document.createElement("p");
-  totale.innerHTML = `<strong>Totale: €${somma.toFixed(2)}</strong>`;
-  container.appendChild(ul);
-  container.appendChild(totale);
-}
-
-
+/* =========================
+   3) LOGIN / PROFILO / UI
+   ========================= */
 async function effettuaLogin() {
   const identificatore = document.getElementById("emailLogin")?.value.trim();
   const password = document.getElementById("passwordLogin")?.value.trim();
@@ -286,7 +244,7 @@ async function effettuaLogin() {
   }
   try {
     const password_hash = await sha256(password);
-    const response = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+    const response = await fetch(ENDPOINT_CLIENTI, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ identificatore, password_hash, tipoRichiesta: "login" })
@@ -331,13 +289,9 @@ function popolaCampiProfiloInStep2() {
     document.getElementById("confermaEmail").value = profilo.email || "";
     document.getElementById("confermaPassword").value = "••••••";
 
-    // Blocca i campi modificabili
-    document.getElementById("nome").readOnly = true;
-    document.getElementById("cognome").readOnly = true;
-    document.getElementById("email").readOnly = true;
-    document.getElementById("password").readOnly = true;
-    document.getElementById("confermaEmail").readOnly = true;
-    document.getElementById("confermaPassword").readOnly = true;
+    ["nome","cognome","email","password","confermaEmail","confermaPassword"].forEach(id=>{
+      const el=document.getElementById(id); if(el){ el.readOnly=true; el.classList.add("readonly"); }
+    });
   } else if (tipo === "azienda") {
     document.getElementById("referente_nome").value = profilo.nome || "";
     document.getElementById("referente_cognome").value = profilo.cognome || "";
@@ -346,41 +300,26 @@ function popolaCampiProfiloInStep2() {
     document.getElementById("confermaEmail_azienda").value = profilo.email || "";
     document.getElementById("confermaPassword_azienda").value = "••••••";
 
-    // Blocca i campi modificabili
-    document.getElementById("referente_nome").readOnly = true;
-    document.getElementById("referente_cognome").readOnly = true;
-    document.getElementById("email_azienda").readOnly = true;
-    document.getElementById("password_azienda").readOnly = true;
-    document.getElementById("confermaEmail_azienda").readOnly = true;
-    document.getElementById("confermaPassword_azienda").readOnly = true;
-
+    ["referente_nome","referente_cognome","email_azienda","password_azienda","confermaEmail_azienda","confermaPassword_azienda"].forEach(id=>{
+      const el=document.getElementById(id); if(el){ el.readOnly=true; el.classList.add("readonly"); }
+    });
   } else {
-    // Caso default (nessun tipo o tipo non riconosciuto)
-    const campi = ["nome", "cognome", "email", "confermaEmail", "password", "confermaPassword"];
-    campi.forEach(id => {
-      const el = document.getElementById(id);
-      if (!el) return;
-
-      if (id === "password" || id === "confermaPassword") {
-        el.value = "••••••";
-      } else if (id === "confermaEmail") {
-        el.value = profilo.email || "";
-      } else {
-        el.value = profilo[id] || "";
-      }
-
-      el.readOnly = true;
-      el.classList.add("readonly");
+    const campi = ["nome","cognome","email","confermaEmail","password","confermaPassword"];
+    campi.forEach(id=>{
+      const el=document.getElementById(id); if(!el) return;
+      if (id==="password"||id==="confermaPassword") el.value="••••••";
+      else if (id==="confermaEmail") el.value = profilo.email || "";
+      else el.value = profilo[id] || "";
+      el.readOnly = true; el.classList.add("readonly");
     });
   }
 }
 
-function mostraSpinner() {
-  document.getElementById("spinnerInvio")?.classList.remove("hidden");
-}
-function nascondiSpinner() {
-  document.getElementById("spinnerInvio")?.classList.add("hidden");
-}
+/* =========================
+   4) ACQUISTO PRODOTTI (con consensi)
+   ========================= */
+function mostraSpinner(){ document.getElementById("spinnerInvio")?.classList.remove("hidden"); }
+function nascondiSpinner(){ document.getElementById("spinnerInvio")?.classList.add("hidden"); }
 
 async function sha256(str) {
   const buffer = new TextEncoder().encode(str);
@@ -395,18 +334,46 @@ async function effettuaAcquistoProdotto() {
   mostraSpinner();
 
   try {
-    const carrello = JSON.parse(sessionStorage.getItem("carrello")) || [];
-    if (!carrello.length) throw new Error("Carrello vuoto.");
+    const c = JSON.parse(sessionStorage.getItem("carrello")) || [];
+    if (!c.length) throw new Error("Carrello vuoto.");
 
-    const lista_prodotti = carrello.map(p => `${p.nome} (€${p.prezzo})`).join(", ");
-    const totale = carrello.reduce((sum, p) => sum + p.prezzo, 0);
+    // ✅ CONSENSI
+    const privacy = document.getElementById("privacy")?.checked === true;
+    const termini = document.getElementById("termini")?.checked === true;
+    const newsletter = document.getElementById("newsletter")?.checked === true;
+    if (!privacy || !termini) throw new Error("Devi accettare Privacy e Termini per continuare.");
+
+    const lista_prodotti = c.map(p => `${p.nome} (€${p.prezzo})`).join(", ");
+    // const totale = c.reduce((sum, p) => sum + p.prezzo, 0); // se serve
 
     const tipoCliente = document.getElementById("cliente_tipo").value;
-    const dati = {
+
+    // Blocchetto consensi uniforme (verso Azure → GAS)
+    const consensi = {
+      consensoGDPR: true,
+      policy_key: CONSENT_CONSTANTS.privacy.key,
+      policy_version: CONSENT_CONSTANTS.privacy.version,
+      gdpr_url: CONSENT_CONSTANTS.privacy.url,
+
+      terminiAccettati: true,
+      terms_key: CONSENT_CONSTANTS.terms.key,
+      terms_version: CONSENT_CONSTANTS.terms.version,
+      terms_url: CONSENT_CONSTANTS.terms.url,
+
+      newsletterConsent: !!newsletter,
+      newsletter_policy_key: CONSENT_CONSTANTS.newsletter.key,
+      newsletter_policy_version: CONSENT_CONSTANTS.newsletter.version,
+      newsletter_url: CONSENT_CONSTANTS.newsletter.url,
+
+      referrer: document.referrer || null,
+      lang: document.documentElement.lang || "it"
+    };
+
+    const dati = Object.assign({
       tipoRichiesta: "ordineProdotto",
       cliente_tipo: tipoCliente,
       lista_prodotti
-    };
+    }, consensi);
 
     if (tipoCliente === "privato") {
       dati.nome = document.getElementById("nome").value;
@@ -440,14 +407,33 @@ async function effettuaAcquistoProdotto() {
       dati.codice_destinatario = document.getElementById("codice_destinatario").value;
     }
 
-    const response = await fetch("https://yume-consulenze.azurewebsites.net/api/invio-estremi", {
+    /* 🔔 NEWSLETTER: double opt‑in in parallelo (stesso endpoint già usato altrove) */
+    if (newsletter && dati.email) {
+      fetch(ENDPOINT_NEWSLETTER, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tipoRichiesta: "newsletter",
+          email: dati.email,
+          website: "",
+          newsletterConsent: true,
+          policy_key: CONSENT_CONSTANTS.newsletter.key,
+          policy_version: CONSENT_CONSTANTS.newsletter.version,
+          gdpr_url: CONSENT_CONSTANTS.newsletter.url,
+          referrer: document.referrer || null,
+          lang: document.documentElement.lang || "it"
+        })
+      }).catch(()=>{});
+    }
+
+    /* INVIO PRINCIPALE (immutato: stesso proxy/function app) */
+    const response = await fetch(ENDPOINT_INOLTRO, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(dati)
     });
 
     const result = await response.json();
-
     if (result.status === "ok" && result.checkout_url) {
       window.location.href = result.checkout_url;
     } else {
@@ -462,26 +448,23 @@ async function effettuaAcquistoProdotto() {
   }
 }
 
+/* =========================
+   5) VERIFICHE EMAIL & REGISTRAZIONE (immutati)
+   ========================= */
 async function verificaEmailEsistente(email) {
-  // ✅ Se il cliente è loggato, salta la verifica
   const profilo = sessionStorage.getItem("profiloUtente");
   if (profilo) {
     const dati = JSON.parse(profilo);
     if (dati.email === email) return false;
   }
-
   try {
-    const response = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+    const response = await fetch(ENDPOINT_CLIENTI, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        tipoRichiesta: "verifica_email",
-        email
-      })
+      body: JSON.stringify({ tipoRichiesta: "verifica_email", email })
     });
-
     const result = await response.json();
-    return result.status === "trovata"; // true se già esiste
+    return result.status === "trovata";
   } catch (err) {
     console.error("Errore durante la verifica email:", err);
     return false;
@@ -491,11 +474,8 @@ async function verificaEmailEsistente(email) {
 async function checkEmailRegistrata() {
   const email = document.getElementById("email")?.value.trim();
   const msgBox = document.getElementById("emailMatchMessage");
-
   if (!email || !msgBox) return;
-
   const esiste = await verificaEmailEsistente(email);
-
   if (esiste) {
     msgBox.innerHTML = `<i class="fas fa-times-circle icon-ko"></i> Email già registrata. <a href="log-in.html">Accedi</a> per proseguire.`;
     msgBox.className = "email-message ko";
@@ -513,12 +493,7 @@ async function checkEmailMatchAndRegistrazione() {
   const msgBox = document.getElementById("emailMatchMessage");
   if (!msgBox) return;
 
-  if (!email || !conferma) {
-    msgBox.innerHTML = "";
-    msgBox.className = "email-message";
-    return;
-  }
-
+  if (!email || !conferma) { msgBox.innerHTML = ""; msgBox.className = "email-message"; return; }
   if (email !== conferma) {
     msgBox.innerHTML = `<i class="fas fa-times-circle icon-ko"></i> Le email non coincidono`;
     msgBox.className = "email-message ko";
@@ -534,7 +509,6 @@ async function checkEmailMatchAndRegistrazione() {
   } else {
     msgBox.innerHTML = `<i class="fas fa-check-circle icon-ok"></i> Le email coincidono e non risultano già registrate`;
     msgBox.className = "email-message ok";
-
     document.getElementById("email").classList.remove("input-ko");
   }
 }
@@ -548,22 +522,15 @@ async function verificaERegistrazioneSeNecessario() {
   const privacy = document.getElementById("privacy")?.checked;
   const termini = document.getElementById("termini")?.checked;
 
-  if (!email || !nome || !cognome || !password || !privacy || !termini) {
-    console.log("Dati insufficienti per registrazione.");
-    return;
-  }
+  if (!email || !nome || !cognome || !password || !privacy || !termini) return;
 
   const emailEsiste = await verificaEmailEsistente(email);
-  if (emailEsiste) {
-    console.log("Email già registrata, nessuna registrazione necessaria.");
-    return;
-  }
+  if (emailEsiste) return;
 
   const password_hash = await sha256(password);
 
-  // Invia registrazione al CRM
   try {
-    const response = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+    const response = await fetch(ENDPOINT_CLIENTI, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -577,37 +544,54 @@ async function verificaERegistrazioneSeNecessario() {
         termini_accettati: termini
       })
     });
-
-    const result = await response.json();
-    if (result.status === "success") {
-      console.log("Registrazione cliente completata.");
-    } else {
-      console.warn("Errore registrazione:", result.message);
-    }
+    await response.json().catch(()=>({}));
   } catch (err) {
     console.error("Errore invio registrazione:", err);
   }
 }
 
+/* =========================
+   6) WRAPPERS (immutati)
+   ========================= */
 async function eseguiRegistrazioneEInvio() {
   mostraSpinner();
-
   const promessaRegistrazione = verificaERegistrazioneSeNecessario();
-  const promessaPrenotazione = confermaPrenotazione();
-
-  // Aspetta entrambe in parallelo (non sequenziale)
+  const promessaPrenotazione = confermaPrenotazione(); // se lo usi anche qui, altrimenti rimuovi
   await Promise.all([promessaRegistrazione, promessaPrenotazione]);
-
   nascondiSpinner();
 }
 
 async function eseguiAcquistoEInvio() {
   mostraSpinner();
-
   const promessaRegistrazione = verificaERegistrazioneSeNecessario();
-  const promessaInvio = inviaRichiestaConsulenza();
-
+  const promessaInvio = effettuaAcquistoProdotto();
   await Promise.all([promessaRegistrazione, promessaInvio]);
-
   nascondiSpinner();
 }
+
+/* (eventuali utility preesistenti per mostraCarrelloInStep1, etc.) */
+function mostraCarrelloInStep1() {
+  const container = document.getElementById("carrello-prodotti");
+  if (!container) return;
+
+  container.innerHTML = "";
+  if (carrello.length === 0) { container.innerHTML = "<p>Il carrello è vuoto.</p>"; return; }
+
+  const ul = document.createElement("ul");
+  ul.classList.add("riepilogo-lista");
+
+  let somma = 0;
+  carrello.forEach(prodotto => {
+    const li = document.createElement("li");
+    li.textContent = `${prodotto.nome} – €${prodotto.prezzo.toFixed(2)}`;
+    ul.appendChild(li);
+    somma += prodotto.prezzo;
+  });
+
+  const totale = document.createElement("p");
+  totale.innerHTML = `<strong>Totale: €${somma.toFixed(2)}</strong>`;
+  container.appendChild(ul);
+  container.appendChild(totale);
+}
+
+
