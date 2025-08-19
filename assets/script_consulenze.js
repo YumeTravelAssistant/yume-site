@@ -1,5 +1,29 @@
 let invioInCorso = false;
 
+/* =========================
+   CONSENSI / VERSIONING
+   (aggiunta: gestione privacy, termini e newsletter)
+   ========================= */
+const CONSENT_CONSTANTS = {
+  privacy: {
+    key: "privacy",
+    version: "v1.0-2025-08-19",
+    url: "https://yellow-bay-077dd2b03.6.azurestaticapps.net/privacy.html",
+  },
+  terms: {
+    key: "terms",
+    version: "v1.0-2025-08-19",
+    url: "https://yellow-bay-077dd2b03.6.azurestaticapps.net/termini-condizioni.html",
+  },
+  newsletter: {
+    key: "newsletter",
+    version: "v1.0-2025-08-19",
+    url: "https://yellow-bay-077dd2b03.6.azurestaticapps.net/privacy.html",
+  },
+};
+
+const ENDPOINT_NEWSLETTER  = "https://yume-sito-form.azurewebsites.net/api/invia-form"; // double opt-in
+
 function mostraStep(numero) {
   document.querySelectorAll(".step").forEach(step => {
     step.classList.add("hidden");
@@ -10,7 +34,6 @@ function mostraStep(numero) {
 function vaiAlStep0() {
  mostraStep(0);
 }
-
 
 function vaiAlStep1() {
   mostraStep(1);
@@ -68,6 +91,11 @@ async function vaiAlStep3Prenota() {
   const cf = document.getElementById("cf")?.value;
   const note = document.getElementById("note")?.value;
 
+  // ✅ Consensi obbligatori (privacy + termini)
+  const privacy = document.getElementById("privacy")?.checked === true;
+  const termini = document.getElementById("termini")?.checked === true;
+  if (!privacy || !termini) return alert("Devi accettare Privacy e Termini per continuare.");
+
   // Validazioni obbligatorie
   if (!nome) return alert("Il campo Nome è obbligatorio.");
   if (!cognome) return alert("Il campo Cognome è obbligatorio.");
@@ -103,6 +131,11 @@ async function vaiAlStep3() {
     alert("Seleziona una tipologia di cliente per proseguire.");
     return;
   }
+
+  // ✅ Consensi obbligatori (privacy + termini)
+  const privacy = document.getElementById("privacy")?.checked === true;
+  const termini = document.getElementById("termini")?.checked === true;
+  if (!privacy || !termini) return alert("Devi accettare Privacy e Termini per continuare.");
 
   riepilogo.innerHTML = "";
 
@@ -254,6 +287,12 @@ async function inviaRichiestaConsulenza() {
   invioInCorso = true;
 
   try {
+    // ✅ Consensi obbligatori (privacy + termini)
+    const privacy = document.getElementById("privacy")?.checked === true;
+    const termini = document.getElementById("termini")?.checked === true;
+    const newsletter = document.getElementById("newsletter")?.checked === true;
+    if (!privacy || !termini) throw new Error("Devi accettare Privacy e Termini per continuare.");
+
     const tipoFunnel = "caldo";
     const tipoCliente = document.getElementById("cliente_tipo").value;
     const categoriaServizio = document.getElementById("categoria_servizio").value;
@@ -269,12 +308,31 @@ async function inviaRichiestaConsulenza() {
     }
 
     const dati = {
+      // ——— dati originali ———
       tipo_funnel: tipoFunnel,
       cliente_tipo: tipoCliente,
       tipo_servizio,
       calendario,
       stato_pagamento: statoPagamento,
-      ID_ordine: idOrdine
+      ID_ordine: idOrdine,
+      // ——— consensi aggiunti ———
+      consensoGDPR: true,
+      policy_key: CONSENT_CONSTANTS.privacy.key,
+      policy_version: CONSENT_CONSTANTS.privacy.version,
+      gdpr_url: CONSENT_CONSTANTS.privacy.url,
+
+      terminiAccettati: true,
+      terms_key: CONSENT_CONSTANTS.terms.key,
+      terms_version: CONSENT_CONSTANTS.terms.version,
+      terms_url: CONSENT_CONSTANTS.terms.url,
+
+      newsletterConsent: !!newsletter,
+      newsletter_policy_key: CONSENT_CONSTANTS.newsletter.key,
+      newsletter_policy_version: CONSENT_CONSTANTS.newsletter.version,
+      newsletter_url: CONSENT_CONSTANTS.newsletter.url,
+
+      referrer: document.referrer || null,
+      lang: document.documentElement.lang || "it"
     };
 
     if (tipoCliente === "privato") {
@@ -309,6 +367,25 @@ async function inviaRichiestaConsulenza() {
       dati.PEC = document.getElementById("pec").value;
       dati.codice_destinatario = document.getElementById("codice_destinatario").value;
       dati.note_azienda = document.getElementById("note_azienda").value;
+    }
+
+    // 🔔 Newsletter double opt‑in parallelo (solo se spuntata)
+    if (newsletter && dati.email) {
+      fetch(ENDPOINT_NEWSLETTER, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tipoRichiesta: "newsletter",
+          email: dati.email,
+          website: "",
+          newsletterConsent: true,
+          policy_key: CONSENT_CONSTANTS.newsletter.key,
+          policy_version: CONSENT_CONSTANTS.newsletter.version,
+          gdpr_url: CONSENT_CONSTANTS.newsletter.url,
+          referrer: document.referrer || null,
+          lang: document.documentElement.lang || "it"
+        })
+      }).catch(() => {});
     }
 
     const response = await fetch("https://yume-consulenze.azurewebsites.net/api/invio-estremi", {
@@ -411,12 +488,20 @@ async function confermaPrenotazione() {
   invioInCorso = true;
 
   try {
+    // ✅ Consensi obbligatori (privacy + termini)
+    const privacy = document.getElementById("privacy")?.checked === true;
+    const termini = document.getElementById("termini")?.checked === true;
+    const newsletter = document.getElementById("newsletter")?.checked === true;
+    if (!privacy || !termini) throw new Error("Devi accettare Privacy e Termini per continuare.");
+
+    const email = document.getElementById("email").value;
+
     const dati = {
       tipo_funnel: "freddo",
       data: new Date().toISOString(),
       nome: document.getElementById("nome").value,
       cognome: document.getElementById("cognome").value,
-      email: document.getElementById("email").value,
+      email: email,
       password_hash: await sha256(document.getElementById("password").value),
       CF: document.getElementById("cf").value,
       tipo_servizio:
@@ -425,8 +510,46 @@ async function confermaPrenotazione() {
         document.getElementById("tipo_servizio")?.value ||
         "",
       calendario: document.getElementById("data_calendario").value,
-      note: document.getElementById("note")?.value || ""
+      note: document.getElementById("note")?.value || "",
+
+      // ——— CONSENSI INCLUSI ———
+      consensoGDPR: true,
+      policy_key: CONSENT_CONSTANTS.privacy.key,
+      policy_version: CONSENT_CONSTANTS.privacy.version,
+      gdpr_url: CONSENT_CONSTANTS.privacy.url,
+
+      terminiAccettati: true,
+      terms_key: CONSENT_CONSTANTS.terms.key,
+      terms_version: CONSENT_CONSTANTS.terms.version,
+      terms_url: CONSENT_CONSTANTS.terms.url,
+
+      newsletterConsent: !!newsletter,
+      newsletter_policy_key: CONSENT_CONSTANTS.newsletter.key,
+      newsletter_policy_version: CONSENT_CONSTANTS.newsletter.version,
+      newsletter_url: CONSENT_CONSTANTS.newsletter.url,
+
+      referrer: document.referrer || null,
+      lang: document.documentElement.lang || "it"
     };
+
+    // 🔔 Newsletter double opt‑in parallelo
+    if (newsletter && email) {
+      fetch(ENDPOINT_NEWSLETTER, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tipoRichiesta: "newsletter",
+          email: email,
+          website: "",
+          newsletterConsent: true,
+          policy_key: CONSENT_CONSTANTS.newsletter.key,
+          policy_version: CONSENT_CONSTANTS.newsletter.version,
+          gdpr_url: CONSENT_CONSTANTS.newsletter.url,
+          referrer: document.referrer || null,
+          lang: document.documentElement.lang || "it"
+        })
+      }).catch(() => {});
+    }
 
     const response = await fetch("https://yume-consulenze.azurewebsites.net/api/invio-estremi", {
       method: "POST",
@@ -463,7 +586,7 @@ async function verificaEmailEsistente(email) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        tipoRichiesta: "verifica_email",
+        tipoRichiesta: "verifica_email", // (coerente con backend originale)
         email
       })
     });
@@ -647,7 +770,6 @@ const cliente = {
   email: data.email || ""
 };
 
-
       // Salva profilo in sessionStorage
  sessionStorage.setItem("profiloUtente", JSON.stringify({
   status: "success",
@@ -762,7 +884,7 @@ async function verificaERegistrazioneSeNecessario() {
 
   const password_hash = await sha256(password);
 
-  // Invia registrazione al CRM
+  // Invia registrazione al CRM (con consensi/versioni)
   try {
     const response = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
       method: "POST",
@@ -773,9 +895,15 @@ async function verificaERegistrazioneSeNecessario() {
         cognome,
         email,
         password_hash,
-        newsletter,
-        privacy_accettata: privacy,
-        termini_accettati: termini
+        newsletter: !!newsletter,
+        privacy_accettata: true,
+        termini_accettati: true,
+        policy_key: CONSENT_CONSTANTS.privacy.key,
+        policy_version: CONSENT_CONSTANTS.privacy.version,
+        terms_key: CONSENT_CONSTANTS.terms.key,
+        terms_version: CONSENT_CONSTANTS.terms.version,
+        referrer: document.referrer || null,
+        lang: document.documentElement.lang || "it"
       })
     });
 
@@ -849,6 +977,9 @@ function avviaSuggerimentoIndirizzo(valore) {
   }, 700); // debounce automatico dopo 700ms
 }
 
+/* =========================
+   CALENDARIO ORIGINALE (immutato)
+   ========================= */
 const endpointAzure = "https://yume-consulenze.azurewebsites.net/api/get-slots";
 let calendar;
 let eventoSelezionato = null;
@@ -888,7 +1019,7 @@ function getDurataSlot() {
 function formatSlotDuration(durata) {
   const ore = Math.floor(durata / 60).toString().padStart(2, "0");
   const minuti = (durata % 60).toString().padStart(2, "0");
-  return `${ore}:${minuti}:00`;
+  return `${ore}:${minuti}:00";
 }
 
 function aggiornaCalendarioConDurata() {
@@ -1060,4 +1191,3 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("tipo_servizio_tematica")?.addEventListener("change", aggiornaCalendarioConDurata);
   }
 });
-
