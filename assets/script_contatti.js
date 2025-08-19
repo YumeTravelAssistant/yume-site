@@ -1,6 +1,6 @@
 // assets/script_contatti.js
 
-// --- CONTATTI (già esistente) ---
+// --- CONTATTI ---
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("contatti-form");
   if (!form) return;
@@ -10,6 +10,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+
+    // ✅ GDPR obbligatorio (checkbox in index.html)
+    const cbox = document.getElementById("consensoGDPR_contatti");
+    if (!cbox || cbox.checked !== true) {
+      stato.textContent = "Devi acconsentire al trattamento dei dati personali per procedere.";
+      return;
+    }
+
     stato.textContent = "Invio in corso…";
 
     const interessi = Array.from(
@@ -17,12 +25,28 @@ document.addEventListener("DOMContentLoaded", () => {
     ).map(i => i.value);
 
     const dati = {
+      // routing
       tipoRichiesta: "contatti",
+
+      // payload business
       nome: form.nome.value.trim(),
       email: form.email.value.trim(),
       interessi,
-      messaggio: form.messaggio.value.trim(),
-      website: form.website ? form.website.value : "" // honeypot
+      messaggio: (form.messaggio?.value || form.msg?.value || "").trim(),
+
+      // honeypot
+      website: form.website ? form.website.value : "",
+
+      // ✅ campi consenso privacy → Supabase
+      consensoGDPR: true,
+      policy_key: "privacy",
+      policy_version: "v1.0-2025-08-19",
+      gdpr_url: "https://yellow-bay-077dd2b03.6.azurestaticapps.net/privacy.html",
+
+      // contesto utile
+      referrer: document.referrer || null,
+      lang: document.documentElement.lang || "it"
+      // ip + userAgent li aggiunge il proxy Azure
     };
 
     const btn = form.querySelector('button[type="submit"]');
@@ -56,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// --- NEWSLETTER (nuovo) ---
+// --- NEWSLETTER ---
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("newsletter-form");
   if (!form) return;
@@ -66,12 +90,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+
+    // ✅ consenso newsletter separato (checkbox in index.html)
+    const cbox = document.getElementById("consensoGDPR_newsletter");
+    if (!cbox || cbox.checked !== true) {
+      stato.textContent = "Per iscriverti devi acconsentire a ricevere la newsletter.";
+      return;
+    }
+
     stato.textContent = "Iscrizione in corso…";
 
     const dati = {
+      // routing
       tipoRichiesta: "newsletter",
-      email: form.email.value.trim(),
-      website: form.website ? form.website.value : "" // honeypot
+
+      // payload business
+      email: (form.email?.value || document.getElementById("newsletter-email")?.value || "").trim(),
+
+      // honeypot
+      website: form.website ? form.website.value : "",
+
+      // ✅ campi consenso newsletter → Supabase
+      newsletterConsent: true,
+      policy_key: "newsletter",
+      policy_version: "v1.0-2025-08-19",
+      gdpr_url: "https://yellow-bay-077dd2b03.6.azurestaticapps.net/privacy.html",
+
+      // contesto utile
+      referrer: document.referrer || null,
+      lang: document.documentElement.lang || "it"
+      // ip + userAgent li aggiunge il proxy Azure
     };
 
     const btn = form.querySelector('button[type="submit"]');
@@ -90,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const success = data ? (data.ok === true || data.status === "success") : false;
 
       if (response.ok && success) {
-        stato.textContent = "Iscrizione completata! Controlla la tua email (se prevista).";
+        stato.textContent = "Iscrizione completata!";
         form.reset();
       } else {
         const msg = (data && (data.error || data.message)) || raw || "Si è verificato un errore. Riprova.";
