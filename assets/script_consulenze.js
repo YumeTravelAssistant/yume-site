@@ -1,8 +1,8 @@
+// script_consulenze.js — versione con consensi GDPR/Termini/Newsletter
 let invioInCorso = false;
 
 /* =========================
-   CONSENSI / VERSIONING
-   (aggiunta: gestione privacy, termini e newsletter)
+   CONSENSI (versioning e URL)
    ========================= */
 const CONSENT_CONSTANTS = {
   privacy: {
@@ -22,8 +22,6 @@ const CONSENT_CONSTANTS = {
   },
 };
 
-const ENDPOINT_NEWSLETTER  = "https://yume-sito-form.azurewebsites.net/api/invia-form"; // double opt-in
-
 function mostraStep(numero) {
   document.querySelectorAll(".step").forEach(step => {
     step.classList.add("hidden");
@@ -32,7 +30,7 @@ function mostraStep(numero) {
 }
 
 function vaiAlStep0() {
- mostraStep(0);
+  mostraStep(0);
 }
 
 function vaiAlStep1() {
@@ -91,10 +89,13 @@ async function vaiAlStep3Prenota() {
   const cf = document.getElementById("cf")?.value;
   const note = document.getElementById("note")?.value;
 
-  // ✅ Consensi obbligatori (privacy + termini)
+  // ✅ Consensi obbligatori per procedere (privacy + termini)
   const privacy = document.getElementById("privacy")?.checked === true;
   const termini = document.getElementById("termini")?.checked === true;
-  if (!privacy || !termini) return alert("Devi accettare Privacy e Termini per continuare.");
+  if (!privacy || !termini) {
+    alert("Devi accettare l’Informativa Privacy e i Termini e Condizioni per proseguire.");
+    return;
+  }
 
   // Validazioni obbligatorie
   if (!nome) return alert("Il campo Nome è obbligatorio.");
@@ -132,10 +133,13 @@ async function vaiAlStep3() {
     return;
   }
 
-  // ✅ Consensi obbligatori (privacy + termini)
+  // ✅ Consensi obbligatori per procedere (privacy + termini)
   const privacy = document.getElementById("privacy")?.checked === true;
   const termini = document.getElementById("termini")?.checked === true;
-  if (!privacy || !termini) return alert("Devi accettare Privacy e Termini per continuare.");
+  if (!privacy || !termini) {
+    alert("Devi accettare l’Informativa Privacy e i Termini e Condizioni per proseguire.");
+    return;
+  }
 
   riepilogo.innerHTML = "";
 
@@ -144,9 +148,9 @@ async function vaiAlStep3() {
     const email = document.getElementById("email")?.value.trim();
     const esiste = await verificaEmailEsistente(email);
     if (esiste) {
-     alert("Questa email risulta già registrata. Fai login per proseguire.");
-     return;
-   }
+      alert("Questa email risulta già registrata. Fai login per proseguire.");
+      return;
+    }
 
     const email2 = document.getElementById("confermaEmail")?.value.trim();
     const password = document.getElementById("password")?.value;
@@ -207,18 +211,18 @@ async function vaiAlStep3() {
       return;
     }
 
-      // ✅ Verifica email già registrata
-const msgBox = document.getElementById("emailMatchMessageAzienda");
-if (!msgBox) return;
+    // ✅ Verifica email già registrata
+    const msgBox = document.getElementById("emailMatchMessageAzienda");
+    if (!msgBox) return;
 
-const emailGiaUsata = await verificaEmailEsistente(email);
-if (emailGiaUsata) {
-  msgBox.innerHTML = `<i class="fas fa-times-circle icon-ko"></i> Email già registrata. <a href="log-in.html">Accedi</a>`;
-  msgBox.className = "email-message ko";
-  document.getElementById("email_azienda").classList.add("input-ko");
-  alert("Email già registrata. Fai login per continuare.");
-  return;
-}
+    const emailGiaUsata = await verificaEmailEsistente(email);
+    if (emailGiaUsata) {
+      msgBox.innerHTML = `<i class="fas fa-times-circle icon-ko"></i> Email già registrata. <a href="log-in.html">Accedi</a>`;
+      msgBox.className = "email-message ko";
+      document.getElementById("email_azienda").classList.add("input-ko");
+      alert("Email già registrata. Fai login per continuare.");
+      return;
+    }
 
     const campiAziendaObbligatori = [
       "ragione_sociale", "email_azienda", "confermaEmail_azienda",
@@ -258,7 +262,6 @@ if (emailGiaUsata) {
   document.getElementById("step3")?.classList.remove("hidden");
 }
 
-
 function aggiornaTipoCliente() {
   const tipo = document.getElementById("cliente_tipo").value;
   const privato = document.getElementById("sezione_privato");
@@ -276,7 +279,6 @@ function aggiornaTipoCliente() {
   }
 }
 
-
 function mostraCampiAzienda() {
   const tipo = document.getElementById("cliente_tipo").value;
   document.getElementById("campi_azienda").classList.toggle("hidden", tipo !== "azienda");
@@ -287,12 +289,6 @@ async function inviaRichiestaConsulenza() {
   invioInCorso = true;
 
   try {
-    // ✅ Consensi obbligatori (privacy + termini)
-    const privacy = document.getElementById("privacy")?.checked === true;
-    const termini = document.getElementById("termini")?.checked === true;
-    const newsletter = document.getElementById("newsletter")?.checked === true;
-    if (!privacy || !termini) throw new Error("Devi accettare Privacy e Termini per continuare.");
-
     const tipoFunnel = "caldo";
     const tipoCliente = document.getElementById("cliente_tipo").value;
     const categoriaServizio = document.getElementById("categoria_servizio").value;
@@ -307,15 +303,24 @@ async function inviaRichiestaConsulenza() {
       tipo_servizio = document.getElementById("tipo_servizio_experience").value;
     }
 
+    // ✅ Consensi da checkbox (privacy+termini obbligatori, newsletter facoltativa)
+    const privacy = document.getElementById("privacy")?.checked === true;
+    const termini = document.getElementById("termini")?.checked === true;
+    const newsletter = document.getElementById("newsletter")?.checked === true;
+
+    if (!privacy || !termini) {
+      throw new Error("Devi accettare l’Informativa Privacy e i Termini e Condizioni per proseguire.");
+    }
+
     const dati = {
-      // ——— dati originali ———
       tipo_funnel: tipoFunnel,
       cliente_tipo: tipoCliente,
       tipo_servizio,
       calendario,
       stato_pagamento: statoPagamento,
       ID_ordine: idOrdine,
-      // ——— consensi aggiunti ———
+
+      // ⬇️ Metadati consensi per GAS→Supabase
       consensoGDPR: true,
       policy_key: CONSENT_CONSTANTS.privacy.key,
       policy_version: CONSENT_CONSTANTS.privacy.version,
@@ -369,25 +374,6 @@ async function inviaRichiestaConsulenza() {
       dati.note_azienda = document.getElementById("note_azienda").value;
     }
 
-    // 🔔 Newsletter double opt‑in parallelo (solo se spuntata)
-    if (newsletter && dati.email) {
-      fetch(ENDPOINT_NEWSLETTER, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          tipoRichiesta: "newsletter",
-          email: dati.email,
-          website: "",
-          newsletterConsent: true,
-          policy_key: CONSENT_CONSTANTS.newsletter.key,
-          policy_version: CONSENT_CONSTANTS.newsletter.version,
-          gdpr_url: CONSENT_CONSTANTS.newsletter.url,
-          referrer: document.referrer || null,
-          lang: document.documentElement.lang || "it"
-        })
-      }).catch(() => {});
-    }
-
     const response = await fetch("https://yume-consulenze.azurewebsites.net/api/invio-estremi", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -408,7 +394,6 @@ async function inviaRichiestaConsulenza() {
     invioInCorso = false;
   }
 }
-
 
 function aggiornaTipoServizio() {
   const categoria = document.getElementById("categoria_servizio")?.value;
@@ -488,20 +473,18 @@ async function confermaPrenotazione() {
   invioInCorso = true;
 
   try {
-    // ✅ Consensi obbligatori (privacy + termini)
+    // ✅ Consensi
     const privacy = document.getElementById("privacy")?.checked === true;
     const termini = document.getElementById("termini")?.checked === true;
     const newsletter = document.getElementById("newsletter")?.checked === true;
-    if (!privacy || !termini) throw new Error("Devi accettare Privacy e Termini per continuare.");
-
-    const email = document.getElementById("email").value;
+    if (!privacy || !termini) throw new Error("Devi accettare l’Informativa Privacy e i Termini e Condizioni per proseguire.");
 
     const dati = {
       tipo_funnel: "freddo",
       data: new Date().toISOString(),
       nome: document.getElementById("nome").value,
       cognome: document.getElementById("cognome").value,
-      email: email,
+      email: document.getElementById("email").value,
       password_hash: await sha256(document.getElementById("password").value),
       CF: document.getElementById("cf").value,
       tipo_servizio:
@@ -512,7 +495,7 @@ async function confermaPrenotazione() {
       calendario: document.getElementById("data_calendario").value,
       note: document.getElementById("note")?.value || "",
 
-      // ——— CONSENSI INCLUSI ———
+      // ⬇️ Metadati consensi per GAS→Supabase
       consensoGDPR: true,
       policy_key: CONSENT_CONSTANTS.privacy.key,
       policy_version: CONSENT_CONSTANTS.privacy.version,
@@ -531,25 +514,6 @@ async function confermaPrenotazione() {
       referrer: document.referrer || null,
       lang: document.documentElement.lang || "it"
     };
-
-    // 🔔 Newsletter double opt‑in parallelo
-    if (newsletter && email) {
-      fetch(ENDPOINT_NEWSLETTER, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          tipoRichiesta: "newsletter",
-          email: email,
-          website: "",
-          newsletterConsent: true,
-          policy_key: CONSENT_CONSTANTS.newsletter.key,
-          policy_version: CONSENT_CONSTANTS.newsletter.version,
-          gdpr_url: CONSENT_CONSTANTS.newsletter.url,
-          referrer: document.referrer || null,
-          lang: document.documentElement.lang || "it"
-        })
-      }).catch(() => {});
-    }
 
     const response = await fetch("https://yume-consulenze.azurewebsites.net/api/invio-estremi", {
       method: "POST",
@@ -586,7 +550,7 @@ async function verificaEmailEsistente(email) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        tipoRichiesta: "verifica_email", // (coerente con backend originale)
+        tipoRichiesta: "verifica_email",
         email
       })
     });
@@ -691,13 +655,13 @@ async function effettuaLogin() {
       };
 
       // Salva profilo in sessionStorage       
-  sessionStorage.setItem("profiloUtente", JSON.stringify({
-    status: "success",
-    codice_cliente: data.codice_cliente,
-    nome: cliente.nome,
-    cognome: cliente.cognome,
-    email: cliente.email
-  }));
+      sessionStorage.setItem("profiloUtente", JSON.stringify({
+        status: "success",
+        codice_cliente: data.codice_cliente,
+        nome: cliente.nome,
+        cognome: cliente.cognome,
+        email: cliente.email
+      }));
 
       // Imposta tipo cliente a "privato" di default (modifica se serve)
       document.getElementById("cliente_tipo").value = "privato";
@@ -764,20 +728,20 @@ async function effettuaLoginPrenota() {
       output.textContent = "Accesso effettuato!";
       output.style.color = "green";
 
-const cliente = {
-  nome: data.nome || "",
-  cognome: data.cognome || "",
-  email: data.email || ""
-};
+      const cliente = {
+        nome: data.nome || "",
+        cognome: data.cognome || "",
+        email: data.email || ""
+      };
 
       // Salva profilo in sessionStorage
- sessionStorage.setItem("profiloUtente", JSON.stringify({
-  status: "success",
-  codice_cliente: data.codice_cliente,
-  nome: cliente.nome || "",
-  cognome: cliente.cognome || "",
-  email: cliente.email || ""
-}));
+      sessionStorage.setItem("profiloUtente", JSON.stringify({
+        status: "success",
+        codice_cliente: data.codice_cliente,
+        nome: cliente.nome || "",
+        cognome: cliente.cognome || "",
+        email: cliente.email || ""
+      }));
 
       // Popola i campi specifici di prenota-consulenza
       ["nome", "cognome", "email"].forEach(id => {
@@ -803,7 +767,6 @@ const cliente = {
     output.style.color = "red";
   }
 }
-
 
 function popolaCampiProfiloInStep2() {
   const tipo = document.getElementById("cliente_tipo")?.value;
@@ -867,12 +830,12 @@ async function verificaERegistrazioneSeNecessario() {
   const nome = document.getElementById("nome")?.value.trim();
   const cognome = document.getElementById("cognome")?.value.trim();
   const password = document.getElementById("password")?.value.trim();
-  const newsletter = document.getElementById("newsletter")?.checked;
-  const privacy = document.getElementById("privacy")?.checked;
-  const termini = document.getElementById("termini")?.checked;
+  const newsletter = document.getElementById("newsletter")?.checked === true;
+  const privacy = document.getElementById("privacy")?.checked === true;
+  const termini = document.getElementById("termini")?.checked === true;
 
   if (!email || !nome || !cognome || !password || !privacy || !termini) {
-    console.log("Dati insufficienti per registrazione.");
+    console.log("Dati/consensi non sufficienti per registrazione (non blocco).");
     return;
   }
 
@@ -884,7 +847,7 @@ async function verificaERegistrazioneSeNecessario() {
 
   const password_hash = await sha256(password);
 
-  // Invia registrazione al CRM (con consensi/versioni)
+  // Invia registrazione al CRM (con consensi, per GAS→Supabase)
   try {
     const response = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
       method: "POST",
@@ -895,23 +858,23 @@ async function verificaERegistrazioneSeNecessario() {
         cognome,
         email,
         password_hash,
-        newsletter: !!newsletter,
+        newsletter,
         privacy_accettata: true,
         termini_accettati: true,
         policy_key: CONSENT_CONSTANTS.privacy.key,
         policy_version: CONSENT_CONSTANTS.privacy.version,
         terms_key: CONSENT_CONSTANTS.terms.key,
         terms_version: CONSENT_CONSTANTS.terms.version,
+        newsletter_policy_key: CONSENT_CONSTANTS.newsletter.key,
+        newsletter_policy_version: CONSENT_CONSTANTS.newsletter.version,
         referrer: document.referrer || null,
         lang: document.documentElement.lang || "it"
       })
     });
 
     const result = await response.json();
-    if (result.status === "success") {
-      console.log("Registrazione cliente completata.");
-    } else {
-      console.warn("Errore registrazione:", result.message);
+    if (result?.status !== "success") {
+      console.warn("Registrazione non confermata dal server:", result);
     }
   } catch (err) {
     console.error("Errore invio registrazione:", err);
@@ -977,9 +940,6 @@ function avviaSuggerimentoIndirizzo(valore) {
   }, 700); // debounce automatico dopo 700ms
 }
 
-/* =========================
-   CALENDARIO ORIGINALE (immutato)
-   ========================= */
 const endpointAzure = "https://yume-consulenze.azurewebsites.net/api/get-slots";
 let calendar;
 let eventoSelezionato = null;
@@ -1019,7 +979,7 @@ function getDurataSlot() {
 function formatSlotDuration(durata) {
   const ore = Math.floor(durata / 60).toString().padStart(2, "0");
   const minuti = (durata % 60).toString().padStart(2, "0");
-  return `${ore}:${minuti}:00";
+  return `${ore}:${minuti}:00`;
 }
 
 function aggiornaCalendarioConDurata() {
@@ -1067,104 +1027,104 @@ function inizializzaCalendario(cal, tipoFunnel) {
       setTimeout(() => cal.refetchEvents(), 100);
     },
 
-eventClick(info) {
-  if (!info.event.extendedProps.clickableSlot) return;
+    eventClick(info) {
+      if (!info.event.extendedProps.clickableSlot) return;
 
-  const start = info.event.start;
-  const end = info.event.end;
-  const startISO = start.toISOString();
+      const start = info.event.start;
+      const end = info.event.end;
+      const startISO = start.toISOString();
 
-  // ✅ Se clicchi sullo stesso slot già selezionato → deseleziona
-  if (eventoSelezionato && eventoSelezionato.start.toISOString() === startISO) {
-    eventoSelezionato.remove();
-    eventoSelezionato = null;
-    campoData.value = "";
-    console.log("🗑️ Slot deselezionato:", startISO);
-    return;
-  }
-
-  // 🔁 Altrimenti seleziona il nuovo
-  eventoSelezionato?.remove();
-
-  eventoSelezionato = cal.addEvent({
-    title: `${start.toTimeString().slice(0, 5)} – selezionato`,
-    start,
-    end,
-    display: "block",
-    classNames: ["yume-scelta"],
-    editable: false,
-    extendedProps: { clickableSlot: true }
-  });
-
-  const localISO = new Date(start.getTime() - start.getTimezoneOffset() * 60000)
-    .toISOString().slice(0, 16);
-
-  campoData.value = localISO;
-  console.log("✅ Slot selezionato:", localISO);
-},
-
-eventSources: [{
-  events: async (fetchInfo, successCallback, failureCallback) => {
-    try {
-      const eventi = [];
-      const vista = cal.view?.type || "dayGridMonth";
-      const durata = getDurataSlot();
-      const da = fetchInfo.start.toISOString().slice(0, 10);
-      const fino = fetchInfo.end.toISOString().slice(0, 10);
-      const url = `${endpointAzure}?da=${da}&fino=${fino}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
-
-      const res = await fetch(url);
-      const tuttiGliSlot = await res.json();
-
-      for (const [giorno, slotDisponibili] of Object.entries(tuttiGliSlot)) {
-        const oggi = new Date();
-        oggi.setHours(0, 0, 0, 0);
-
-       const giornoCorrente = new Date(giorno);
-       if (giornoCorrente <= oggi) continue; // ⛔️ Salta oggi e giorni precedenti
-
-        if (vista === "dayGridMonth") {
-          eventi.push({
-            title: `${slotDisponibili.length} slot disponibili`,
-            start: giorno,
-            allDay: true,
-            display: "block",
-            classNames: ["yume-slot-count"],
-            extendedProps: { dayHasSlot: slotDisponibili.length > 0 }
-          });
-        }
-
-        if (vista === "timeGridDay") {
-          const start = new Date(`${giorno}T09:00:00`);
-          const end = new Date(`${giorno}T20:00:00`);
-          for (
-            let slot = new Date(start);
-            slot.getTime() + durata * 60000 <= end.getTime();
-            slot = new Date(slot.getTime() + durata * 60000)
-          ) {
-            const ora = slot.toTimeString().slice(0, 5);
-            const endSlot = new Date(slot.getTime() + durata * 60000);
-            const disponibile = slotDisponibili.includes(ora);
-
-            eventi.push({
-              title: disponibile ? ora : "Occupato",
-              start: slot.toISOString(),
-              end: endSlot.toISOString(),
-              display: "block",
-              classNames: [disponibile ? (isAcquisto ? "acquisto-slot" : "libero-slot") : "inverse-slot"],
-              extendedProps: { clickableSlot: disponibile }
-            });
-          }
-        }
+      // ✅ Se clicchi sullo stesso slot già selezionato → deseleziona
+      if (eventoSelezionato && eventoSelezionato.start.toISOString() === startISO) {
+        eventoSelezionato.remove();
+        eventoSelezionato = null;
+        campoData.value = "";
+        console.log("🗑️ Slot deselezionato:", startISO);
+        return;
       }
 
-      successCallback(eventi);
-    } catch (err) {
-      console.error("Errore calendario:", err);
-      failureCallback(err);
-    }
-  }
-}]
+      // 🔁 Altrimenti seleziona il nuovo
+      eventoSelezionato?.remove();
+
+      eventoSelezionato = cal.addEvent({
+        title: `${start.toTimeString().slice(0, 5)} – selezionato`,
+        start,
+        end,
+        display: "block",
+        classNames: ["yume-scelta"],
+        editable: false,
+        extendedProps: { clickableSlot: true }
+      });
+
+      const localISO = new Date(start.getTime() - start.getTimezoneOffset() * 60000)
+        .toISOString().slice(0, 16);
+
+      campoData.value = localISO;
+      console.log("✅ Slot selezionato:", localISO);
+    },
+
+    eventSources: [{
+      events: async (fetchInfo, successCallback, failureCallback) => {
+        try {
+          const eventi = [];
+          const vista = cal.view?.type || "dayGridMonth";
+          const durata = getDurataSlot();
+          const da = fetchInfo.start.toISOString().slice(0, 10);
+          const fino = fetchInfo.end.toISOString().slice(0, 10);
+          const url = `${endpointAzure}?da=${da}&fino=${fino}&durata=${durata}&tipoFunnel=${tipoFunnel}`;
+
+          const res = await fetch(url);
+          const tuttiGliSlot = await res.json();
+
+          for (const [giorno, slotDisponibili] of Object.entries(tuttiGliSlot)) {
+            const oggi = new Date();
+            oggi.setHours(0, 0, 0, 0);
+
+            const giornoCorrente = new Date(giorno);
+            if (giornoCorrente <= oggi) continue; // ⛔️ Salta oggi e giorni precedenti
+
+            if (vista === "dayGridMonth") {
+              eventi.push({
+                title: `${slotDisponibili.length} slot disponibili`,
+                start: giorno,
+                allDay: true,
+                display: "block",
+                classNames: ["yume-slot-count"],
+                extendedProps: { dayHasSlot: slotDisponibili.length > 0 }
+              });
+            }
+
+            if (vista === "timeGridDay") {
+              const start = new Date(`${giorno}T09:00:00`);
+              const end = new Date(`${giorno}T20:00:00`);
+              for (
+                let slot = new Date(start);
+                slot.getTime() + durata * 60000 <= end.getTime();
+                slot = new Date(slot.getTime() + durata * 60000)
+              ) {
+                const ora = slot.toTimeString().slice(0, 5);
+                const endSlot = new Date(slot.getTime() + durata * 60000);
+                const disponibile = slotDisponibili.includes(ora);
+
+                eventi.push({
+                  title: disponibile ? ora : "Occupato",
+                  start: slot.toISOString(),
+                  end: endSlot.toISOString(),
+                  display: "block",
+                  classNames: [disponibile ? (isAcquisto ? "acquisto-slot" : "libero-slot") : "inverse-slot"],
+                  extendedProps: { clickableSlot: disponibile }
+                });
+              }
+            }
+          }
+
+          successCallback(eventi);
+        } catch (err) {
+          console.error("Errore calendario:", err);
+          failureCallback(err);
+        }
+      }
+    }]
 
   });
 
@@ -1191,3 +1151,4 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("tipo_servizio_tematica")?.addEventListener("change", aggiornaCalendarioConDurata);
   }
 });
+
