@@ -1,4 +1,3 @@
-
 let carrello = [];
 
 /* === [AGGIUNTA CONSENSI — non impatta il flusso] ===================== */
@@ -575,17 +574,18 @@ async function checkEmailMatchAndRegistrazione() {
   }
 }
 
+/* 🔄 VERSIONE IDENTICA A script_consulenze.js */
 async function verificaERegistrazioneSeNecessario() {
   const email = document.getElementById("email")?.value.trim();
   const nome = document.getElementById("nome")?.value.trim();
   const cognome = document.getElementById("cognome")?.value.trim();
   const password = document.getElementById("password")?.value.trim();
-  const newsletter = document.getElementById("newsletter")?.checked;
-  const privacy = document.getElementById("privacy")?.checked;
-  const termini = document.getElementById("termini")?.checked;
+  const newsletter = document.getElementById("newsletter")?.checked === true;
+  const privacy = document.getElementById("privacy")?.checked === true;
+  const termini = document.getElementById("termini")?.checked === true;
 
   if (!email || !nome || !cognome || !password || !privacy || !termini) {
-    console.log("Dati insufficienti per registrazione.");
+    console.log("Dati/consensi non sufficienti per registrazione (non blocco).");
     return;
   }
 
@@ -597,7 +597,7 @@ async function verificaERegistrazioneSeNecessario() {
 
   const password_hash = await sha256(password);
 
-  // Invia registrazione al CRM
+  // Invia registrazione al CRM (con consensi, per GAS→Supabase)
   try {
     const response = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
       method: "POST",
@@ -609,16 +609,22 @@ async function verificaERegistrazioneSeNecessario() {
         email,
         password_hash,
         newsletter,
-        privacy_accettata: privacy,
-        termini_accettati: termini
+        privacy_accettata: true,
+        termini_accettati: true,
+        policy_key: CONSENT_CONSTANTS.privacy.key,
+        policy_version: CONSENT_CONSTANTS.privacy.version,
+        terms_key: CONSENT_CONSTANTS.terms.key,
+        terms_version: CONSENT_CONSTANTS.terms.version,
+        newsletter_policy_key: CONSENT_CONSTANTS.newsletter.key,
+        newsletter_policy_version: CONSENT_CONSTANTS.newsletter.version,
+        referrer: document.referrer || null,
+        lang: document.documentElement.lang || "it"
       })
     });
 
     const result = await response.json();
-    if (result.status === "success") {
-      console.log("Registrazione cliente completata.");
-    } else {
-      console.warn("Errore registrazione:", result.message);
+    if (result?.status !== "success") {
+      console.warn("Registrazione non confermata dal server:", result);
     }
   } catch (err) {
     console.error("Errore invio registrazione:", err);
