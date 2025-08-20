@@ -429,6 +429,14 @@ async function effettuaAcquistoProdotto() {
     const termini    = document.getElementById("termini")?.checked === true;
     const newsletter = document.getElementById("newsletter")?.checked === true;
 
+    // ⛔️ BLOCCO OBBLIGATORIO: Privacy + Termini
+    if (!privacy || !termini) {
+      alert("Devi accettare l’Informativa Privacy e i Termini e Condizioni per proseguire.");
+      invioInCorso = false;
+      nascondiSpinner();
+      return;
+    }
+
     const dati = {
       tipoRichiesta: "ordineProdotto",
       cliente_tipo: tipoCliente,
@@ -436,12 +444,12 @@ async function effettuaAcquistoProdotto() {
       totale,
 
       // Metadati consensi per GAS→Supabase
-      consensoGDPR: !!(privacy),
+      consensoGDPR: true,
       policy_key: CONSENT_CONSTANTS.privacy.key,
       policy_version: CONSENT_CONSTANTS.privacy.version,
       gdpr_url: CONSENT_CONSTANTS.privacy.url,
 
-      terminiAccettati: !!(termini),
+      terminiAccettati: true,
       terms_key: CONSENT_CONSTANTS.terms.key,
       terms_version: CONSENT_CONSTANTS.terms.version,
       terms_url: CONSENT_CONSTANTS.terms.url,
