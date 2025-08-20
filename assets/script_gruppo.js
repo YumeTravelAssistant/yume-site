@@ -460,3 +460,18 @@ function mostraRiepilogoEFase2() {
   document.getElementById("step2-conferma-pagamento")?.classList.remove("hidden");
 }
 
+function checkPasswordMatchAzienda() {
+  const pw = document.getElementById("password_azienda")?.value || "";
+  const conferma = document.getElementById("confermaPassword_azienda")?.value || "";
+  const msg = document.getElementById("passwordMatchMessageAzienda");
+  if (!msg) return;
+  if (!conferma) { msg.innerHTML = ""; return; }
+  if (pw === conferma) {
+    msg.innerHTML = `<i class="fas fa-check-circle icon-ok"></i> Le password coincidono`;
+    msg.className = "password-message ok";
+  } else {
+    msg.innerHTML = `<i class="fas fa-times-circle icon-ko"></i> Le password non coincidono`;
+    msg.className = "password-message ko";
+  }
+}
+
