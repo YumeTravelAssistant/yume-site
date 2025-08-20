@@ -9,6 +9,10 @@
   <!-- Font Yume: Playfair, Raleway, Quicksand -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Raleway:wght@300;500;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
 
+<!-- Choices.js -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
   <!-- Stili e icone -->
   <link rel="stylesheet" href="assets/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -18,6 +22,32 @@
 
 </head>
 <body>
+
+<style>
+  /* HARD OVERRIDE: rosso YUME per i tag selezionati di Choices (multi-select) */
+  .choices[data-type*="select-multiple"] .choices__list--multiple .choices__item,
+  .choices .choices__list--multiple .choices__item {
+    background-color: #8B2C2B !important; /* rosso Yume */
+    border: 1px solid #8B2C2B !important;
+    color: #fff !important;
+  }
+
+  /* Stato evidenziato (drag/hover) dei tag già selezionati */
+  .choices[data-type*="select-multiple"] .choices__list--multiple .choices__item.is-highlighted,
+  .choices .choices__list--multiple .choices__item.is-highlighted {
+    background-color: #C9A86A !important; /* oro Yume */
+    border-color: #C9A86A !important;
+    color: #fff !important;
+  }
+
+  /* Bordo/focus del campo multi-select */
+  .choices.is-focused .choices__inner,
+  .choices.is-open .choices__inner {
+    border-color: #8B2C2B !important;
+    box-shadow: 0 0 0 3px rgba(139, 44, 43, 0.15) !important;
+  }
+</style>
+
 
 <!-- Navbar coerente con index -->
 <nav class="navbar">
@@ -626,6 +656,8 @@
     <i class="fa fa-inbox"></i> Vai ai messaggi
   </button>
 </div>
+
+
 
 </body>
 </html>

@@ -24,7 +24,7 @@ const cittaPerPacchetto = {
   ],
 
   shizen: [
-    "Kawaguchiko", "Hakone", "Nikko", "Miyajima", "Takayama",
+    "Tokyo", "Kawaguchiko", "Hakone", "Nikko", "Miyajima", "Takayama",
     "Kanazawa", "Shirakawa-go", "Okayama", "Kiso-dani", "Gifu"
   ],
 
@@ -46,30 +46,76 @@ const cittaPerPacchetto = {
 
 let maxCitta = 0;
 
-function aggiornaCitta(pacchetto, durata) {
-  const selectCitta = document.getElementById("citta");
-  const msgMax = document.getElementById("maxCittaMsg");
-  const msgErrore = document.getElementById("erroreCitta");
-  const opzioni = cittaPerPacchetto[pacchetto] || [];
+// ============== Choices.js (multi-select senza Ctrl/Cmd) ==============
+let choicesCittaInstance = null;
 
-  // Pulisce il campo e lo riempie
-  selectCitta.innerHTML = "";
-  opzioni.forEach(citta => {
-    const option = document.createElement("option");
-    option.value = citta;
-    option.textContent = citta;
-    selectCitta.appendChild(option);
+function creaChoicesCitta(selectEl, max) {
+  if (!window.Choices) return null;
+
+  // distrugge eventuale istanza precedente
+  if (choicesCittaInstance) {
+    try { choicesCittaInstance.destroy(); } catch (e) {}
+    choicesCittaInstance = null;
+  }
+
+  choicesCittaInstance = new Choices(selectEl, {
+    removeItemButton: true,
+    searchEnabled: true,
+    placeholder: true,
+    placeholderValue: 'Seleziona città…',
+    noResultsText: 'Nessun risultato',
+    noChoicesText: 'Nessuna opzione disponibile',
+    itemSelectText: '',
+    shouldSort: false,
+    maxItemCount: max // 🔒 limite selezioni
   });
 
-  // Disattiva il campo se non è stata selezionata la durata
-  selectCitta.disabled = !durata;
+  return choicesCittaInstance;
+}
 
-  // Reset messaggi
+function popolaChoicesCitta(lista) {
+  if (!choicesCittaInstance) return;
+  const choices = (lista || []).map(c => ({ value: c, label: c, selected: false, disabled: false }));
+  choicesCittaInstance.clearChoices();
+  choicesCittaInstance.setChoices(choices, 'value', 'label', true);
+}
+
+// ===================== AGGIORNA CITTÀ (DINAMICO) =====================
+function aggiornaCitta(pacchetto, durata) {
+  let selectCitta = document.getElementById("citta");
+  const msgMax = document.getElementById("maxCittaMsg");
+  const msgErrore = document.getElementById("erroreCitta");
+  const counter = document.getElementById("counterCitta");
+  const opzioni = cittaPerPacchetto[pacchetto] || [];
+
+  // reset messaggi
   msgErrore.textContent = "";
   msgMax.textContent = "";
+  counter.textContent = "";
 
-  // Se durata non ancora disponibile (es. data non selezionata), esce
-  if (!durata) return;
+  // distrugge Choices se esiste (per evitare doppie istanze)
+  if (choicesCittaInstance) {
+    try { choicesCittaInstance.destroy(); } catch (e) {}
+    choicesCittaInstance = null;
+  }
+
+  // rimuove eventuali listener clonando il select
+  const nuovoSelect = selectCitta.cloneNode(true);
+  selectCitta.parentNode.replaceChild(nuovoSelect, selectCitta);
+  selectCitta = nuovoSelect;
+
+  // se non ho ancora la durata → disabilito e svuoto
+  if (!durata) {
+    selectCitta.disabled = true;
+
+    if (window.Choices) {
+      // nessuna UI avanzata finché non c'è la durata
+      selectCitta.innerHTML = "";
+    } else {
+      selectCitta.innerHTML = "";
+    }
+    return;
+  }
 
   // Calcolo massimo città selezionabili
   if (durata <= 8) maxCitta = 3;
@@ -78,48 +124,65 @@ function aggiornaCitta(pacchetto, durata) {
   else maxCitta = 8;
 
   msgMax.textContent = `Puoi selezionare fino a ${maxCitta} città.`;
+  selectCitta.disabled = false;
 
-  // Gestore selezione città
-  const nuovoSelectCitta = selectCitta.cloneNode(true);
-  selectCitta.parentNode.replaceChild(nuovoSelectCitta, selectCitta);
+  // ---- Se Choices.js è disponibile: UI moderna a tag (no Ctrl/Cmd) ----
+  if (window.Choices) {
+    // popolo il select con le opzioni base (serve per avere value/label corretti)
+    selectCitta.innerHTML = "";
+    opzioni.forEach(citta => {
+      const option = document.createElement("option");
+      option.value = citta;
+      option.textContent = citta;
+      selectCitta.appendChild(option);
+    });
 
-  // Aggiungi il listener solo al nuovo elemento pulito
-  nuovoSelectCitta.addEventListener("change", function () {
+    creaChoicesCitta(selectCitta, maxCitta);
+    popolaChoicesCitta(opzioni);
+
+    // Counter live
+    const updateCounter = () => {
+      const values = choicesCittaInstance ? (choicesCittaInstance.getValue(true) || []) : [];
+      counter.textContent = `${values.length} città selezionate su massimo ${maxCitta}`;
+    };
+    selectCitta.addEventListener('addItem', updateCounter);
+    selectCitta.addEventListener('removeItem', updateCounter);
+    updateCounter();
+
+    // Nessun errore necessario: il limite è enforced da maxItemCount
+    msgErrore.textContent = "";
+
+    return;
+  }
+
+  // ---- Fallback nativo (senza Choices) ----
+  selectCitta.innerHTML = "";
+  opzioni.forEach(citta => {
+    const option = document.createElement("option");
+    option.value = citta;
+    option.textContent = citta;
+    selectCitta.appendChild(option);
+  });
+
+  // Enforce limite + counter
+  selectCitta.onchange = function () {
     const selezionate = Array.from(this.selectedOptions);
+    counter.textContent = `${selezionate.length} città selezionate su massimo ${maxCitta}`;
+
     if (selezionate.length > maxCitta) {
       selezionate[selezionate.length - 1].selected = false;
       msgErrore.textContent = `Attenzione: massimo ${maxCitta} città selezionabili.`;
     } else {
       msgErrore.textContent = "";
     }
-
     Array.from(this.options).forEach(opt => {
       opt.disabled = !opt.selected && selezionate.length >= maxCitta;
     });
-  });
-const counterCitta = document.getElementById("counterCitta");
-
-nuovoSelectCitta.addEventListener("change", function () {
-  const selezionate = Array.from(this.selectedOptions);
-
-  // aggiorna il counter live
-  counterCitta.textContent = `${selezionate.length} città selezionate su massimo ${maxCitta}`;
-
-  if (selezionate.length > maxCitta) {
-    selezionate[selezionate.length - 1].selected = false;
-    msgErrore.textContent = `Attenzione: massimo ${maxCitta} città selezionabili.`;
-  } else {
-    msgErrore.textContent = "";
-  }
-
-  Array.from(this.options).forEach(opt => {
-    opt.disabled = !opt.selected && selezionate.length >= maxCitta;
-  });
-});
-
-
+  };
+  counter.textContent = `0 città selezionate su massimo ${maxCitta}`;
 }
 
+// =================== LISTENER PACCHETTO / DATE ===================
 document.getElementById('pacchetto').addEventListener('change', function () {
   const selected = this.options[this.selectedIndex];
   const min = parseInt(selected.dataset.min);
@@ -137,27 +200,25 @@ document.getElementById('pacchetto').addEventListener('change', function () {
   document.getElementById('erroreCitta').textContent = "";
 
   // Aggiorna listener sulla data di partenza
-partenza.addEventListener("change", function () {
-  if (!partenza.value || isNaN(min) || isNaN(max)) return;
+  partenza.addEventListener("change", function () {
+    if (!partenza.value || isNaN(min) || isNaN(max)) return;
 
-  const partenzaDate = new Date(partenza.value);
-  const minRitorno = new Date(partenzaDate);
-  minRitorno.setDate(minRitorno.getDate() + min);
+    const partenzaDate = new Date(partenza.value);
+    const minRitorno = new Date(partenzaDate);
+    minRitorno.setDate(minRitorno.getDate() + min);
 
-  const maxRitorno = new Date(partenzaDate);
-  maxRitorno.setDate(maxRitorno.getDate() + max);
+    const maxRitorno = new Date(partenzaDate);
+    maxRitorno.setDate(maxRitorno.getDate() + max);
 
-  const ritornoInput = document.getElementById("dataRitorno");
+    const ritornoInput = document.getElementById("dataRitorno");
 
-  ritornoInput.min = minRitorno.toISOString().split("T")[0];
-  ritornoInput.max = maxRitorno.toISOString().split("T")[0];
-  ritornoInput.value = ritornoInput.min; // default visivo
+    ritornoInput.min = minRitorno.toISOString().split("T")[0];
+    ritornoInput.max = maxRitorno.toISOString().split("T")[0];
+    ritornoInput.value = ritornoInput.min; // default visivo
 
-  const durata = min; // iniziale = minima
-  aggiornaCitta(pacchetto, durata);
-});
-
-
+    const durata = min; // iniziale = minima
+    aggiornaCitta(pacchetto, durata);
+  });
 
   // Reset e aggiorna città senza giorni ancora noti
   aggiornaCitta(pacchetto, null);
@@ -171,6 +232,7 @@ document.getElementById('dataRitorno').addEventListener('change', function () {
   aggiornaCitta(pacchetto, diff);
 });
 
+// =================== CONTROLLI PARTECIPANTI ===================
 document.getElementById('formPacchetto').addEventListener('input', function () {
   const partecipanti = parseInt(document.getElementById('partecipanti').value) || 0;
   const adulti = parseInt(document.getElementById('adulti').value) || 0;
@@ -267,6 +329,7 @@ function aggiornaControlloAutomaticoCamere() {
 
 document.getElementById("partecipanti").addEventListener("input", aggiornaErroreCamere);
 
+// =================== SUBMIT (feedback breve) ===================
 document.getElementById('formPacchetto').addEventListener('submit', function (e) {
   e.preventDefault(); // blocca invio classico
   const feedback = document.getElementById('formFeedback');
@@ -292,6 +355,7 @@ function validaForm() {
   return true;
 }
 
+// =================== SUBMIT (riepilogo + invio a backend) ===================
 document.getElementById("formPacchetto").addEventListener("submit", function (e) {
   e.preventDefault();
 
@@ -344,40 +408,40 @@ document.getElementById("formPacchetto").addEventListener("submit", function (e)
   document.getElementById("confermaInvio").addEventListener("click", () => {
     document.body.removeChild(modal);
 
-const dati = {
-  // --- dati form ---
-  nome: form.get("nome"),
-  cognome: form.get("cognome"),
-  email: form.get("email"),
-  pacchetto: form.get("pacchetto"),
-  dataPartenza: form.get("dataPartenza"),
-  dataRitorno: form.get("dataRitorno"),
-  tipologiaGruppo: form.get("tipologiaGruppo"),
-  dettagliGruppo: form.get("dettagliGruppo"),
-  partecipanti: form.get("partecipanti"),
-  adulti: form.get("adulti"),
-  bambini: form.get("bambini"),
-  fasciaPrezzo: form.get("fasciaPrezzo"),
-  trasporto: form.get("trasporto"),
-  connettivita: form.get("connettivita"),
-  citta: form.getAll("citta[]"),
-  camere: [...document.querySelectorAll('.camera-box')].map(box => {
-    const tipo = box.querySelector(".tipo-camera")?.selectedOptions[0]?.text || "";
-    const ospiti = box.querySelector(".ospiti-camera")?.value || "";
-    return `${tipo} x ${ospiti}`;
-  }),
-  richieste: form.get("richieste"),
+    const dati = {
+      // --- dati form ---
+      nome: form.get("nome"),
+      cognome: form.get("cognome"),
+      email: form.get("email"),
+      pacchetto: form.get("pacchetto"),
+      dataPartenza: form.get("dataPartenza"),
+      dataRitorno: form.get("dataRitorno"),
+      tipologiaGruppo: form.get("tipologiaGruppo"),
+      dettagliGruppo: form.get("dettagliGruppo"),
+      partecipanti: form.get("partecipanti"),
+      adulti: form.get("adulti"),
+      bambini: form.get("bambini"),
+      fasciaPrezzo: form.get("fasciaPrezzo"),
+      trasporto: form.get("trasporto"),
+      connettivita: form.get("connettivita"),
+      citta: form.getAll("citta[]"),
+      camere: [...document.querySelectorAll('.camera-box')].map(box => {
+        const tipo = box.querySelector(".tipo-camera")?.selectedOptions[0]?.text || "";
+        const ospiti = box.querySelector(".ospiti-camera")?.value || "";
+        return `${tipo} x ${ospiti}`;
+      }),
+      richieste: form.get("richieste"),
 
-  // --- CONSENSO PRIVACY (campi unificati per GDPR) ---
-  privacy: document.getElementById("consensoGDPR")?.checked === true,   // boolean
-  policy_key: POLICY_PRIVACY_KEY,                                        // 'privacy'
-  policy_version: POLICY_PRIVACY_VERSION,                                // es. 'v1.0-2025-08-19'
+      // --- CONSENSO PRIVACY (campi unificati per GDPR) ---
+      privacy: document.getElementById("consensoGDPR")?.checked === true,   // boolean
+      policy_key: POLICY_PRIVACY_KEY,                                        // 'privacy'
+      policy_version: POLICY_PRIVACY_VERSION,                                // es. 'v1.0-2025-08-19'
 
-  // --- metadati utili (prova del consenso) ---
-  userAgent: navigator.userAgent || null,
-  lang: navigator.language || 'it',
-  referrer: document.referrer || null
-};
+      // --- metadati utili (prova del consenso) ---
+      userAgent: navigator.userAgent || null,
+      lang: navigator.language || 'it',
+      referrer: document.referrer || null
+    };
 
     fetch("https://yume-sito-form.azurewebsites.net/api/invia-form", {
       method: "POST",
@@ -492,8 +556,8 @@ function validaForm() {
   }
 
   if (!consensoGDPR.checked) {
-  alert("Devi acconsentire al trattamento dei dati personali per procedere.");
-  return false;
+    alert("Devi acconsentire al trattamento dei dati personali per procedere.");
+    return false;
   }
 
   return true;
