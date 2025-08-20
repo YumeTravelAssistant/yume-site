@@ -1,0 +1,88 @@
+/* assets/styles.css */
+
+/* Imposta margini generali per tutto il contenuto */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #F4F0E2; /* colore beige già definito */
+  line-height: 1.5;
+}
+
+/* Wrapper principale con padding interno */
+.main-wrapper {
+  max-width: 900px;
+  margin: 2rem auto;      /* distanza dai bordi pagina */
+  padding: 2rem;          /* spazio interno */
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Sezioni step */
+.step-container {
+  margin-top: 1rem;
+}
+
+/* Input e select */
+input, select {
+  width: 80%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+/* Gruppi di campi doppi */
+.campo-doppio {
+  display: flex;
+  gap: 1rem;
+}
+
+.campo-doppio input {
+  flex: 1;
+}
+
+/* Bottoni */
+.btn-step {
+  margin-top: 1rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Checkbox group */
+.checkbox-group {
+  margin-top: 1rem;
+}
+
+.checkbox-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* assets/styles_form.css */
+
+/* Wrapper principale per dare respiro alle form */
+.main-wrapper {
+  max-width: 900px;
+  margin: 2rem auto;      /* spazio sopra/sotto e centrato ai lati */
+  padding: 2rem;          /* spazio interno ai bordi */
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-sizing: border-box;
+}
+
+/* Testo e contenuti */
+.main-wrapper h2,
+.main-wrapper label,
+.main-wrapper p,
+.main-wrapper input,
+.main-wrapper select,
+.main-wrapper textarea {
+  margin-left: 0.85rem;
+  margin-right: 0.85rem;
+}
+
