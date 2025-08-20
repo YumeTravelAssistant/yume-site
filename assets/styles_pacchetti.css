@@ -118,6 +118,7 @@
   }
 }
 
+
 .focus-tags {
   display: flex;
   flex-wrap: wrap;
@@ -638,5 +639,25 @@
     gap: 16px;
     padding: 30px 10px 40px;
   }
+}
+
+/* Disclaimer itinerario (coerente con la palette Yume) */
+.itinerario-disclaimer {
+  max-width: 700px;         /* più stretto per non occupare tutta la pagina */
+  margin: 25px auto 10px;   /* centrato con margine sopra/sotto */
+  padding: 12px 16px;
+  background: #FFF8E6;
+  border-left: 3px solid #C9A86A;
+  border-radius: 8px;
+  color: #5c4a1a;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  text-align: center;       /* centrato anche il testo */
+}
+
+/* Spazio leggero sotto i titoli delle sezioni, se serve armonizzare */
+.itinerario-esteso h2,
+.mappa-itinerario .section-title {
+  margin-bottom: 10px;
 }
 
