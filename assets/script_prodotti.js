@@ -1,6 +1,7 @@
+// script_prodotti.js — allineato alla meccanica di script_consulenze.js
 let carrello = [];
 
-/* === [AGGIUNTA CONSENSI — non impatta il flusso] ===================== */
+/* === CONSENSI (versioning e URL) ==================================== */
 const CONSENT_CONSTANTS = {
   privacy:    { key: "privacy",    version: "v1.0-2025-08-19", url: "https://yellow-bay-077dd2b03.6.azurestaticapps.net/privacy.html" },
   terms:      { key: "terms",      version: "v1.0-2025-08-19", url: "https://yellow-bay-077dd2b03.6.azurestaticapps.net/termini-condizioni.html" },
@@ -10,21 +11,15 @@ const CONSENT_CONSTANTS = {
 
 document.addEventListener("DOMContentLoaded", () => {
   const carrelloSalvato = JSON.parse(sessionStorage.getItem("carrello")) || [];
-  console.log("🛒 Carrello salvato:", carrelloSalvato);
-
   if (carrelloSalvato.length > 0) {
     carrello = carrelloSalvato;
     aggiornaCarrelloUI();
-    console.log("  Carrello ripristinato e UI aggiornata.");
 
     if (window.location.pathname.includes("acquista-prodotti")) {
-      mostraCarrelloInStep1();  // ✅ qui aggiorna anche lo STEP 1
+      mostraCarrelloInStep1();
     }
-  } else {
-    console.log(" ️ Nessun prodotto trovato nel carrello.");
   }
 });
-
 
 function toggleCarrello() {
   document.getElementById("carrelloContainer").classList.toggle("hidden");
@@ -33,7 +28,6 @@ function toggleCarrello() {
 document.addEventListener("click", function (event) {
   const carrelloBox = document.getElementById("carrelloContainer");
   const carrelloBtn = document.getElementById("toggleCarrelloBtn");
-
   if (
     carrelloBox &&
     !carrelloBox.classList.contains("hidden") &&
@@ -45,16 +39,10 @@ document.addEventListener("click", function (event) {
 });
 
 function aggiornaCarrelloUI() {
-  console.log("🔄 aggiornaCarrelloUI() avviata");
-
   const lista = document.getElementById("listaCarrello");
   const totale = document.getElementById("carrelloTotale");
   const badge = document.getElementById("cartCount");
-
-  if (!lista || !totale || !badge) {
-    console.warn("⚠️ Uno o più elementi DOM mancanti (#listaCarrello, #carrelloTotale, #cartCount)");
-    return;
-  }
+  if (!lista || !totale || !badge) return;
 
   lista.innerHTML = "";
   let somma = 0;
@@ -71,26 +59,24 @@ function aggiornaCarrelloUI() {
 
   totale.textContent = `€${somma.toFixed(2)}`;
   badge.textContent = carrello.length;
-
-  console.log(`📦 ${carrello.length} prodotti nel carrello`);
-  console.log(`💰 Totale aggiornato: €${somma.toFixed(2)}`);
 }
 
 function aggiungiAlCarrello(nome, prezzo) {
   carrello.push({ nome, prezzo });
   aggiornaCarrelloUI();
   mostraConfermaAggiunta();
-  sessionStorage.setItem("carrello", JSON.stringify(carrello)); // 🔁 salva
+  sessionStorage.setItem("carrello", JSON.stringify(carrello));
 }
 
 function rimuoviDalCarrello(index) {
   carrello.splice(index, 1);
   aggiornaCarrelloUI();
-  sessionStorage.setItem("carrello", JSON.stringify(carrello)); // 🔁 aggiorna
+  sessionStorage.setItem("carrello", JSON.stringify(carrello));
 }
 
 function mostraConfermaAggiunta() {
   const btn = document.getElementById("toggleCarrelloBtn");
+  if (!btn) return;
   btn.classList.add("pulse");
   setTimeout(() => btn.classList.remove("pulse"), 600);
 }
@@ -100,8 +86,7 @@ function vaiAllaCassa() {
     alert("Il carrello è vuoto.");
     return;
   }
-
-  sessionStorage.setItem("carrello", JSON.stringify(carrello)); // ✅ uniformato
+  sessionStorage.setItem("carrello", JSON.stringify(carrello));
   window.location.href = "acquista-prodotti.html";
 }
 
@@ -143,34 +128,21 @@ async function vaiAlStep3() {
     const password = document.getElementById("password")?.value;
     const password2 = document.getElementById("confermaPassword")?.value;
 
-    // Verifica email già registrata
     const esiste = await verificaEmailEsistente(email);
     if (esiste) {
       alert("Questa email risulta già registrata. Accedi per proseguire.");
       return;
     }
-
-    if (email !== email2) {
-      alert("Le email non coincidono.");
-      return;
-    }
-
-    if (password !== password2) {
-      alert("Le password non coincidono.");
-      return;
-    }
+    if (email !== email2) return alert("Le email non coincidono.");
+    if (password !== password2) return alert("Le password non coincidono.");
 
     const campiPrivatoObbligatori = [
       "nome", "cognome", "email", "confermaEmail", "password", "confermaPassword",
       "cf", "telefono", "via", "cap", "citta", "provincia", "stato"
     ];
-
     for (let id of campiPrivatoObbligatori) {
       const val = document.getElementById(id)?.value?.trim();
-      if (!val) {
-        alert("Compila tutti i campi obbligatori.");
-        return;
-      }
+      if (!val) return alert("Compila tutti i campi obbligatori.");
     }
 
     riepilogo.innerHTML += `<li><strong>Tipo cliente:</strong> Privato</li>`;
@@ -194,15 +166,8 @@ async function vaiAlStep3() {
     const password = document.getElementById("password_azienda")?.value;
     const password2 = document.getElementById("confermaPassword_azienda")?.value;
 
-    if (email !== email2) {
-      alert("Le email non coincidono.");
-      return;
-    }
-
-    if (password !== password2) {
-      alert("Le password non coincidono.");
-      return;
-    }
+    if (email !== email2) return alert("Le email non coincidono.");
+    if (password !== password2) return alert("Le password non coincidono.");
 
     const esiste = await verificaEmailEsistente(email);
     if (esiste) {
@@ -223,13 +188,9 @@ async function vaiAlStep3() {
       "telefono_azienda", "via_azienda", "cap_azienda", "citta_azienda",
       "provincia_azienda", "stato_azienda"
     ];
-
     for (let id of campiAziendaObbligatori) {
       const val = document.getElementById(id)?.value?.trim();
-      if (!val) {
-        alert("Compila tutti i campi obbligatori.");
-        return;
-      }
+      if (!val) return alert("Compila tutti i campi obbligatori.");
     }
 
     riepilogo.innerHTML += `<li><strong>Tipo cliente:</strong> Azienda</li>`;
@@ -256,8 +217,7 @@ function mostraCarrelloInStep1() {
   const container = document.getElementById("carrello-prodotti");
   if (!container) return;
 
-  container.innerHTML = ""; // pulizia
-
+  container.innerHTML = "";
   if (carrello.length === 0) {
     container.innerHTML = "<p>Il carrello è vuoto.</p>";
     return;
@@ -267,7 +227,6 @@ function mostraCarrelloInStep1() {
   ul.classList.add("riepilogo-lista");
 
   let somma = 0;
-
   carrello.forEach(prodotto => {
     const li = document.createElement("li");
     li.textContent = `${prodotto.nome} – €${prodotto.prezzo.toFixed(2)}`;
@@ -280,7 +239,6 @@ function mostraCarrelloInStep1() {
   container.appendChild(ul);
   container.appendChild(totale);
 }
-
 
 async function effettuaLogin() {
   const identificatore = document.getElementById("emailLogin")?.value.trim();
@@ -301,7 +259,14 @@ async function effettuaLogin() {
     });
     const data = await response.json();
     if (data.status === "success") {
-      sessionStorage.setItem("profiloUtente", JSON.stringify(data));
+      // Salvataggio profilo minimale, coerente con uso in pagina
+      const cliente = {
+        nome: data.nome || "",
+        cognome: data.cognome || "",
+        email: data.email || "",
+      };
+      sessionStorage.setItem("profiloUtente", JSON.stringify(cliente));
+
       document.getElementById("cliente_tipo").value = "privato";
       aggiornaTipoCliente();
       mostraStep(1);
@@ -339,13 +304,10 @@ function popolaCampiProfiloInStep2() {
     document.getElementById("confermaEmail").value = profilo.email || "";
     document.getElementById("confermaPassword").value = "••••••";
 
-    // Blocca i campi modificabili
-    document.getElementById("nome").readOnly = true;
-    document.getElementById("cognome").readOnly = true;
-    document.getElementById("email").readOnly = true;
-    document.getElementById("password").readOnly = true;
-    document.getElementById("confermaEmail").readOnly = true;
-    document.getElementById("confermaPassword").readOnly = true;
+    ["nome","cognome","email","password","confermaEmail","confermaPassword"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.readOnly = true; el.classList.add("readonly"); }
+    });
   } else if (tipo === "azienda") {
     document.getElementById("referente_nome").value = profilo.nome || "";
     document.getElementById("referente_cognome").value = profilo.cognome || "";
@@ -354,29 +316,18 @@ function popolaCampiProfiloInStep2() {
     document.getElementById("confermaEmail_azienda").value = profilo.email || "";
     document.getElementById("confermaPassword_azienda").value = "••••••";
 
-    // Blocca i campi modificabili
-    document.getElementById("referente_nome").readOnly = true;
-    document.getElementById("referente_cognome").readOnly = true;
-    document.getElementById("email_azienda").readOnly = true;
-    document.getElementById("password_azienda").readOnly = true;
-    document.getElementById("confermaEmail_azienda").readOnly = true;
-    document.getElementById("confermaPassword_azienda").readOnly = true;
-
+    ["referente_nome","referente_cognome","email_azienda","password_azienda","confermaEmail_azienda","confermaPassword_azienda"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.readOnly = true; el.classList.add("readonly"); }
+    });
   } else {
-    // Caso default (nessun tipo o tipo non riconosciuto)
     const campi = ["nome", "cognome", "email", "confermaEmail", "password", "confermaPassword"];
     campi.forEach(id => {
       const el = document.getElementById(id);
       if (!el) return;
-
-      if (id === "password" || id === "confermaPassword") {
-        el.value = "••••••";
-      } else if (id === "confermaEmail") {
-        el.value = profilo.email || "";
-      } else {
-        el.value = profilo[id] || "";
-      }
-
+      if (id === "password" || id === "confermaPassword") el.value = "••••••";
+      else if (id === "confermaEmail") el.value = profilo.email || "";
+      else el.value = profilo[id] || "";
       el.readOnly = true;
       el.classList.add("readonly");
     });
@@ -397,12 +348,75 @@ async function sha256(str) {
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
+/* ======================
+   REGISTRAZIONE (identica)
+   ====================== */
+async function verificaERegistrazioneSeNecessario() {
+  const email = document.getElementById("email")?.value.trim();
+  const nome = document.getElementById("nome")?.value.trim();
+  const cognome = document.getElementById("cognome")?.value.trim();
+  const password = document.getElementById("password")?.value.trim();
+  const newsletter = document.getElementById("newsletter")?.checked === true;
+  const privacy = document.getElementById("privacy")?.checked === true;
+  const termini = document.getElementById("termini")?.checked === true;
+
+  if (!email || !nome || !cognome || !password || !privacy || !termini) {
+    console.log("Dati/consensi non sufficienti per registrazione (non blocco).");
+    return;
+  }
+
+  const emailEsiste = await verificaEmailEsistente(email);
+  if (emailEsiste) {
+    console.log("Email già registrata, nessuna registrazione necessaria.");
+    return;
+  }
+
+  const password_hash = await sha256(password);
+
+  try {
+    const response = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tipoRichiesta: "registrazione",
+        nome,
+        cognome,
+        email,
+        password_hash,
+        newsletter,
+        privacy_accettata: true,
+        termini_accettati: true,
+        policy_key: CONSENT_CONSTANTS.privacy.key,
+        policy_version: CONSENT_CONSTANTS.privacy.version,
+        terms_key: CONSENT_CONSTANTS.terms.key,
+        terms_version: CONSENT_CONSTANTS.terms.version,
+        newsletter_policy_key: CONSENT_CONSTANTS.newsletter.key,
+        newsletter_policy_version: CONSENT_CONSTANTS.newsletter.version,
+        referrer: document.referrer || null,
+        lang: document.documentElement.lang || "it"
+      })
+    });
+    const result = await response.json();
+    if (result?.status !== "success") {
+      console.warn("Registrazione non confermata dal server:", result);
+    }
+  } catch (err) {
+    console.error("Errore invio registrazione:", err);
+  }
+}
+
+/* ======================
+   ACQUISTO PRODOTTI
+   ====================== */
 async function effettuaAcquistoProdotto() {
   if (invioInCorso) return;
   invioInCorso = true;
   mostraSpinner();
 
   try {
+    // ✅ Prima mi assicuro della registrazione (come nelle consulenze)
+    await verificaERegistrazioneSeNecessario();
+
     const carrello = JSON.parse(sessionStorage.getItem("carrello")) || [];
     if (!carrello.length) throw new Error("Carrello vuoto.");
 
@@ -411,24 +425,23 @@ async function effettuaAcquistoProdotto() {
 
     const tipoCliente = document.getElementById("cliente_tipo").value;
 
-    /* === [AGGIUNTA CONSENSI — solo inclusi nel payload, nessun blocco] === */
     const privacy    = document.getElementById("privacy")?.checked === true;
     const termini    = document.getElementById("termini")?.checked === true;
     const newsletter = document.getElementById("newsletter")?.checked === true;
-    /* ===================================================================== */
 
     const dati = {
       tipoRichiesta: "ordineProdotto",
       cliente_tipo: tipoCliente,
       lista_prodotti,
+      totale,
 
-      /* === [AGGIUNTA: campi che GAS legge per scrivere su Supabase] ====== */
-      consensoGDPR: !!privacy,
+      // Metadati consensi per GAS→Supabase
+      consensoGDPR: !!(privacy),
       policy_key: CONSENT_CONSTANTS.privacy.key,
       policy_version: CONSENT_CONSTANTS.privacy.version,
       gdpr_url: CONSENT_CONSTANTS.privacy.url,
 
-      terminiAccettati: !!termini,
+      terminiAccettati: !!(termini),
       terms_key: CONSENT_CONSTANTS.terms.key,
       terms_version: CONSENT_CONSTANTS.terms.version,
       terms_url: CONSENT_CONSTANTS.terms.url,
@@ -440,7 +453,6 @@ async function effettuaAcquistoProdotto() {
 
       referrer: document.referrer || null,
       lang: document.documentElement.lang || "it"
-      /* =================================================================== */
     };
 
     if (tipoCliente === "privato") {
@@ -497,26 +509,23 @@ async function effettuaAcquistoProdotto() {
   }
 }
 
+/* ======================
+   UTILITIES EMAIL
+   ====================== */
 async function verificaEmailEsistente(email) {
-  // ✅ Se il cliente è loggato, salta la verifica
   const profilo = sessionStorage.getItem("profiloUtente");
   if (profilo) {
     const dati = JSON.parse(profilo);
     if (dati.email === email) return false;
   }
-
   try {
     const response = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        tipoRichiesta: "verifica_email",
-        email
-      })
+      body: JSON.stringify({ tipoRichiesta: "verifica_email", email })
     });
-
     const result = await response.json();
-    return result.status === "trovata"; // true se già esiste
+    return result.status === "trovata";
   } catch (err) {
     console.error("Errore durante la verifica email:", err);
     return false;
@@ -526,11 +535,9 @@ async function verificaEmailEsistente(email) {
 async function checkEmailRegistrata() {
   const email = document.getElementById("email")?.value.trim();
   const msgBox = document.getElementById("emailMatchMessage");
-
   if (!email || !msgBox) return;
 
   const esiste = await verificaEmailEsistente(email);
-
   if (esiste) {
     msgBox.innerHTML = `<i class="fas fa-times-circle icon-ko"></i> Email già registrata. <a href="log-in.html">Accedi</a> per proseguire.`;
     msgBox.className = "email-message ko";
@@ -553,7 +560,6 @@ async function checkEmailMatchAndRegistrazione() {
     msgBox.className = "email-message";
     return;
   }
-
   if (email !== conferma) {
     msgBox.innerHTML = `<i class="fas fa-times-circle icon-ko"></i> Le email non coincidono`;
     msgBox.className = "email-message ko";
@@ -569,88 +575,20 @@ async function checkEmailMatchAndRegistrazione() {
   } else {
     msgBox.innerHTML = `<i class="fas fa-check-circle icon-ok"></i> Le email coincidono e non risultano già registrate`;
     msgBox.className = "email-message ok";
-
     document.getElementById("email").classList.remove("input-ko");
   }
 }
 
-/* 🔄 VERSIONE IDENTICA A script_consulenze.js */
-async function verificaERegistrazioneSeNecessario() {
-  const email = document.getElementById("email")?.value.trim();
-  const nome = document.getElementById("nome")?.value.trim();
-  const cognome = document.getElementById("cognome")?.value.trim();
-  const password = document.getElementById("password")?.value.trim();
-  const newsletter = document.getElementById("newsletter")?.checked === true;
-  const privacy = document.getElementById("privacy")?.checked === true;
-  const termini = document.getElementById("termini")?.checked === true;
-
-  if (!email || !nome || !cognome || !password || !privacy || !termini) {
-    console.log("Dati/consensi non sufficienti per registrazione (non blocco).");
-    return;
-  }
-
-  const emailEsiste = await verificaEmailEsistente(email);
-  if (emailEsiste) {
-    console.log("Email già registrata, nessuna registrazione necessaria.");
-    return;
-  }
-
-  const password_hash = await sha256(password);
-
-  // Invia registrazione al CRM (con consensi, per GAS→Supabase)
-  try {
-    const response = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        tipoRichiesta: "registrazione",
-        nome,
-        cognome,
-        email,
-        password_hash,
-        newsletter,
-        privacy_accettata: true,
-        termini_accettati: true,
-        policy_key: CONSENT_CONSTANTS.privacy.key,
-        policy_version: CONSENT_CONSTANTS.privacy.version,
-        terms_key: CONSENT_CONSTANTS.terms.key,
-        terms_version: CONSENT_CONSTANTS.terms.version,
-        newsletter_policy_key: CONSENT_CONSTANTS.newsletter.key,
-        newsletter_policy_version: CONSENT_CONSTANTS.newsletter.version,
-        referrer: document.referrer || null,
-        lang: document.documentElement.lang || "it"
-      })
-    });
-
-    const result = await response.json();
-    if (result?.status !== "success") {
-      console.warn("Registrazione non confermata dal server:", result);
-    }
-  } catch (err) {
-    console.error("Errore invio registrazione:", err);
-  }
-}
-
-async function eseguiRegistrazioneEInvio() {
-  mostraSpinner();
-
-  const promessaRegistrazione = verificaERegistrazioneSeNecessario();
-  const promessaPrenotazione = confermaPrenotazione();
-
-  // Aspetta entrambe in parallelo (non sequenziale)
-  await Promise.all([promessaRegistrazione, promessaPrenotazione]);
-
-  nascondiSpinner();
-}
-
+/* ======================
+   WRAPPER PER IL BOTTONE
+   ====================== */
 async function eseguiAcquistoEInvio() {
   mostraSpinner();
-
-  const promessaRegistrazione = verificaERegistrazioneSeNecessario();
-  const promessaInvio = inviaRichiestaConsulenza();
-
-  await Promise.all([promessaRegistrazione, promessaInvio]);
-
-  nascondiSpinner();
+  try {
+    await verificaERegistrazioneSeNecessario();
+    await effettuaAcquistoProdotto();
+  } finally {
+    nascondiSpinner();
+  }
 }
 
