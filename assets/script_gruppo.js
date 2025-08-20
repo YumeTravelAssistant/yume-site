@@ -1,32 +1,12 @@
-// script_gruppo.js — gestione viaggi di gruppo (allineato a script_consulenze.js)
+// script_gruppo.js – gestione viaggi di gruppo (pari a script_gruppo (1) + registrazione nuova)
 
 let invioInCorso = false;
 
 /* =========================
-   CONSENSI (versioning e URL)
-   ========================= */
-const CONSENT_CONSTANTS = {
-  privacy: {
-    key: "privacy",
-    version: "v1.0-2025-08-19",
-    url: "https://yellow-bay-077dd2b03.6.azurestaticapps.net/privacy.html",
-  },
-  terms: {
-    key: "terms",
-    version: "v1.0-2025-08-19",
-    url: "https://yellow-bay-077dd2b03.6.azurestaticapps.net/termini-condizioni.html",
-  },
-  newsletter: {
-    key: "newsletter",
-    version: "v1.0-2025-08-19",
-    url: "https://yellow-bay-077dd2b03.6.azurestaticapps.net/privacy.html",
-  },
-};
-
-/* =========================
-   NAVIGAZIONE STEP / UI
+   STEP / UI identici
    ========================= */
 function mostraStep(numero) {
+  console.log("🔁 Passo attivato:", numero);
   document.querySelectorAll(".step").forEach(step => {
     step.classList.add("hidden");
     step.classList.remove("active");
@@ -37,6 +17,7 @@ function mostraStep(numero) {
     attuale.classList.add("active");
   }
 }
+
 function vaiAlStep0() { mostraStep(0); }
 function vaiAlStep2() { mostraStep(2); }
 
@@ -52,20 +33,24 @@ function aggiornaTipoCliente() {
   const tipo = document.getElementById("cliente_tipo")?.value;
   const privato = document.getElementById("sezione_privato");
   const azienda = document.getElementById("sezione_azienda");
+
   if (!privato || !azienda) return;
+
   privato.classList.add("hidden");
   azienda.classList.add("hidden");
+
   if (tipo === "privato")  privato.classList.remove("hidden");
   if (tipo === "azienda")  azienda.classList.remove("hidden");
 }
 
 /* =========================
-   LOGIN (come consulenze)
+   LOGIN (come originale)
    ========================= */
 async function effettuaLogin() {
   const identificatore = document.getElementById("emailLogin")?.value.trim();
   const password = document.getElementById("passwordLogin")?.value.trim();
   const output = document.getElementById("esitoLogin");
+
   output.textContent = "";
   output.style.color = "";
 
@@ -82,31 +67,35 @@ async function effettuaLogin() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ identificatore, password_hash, tipoRichiesta: "login" })
     });
+
     const data = await response.json();
 
     if (data.status === "success") {
       output.textContent = "Accesso effettuato!";
       output.style.color = "green";
 
-      // Salva profilo minimo
-      sessionStorage.setItem("profiloUtente", JSON.stringify({
-        codice_cliente: data.codice_cliente,
+      // Salva profilo
+      const profilo = {
         nome: data.nome || "",
         cognome: data.cognome || "",
-        email: data.email || ""
-      }));
+        email: data.email || "",
+        codice_cliente: data.codice_cliente
+      };
+      sessionStorage.setItem("profiloUtente", JSON.stringify(profilo));
 
       // Default: privato
       document.getElementById("cliente_tipo").value = "privato";
       aggiornaTipoCliente();
       popolaCampiProfiloInStep2();
 
-      // Vai allo step successivo
+      // Passa a step 2
       mostraStep(2);
+
     } else {
       output.textContent = data.message || "Credenziali errate.";
       output.style.color = "red";
     }
+
   } catch (err) {
     output.textContent = "Errore: " + (err.message || err);
     output.style.color = "red";
@@ -123,29 +112,39 @@ function popolaCampiProfiloInStep2() {
 
   if (tipo === "privato") {
     const campi = {
-      nome: profilo.nome || "",
-      cognome: profilo.cognome || "",
-      email: profilo.email || "",
-      confermaEmail: profilo.email || "",
+      nome: profilo.nome,
+      cognome: profilo.cognome,
+      email: profilo.email,
+      confermaEmail: profilo.email,
       password: "••••••",
       confermaPassword: "••••••"
     };
+
     for (const [id, valore] of Object.entries(campi)) {
       const el = document.getElementById(id);
-      if (el) { el.value = valore; el.readOnly = true; el.classList.add("readonly"); }
+      if (el) {
+        el.value = valore;
+        el.readOnly = true;
+        el.classList.add("readonly");
+      }
     }
   } else if (tipo === "azienda") {
     const campi = {
-      referente_nome: profilo.nome || "",
-      referente_cognome: profilo.cognome || "",
-      email_azienda: profilo.email || "",
-      confermaEmail_azienda: profilo.email || "",
+      referente_nome: profilo.nome,
+      referente_cognome: profilo.cognome,
+      email_azienda: profilo.email,
+      confermaEmail_azienda: profilo.email,
       password_azienda: "••••••",
       confermaPassword_azienda: "••••••"
     };
+
     for (const [id, valore] of Object.entries(campi)) {
       const el = document.getElementById(id);
-      if (el) { el.value = valore; el.readOnly = true; el.classList.add("readonly"); }
+      if (el) {
+        el.value = valore;
+        el.readOnly = true;
+        el.classList.add("readonly");
+      }
     }
   }
 }
@@ -168,7 +167,7 @@ async function checkEmailMatchAndRegistrazione() {
   if (email !== conferma) {
     msgBox.innerHTML = `<i class="fas fa-times-circle icon-ko"></i> Le email non coincidono`;
     msgBox.className = "email-message ko";
-    document.getElementById("email")?.classList.add("input-ko");
+    document.getElementById("email").classList.add("input-ko");
     return;
   }
 
@@ -176,11 +175,11 @@ async function checkEmailMatchAndRegistrazione() {
   if (esiste) {
     msgBox.innerHTML = `<i class="fas fa-times-circle icon-ko"></i> Email già registrata. <a href="log-in.html">Accedi</a>`;
     msgBox.className = "email-message ko";
-    document.getElementById("email")?.classList.add("input-ko");
+    document.getElementById("email").classList.add("input-ko");
   } else {
     msgBox.innerHTML = `<i class="fas fa-check-circle icon-ok"></i> Le email coincidono e non risultano già registrate`;
     msgBox.className = "email-message ok";
-    document.getElementById("email")?.classList.remove("input-ko");
+    document.getElementById("email").classList.remove("input-ko");
   }
 }
 
@@ -194,14 +193,16 @@ async function verificaEmailEsistente(email) {
     const dati = JSON.parse(profilo);
     if (dati.email === email) return false;
   }
+
   try {
-    const res = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
+    const response = await fetch("https://yume-clienti.azurewebsites.net/api/invio-yume", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ tipoRichiesta: "verifica_email", email })
     });
-    const out = await res.json();
-    return out.status === "trovata"; // true se già esiste
+
+    const result = await response.json();
+    return result.status === "trovata"; // true se già esiste
   } catch (err) {
     console.error("Errore durante la verifica email:", err);
     return false;
@@ -216,11 +217,10 @@ async function sha256(str) {
 }
 
 /* =========================
-   REGISTRAZIONE AUTOMATICA (come consulenze)
-   - Non blocca il flusso: tenta la registrazione SOLO se ho tutti i dati + consensi.
+   REGISTRAZIONE (solo se nuovo)
    ========================= */
 async function verificaERegistrazioneSeNecessario() {
-  // Leggo sempre dai campi "privato" (stessa meccanica usata nelle altre pagine)
+  // Leggo i campi "privato" (come nelle altre pagine)
   const email = document.getElementById("email")?.value.trim();
   const nome = document.getElementById("nome")?.value.trim();
   const cognome = document.getElementById("cognome")?.value.trim();
@@ -229,7 +229,7 @@ async function verificaERegistrazioneSeNecessario() {
   const privacy = document.getElementById("privacy")?.checked === true;
   const termini = document.getElementById("termini")?.checked === true;
 
-  // Se manca qualcosa o non ha dato i consensi → non provo a registrare (non blocco)
+  // Se dati o consensi mancanti → non registro (non blocco il flusso qui)
   if (!email || !nome || !cognome || !password || !privacy || !termini) return;
 
   // Se esiste già, non registro
@@ -250,16 +250,7 @@ async function verificaERegistrazioneSeNecessario() {
         password_hash,
         newsletter,
         privacy_accettata: true,
-        termini_accettati: true,
-        // Metadati consensi (utile lato GAS → Supabase)
-        policy_key: CONSENT_CONSTANTS.privacy.key,
-        policy_version: CONSENT_CONSTANTS.privacy.version,
-        terms_key: CONSENT_CONSTANTS.terms.key,
-        terms_version: CONSENT_CONSTANTS.terms.version,
-        newsletter_policy_key: CONSENT_CONSTANTS.newsletter.key,
-        newsletter_policy_version: CONSENT_CONSTANTS.newsletter.version,
-        referrer: document.referrer || null,
-        lang: document.documentElement.lang || "it",
+        termini_accettati: true
       })
     });
     const result = await response.json();
@@ -273,6 +264,7 @@ async function verificaERegistrazioneSeNecessario() {
 
 /* =========================
    INVIO / PAGAMENTO ACCONTO
+   (identico + blocco Privacy/Termini)
    ========================= */
 async function inviaRichiestaAcconto() {
   if (invioInCorso) return;
@@ -285,7 +277,7 @@ async function inviaRichiestaAcconto() {
       return;
     }
 
-    // Consensi (OBBLIGATORI per procedere)
+    // Consensi OBBLIGATORI
     const privacy    = document.getElementById("privacy")?.checked === true;
     const termini    = document.getElementById("termini")?.checked === true;
     const newsletter = document.getElementById("newsletter")?.checked === true;
@@ -295,41 +287,21 @@ async function inviaRichiestaAcconto() {
       return;
     }
 
-    // Base payload (come consulenze, ma con funnel 'gruppo')
     const dati = {
       tipo_funnel: "gruppo",
       ID_ordine: "ORD-" + Date.now(),
       stato_pagamento: "In attesa",
-
-      // Metadati consensi → GAS → Supabase
-      consensoGDPR: true,
-      policy_key: CONSENT_CONSTANTS.privacy.key,
-      policy_version: CONSENT_CONSTANTS.privacy.version,
-      gdpr_url: CONSENT_CONSTANTS.privacy.url,
-
-      terminiAccettati: true,
-      terms_key: CONSENT_CONSTANTS.terms.key,
-      terms_version: CONSENT_CONSTANTS.terms.version,
-      terms_url: CONSENT_CONSTANTS.terms.url,
-
-      newsletterConsent: !!newsletter,
-      newsletter_policy_key: CONSENT_CONSTANTS.newsletter.key,
-      newsletter_policy_version: CONSENT_CONSTANTS.newsletter.version,
-      newsletter_url: CONSENT_CONSTANTS.newsletter.url,
-
-      referrer: document.referrer || null,
-      lang: document.documentElement.lang || "it"
+      newsletterConsent: !!newsletter
     };
 
     if (tipoCliente === "privato") {
-      // Campi obbligatori
       const campi = [
-        "nome","cognome","email","confermaEmail","password","confermaPassword",
-        "cf","telefono","via","numero_civico","cap","citta","provincia","stato"
+        "nome", "cognome", "email", "confermaEmail", "password", "confermaPassword",
+        "cf", "telefono", "via", "numero_civico", "cap", "citta", "provincia", "stato"
       ];
       for (const id of campi) {
-        const v = document.getElementById(id)?.value?.trim();
-        if (!v) { alert("Compila tutti i campi obbligatori."); return; }
+        const val = document.getElementById(id)?.value?.trim();
+        if (!val) { alert("Compila tutti i campi obbligatori."); return; }
       }
 
       const email = document.getElementById("email").value.trim();
@@ -401,14 +373,14 @@ async function inviaRichiestaAcconto() {
       dati.note_azienda = document.getElementById("note_azienda")?.value || "";
     }
 
-    // Invio a GAS (stesso endpoint usato nelle consulenze/prodotti)
+    // Invio (stesso endpoint)
     const res = await fetch("https://yume-consulenze.azurewebsites.net/api/invio-estremi", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(dati)
     });
-    const json = await res.json();
 
+    const json = await res.json();
     if (json.status === "ok" && json.checkout_url) {
       window.location.href = json.checkout_url;
     } else {
@@ -422,28 +394,69 @@ async function inviaRichiestaAcconto() {
 }
 
 /* =========================
-   WRAPPER (stessa meccanica: registrazione + invio)
+   WRAPPER come originale:
+   registra (se serve) + invia
    ========================= */
 async function eseguiAcquistoEInvio() {
   mostraSpinner();
-  try {
-    // In parallelo, come in script_consulenze.js
-    await Promise.all([
-      verificaERegistrazioneSeNecessario(),
-      inviaRichiestaAcconto()
-    ]);
-  } finally {
-    nascondiSpinner();
-  }
+  const promessaRegistrazione = verificaERegistrazioneSeNecessario();
+  const promessaInvio = inviaRichiestaAcconto();
+  await Promise.all([promessaRegistrazione, promessaInvio]);
+  nascondiSpinner();
 }
 
 /* =========================
-   SPINNER
+   SPINNER (id = "spinner" come originale)
    ========================= */
 function mostraSpinner() {
-  document.getElementById("spinnerInvio")?.classList.remove("hidden");
+  const spinner = document.getElementById("spinner");
+  if (spinner) spinner.style.display = "block";
 }
 function nascondiSpinner() {
-  document.getElementById("spinnerInvio")?.classList.add("hidden");
+  const spinner = document.getElementById("spinner");
+  if (spinner) spinner.style.display = "none";
+}
+
+/* =========================
+   RIEPILOGO (identico all’originale)
+   ========================= */
+function mostraRiepilogoFatturazione() {
+  const tipoCliente = document.getElementById("cliente_tipo")?.value;
+  const riepilogo = document.getElementById("riepilogo");
+  if (!riepilogo) return;
+
+  riepilogo.innerHTML = "";
+
+  if (tipoCliente === "privato") {
+    riepilogo.innerHTML += `<li><strong>Nome:</strong> ${document.getElementById("nome").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Cognome:</strong> ${document.getElementById("cognome").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Email:</strong> ${document.getElementById("email").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Telefono:</strong> ${document.getElementById("telefono").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Indirizzo:</strong> ${document.getElementById("via").value} ${document.getElementById("numero_civico").value}, ${document.getElementById("cap").value} ${document.getElementById("citta").value} (${document.getElementById("provincia").value}), ${document.getElementById("stato").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Codice Fiscale:</strong> ${document.getElementById("cf").value}</li>`;
+  } else if (tipoCliente === "azienda") {
+    riepilogo.innerHTML += `<li><strong>Ragione Sociale:</strong> ${document.getElementById("ragione_sociale").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Email:</strong> ${document.getElementById("email_azienda").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Telefono:</strong> ${document.getElementById("telefono_azienda").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Referente:</strong> ${document.getElementById("referente_nome").value} ${document.getElementById("referente_cognome").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Indirizzo:</strong> ${document.getElementById("via_azienda").value} ${document.getElementById("numero_civico_azienda").value}, ${document.getElementById("cap_azienda").value} ${document.getElementById("citta_azienda").value} (${document.getElementById("provincia_azienda").value}), ${document.getElementById("stato_azienda").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Partita IVA:</strong> ${document.getElementById("piva").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Codice Fiscale:</strong> ${document.getElementById("cf_azienda").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>PEC:</strong> ${document.getElementById("pec").value}</li>`;
+    riepilogo.innerHTML += `<li><strong>Codice SDI:</strong> ${document.getElementById("codice_destinatario").value}</li>`;
+  }
+
+  const box = document.getElementById("riepilogo-box");
+  if (box) box.classList.remove("hidden");
+}
+
+function mostraRiepilogoEFase2() {
+  mostraRiepilogoFatturazione();
+
+  // Nascondi pulsanti iniziali
+  document.getElementById("step2-pulsanti-iniziali")?.classList.add("hidden");
+
+  // Mostra conferma e pagamento
+  document.getElementById("step2-conferma-pagamento")?.classList.remove("hidden");
 }
 
