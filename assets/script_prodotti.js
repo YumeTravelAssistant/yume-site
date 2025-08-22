@@ -420,7 +420,8 @@ async function effettuaAcquistoProdotto() {
     const carrello = JSON.parse(sessionStorage.getItem("carrello")) || [];
     if (!carrello.length) throw new Error("Carrello vuoto.");
 
-    const lista_prodotti = carrello.map(p => `${p.nome} (€${p.prezzo})`).join(", ");
+    // CHANGED: invia solo i nomi (senza “(€…)”) per abilitare la mappatura dei price LIVE
+    const lista_prodotti = carrello.map(p => p.nome).join(", ");
     const totale = carrello.reduce((sum, p) => sum + p.prezzo, 0);
 
     const tipoCliente = document.getElementById("cliente_tipo").value;
