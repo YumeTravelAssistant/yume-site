@@ -81,21 +81,47 @@
     <div class="main-content">
 
 <section class="contatti-section">
-<h2 class="slide-in">Siamo qui per te</h2>
-  <form>
+  <h2 class="slide-in">Siamo qui per te</h2>
+
+  <!-- niente action: gestiamo via JS/fetch -->
+  <form id="contatti-form" novalidate>
     <label for="nome">Il tuo nome</label>
     <input type="text" id="nome" name="nome" required>
+
     <label for="email">E-mail</label>
     <input type="email" id="email" name="email" required>
+
     <label>Cosa ti interessa</label>
     <div class="row">
-      <label><input type="checkbox"> Consulenza</label>
-      <label><input type="checkbox"> Preventivo</label>
-      <label><input type="checkbox"> Info generiche</label>
+      <label><input type="checkbox" name="interessi" value="Consulenza"> Consulenza</label>
+      <label><input type="checkbox" name="interessi" value="Preventivo"> Preventivo</label>
+      <label><input type="checkbox" name="interessi" value="Info generiche"> Info generiche</label>
     </div>
+
     <label for="msg">Messaggio</label>
-    <textarea id="msg" rows="4"></textarea>
+    <textarea id="msg" name="messaggio" rows="4" required></textarea>
+
+    <!-- honeypot antispam (nascosto via CSS inline) -->
+    <input type="text" name="website" tabindex="-1" autocomplete="off"
+           style="position:absolute;left:-9999px;opacity:0;pointer-events:none">
+
+<div class="checkbox-gdpr" style="margin:12px 0; display:flex; align-items:center; gap:8px;">
+  <input type="checkbox" id="consensoGDPR_contatti" required>
+  <label for="consensoGDPR_contatti">
+    Acconsento al trattamento dei miei dati personali ai sensi del
+    <a href="privacy.html" target="_blank" style="color:#C9A86A; text-decoration:underline;">
+      Regolamento (UE) 2016/679 (GDPR)
+    </a>.
+  </label>
+</div>
+
     <button type="submit">Invia</button>
+
+    <!-- area stato/accessibilità -->
+    <p id="stato-form" role="status" aria-live="polite"></p>
+
+    <!-- tag invisibile per il proxy/GAS -->
+    <input type="hidden" name="tipoRichiesta" value="contatti">
   </form>
 </section>
 
@@ -104,9 +130,9 @@
     <ul class="social-icons">
       <li><a href="tel:+393703081341" class="fa fa-phone">+39&nbsp;370&nbsp;308&nbsp;1341</a></li>
       <li><a href="https://wa.me/3703081341" target="_blank" class="fa fa-whatsapp">WhatsApp</a></li>
-      <li><a href="https://www.instagram.com/yumeviaggi" target="_blank" class="fa fa-instagram">Instagram</a></li>
-      <li><a href="https://www.facebook.com/..." target="_blank" class="fa fa-facebook">Facebook</a></li>
-      <li><a href="https://www.linkedin.com/company/..." target="_blank" class="fa fa-linkedin">LinkedIn</a></li>
+      <li><a href="https://www.instagram.com/yume_traveltech" target="_blank" class="fa fa-instagram">Instagram</a></li>
+      <li><a href="https://www.facebook.com/profile.php?id=61577214082171" target="_blank" class="fa fa-facebook">Facebook</a></li>
+      <li><a href="https://www.linkedin.com/company/108587287" target="_blank" class="fa fa-linkedin">LinkedIn</a></li>
     </ul>
   </section>
 
@@ -121,14 +147,30 @@
   </section>
 
 <section class="newsletter-section">
- <h2 class="slide-in">Iscriviti alla newsletter</h2>
+  <h2 class="slide-in">Iscriviti alla newsletter</h2>
   <p>Non lasciarti sfuggire novità, offerte e approfondimenti!</p>
-  <form>
-    <input type="email" placeholder="La tua email">
+
+  <form id="newsletter-form" novalidate>
+    <input type="email" id="newsletter-email" name="email" placeholder="La tua email" required>
+
+<div class="checkbox-gdpr" style="margin:8px 0; display:flex; align-items:center; gap:8px;">
+  <input type="checkbox" id="consensoGDPR_newsletter" required>
+  <label for="consensoGDPR_newsletter">
+    Acconsento a ricevere comunicazioni via email da Yume Travel (newsletter).
+  </label>
+</div>
+
     <button type="submit">Iscriviti</button>
+
+    <!-- honeypot antispam (invisibile) -->
+    <input type="text" name="website" tabindex="-1" autocomplete="off"
+           style="position:absolute;left:-9999px;opacity:0;pointer-events:none">
   </form>
 
+  <p id="newsletter-stato" role="status" aria-live="polite"></p>
 </section>
+
+
 
     </div>
   </div>
@@ -270,6 +312,134 @@ logoutBtn.onclick = () => {
     document.getElementById("toggleNotificheBtn")?.classList.add("hidden");
   }
 });
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const ENDPOINT = "https://yume-clienti.azurewebsites.net/api/invio-yume";
+
+  // --- FORM CONTATTI ---
+  const formContatti = document.getElementById("contatti-form");
+  const stato = document.getElementById("stato-form");
+
+  if (formContatti) {
+    formContatti.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      stato.textContent = "⏳ Invio in corso…";
+
+      // GDPR obbligatorio
+      const cbox = document.getElementById("consensoGDPR_contatti");
+      if (!cbox || !cbox.checked) {
+        stato.textContent = "⚠️ Devi accettare il consenso GDPR.";
+        return;
+      }
+
+      const interessi = Array.from(
+        formContatti.querySelectorAll('input[name="interessi"]:checked')
+      ).map(i => i.value);
+
+      const dati = {
+        tipoRichiesta: "contatti",
+        nome: formContatti.nome.value.trim(),
+        email: formContatti.email.value.trim(),
+        messaggio: formContatti.messaggio.value.trim(),
+        interessi
+      };
+
+      try {
+        const res = await fetch(ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(dati)
+        });
+        const data = await res.json();
+        if (data.status === "ok" || data.status === "success") {
+          stato.textContent = "✅ Messaggio inviato con successo!";
+          formContatti.reset();
+        } else {
+          stato.textContent = "❌ Errore: " + (data.message || "Invio fallito.");
+        }
+      } catch (err) {
+        console.error(err);
+        stato.textContent = "❌ Errore di rete. Riprova.";
+      }
+    });
+  }
+
+  // --- FORM NEWSLETTER ---
+  const formNewsletter = document.getElementById("newsletter-form");
+  const statoNewsletter = document.getElementById("newsletter-stato");
+
+  if (formNewsletter) {
+    formNewsletter.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      statoNewsletter.textContent = "⏳ Invio in corso…";
+
+      const cbox = document.getElementById("consensoGDPR_newsletter");
+      if (!cbox || !cbox.checked) {
+        statoNewsletter.textContent = "⚠️ Devi accettare il consenso per iscriverti.";
+        return;
+      }
+
+      const dati = {
+        tipoRichiesta: "newsletter",
+        email: formNewsletter.email.value.trim()
+      };
+
+      try {
+        const res = await fetch(ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(dati)
+        });
+        const data = await res.json();
+        if (data.status === "ok" || data.status === "success") {
+          statoNewsletter.textContent = "✅ Iscrizione completata!";
+          formNewsletter.reset();
+        } else {
+          statoNewsletter.textContent = "❌ Errore: " + (data.message || "Invio fallito.");
+        }
+      } catch (err) {
+        console.error(err);
+        statoNewsletter.textContent = "❌ Errore di rete. Riprova.";
+      }
+    });
+  }
+});
+</script>
+
+<script>
+(function () {
+  function safeJSON(key){
+    try { return JSON.parse(sessionStorage.getItem(key) || "null"); }
+    catch { return null; }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const pre = safeJSON("contatti_prefill");
+    if (!pre) return;
+
+    const form   = document.querySelector("#contatti-form");
+    const msgEl  = document.querySelector("#msg") || document.querySelector("textarea[name='messaggio']");
+    const stato  = document.querySelector("#stato-form");
+
+    if (msgEl && pre.messaggio) msgEl.value = pre.messaggio;
+
+    if (Array.isArray(pre.interessi)) {
+      pre.interessi.forEach(val => {
+        const box = document.querySelector(`input[name="interessi"][value="${CSS.escape(val)}"]`);
+        if (box) box.checked = true;
+      });
+    }
+
+    if (stato) {
+      stato.textContent = "✍️ Messaggio precompilato dal viaggio Kokai.";
+      stato.style.color = "#8B2C2B";
+    }
+
+    sessionStorage.removeItem("contatti_prefill");
+  });
+})();
 </script>
 
 <script src="assets/script_prodotti.js"></script>

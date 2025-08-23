@@ -123,7 +123,7 @@ h1.hero-title {
 </div>
 
 <section class="cta-gruppo-kokai slide-in">
-  <a href="contatti.html" class="modern-btn light">Contattaci</a>
+<a href="contatti.html#contatti-form" class="modern-btn light">Contattaci</a>
 </section>
 
   <section class="focus-tags slide-in">
@@ -403,7 +403,7 @@ h1.hero-title {
 </section>
 
 <section class="cta-gruppo-kokai slide-in">
-  <a href="contatti.html" class="modern-btn light">Contattaci</a>
+<a href="contatti.html#contatti-form" class="modern-btn light">Contattaci</a>
 </section>
 
 </div>
@@ -595,6 +595,31 @@ Ho visto che è un percorso speciale tra città e tradizione giapponese, e mi pi
   });
 })();
 </script>
+
+<script>
+(function () {
+  function buildPrefill() {
+    return {
+      origine: "Kokai",
+      messaggio: `Ciao Yume, sono un viaggiatore curioso.
+Mi interessa il viaggio di gruppo **Kokai** (18 nov – 2 dic 2025).
+Vorrei info su disponibilità, modalità di prenotazione e cosa include. Grazie!`,
+      interessi: ["viaggi-di-gruppo","kokai"]
+    };
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // prendi tutti i link a contatti.html
+     document.querySelectorAll('a[href^="contatti.html"]').forEach(link => {
+      link.addEventListener("click", e => {
+        sessionStorage.setItem("contatti_prefill", JSON.stringify(buildPrefill()));
+        // si prosegue normalmente al link
+      });
+    });
+  });
+})();
+</script>
+
 
 <script>
   window.addEventListener("DOMContentLoaded", function () {
