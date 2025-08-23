@@ -5082,3 +5082,151 @@ body .indice-info-utili {
   cursor: pointer;
 }
 
+/* Tag selezionati di Choices per il campo Città — rosso YUME */
+#citta + .choices .choices__list--multiple .choices__item {
+  display: inline-block;
+  vertical-align: middle;
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-right: 3.75px;
+  margin-bottom: 3.75px;
+  background-color: #8B2C2B !important; /* rosso Yume */
+  border: 1px solid #8B2C2B !important; /* rosso Yume */
+  color: #fff !important;
+  word-break: break-all;
+  box-sizing: border-box;
+}
+
+/* ====== PRIORITÀ DI SOVRAPPOSIZIONE (Z‑INDEX) ====== */
+/* Yuki sempre sopra a WA overlay, carrello, mappe ecc. */
+#yuki-chat-avatar { z-index: 11000 !important; position: fixed; right: 25px; bottom: 25px; }
+#yuki-chatbox  { z-index: 11001 !important; position: fixed; right: 25px; bottom: 120px; }
+
+/* Overlay WA: sotto Yuki. Quando hidden, sparisce proprio. */
+.wa-overlay { position: fixed; inset: 0; z-index: 10010; display: grid; align-items: end; justify-items: start; padding: 0; }
+.wa-overlay.hidden { display: none !important; }
+
+/* Carrello sotto Yuki */
+.yume-cart-toggle { z-index: 10005; }
+.yume-cart        { z-index: 10006; }
+
+/* ====== MINI CHAT WHATSAPP (STILE/FORMAT DI YUKI) ====== */
+/* Avatar in basso a sinistra (speculare a Yuki) */
+#wa-chat-avatar{
+  position: fixed;
+  bottom: 25px;
+  left: 25px;
+  width: 60px; height: 60px;
+  background: #FFF8F4;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0,0,0,.2);
+  display: grid; place-items: center;
+  color: #25D366;               /* icona verde su fondo chiaro */
+  cursor: pointer;
+  transition: transform .25s ease;
+  z-index: 9998;                /* sotto Yuki */
+}
+#wa-chat-avatar:hover { transform: scale(1.05); }
+#wa-chat-avatar .fa-whatsapp { font-size: 28px; line-height: 1; }
+
+/* Box chat: stessa taglia/angoli/ombra di Yuki */
+#wa-chatbox{
+  position: fixed;               /* resta ancorata al viewport */
+  bottom: 100px;                 /* 100px sopra l’avatar, come Yuki */
+  left: 25px;
+  width: 320px; height: 450px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 18px rgba(0,0,0,.3);
+  display: flex; flex-direction: column;
+  overflow: hidden;              /* header fisso, body scrollabile */
+  z-index: 9998;
+  font-family: 'Quicksand', sans-serif;
+}
+#wa-chatbox.hidden { display: none; }
+
+/* Header allineato al tema Yume/Yuki */
+#wa-chatbox .wa-header{
+  background: #8B2C2B; color: #fff;
+  padding: 12px 16px;
+  font-weight: 700;
+  display:flex; align-items:center; justify-content: space-between;
+}
+#wa-chatbox .wa-header .wa-brand{
+  display:flex; align-items:center; gap:8px;
+}
+#wa-chatbox .wa-header .wa-brand i{ font-size: 18px; }
+#wa-chatbox .wa-header .wa-brand span{ font-size: 0.95rem; }
+
+/* ✖️ Nascosto: chiusura SOLO tramite icona a sinistra (come richiesto) */
+#wa-chatbox .wa-close{ display:none; }
+
+/* Corpo: flessibile e scrollabile se serve */
+#wa-chatbox .wa-body{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  overflow-y: auto;              /* se il contenuto supera l’altezza, si scrolla QUI */
+}
+
+/* Prefazione: molto ridotta; su mobile scompare */
+.wa-preface{
+  font-size: .78rem; line-height: 1.35;
+  color: #8B2C2B;
+  margin: 0 0 2px 0;
+  opacity: .9;
+}
+@media (max-width: 480px){ .wa-preface{ display:none; } }
+
+/* Textarea e hint coerenti con Yuki */
+#waMessage{
+  width: 100%;
+  min-height: 140px;             /* sufficiente per leggere/scrivere */
+  resize: vertical;
+  border: 1px solid #e3d9c4;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #FFF8F4; color: #1C1C1C;
+  font: inherit;
+}
+.wa-linkcheck{
+  display: flex; align-items: center; gap: 8px;
+  font-size: .92rem; color:#1C1C1C;
+  user-select: none;
+}
+
+/* Bottone invio come Yuki, ma gold on red */
+.wa-send{
+  width: 100%;
+  margin-top: 6px;
+  background: #8B2C2B; color: #C9A86A;
+  border: none; border-radius: 10px;
+  padding: 12px 16px;
+  font-weight: 700; cursor: pointer;
+  transition: background .18s ease, color .18s ease, transform .05s ease;
+}
+.wa-send:hover{ background:#721F1E; color:#fff; }
+.wa-send:active{ transform: scale(.99); }
+
+/* --- Responsive fine‑tuning --- */
+@media (max-width: 768px){
+  #wa-chatbox{
+    left: max(12px, env(safe-area-inset-left,0));
+    bottom: 100px;
+    width: min(92vw, 340px);     /* resta “tipo Yuki”, ma un filo più stretta */
+    height: 420px;               /* un po’ più bassa su mobile */
+  }
+  #wa-chat-avatar{
+    left: max(12px, env(safe-area-inset-left,0));
+  }
+}
+
+/* Riduce l’intensità delle transizioni se l’utente preferisce meno motion */
+@media (prefers-reduced-motion: reduce){
+  #wa-chat-avatar, .wa-send { transition: none; }
+}
+
