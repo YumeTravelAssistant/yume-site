@@ -5230,3 +5230,25 @@ body .indice-info-utili {
   #wa-chat-avatar, .wa-send { transition: none; }
 }
 
+.ribbon {
+  position: absolute;
+  top: 18px;
+  right: -50px;      /* spostata più fuori */
+  width: 200px;      /* più larga per il testo */
+  text-align: center;
+  line-height: 40px; /* più alto, più leggibile */
+  transform: rotate(40deg);
+  background: #8B2C2B;  /* Rosso Yume */
+  color: #fff;
+  font-weight: bold;
+  font-size: 16px;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  z-index: 5;
+}
+
+.pacchetti-box {
+  position: relative;
+  overflow: hidden;
+}
+
