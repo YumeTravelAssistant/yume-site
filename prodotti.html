@@ -120,6 +120,13 @@ h2.slide-in.visible {
     margin-bottom: 30px;
 }
 
+/* Card cliccabili */
+.pacchetti-box.clickable { cursor: pointer; }
+.pacchetti-box.clickable:focus, .pacchetti-box.clickable:focus-within {
+  outline: 2px solid #C9A86A; outline-offset: 2px;
+}
+
+
 </style>
 
 </head>
@@ -181,50 +188,53 @@ h2.slide-in.visible {
 
   <div class="pacchetti-wrapper">
     
-    <!-- Guida Tokyo e Dintorni -->
-    <div class="pacchetti-box slide-in">
-      <img src="prodotti/tokyo.jpg" alt="Guida Tokyo e Dintorni">
-      <div class="card-content">
-        <h3>Guida Tokyo e Dintorni</h3>
-        <p>Un itinerario ragionato tra i quartieri più iconici, luoghi nascosti e gite perfette da Tokyo.</p>
-        <ul class="icon-list">
-          <li><i class="fa fa-map"></i> 90+ pagine PDF</li>
-          <li><i class="fa fa-bolt"></i> Accesso immediato</li>
-        </ul>
-        <div class="prodotto-prezzo">€19,90</div>
-        <button class="modern-btn" onclick="aggiungiAlCarrello('Guida Tokyo e Dintorni', 29)">Aggiungi al carrello</button>
-      </div>
-    </div>
+<!-- Guida Tokyo e Dintorni -->
+<div class="pacchetti-box slide-in clickable" data-link="prodotti-tokyo.html"
+     tabindex="0" role="link" aria-label="Apri scheda prodotto: Guida Tokyo e Dintorni">
+  <img src="prodotti/tokyo.jpg" alt="Guida Tokyo e Dintorni">
+  <div class="card-content">
+    <h3>Guida Tokyo e Dintorni</h3>
+    <p>Un itinerario ragionato tra i quartieri più iconici, luoghi nascosti e gite perfette da Tokyo.</p>
+    <ul class="icon-list">
+      <li><i class="fa fa-map"></i> 90+ pagine PDF</li>
+      <li><i class="fa fa-bolt"></i> Accesso immediato</li>
+    </ul>
+    <div class="prodotto-prezzo">€19,90</div>
+    <button class="modern-btn" onclick="aggiungiAlCarrello('Guida Tokyo e Dintorni', 19.9)">Aggiungi al carrello</button>
+  </div>
+</div>
 
-    <!-- Guida Giappone Inclusivo -->
-    <div class="pacchetti-box slide-in">
-      <img src="prodotti/inclusivo.jpg" alt="Guida Giappone Inclusivo">
-      <div class="card-content">
-        <h3>Guida Giappone Inclusivo</h3>
-        <p>Accessibilità, disabilità, neurodivergenze e percorsi personalizzati: il Giappone che accoglie tutti.</p>
-        <ul class="icon-list">
-          <li><i class="fa fa-universal-access"></i> Guida inclusiva</li>
-          <li><i class="fa fa-heart"></i> Pensata per ogni esigenza</li>
-        </ul>
-        <div class="prodotto-prezzo">€7,90</div>
-        <button class="modern-btn" onclick="aggiungiAlCarrello('Guida Giappone Inclusivo', 25)">Aggiungi al carrello</button>
-      </div>
-    </div>
+<!-- Guida Giappone Inclusivo -->
+<div class="pacchetti-box slide-in clickable" data-link="prodotti-inclusivita.html"
+     tabindex="0" role="link" aria-label="Apri scheda prodotto: Guida Giappone Inclusivo">
+  <img src="prodotti/inclusivo.jpg" alt="Guida Giappone Inclusivo">
+  <div class="card-content">
+    <h3>Guida Giappone Inclusivo</h3>
+    <p>Accessibilità, disabilità, neurodivergenze e percorsi personalizzati: il Giappone che accoglie tutti.</p>
+    <ul class="icon-list">
+      <li><i class="fa fa-universal-access"></i> Guida inclusiva</li>
+      <li><i class="fa fa-heart"></i> Pensata per ogni esigenza</li>
+    </ul>
+    <div class="prodotto-prezzo">€7,90</div>
+    <button class="modern-btn" onclick="aggiungiAlCarrello('Guida Giappone Inclusivo', 7.9)">Aggiungi al carrello</button>
+  </div>
+</div>
 
-    <!-- Guida Usi e Costumi Giapponesi -->
-    <div class="pacchetti-box slide-in">
-      <img src="prodotti/usi.jpg" alt="Guida Usi e Costumi Giapponesi">
-      <div class="card-content">
-        <h3>Guida Usi e Costumi Giapponesi</h3>
-        <p>Comportamenti, regole, espressioni utili e situazioni reali per non sentirti mai fuori posto.</p>
-        <ul class="icon-list">
-          <li><i class="fa fa-language"></i> Frasario e contesto</li>
-          <li><i class="fa fa-lightbulb-o"></i> Conoscere per rispettare</li>
-        </ul>
-        <div class="prodotto-prezzo">€5,90</div>
-        <button class="modern-btn" onclick="aggiungiAlCarrello('Guida Usi e Costumi Giapponesi', 19)">Aggiungi al carrello</button>
-      </div>
-    </div>
+<!-- Guida Usi e Costumi Giapponesi -->
+<div class="pacchetti-box slide-in clickable" data-link="prodotti-usanze.html"
+     tabindex="0" role="link" aria-label="Apri scheda prodotto: Guida Usi e Costumi Giapponesi">
+  <img src="prodotti/usi.jpg" alt="Guida Usi e Costumi Giapponesi">
+  <div class="card-content">
+    <h3>Guida Usi e Costumi Giapponesi</h3>
+    <p>Comportamenti, regole, espressioni utili e situazioni reali per non sentirti mai fuori posto.</p>
+    <ul class="icon-list">
+      <li><i class="fa fa-language"></i> Frasario e contesto</li>
+      <li><i class="fa fa-lightbulb-o"></i> Conoscere per rispettare</li>
+    </ul>
+    <div class="prodotto-prezzo">€5,90</div>
+    <button class="modern-btn" onclick="aggiungiAlCarrello('Guida Usi e Costumi Giapponesi', 5.9)">Aggiungi al carrello</button>
+  </div>
+</div>
 
   </div>
 </section>
@@ -254,17 +264,70 @@ h2.slide-in.visible {
   <span id="cartCount" class="cart-count-badge">0</span>
 </button>
 
+<!-- Avatar flottante: CONTATTACI -->
+<div id="contattaci-avatar">
+  <a href="contatti.html#contatti-form" aria-label="Contattaci">Contattaci</a>
+</div>
+
+<!-- ===== Mini Chat WhatsApp (LEFT) — Prodotti ===== -->
+<div id="wa-chat-avatar" class="wa-avatar-left" aria-label="Apri chat WhatsApp" title="Apri chat WhatsApp">
+  <i class="fa fa-whatsapp" aria-hidden="true"></i>
+</div>
+
+<div id="waMiniChat" class="wa-overlay hidden" aria-hidden="true">
+  <div id="wa-chatbox" class="wa-box">
+    <div class="wa-header">
+      <div class="wa-brand">
+        <i class="fa fa-whatsapp" aria-hidden="true"></i>
+        <span>Parla con Yume</span>
+      </div>
+      <button class="wa-close" type="button" aria-label="Chiudi">×</button>
+    </div>
+
+    <div class="wa-body">
+      <p class="wa-preface">
+        Vuoi un consiglio sulle nostre <strong>guide e risorse digitali</strong>? <br>
+        Scrivici su WhatsApp, il messaggio è già pronto!
+      </p>
+
+      <textarea id="waMessage" rows="5" placeholder="Scrivi qui..."></textarea>
+
+      <label class="wa-linkcheck">
+        <input id="waIncludeLink" type="checkbox" checked />
+        Includi il link a questa pagina
+      </label>
+
+      <button id="waSendBtn" class="wa-send">Invia su WhatsApp</button>
+    </div>
+  </div>
+</div>
 
 <footer class="main-footer">
   <div class="footer-social">
     <p><strong>Seguici su:</strong></p>
     <a href="https://www.instagram.com/yumeviaggi" target="_blank" aria-label="Instagram" class="fa fa-instagram"></a>
+    <a href="https://www.tiktok.com/@yumetraveltech" target="_blank" aria-label="TikTok" class="fa fa-music"></a>
+    <a href="https://wa.me/393703081341" target="_blank" aria-label="WhatsApp" class="fa fa-whatsapp"></a>
     <a href="https://yuta-travel.com" target="_blank" aria-label="Sito YUTA" class="fa fa-globe"></a>
   </div>
-  <p><a href="privacy.html">Privacy Policy</a>   <a href="termini-condizioni.html">Termini e Condizioni</a></p>
- <p><a href="cookie-policy.html">Cookie Policy</a>   <a href="#" onclick="apriBannerCookie()">Modifica preferenze cookie</a></p>
 
-  <p class="footer-copy">© 2025 Yume Travel Tech – Tutti i diritti riservati.</p>
+  <p>
+    <a href="privacy.html">Privacy Policy</a> |
+    <a href="termini-condizioni.html">Termini e Condizioni</a> |
+    <a href="cookie-policy.html">Cookie Policy</a> |
+    <a href="#" onclick="apriBannerCookie()">Modifica preferenze cookie</a>
+  </p>
+
+  <p class="footer-copy">
+    © 2025 Yume Travel Tech S.r.l. – Tutti i diritti riservati. <br>
+    C.F./P.IVA 02115540474 – Via Marconi 933/A, 51036 Larciano (PT) – Capitale sociale € 10.000,00 – REA PT-623031 <br>
+    PEC: <a href="mailto:yumetravel@pec.it">yumetravel@pec.it</a> – Email: <a href="mailto:yume.traveltech@gmail.com">yume.traveltech@gmail.com</a>
+  </p>
+
+  <p class="footer-legal">
+    Polizza RC: Revo Insurance S.p.A., n. OX00053974. <br>
+    Protezione insolvenza/fallimento: Nobis Compagnia di Assicurazioni S.p.A., n. 204143050.
+  </p>
 </footer>
 
 
@@ -310,6 +373,130 @@ h2.slide-in.visible {
       img.style.borderRadius = '50%';
     }
   });
+</script>
+
+<script>
+(function(){
+  const root = document.documentElement;
+
+  function detectWhatsAppGap(){
+    const cands = Array.from(document.querySelectorAll('[class*="whatsapp"], [href*="wa.me"], [href*="api.whatsapp.com"]'));
+    const btn = cands.find(el => {
+      const style = getComputedStyle(el);
+      if (style.position !== 'fixed') return false;
+      const r = el.getBoundingClientRect();
+      return r.left < (window.innerWidth / 2) && (window.innerHeight - r.bottom) < 150;
+    });
+    if (!btn){ root.style.setProperty('--wa-gap','0px'); return; }
+    const r = btn.getBoundingClientRect();
+    root.style.setProperty('--wa-gap', (Math.ceil(r.height)+12)+'px');
+  }
+
+  function detectCookieGap(){
+    const cand = document.getElementById('cookie-banner');
+    if (!cand){ root.style.setProperty('--cookie-gap','0px'); return; }
+    const style = getComputedStyle(cand);
+    const isFixed = style.position==='fixed' && (style.bottom==='0px' || style.bottom==='0');
+    if (!isFixed || cand.classList.contains('hidden')){ root.style.setProperty('--cookie-gap','0px'); return; }
+    const r = cand.getBoundingClientRect();
+    root.style.setProperty('--cookie-gap', (Math.max(0,Math.ceil(r.height)+10))+'px');
+  }
+
+  window.addEventListener('DOMContentLoaded', ()=>{
+    detectWhatsAppGap();
+    detectCookieGap();
+
+    // Se già su contatti.html → scrolla al form
+    if (location.pathname.endsWith('contatti.html')){
+      document.querySelector('#contattaci-avatar a')?.addEventListener('click',(e)=>{
+        const target = document.getElementById('contatti-form');
+        if(target){
+          e.preventDefault();
+          target.scrollIntoView({behavior:'smooth',block:'start'});
+          target.style.outline='2px solid #8B2C2B';
+          setTimeout(()=>{target.style.outline='none'},1500);
+        }
+      });
+    }
+  });
+  window.addEventListener('resize', detectWhatsAppGap);
+  const cookie=document.getElementById('cookie-banner');
+  if(cookie && 'MutationObserver' in window){
+    new MutationObserver(detectCookieGap).observe(cookie,{attributes:true,attributeFilter:['class','style']});
+  }
+})();
+</script>
+
+
+<script>
+// ===== Mini Chat WhatsApp — Prodotti (Guide) =====
+(function () {
+  const WHATSAPP_NUMBER = "393703081341"; // tuo numero
+
+  const avatar      = document.getElementById("wa-chat-avatar");
+  const overlay     = document.getElementById("waMiniChat");
+  const box         = document.getElementById("wa-chatbox");
+  const closeB      = box?.querySelector(".wa-close");
+  const sendB       = document.getElementById("waSendBtn");
+  const area        = document.getElementById("waMessage");
+  const includeLink = document.getElementById("waIncludeLink");
+
+  // Prefill per prodotti/guide
+  function templateMessaggioProdotti(nome){
+    const who = nome && nome.trim() ? nome.trim() : "un viaggiatore curioso";
+    return `Ciao Yume, sono ${who}! 📚✨
+Sto curiosando tra le vostre guide digitali e mi piacerebbe un consiglio:
+quale mi consigliate per partire col piede giusto?
+Tokyo e dintorni, usi e costumi, inclusività… voglio la dritta giusta! 😉`;
+  }
+
+  function buildPrefill(){
+    let nome = "";
+    try {
+      const p1 = JSON.parse(sessionStorage.getItem("profiloUtente") || "null");
+      const p2 = JSON.parse(localStorage.getItem("profiloUtente") || "null");
+      const p  = p1?.profilo || p1 || p2;
+      nome = (p?.nome || p?.Nome || "").toString().trim();
+    } catch {}
+    return templateMessaggioProdotti(nome);
+  }
+
+  function toggleWA() {
+    if (!overlay) return;
+    const willOpen = overlay.classList.contains("hidden");
+    overlay.classList.toggle("hidden");
+    if (willOpen) {
+      if (area) area.value = buildPrefill();
+      setTimeout(() => area?.focus(), 40);
+    }
+  }
+
+  function openWhatsAppWithMessage(phone, text){
+    const encoded  = encodeURIComponent(text);
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isMobile) {
+      window.location.href = `whatsapp://send?phone=${phone}&text=${encoded}`;
+      setTimeout(() => window.open(`https://wa.me/${phone}?text=${encoded}`, '_blank', 'noopener'), 800);
+    } else {
+      window.open(`https://wa.me/${phone}?text=${encoded}`, '_blank', 'noopener');
+    }
+  }
+
+  function sendWA(){
+    const testo = (area?.value || buildPrefill()).trim();
+    if (!testo) { alert("Scrivi un messaggio oppure chiudi la chat."); return; }
+    let payload = testo;
+    if (includeLink?.checked) payload += `\n\nLink: ${window.location.href}`;
+    openWhatsAppWithMessage(WHATSAPP_NUMBER, payload);
+    overlay?.classList.add("hidden");
+  }
+
+  avatar?.addEventListener("click", toggleWA);
+  closeB?.addEventListener("click", toggleWA);
+  sendB?.addEventListener("click", sendWA);
+  overlay?.addEventListener("click", (e) => { if (e.target === overlay) overlay.classList.add("hidden"); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !overlay.classList.contains("hidden")) overlay.classList.add("hidden"); });
+})();
 </script>
 
 <script>
@@ -368,6 +555,36 @@ logoutBtn.onclick = () => {
   }
 });
   </script>
+
+<script>
+  // Navigazione quando si tocca/clicca la card (ma NON se si clicca il bottone)
+  document.querySelectorAll('.pacchetti-box.clickable').forEach(card => {
+    const go = url => window.location.href = url;
+
+    card.addEventListener('click', e => {
+      if (e.target.closest('button')) return; // non hijack del bottone carrello
+      const url = card.dataset.link;
+      if (!url) return;
+      // supporta Ctrl/Cmd click per aprire in nuova scheda
+      if (e.metaKey || e.ctrlKey || e.button === 1) {
+        window.open(url, '_blank', 'noopener');
+      } else {
+        go(url);
+      }
+    });
+
+    // Accessibilità tastiera: Enter/Space aprono la scheda
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        if (document.activeElement && document.activeElement.closest('button')) return;
+        e.preventDefault();
+        const url = card.dataset.link;
+        if (url) go(url);
+      }
+    });
+  });
+</script>
+
 
 <!-- jQuery PRIMA -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

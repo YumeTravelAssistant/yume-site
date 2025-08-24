@@ -3,21 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Informativa Privacy - Yume Travel Tech</title>
+  <title>Informativa Privacy (GDPR) - Yume Travel Tech</title>
   <link rel="icon" type="image/png" href="favicon.ico" />
+
+  <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Raleway:wght@300;500;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Stili -->
   <link rel="stylesheet" href="assets/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
+
+<!-- NAVBAR (come privacy.html) -->
 <nav class="navbar">
   <div class="navbar-left">
     <img src="assets/logo-yume.jpg" alt="Logo YUME" class="logo-navbar">
   </div>
   <button id="toggleNotificheBtn" class="notif-btn" onclick="toggleNotifiche()" aria-label="Notifiche">
-  <i class="fa fa-bell fa-lg"></i>
-  <span id="notifCount" class="notif-count">0</span>
-</button>
+    <i class="fa fa-bell fa-lg"></i>
+    <span id="notifCount" class="notif-count">0</span>
+  </button>
   <button class="hamburger" onclick="toggleSidebar()">☰</button>
 </nav>
 
@@ -38,87 +43,191 @@
   <a href="log-in.html">Area Personale</a>
 </div>
 
+<!-- CONTENUTO (stile e box come privacy.html) -->
 <main class="privacy-wrapper">
-  <h1>Informativa sulla Privacy</h1>
-  <p>Questa pagina descrive le modalità di gestione del sito in riferimento al trattamento dei dati personali degli utenti che lo consultano.</p>
+  <h1>Informativa sul Trattamento dei Dati Personali (GDPR)</h1>
+  <p>Trasparenza, controllo e sicurezza dei tuoi dati.</p>
 
   <h2>Titolare del trattamento</h2>
-  <p>Yume Travel Tech, email: <a href="mailto:info@yumetraveltech.com">info@yumetraveltech.com</a>.</p>
+  <p>
+    <strong>Yume Travel Tech S.r.l.</strong><br>
+    Sede legale: Via G. Marconi 933/A, 51036 Larciano (PT)<br>
+    P.IVA e C.F.: 02115540474 – Capitale Sociale €10.000,00 – REA PT-623031<br>
+    PEC: <a href="mailto:yumetravel@pec.it">yumetravel@pec.it</a> – Email: <a href="mailto:yume.traveltech@gmail.com">yume.traveltech@gmail.com</a><br>
+    <strong>Ultimo aggiornamento:</strong> 19 agosto 2025<br>
+    <strong>Sito web:</strong> <a href="https://yume-travel.com" target="_blank" rel="noopener">yume-travel.com</a>
+  </p>
 
-  <h2>Tipologie di dati raccolti</h2>
+  <h2>1. Tipologia di dati trattati</h2>
   <ul>
-    <li>Dati forniti volontariamente dall'utente tramite i moduli di registrazione o contatto (nome, cognome, email, password).</li>
-    <li>Dati di navigazione raccolti tramite cookie tecnici e analitici.</li>
+    <li><strong>Dati anagrafici:</strong> nome, cognome, data e luogo di nascita, residenza, codice fiscale</li>
+    <li><strong>Dati di contatto:</strong> telefono, email</li>
+    <li><strong>Dati identificativi:</strong> documento d’identità, passaporto</li>
+    <li><strong>Dati contrattuali e di pagamento:</strong> transazioni effettuate tramite PayPal, Stripe o analoghi</li>
+    <li><strong>Preferenze di viaggio</strong> e servizi richiesti</li>
+    <li><strong>Dati particolari (ex sensibili):</strong> condizioni di salute, allergie, intolleranze alimentari, disabilità, esigenze religiose o alimentari (previo consenso esplicito)</li>
+    <li><strong>Dati di utilizzo e navigazione:</strong> indirizzo IP, tipo di browser, pagine visitate, tempo di permanenza, raccolti tramite cookie e strumenti di analisi (es. Google Analytics)</li>
+    <li><strong>Dati per marketing e profilazione:</strong> interazioni con campagne Google Ads, Meta Ads, iscrizione a newsletter tramite Mailchimp o servizi simili</li>
   </ul>
 
-  <h2>Finalità del trattamento</h2>
+  <h2>2. Finalità e base giuridica del trattamento</h2>
   <ul>
-    <li>Fornire i servizi richiesti e gestire prenotazioni o consulenze.</li>
-    <li>Rispondere a domande o richieste di assistenza.</li>
-    <li>Inviare comunicazioni promozionali solo previo esplicito consenso.</li>
+    <li>Esecuzione del contratto di viaggio (prenotazioni, emissione documenti, gestione pagamenti) – <strong>Art. 6, par. 1, lett. b) GDPR</strong></li>
+    <li>Adempimento di obblighi di legge (fiscali, contabili, assicurativi, pubblica sicurezza) – <strong>Art. 6, par. 1, lett. c) GDPR</strong></li>
+    <li>Tutela dei diritti del Titolare (es. recupero crediti) – <strong>Art. 6, par. 1, lett. f) GDPR</strong></li>
+    <li>Gestione di dati particolari per esigenze sanitarie, alimentari, religiose – <strong>Art. 9, par. 2, lett. a) GDPR</strong> (consenso)</li>
+    <li>Invio comunicazioni promozionali e newsletter – <strong>Art. 6, par. 1, lett. a) GDPR</strong> (consenso)</li>
+    <li>Analisi statistiche e miglioramento servizi tramite strumenti come Google Analytics</li>
+    <li>Gestione di campagne pubblicitarie tramite Google Ads, Meta Ads e simili</li>
+    <li>Email marketing tramite piattaforme quali Mailchimp</li>
   </ul>
 
-  <h2>Modalità del trattamento</h2>
-  <p>I dati personali sono trattati con strumenti automatizzati per il tempo strettamente necessario a conseguire gli scopi per cui sono stati raccolti, nel rispetto delle misure di sicurezza previste dal GDPR.</p>
+  <h2>3. Modalità di trattamento</h2>
+  <p>I dati sono trattati con strumenti elettronici e cartacei, con misure di sicurezza adeguate a garantirne integrità, riservatezza e protezione da accessi non autorizzati.</p>
 
-  <h2>Diritti degli interessati</h2>
-  <p>L'utente può in qualsiasi momento esercitare i diritti previsti dagli artt. 15-22 del GDPR scrivendo a <a href="mailto:info@yumetraveltech.com">info@yumetraveltech.com</a>.</p>
+  <h2>4. Comunicazione e diffusione</h2>
+  <p>I dati possono essere comunicati a:</p>
+  <ul>
+    <li>Fornitori di servizi turistici (hotel, compagnie aeree, guide, assicurazioni)</li>
+    <li>Fornitori di servizi informatici, di analisi e marketing (es. Google, Meta, Mailchimp)</li>
+    <li>Provider di pagamento (PayPal, Stripe)</li>
+    <li>Autorità competenti per obblighi di legge</li>
+    <li>Professionisti e consulenti (legali, contabili)</li>
+  </ul>
+  <p>I dati <strong>non</strong> saranno diffusi a terzi per fini commerciali senza consenso espresso.</p>
 
-<h2>Cookie</h2>
-<p>
-  Questo sito utilizza:
-</p>
-<ul>
-  <li><strong>Cookie tecnici</strong> necessari al corretto funzionamento del sito e alla navigazione. Non richiedono consenso.</li>
-  <li><strong>Cookie analitici</strong> (Google Analytics) anonimizzati, per finalità statistiche aggregate, attivati solo previo consenso esplicito dell’utente.</li>
-  <li><strong>Cookie di terze parti</strong> (es. widget esterni come Viator, video, chatbot), che potrebbero raccogliere dati per finalità diverse. Sono attivati solo con il consenso dell’utente.</li>
-</ul>
-<p>
-  Al primo accesso viene mostrato un banner che consente di accettare o rifiutare l’uso dei cookie non tecnici. In ogni momento è possibile modificare la scelta cancellando i cookie dal proprio browser.
-</p>
+  <h2>5. Trasferimento dati extra-UE</h2>
+  <p>In caso di viaggi fuori dall’UE o utilizzo di servizi (es. Google, Meta, Mailchimp), i dati possono essere trasferiti verso paesi terzi nel rispetto del GDPR, adottando Clausole Contrattuali Standard o altre misure idonee.</p>
 
+  <h2>6. Periodo di conservazione</h2>
+  <ul>
+    <li><strong>Dati contrattuali e fiscali:</strong> 10 anni dalla cessazione del rapporto</li>
+    <li><strong>Dati particolari:</strong> solo per la durata del viaggio e servizi connessi</li>
+    <li><strong>Dati marketing:</strong> fino a revoca del consenso</li>
+  </ul>
+
+  <h2>7. Diritti dell’interessato</h2>
+  <p>Puoi esercitare i diritti previsti dagli artt. 15–22 GDPR, tra cui:</p>
+  <ul>
+    <li>Accesso, rettifica, cancellazione dei dati</li>
+    <li>Limitazione o opposizione al trattamento</li>
+    <li>Portabilità dei dati</li>
+    <li>Revoca del consenso in qualsiasi momento</li>
+    <li>Reclamo al Garante per la protezione dei dati personali</li>
+  </ul>
+  <p>Per esercitare i diritti: scrivi a <a href="mailto:yume.traveltech@gmail.com">yume.traveltech@gmail.com</a>.</p>
+
+  <h2>8. Natura del conferimento</h2>
+  <p>Il conferimento dei dati è necessario per l’esecuzione del contratto. In mancanza, non potremo erogare i servizi richiesti. Il conferimento dei dati particolari e per finalità di marketing è facoltativo, ma senza di essi non potremo personalizzare servizi o inviarti offerte.</p>
+
+  <h2>9. Cookie e tecnologie di tracciamento</h2>
+  <p>Il sito utilizza:</p>
+  <ul>
+    <li><strong>Cookie tecnici</strong> per il funzionamento del sito</li>
+    <li><strong>Cookie analitici</strong> (Google Analytics e simili) per statistiche</li>
+    <li><strong>Cookie di profilazione</strong> per campagne Google Ads, Meta Ads</li>
+  </ul>
+  <p>Puoi gestire le preferenze tramite il banner cookie o le impostazioni del browser.</p>
+
+  <h2>10. Sicurezza dei dati</h2>
+  <p>Adottiamo misure tecniche e organizzative per proteggere i tuoi dati. Tuttavia, nessun sistema è sicuro al 100%.</p>
+
+  <h2>11. Contatti</h2>
+  <p>
+    <strong>Titolare:</strong> Yume Travel Tech S.r.l.<br>
+    <strong>Email:</strong> <a href="mailto:yume.traveltech@gmail.com">yume.traveltech@gmail.com</a><br>
+    <strong>PEC:</strong> <a href="mailto:yumetravel@pec.it">yumetravel@pec.it</a><br>
+    <strong>Telefono:</strong> +39 3703081341<br>
+    <strong>Indirizzo:</strong> Via G. Marconi 933/A – 51036 Larciano (PT)
+  </p>
 </main>
 
-<!-- Carrello Laterale Yume -->
+<!-- CARRELLO (come privacy.html) -->
 <div id="carrelloContainer" class="yume-cart hidden">
   <div class="cart-header">
     <h3>Il tuo carrello</h3>
     <button onclick="toggleCarrello()" class="close-cart" aria-label="Chiudi il carrello">×</button>
   </div>
-
   <ul id="listaCarrello" class="cart-list"></ul>
-
   <div class="cart-footer">
-    <div class="cart-total">
-      Totale: <span id="carrelloTotale">€0,00</span>
-    </div>
+    <div class="cart-total">Totale: <span id="carrelloTotale">€0,00</span></div>
     <button class="negozio btn" onclick="vaiAllaCassa()">Procedi al pagamento</button>
   </div>
 </div>
 
-<!-- Pulsante flottante fisso con icona -->
+<!-- Pulsante flottante carrello -->
 <button id="toggleCarrelloBtn" class="yume-cart-toggle" onclick="toggleCarrello()" aria-label="Apri il carrello">
   <i class="fa fa-shopping-bag fa-lg"></i>
   <span id="cartCount" class="cart-count-badge">0</span>
 </button>
 
+<!-- Avatar flottante: CONTATTACI -->
+<div id="contattaci-avatar">
+  <a href="contatti.html#contatti-form" aria-label="Contattaci">Contattaci</a>
+</div>
+
+<!-- Mini Chat WhatsApp (non invasiva) -->
+<div id="wa-chat-avatar" class="wa-avatar-left" aria-label="Apri chat WhatsApp" title="Apri chat WhatsApp">
+  <i class="fa fa-whatsapp" aria-hidden="true"></i>
+</div>
+
+<div id="waMiniChat" class="wa-overlay hidden" aria-hidden="true">
+  <div id="wa-chatbox" class="wa-box">
+    <div class="wa-header">
+      <div class="wa-brand">
+        <i class="fa fa-whatsapp" aria-hidden="true"></i>
+        <span>Parla con Yume</span>
+      </div>
+      <button class="wa-close" type="button" aria-label="Chiudi">×</button>
+    </div>
+    <div class="wa-body">
+      <p class="wa-preface">
+        Domande sulla Privacy o sul trattamento dei dati?<br>
+        Scrivici su WhatsApp: ti rispondiamo subito.
+      </p>
+      <textarea id="waMessage" rows="5" placeholder="Scrivi qui..."></textarea>
+      <label class="wa-linkcheck">
+        <input id="waIncludeLink" type="checkbox" checked />
+        Includi il link a questa pagina
+      </label>
+      <button id="waSendBtn" class="wa-send">Invia su WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER (identico a faq.html) -->
 <footer class="main-footer">
   <div class="footer-social">
     <p><strong>Seguici su:</strong></p>
     <a href="https://www.instagram.com/yumeviaggi" target="_blank" aria-label="Instagram" class="fa fa-instagram"></a>
+    <a href="https://www.tiktok.com/@yumetraveltech" target="_blank" aria-label="TikTok" class="fa fa-music"></a>
+    <a href="https://wa.me/393703081341" target="_blank" aria-label="WhatsApp" class="fa fa-whatsapp"></a>
     <a href="https://yuta-travel.com" target="_blank" aria-label="Sito YUTA" class="fa fa-globe"></a>
   </div>
-  <p><a href="privacy.html">Privacy Policy</a>   <a href="termini-condizioni.html">Termini e Condizioni</a></p>
- <p><a href="cookie-policy.html">Cookie Policy</a>   <a href="#" onclick="apriBannerCookie()">Modifica preferenze cookie</a></p>
-  <p class="footer-copy">© 2025 Yume Travel Tech – Tutti i diritti riservati.</p>
+
+  <p>
+    <a href="privacy.html">Privacy Policy</a> |
+    <a href="termini-condizioni.html">Termini e Condizioni</a> |
+    <a href="cookie-policy.html">Cookie Policy</a> |
+    <a href="#" onclick="apriBannerCookie()">Modifica preferenze cookie</a>
+  </p>
+
+  <p class="footer-copy">
+    © 2025 Yume Travel Tech S.r.l. – Tutti i diritti riservati. <br>
+    C.F./P.IVA 02115540474 – Via Marconi 933/A, 51036 Larciano (PT) – Capitale sociale € 10.000,00 – REA PT-623031 <br>
+    PEC: <a href="mailto:yumetravel@pec.it">yumetravel@pec.it</a> – Email: <a href="mailto:yume.traveltech@gmail.com">yume.traveltech@gmail.com</a>
+  </p>
+
+  <p class="footer-legal">
+    Polizza RC: Revo Insurance S.p.A., n. OX00053974. <br>
+    Protezione insolvenza/fallimento: Nobis Compagnia di Assicurazioni S.p.A., n. 204143050.
+  </p>
 </footer>
 
-<!-- Avatar Chatbot Yuki -->
+<!-- CHAT YUKI (come privacy.html) -->
 <div id="yuki-chat-avatar" onclick="toggleYukiChat()" title="Hai bisogno di aiuto?">
   <img src="assets/yuki-avatar.png" alt="Yuki" />
 </div>
-
-<!-- Finestra Chat -->
 <div id="yuki-chatbox" class="hidden">
   <div class="chatbox-header">
     <span>Yuki, assistente AI</span>
@@ -131,7 +240,9 @@
   </div>
 </div>
 
+<!-- SCRIPT -->
 <script>
+  // Avatar Yuki (come privacy.html)
   window.addEventListener("DOMContentLoaded", function () {
     const el = document.querySelector('#yuki-chat-avatar');
     if (!el) return;
@@ -155,73 +266,156 @@
   });
 </script>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const profilo = JSON.parse(sessionStorage.getItem("profiloUtente"));
-      if (profilo) {
-        document.querySelectorAll("a[href='log-in.html']").forEach(link => {
-          link.href = "area-clienti.html";
-        });
-        const sidebar = document.querySelector(".sidebar");
-        if (sidebar && !document.getElementById("userBox")) {
-          const userBox = document.createElement("div");
-          userBox.id = "userBox";
-          userBox.style.marginTop = "30px";
-          userBox.style.padding = "10px";
-          userBox.style.textAlign = "center";
-          userBox.style.borderTop = "1px solid #ccc";
-          const avatar = document.createElement("img");
-          avatar.src = localStorage.getItem("userAvatar") || "https://api.dicebear.com/7.x/avataaars/svg?seed=yume";
-          avatar.alt = "Avatar";
-          avatar.style.width = "60px";
-          avatar.style.height = "60px";
-          avatar.style.borderRadius = "50%";
-          avatar.style.objectFit = "cover";
-          avatar.style.border = "2px solid #C9A86A";
-          avatar.style.marginBottom = "8px";
-          const logoutBtn = document.createElement("button");
-          logoutBtn.textContent = "Logout";
-          logoutBtn.style.marginTop = "6px";
-          logoutBtn.style.background = "#8B2C2B";
-          logoutBtn.style.color = "#fff";
-          logoutBtn.style.border = "none";
-          logoutBtn.style.padding = "6px 12px";
-          logoutBtn.style.borderRadius = "20px";
-          logoutBtn.style.cursor = "pointer";
+<script>
+/* Gap WA/cookie + contattaci - non invasivo */
+(function(){
+  const root = document.documentElement;
+  function detectWhatsAppGap(){
+    const cands = Array.from(document.querySelectorAll('[class*="whatsapp"], [href*="wa.me"], [href*="api.whatsapp.com"]'));
+    const btn = cands.find(el => {
+      const style = getComputedStyle(el);
+      if (style.position !== 'fixed') return false;
+      const r = el.getBoundingClientRect();
+      return r.left < (window.innerWidth / 2) && (window.innerHeight - r.bottom) < 150;
+    });
+    if (!btn){ root.style.setProperty('--wa-gap','0px'); return; }
+    const r = btn.getBoundingClientRect();
+    root.style.setProperty('--wa-gap', (Math.ceil(r.height)+12)+'px');
+  }
+  function detectCookieGap(){
+    const cand = document.getElementById('cookie-banner');
+    if (!cand){ root.style.setProperty('--cookie-gap','0px'); return; }
+    const style = getComputedStyle(cand);
+    const isFixed = style.position==='fixed' && (style.bottom==='0px' || style.bottom==='0');
+    if (!isFixed || cand.classList.contains('hidden')){ root.style.setProperty('--cookie-gap','0px'); return; }
+    const r = cand.getBoundingClientRect();
+    root.style.setProperty('--cookie-gap', (Math.max(0,Math.ceil(r.height)+10))+'px');
+  }
+  window.addEventListener('DOMContentLoaded', ()=>{ detectWhatsAppGap(); detectCookieGap(); });
+  window.addEventListener('resize', detectWhatsAppGap);
+})();
+</script>
 
-logoutBtn.onclick = () => {
-  sessionStorage.removeItem("profiloUtente");
-  localStorage.removeItem("userAvatar");
-  localStorage.removeItem("codice_cliente"); // ✅ nuovo
-  window.location.href = "index.html";
-};
+<script>
+// Mini Chat WhatsApp — testo privacy
+(function () {
+  const WHATSAPP_NUMBER = "393703081341";
+  const avatar      = document.getElementById("wa-chat-avatar");
+  const overlay     = document.getElementById("waMiniChat");
+  const box         = document.getElementById("wa-chatbox");
+  const closeB      = box?.querySelector(".wa-close");
+  const sendB       = document.getElementById("waSendBtn");
+  const area        = document.getElementById("waMessage");
+  const includeLink = document.getElementById("waIncludeLink");
 
-          userBox.appendChild(avatar);
-          userBox.appendChild(logoutBtn);
-          sidebar.appendChild(userBox);
+  function templateMessaggio(){
+    let nome = "";
+    try {
+      const p1 = JSON.parse(sessionStorage.getItem("profiloUtente") || "null");
+      const p2 = JSON.parse(localStorage.getItem("profiloUtente") || "null");
+      const p  = p1?.profilo || p1 || p2;
+      nome = (p?.nome || p?.Nome || "").toString().trim();
+    } catch {}
+    const who = nome || "un viaggiatore curioso";
+    return `Ciao Yume, sono ${who}! 🔐
+Sto leggendo la vostra Informativa Privacy (GDPR) e ho una domanda. Mi aiutate?`;
+  }
+
+  function toggleWA() {
+    if (!overlay) return;
+    const willOpen = overlay.classList.contains("hidden");
+    overlay.classList.toggle("hidden");
+    if (willOpen) {
+      if (area) area.value = templateMessaggio();
+      setTimeout(() => area?.focus(), 40);
+    }
+  }
+
+  function openWhatsAppWithMessage(phone, text){
+    const encoded  = encodeURIComponent(text);
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isMobile) {
+      window.location.href = `whatsapp://send?phone=${phone}&text=${encoded}`;
+      setTimeout(() => window.open(`https://wa.me/${phone}?text=${encoded}`, '_blank', 'noopener'), 800);
+    } else {
+      window.open(`https://wa.me/${phone}?text=${encoded}`, '_blank', 'noopener');
+    }
+  }
+
+  function sendWA(){
+    const testo = (area?.value || templateMessaggio()).trim();
+    if (!testo) { alert("Scrivi un messaggio oppure chiudi la chat."); return; }
+    let payload = testo;
+    if (includeLink?.checked) payload += `\n\nLink: ${window.location.href}`;
+    openWhatsAppWithMessage(WHATSAPP_NUMBER, payload);
+    overlay?.classList.add("hidden");
+  }
+
+  avatar?.addEventListener("click", toggleWA);
+  closeB?.addEventListener("click", toggleWA);
+  sendB?.addEventListener("click", sendWA);
+  overlay?.addEventListener("click", (e) => { if (e.target === overlay) overlay.classList.add("hidden"); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !overlay.classList.contains("hidden")) overlay.classList.add("hidden"); });
+
+  // Inizializza messaggio precompilato al primo click
+  avatar?.addEventListener("click", () => { if (area && !area.value) area.value = templateMessaggio(); });
+})();
+</script>
+
+<script>
+// Login state (come privacy.html)
+document.addEventListener("DOMContentLoaded", () => {
+  const profilo = JSON.parse(sessionStorage.getItem("profiloUtente"));
+  if (profilo) {
+    document.querySelectorAll("a[href='log-in.html']").forEach(link => { link.href = "area-clienti.html"; });
+    const sidebar = document.querySelector(".sidebar");
+    if (sidebar && !document.getElementById("userBox")) {
+      const userBox = document.createElement("div");
+      userBox.id = "userBox";
+      userBox.style.marginTop = "30px";
+      userBox.style.padding = "10px";
+      userBox.style.textAlign = "center";
+      userBox.style.borderTop = "1px solid #ccc";
+      const avatar = document.createElement("img");
+      avatar.src = localStorage.getItem("userAvatar") || "https://api.dicebear.com/7.x/avataaars/svg?seed=yume";
+      avatar.alt = "Avatar";
+      avatar.style.width = "60px"; avatar.style.height = "60px";
+      avatar.style.borderRadius = "50%"; avatar.style.objectFit = "cover";
+      avatar.style.border = "2px solid #C9A86A"; avatar.style.marginBottom = "8px";
+      const logoutBtn = document.createElement("button");
+      logoutBtn.textContent = "Logout";
+      logoutBtn.style.marginTop = "6px";
+      logoutBtn.style.background = "#8B2C2B";
+      logoutBtn.style.color = "#fff";
+      logoutBtn.style.border = "none";
+      logoutBtn.style.padding = "6px 12px";
+      logoutBtn.style.borderRadius = "20px";
+      logoutBtn.style.cursor = "pointer";
+      logoutBtn.onclick = () => {
+        sessionStorage.removeItem("profiloUtente");
+        localStorage.removeItem("userAvatar");
+        localStorage.removeItem("codice_cliente");
+        window.location.href = "index.html";
+      };
+      userBox.appendChild(avatar); userBox.appendChild(logoutBtn); sidebar.appendChild(userBox);
     }
   } else {
-    // 🔁 Se non loggato, reimposta i link a log-in.html
-    document.querySelectorAll("a[href='area-clienti.html']").forEach(link => {
-      link.href = "log-in.html";
-    });
-
-    // 🔕 Nasconde la campanella se non loggato
+    document.querySelectorAll("a[href='area-clienti.html']").forEach(link => { link.href = "log-in.html"; });
     document.getElementById("toggleNotificheBtn")?.classList.add("hidden");
   }
 });
-  </script>
+</script>
 
+<!-- LIBRERIE -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="assets/script.js"></script>
-
 <script src="assets/script_prodotti.js"></script>
 
-<!-- Banner Cookie Yume -->
+<!-- Banner Cookie (come privacy.html) -->
 <div id="cookie-banner" class="cookie-banner slide-up">
   <p>
     Utilizziamo cookie tecnici per garantire il funzionamento del sito e, previo consenso, cookie analitici e di terze parti per migliorare la tua esperienza.
-    <a href="privacy.html" target="_blank">Leggi la nostra informativa</a>.
+    <a href="privacy.html" target="_blank" rel="noopener">Leggi la nostra informativa</a>.
   </p>
   <div class="cookie-buttons">
     <button class="btn-accetta" onclick="accettaCookie()">Accetta</button>
@@ -231,7 +425,7 @@ logoutBtn.onclick = () => {
 </div>
 
 <!-- Modale Preferenze Cookie -->
-<div id="cookie-preferenze" class="cookie-modal"style="display: none;">
+<div id="cookie-preferenze" class="cookie-modal" style="display: none;">
   <div class="cookie-modal-box">
     <h3>Gestisci preferenze cookie</h3>
     <form id="cookie-preferenze-form">
@@ -246,6 +440,7 @@ logoutBtn.onclick = () => {
   </div>
 </div>
 
+<!-- Notifiche -->
 <div id="notificheContainer" class="notifiche-container hidden">
   <h3><i class="fa fa-envelope-open"></i> Messaggi ricevuti</h3>
   <ul id="listaNotifiche" class="notifiche-lista"></ul>

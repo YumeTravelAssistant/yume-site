@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Usanze e Modi di fare in Giappone – Guida 19 pagine (2025) – Yume Travel Tech</title>
+  <link rel="icon" type="image/png" href="favicon.ico" />
+
+  <!-- Font Yume -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Raleway:wght@300;500;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Stili e icone -->
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <style>
+    /* Mini-stili per la scheda prodotto (in linea con prodotti-tokyo.html) */
+    .sezione-prodotto {
+      padding: 60px 20px;
+      background-color: #F4F0E2;
+    }
+    .scheda-prodotto {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 36px;
+      align-items: start;
+    }
+    .scheda-img {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+    .scheda-img img { width: 100%; height: auto; display: block; }
+    .scheda-info h1 {
+      font-family: 'Playfair Display', serif;
+      color: #8B2C2B;
+      margin: 0 0 6px 0;
+      font-size: 2rem;
+      line-height: 1.2;
+    }
+    .meta { color: #555; font-size: 0.95rem; margin-bottom: 14px; }
+    .descrizione {
+      background: #fff;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      color: #333; line-height: 1.6; margin-bottom: 16px;
+    }
+    .icon-list { list-style: none; padding: 0; margin: 0 0 14px 0; color: #555; font-size: 0.95rem; }
+    .icon-list li { margin-bottom: 6px; }
+    .icon-list i { color: #C9A86A; margin-right: 8px; }
+    .prodotto-prezzo { font-weight: bold; font-size: 1.2rem; color: #C9A86A; margin: 12px 0; }
+    .galleria {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .galleria img {
+      width: 100%; height: 130px; object-fit: cover;
+      border-radius: 12px; box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+      background: #fff;
+    }
+    @media (max-width: 980px){
+      .scheda-prodotto { grid-template-columns: 1fr; }
+      .galleria img { height: 110px; }
+    }
+
+    /* Mantiene la coerenza col titolo sezione */
+    h2.slide-in.visible {
+      font-size: 2.5rem;
+      color: #C9A86A;
+      margin-bottom: 30px;
+    }
+
+    /* ==== Fullscreen Gallery (come in Kodai) ==== */
+    .fullscreen-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 99999;
+    }
+    .fullscreen-img {
+      max-width: 92vw; max-height: 88vh; border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+    .btn-close {
+      position: absolute; top: 18px; right: 22px; font-size: 40px; line-height: 1;
+      color: #fff; cursor: pointer; user-select: none;
+    }
+    .fullscreen-arrow {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: rgba(0,0,0,0.4); border: none; padding: 12px 16px;
+      font-size: 22px; color: #fff; cursor: pointer; border-radius: 10px;
+    }
+    .fullscreen-arrow.left { left: 18px; }
+    .fullscreen-arrow.right { right: 18px; }
+
+    /* ==== Bottone carrello: mai sovrapposto, sempre dopo il testo ==== */
+    .scheda-info { display: flex; flex-direction: column; gap: 12px; }
+    .scheda-info .descrizione { order: 2; }
+    .scheda-info .icon-list { order: 3; }
+    .scheda-info .prodotto-prezzo { order: 4; }
+    .scheda-info .modern-btn {
+      order: 5; align-self: flex-start; position: static; margin-top: 6px; z-index: 1;
+    }
+    .scheda-prodotto { align-items: start; }
+
+    /* === MOBILE BALANCE PER COVER (identico a prodotti-tokyo) === */
+    @media (max-width: 980px) {
+      .scheda-prodotto { grid-template-columns: 1fr; gap: 20px; }
+      .scheda-img {
+        width: clamp(300px, 88vw, 560px) !important;
+        max-width: 100%;
+        margin: 0 auto 8px !important;
+        border-radius: 16px;
+      }
+      .scheda-img > img:first-child {
+        width: 100% !important; height: auto !important; max-height: 68vh !important;
+        object-fit: contain !important; background: #fff; display: block;
+      }
+      .galleria {
+        width: clamp(300px, 88vw, 560px) !important;
+        margin: 10px auto 0 !important;
+        grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important;
+      }
+      .galleria img { height: 120px !important; object-fit: cover; border-radius: 12px; }
+      .scheda-info .modern-btn { position: static !important; margin-top: 8px !important; }
+    }
+    @media (max-width: 560px) {
+      .scheda-img { width: clamp(280px, 92vw, 520px) !important; }
+      .scheda-img > img:first-child { max-height: 62vh !important; }
+      .galleria img { height: 105px !important; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="navbar-left">
+    <img src="assets/logo-yume.jpg" alt="Logo YUME" class="logo-navbar">
+  </div>
+  <button id="toggleNotificheBtn" class="notif-btn" onclick="toggleNotifiche()" aria-label="Notifiche">
+    <i class="fa fa-bell fa-lg"></i>
+    <span id="notifCount" class="notif-count">0</span>
+  </button>
+  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+</nav>
+
+<div id="sidebar" class="sidebar hidden">
+  <div class="sidebar-logo">
+    <img src="assets/logo_bar.png" alt="Logo Yume" class="logo-sidebar">
+  </div>
+
+  <a href="index.html">Home</a>
+  <a href="pacchetti.html">Pacchetti flessibili</a>
+  <a href="gruppo.html">Viaggi di gruppo</a>
+  <a href="maison.html">Viaggi su misura</a>
+  <a href="consulenze.html">Consulenze</a>
+  <a href="prodotti.html">Prodotti</a>
+  <a href="faq.html">FAQ</a>
+  <a href="info-utili.html">Informazioni utili</a>
+  <a href="contatti.html">Contatti</a>
+  <a href="profilo.html">Registrazione</a>
+  <a href="log-in.html">Area Personale</a>
+</div>
+
+<!-- Hero -->
+<header class="hero-banner">
+  <picture>
+    <source srcset="assets/prodotti_mob.jpg" media="(max-width: 768px)">
+    <img src="assets/prodotti_desk.jpg" alt="Prodotti Yume" class="hero-banner-img">
+  </picture>
+  <div class="scroll-indicator" onclick="scrollToMain()">
+    <span class="arrow-down"></span>
+  </div>
+</header>
+
+<section class="hero-section">
+  <div class="hero-intro">
+    <h1 class="hero-title">Guida Digitale</h1>
+    <p class="hero-subtitle">Usanze e Modi di fare in Giappone – Edizione 2025</p>
+  </div>
+</section>
+
+<div class="main-wrapper">
+
+  <!-- SEZIONE PRODOTTO -->
+  <section class="sezione-prodotto">
+    <div class="scheda-prodotto">
+
+      <!-- Colonna immagini -->
+      <div class="scheda-img slide-in">
+        <!-- Cover -->
+        <img src="prodotti/usi.jpg" alt="Copertina Guida Usanze e Modi di fare in Giappone">
+        <!-- Galleria cliccabile -->
+        <div class="galleria">
+          <img src="prodotti/usi1.png" alt="Saluti e formule di cortesia" data-index="0" onclick="apriFotoFullscreen(0)">
+          <img src="prodotti/usi2.png" alt="Etichetta a tavola e omiyage" data-index="1" onclick="apriFotoFullscreen(1)">
+          <img src="prodotti/usi3.png" alt="Trasporti e spazi pubblici" data-index="2" onclick="apriFotoFullscreen(2)">
+          <img src="prodotti/usi4.png" alt="Onsen e regole di convivenza" data-index="3" onclick="apriFotoFullscreen(3)">
+          <img src="prodotti/usi5.png" alt="Templi, santuari e rispetto" data-index="4" onclick="apriFotoFullscreen(4)">
+        </div>
+      </div>
+
+      <!-- Colonna info -->
+      <div class="scheda-info slide-in">
+        <h1>Usanze e Modi di fare in Giappone — Guida 2025</h1>
+        <div class="meta">
+          <strong>Autore:</strong> Yume Travel Tech S.r.l. &nbsp;•&nbsp;
+          <strong>Anno:</strong> 2025 &nbsp;•&nbsp;
+          <strong>Pagine:</strong> 19 &nbsp;•&nbsp;
+          <strong>Compreso:</strong> Estensioni per i primi 6 mesi (invio aggiornato)
+        </div>
+
+        <div class="descrizione">
+          <p><em>Guida tematica</em> pensata per muoversi con sicurezza e rispetto nella quotidianità giapponese. Dalla stretta di mano al saluto con inchino, dalle frasi utili ai piccoli rituali che fanno la differenza: capirai <strong>cosa fare, quando e perché</strong>, evitando figuracce e imparando a leggere i contesti.</p>
+          <p>Trovi esempi concreti e veloci su: <strong>etichetta a tavola</strong> (bacchette, ciotole, sushi e ramen), <strong>omiyage</strong> (regali e come offrirli), <strong>trasporti</strong> (metropolitana, code, telefoni silenziosi), <strong>templi e santuari</strong> (purificazione, ema, goshuin), <strong>onsen</strong> (asciugamano, tatuaggi, spazi separati), <strong>spazi pubblici</strong> (rifiuti, fumo, voce), e <strong>frasi utili</strong> per cavartela con cortesia. Con le estensioni incluse per 6 mesi ricevi gli <strong>aggiornamenti e nuovi esempi</strong> direttamente via mail.</p>
+        </div>
+
+        <ul class="icon-list">
+          <li><i class="fa fa-language"></i> Frasi chiave con contesto reale</li>
+          <li><i class="fa fa-cutlery"></i> Etichetta a tavola, omiyage e convivenza</li>
+          <li><i class="fa fa-universal-access"></i> Regole in templi, santuari e onsen</li>
+          <li><i class="fa fa-refresh"></i> Estensioni incluse per 6 mesi (invii aggiornati)</li>
+        </ul>
+
+        <div class="prodotto-prezzo">€5,90</div>
+
+        <button class="modern-btn"
+          onclick="aggiungiAlCarrello('Usanze e Modi di fare in Giappone — Guida 19p (2025)', 5.9)">
+          <i class="fa fa-shopping-cart"></i> Aggiungi al carrello
+        </button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- Carrello Laterale Yume -->
+<div id="carrelloContainer" class="yume-cart hidden">
+  <div class="cart-header">
+    <h3>Il tuo carrello</h3>
+    <button onclick="toggleCarrello()" class="close-cart" aria-label="Chiudi il carrello">×</button>
+  </div>
+  <ul id="listaCarrello" class="cart-list"></ul>
+  <div class="cart-footer">
+    <div class="cart-total">Totale: <span id="carrelloTotale">€0,00</span></div>
+    <button class="negozio btn" onclick="vaiAllaCassa()">Procedi al pagamento</button>
+  </div>
+</div>
+
+<!-- Pulsante flottante carrello -->
+<button id="toggleCarrelloBtn" class="yume-cart-toggle" onclick="toggleCarrello()" aria-label="Apri il carrello">
+  <i class="fa fa-shopping-bag fa-lg"></i>
+  <span id="cartCount" class="cart-count-badge">0</span>
+</button>
+
+<!-- Avatar flottante: CONTATTACI -->
+<div id="contattaci-avatar">
+  <a href="contatti.html#contatti-form" aria-label="Contattaci">Contattaci</a>
+</div>
+
+<!-- Mini Chat WhatsApp (LEFT) -->
+<div id="wa-chat-avatar" class="wa-avatar-left" aria-label="Apri chat WhatsApp" title="Apri chat WhatsApp">
+  <i class="fa fa-whatsapp" aria-hidden="true"></i>
+</div>
+
+<div id="waMiniChat" class="wa-overlay hidden" aria-hidden="true">
+  <div id="wa-chatbox" class="wa-box">
+    <div class="wa-header">
+      <div class="wa-brand">
+        <i class="fa fa-whatsapp" aria-hidden="true"></i>
+        <span>Parla con Yume</span>
+      </div>
+      <button class="wa-close" type="button" aria-label="Chiudi">×</button>
+    </div>
+
+    <div class="wa-body">
+      <p class="wa-preface">
+        Dubbi su <strong>Usanze e Modi di fare in Giappone</strong>? <br>
+        Scrivici su WhatsApp, il messaggio è già pronto!
+      </p>
+
+      <textarea id="waMessage" rows="5" placeholder="Scrivi qui..."></textarea>
+
+      <label class="wa-linkcheck">
+        <input id="waIncludeLink" type="checkbox" checked />
+        Includi il link a questa pagina
+      </label>
+
+      <button id="waSendBtn" class="wa-send">Invia su WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<footer class="main-footer">
+  <div class="footer-social">
+    <p><strong>Seguici su:</strong></p>
+    <a href="https://www.instagram.com/yumeviaggi" target="_blank" aria-label="Instagram" class="fa fa-instagram"></a>
+    <a href="https://www.tiktok.com/@yumetraveltech" target="_blank" aria-label="TikTok" class="fa fa-music"></a>
+    <a href="https://wa.me/393703081341" target="_blank" aria-label="WhatsApp" class="fa fa-whatsapp"></a>
+    <a href="https://yuta-travel.com" target="_blank" aria-label="Sito YUTA" class="fa fa-globe"></a>
+  </div>
+
+  <p>
+    <a href="privacy.html">Privacy Policy</a> |
+    <a href="termini-condizioni.html">Termini e Condizioni</a> |
+    <a href="cookie-policy.html">Cookie Policy</a> |
+    <a href="#" onclick="apriBannerCookie()">Modifica preferenze cookie</a>
+  </p>
+
+  <p class="footer-copy">
+    © 2025 Yume Travel Tech S.r.l. – Tutti i diritti riservati. <br>
+    C.F./P.IVA 02115540474 – Via Marconi 933/A, 51036 Larciano (PT) – Capitale sociale € 10.000,00 – REA PT-623031 <br>
+    PEC: <a href="mailto:yumetravel@pec.it">yumetravel@pec.it</a> – Email: <a href="mailto:yume.traveltech@gmail.com">yume.traveltech@gmail.com</a>
+  </p>
+
+  <p class="footer-legal">
+    Polizza RC: Revo Insurance S.p.A., n. OX00053974. <br>
+    Protezione insolvenza/fallimento: Nobis Compagnia di Assicurazioni S.p.A., n. 204143050.
+  </p>
+</footer>
+
+<!-- Avatar Chatbot Yuki -->
+<div id="yuki-chat-avatar" onclick="toggleYukiChat()" title="Hai bisogno di aiuto?">
+  <img src="assets/yuki-avatar.png" alt="Yuki" />
+</div>
+
+<div id="yuki-chatbox" class="hidden">
+  <div class="chatbox-header">
+    <span>Yuki, assistente AI</span>
+    <button onclick="toggleYukiChat()">✕</button>
+  </div>
+  <div class="chatbox-messages" id="chatbox-messages"></div>
+  <div class="chatbox-input">
+    <input type="text" id="userMessage" placeholder="Scrivi qui..." />
+    <button onclick="sendMessage()">Invia</button>
+  </div>
+</div>
+
+<script>
+  // Avatar Yuki (identico)
+  window.addEventListener("DOMContentLoaded", function () {
+    const el = document.querySelector('#yuki-chat-avatar');
+    if (!el) return;
+    el.style.position = 'fixed';
+    el.style.bottom = '25px';
+    el.style.right = '25px';
+    el.style.width = '90px';
+    el.style.height = '90px';
+    el.style.zIndex = '9999';
+    el.style.borderRadius = '50%';
+    el.style.overflow = 'hidden';
+    el.style.boxShadow = '0 4px 10px rgba(0,0,0,0.2)';
+    el.style.backgroundColor = '#fff';
+    const img = el.querySelector('img');
+    if (img) {
+      img.style.width = '100%'; img.style.height = '100%';
+      img.style.objectFit = 'cover'; img.style.borderRadius = '50%';
+    }
+  });
+</script>
+
+<script>
+/* Gap WA/cookie + contattaci (identico) */
+(function(){
+  const root = document.documentElement;
+  function detectWhatsAppGap(){
+    const cands = Array.from(document.querySelectorAll('[class*="whatsapp"], [href*="wa.me"], [href*="api.whatsapp.com"]'));
+    const btn = cands.find(el => {
+      const style = getComputedStyle(el);
+      if (style.position !== 'fixed') return false;
+      const r = el.getBoundingClientRect();
+      return r.left < (window.innerWidth / 2) && (window.innerHeight - r.bottom) < 150;
+    });
+    if (!btn){ root.style.setProperty('--wa-gap','0px'); return; }
+    const r = btn.getBoundingClientRect();
+    root.style.setProperty('--wa-gap', (Math.ceil(r.height)+12)+'px');
+  }
+  function detectCookieGap(){
+    const cand = document.getElementById('cookie-banner');
+    if (!cand){ root.style.setProperty('--cookie-gap','0px'); return; }
+    const style = getComputedStyle(cand);
+    const isFixed = style.position==='fixed' && (style.bottom==='0px' || style.bottom==='0');
+    if (!isFixed || cand.classList.contains('hidden')){ root.style.setProperty('--cookie-gap','0px'); return; }
+    const r = cand.getBoundingClientRect();
+    root.style.setProperty('--cookie-gap', (Math.max(0,Math.ceil(r.height)+10))+'px');
+  }
+  window.addEventListener('DOMContentLoaded', ()=>{
+    detectWhatsAppGap();
+    detectCookieGap();
+    if (location.pathname.endsWith('contatti.html')){
+      document.querySelector('#contattaci-avatar a')?.addEventListener('click',(e)=>{
+        const target = document.getElementById('contatti-form');
+        if(target){
+          e.preventDefault();
+          target.scrollIntoView({behavior:'smooth',block:'start'});
+          target.style.outline='2px solid #8B2C2B';
+          setTimeout(()=>{target.style.outline='none'},1500);
+        }
+      });
+    }
+  });
+  window.addEventListener('resize', detectWhatsAppGap);
+  const cookie=document.getElementById('cookie-banner');
+  if(cookie && 'MutationObserver' in window){
+    new MutationObserver(detectCookieGap).observe(cookie,{attributes:true,attributeFilter:['class','style']});
+  }
+})();
+</script>
+
+<script>
+// Mini Chat WhatsApp — testo specifico per questa guida
+(function () {
+  const WHATSAPP_NUMBER = "393703081341";
+  const avatar      = document.getElementById("wa-chat-avatar");
+  const overlay     = document.getElementById("waMiniChat");
+  const box         = document.getElementById("wa-chatbox");
+  const closeB      = box?.querySelector(".wa-close");
+  const sendB       = document.getElementById("waSendBtn");
+  const area        = document.getElementById("waMessage");
+  const includeLink = document.getElementById("waIncludeLink");
+
+  function templateMessaggio(){
+    let nome = "";
+    try {
+      const p1 = JSON.parse(sessionStorage.getItem("profiloUtente") || "null");
+      const p2 = JSON.parse(localStorage.getItem("profiloUtente") || "null");
+      const p  = p1?.profilo || p1 || p2;
+      nome = (p?.nome || p?.Nome || "").toString().trim();
+    } catch {}
+    const who = nome || "un viaggiatore curioso";
+    return `Ciao Yume, sono ${who}! 🙇‍♂️✨
+Sto guardando la vostra **Guida "Usanze e Modi di fare in Giappone" (2025)**.
+È in PDF e include davvero gli aggiornamenti per 6 mesi?`;
+  }
+
+  function toggleWA() {
+    if (!overlay) return;
+    const willOpen = overlay.classList.contains("hidden");
+    overlay.classList.toggle("hidden");
+    if (willOpen) {
+      if (area) area.value = templateMessaggio();
+      setTimeout(() => area?.focus(), 40);
+    }
+  }
+
+  function openWhatsAppWithMessage(phone, text){
+    const encoded  = encodeURIComponent(text);
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isMobile) {
+      window.location.href = `whatsapp://send?phone=${phone}&text=${encoded}`;
+      setTimeout(() => window.open(`https://wa.me/${phone}?text=${encoded}`, '_blank', 'noopener'), 800);
+    } else {
+      window.open(`https://wa.me/${phone}?text=${encoded}`, '_blank', 'noopener');
+    }
+  }
+
+  function sendWA(){
+    const testo = (area?.value || templateMessaggio()).trim();
+    if (!testo) { alert("Scrivi un messaggio oppure chiudi la chat."); return; }
+    let payload = testo;
+    if (includeLink?.checked) payload += `\n\nLink: ${window.location.href}`;
+    openWhatsAppWithMessage(WHATSAPP_NUMBER, payload);
+    overlay?.classList.add("hidden");
+  }
+
+  avatar?.addEventListener("click", toggleWA);
+  closeB?.addEventListener("click", toggleWA);
+  sendB?.addEventListener("click", sendWA);
+  overlay?.addEventListener("click", (e) => { if (e.target === overlay) overlay.classList.add("hidden"); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !overlay.classList.contains("hidden")) overlay.classList.add("hidden"); });
+})();
+</script>
+
+<script>
+  // Login state → identico
+  document.addEventListener("DOMContentLoaded", () => {
+    const profilo = JSON.parse(sessionStorage.getItem("profiloUtente"));
+    if (profilo) {
+      document.querySelectorAll("a[href='log-in.html']").forEach(link => { link.href = "area-clienti.html"; });
+      const sidebar = document.querySelector(".sidebar");
+      if (sidebar && !document.getElementById("userBox")) {
+        const userBox = document.createElement("div");
+        userBox.id = "userBox";
+        userBox.style.marginTop = "30px";
+        userBox.style.padding = "10px";
+        userBox.style.textAlign = "center";
+        userBox.style.borderTop = "1px solid #ccc";
+        const avatar = document.createElement("img");
+        avatar.src = localStorage.getItem("userAvatar") || "https://api.dicebear.com/7.x/avataaars/svg?seed=yume";
+        avatar.alt = "Avatar";
+        avatar.style.width = "60px"; avatar.style.height = "60px";
+        avatar.style.borderRadius = "50%"; avatar.style.objectFit = "cover";
+        avatar.style.border = "2px solid #C9A86A"; avatar.style.marginBottom = "8px";
+        const logoutBtn = document.createElement("button");
+        logoutBtn.textContent = "Logout";
+        logoutBtn.style.marginTop = "6px";
+        logoutBtn.style.background = "#8B2C2B";
+        logoutBtn.style.color = "#fff";
+        logoutBtn.style.border = "none";
+        logoutBtn.style.padding = "6px 12px";
+        logoutBtn.style.borderRadius = "20px";
+        logoutBtn.style.cursor = "pointer";
+        logoutBtn.onclick = () => {
+          sessionStorage.removeItem("profiloUtente");
+          localStorage.removeItem("userAvatar");
+          localStorage.removeItem("codice_cliente");
+          window.location.href = "index.html";
+        };
+        userBox.appendChild(avatar); userBox.appendChild(logoutBtn); sidebar.appendChild(userBox);
+      }
+    } else {
+      document.querySelectorAll("a[href='area-clienti.html']").forEach(link => { link.href = "log-in.html"; });
+      document.getElementById("toggleNotificheBtn")?.classList.add("hidden");
+    }
+  });
+</script>
+
+<script>
+  /* Fullscreen gallery (identico) */
+  const immaginiProdotto = Array.from(document.querySelectorAll('.galleria img')).map(img => img.src);
+  let indexAttuale = 0, startX = 0;
+
+  function apriFotoFullscreen(index) {
+    indexAttuale = index;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'fullscreen-overlay';
+    overlay.setAttribute('role','dialog');
+    overlay.setAttribute('aria-modal','true');
+
+    const img = document.createElement('img');
+    img.src = immaginiProdotto[indexAttuale];
+    img.alt = 'Anteprima ' + (indexAttuale + 1);
+    img.className = 'fullscreen-img';
+
+    const btnChiudi = document.createElement('span');
+    btnChiudi.innerHTML = '&times;';
+    btnChiudi.className = 'btn-close';
+    btnChiudi.title = 'Chiudi (ESC)';
+
+    const frecciaSx = document.createElement('button');
+    frecciaSx.className = 'fullscreen-arrow left';
+    frecciaSx.innerHTML = '<i class="fa fa-chevron-left" aria-hidden="true"></i>';
+    frecciaSx.setAttribute('aria-label','Immagine precedente');
+
+    const frecciaDx = document.createElement('button');
+    frecciaDx.className = 'fullscreen-arrow right';
+    frecciaDx.innerHTML = '<i class="fa fa-chevron-right" aria-hidden="true"></i>';
+    frecciaDx.setAttribute('aria-label','Immagine successiva');
+
+    function chiudi() {
+      document.removeEventListener('keydown', onKey);
+      overlay.remove();
+    }
+    function cambiaFoto(direz) {
+      indexAttuale = (indexAttuale + direz + immaginiProdotto.length) % immaginiProdotto.length;
+      img.src = immaginiProdotto[indexAttuale];
+      img.alt = 'Anteprima ' + (indexAttuale + 1);
+    }
+    function onKey(e){
+      if (e.key === 'Escape') chiudi();
+      if (e.key === 'ArrowLeft') cambiaFoto(-1);
+      if (e.key === 'ArrowRight') cambiaFoto(1);
+    }
+
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) chiudi(); });
+    btnChiudi.addEventListener('click', chiudi);
+    frecciaSx.addEventListener('click', (e) => { e.stopPropagation(); cambiaFoto(-1); });
+    frecciaDx.addEventListener('click', (e) => { e.stopPropagation(); cambiaFoto(1); });
+
+    overlay.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, {passive:true});
+    overlay.addEventListener('touchend', (e) => {
+      const endX = e.changedTouches[0].clientX;
+      const diff = startX - endX;
+      if (Math.abs(diff) > 50) cambiaFoto(diff > 0 ? 1 : -1);
+    }, {passive:true});
+
+    document.addEventListener('keydown', onKey);
+
+    overlay.appendChild(btnChiudi);
+    overlay.appendChild(frecciaSx);
+    overlay.appendChild(img);
+    overlay.appendChild(frecciaDx);
+    document.body.appendChild(overlay);
+  }
+</script>
+
+<!-- jQuery + roundSlider + script principali (identici) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.js"></script>
+<script src="assets/script.js"></script>
+<script src="assets/script_prodotti.js"></script>
+
+<!-- Banner Cookie -->
+<div id="cookie-banner" class="cookie-banner slide-up">
+  <p>
+    Utilizziamo cookie tecnici per garantire il funzionamento del sito e, previo consenso, cookie analitici e di terze parti per migliorare la tua esperienza.
+    <a href="privacy.html" target="_blank">Leggi la nostra informativa</a>.
+  </p>
+  <div class="cookie-buttons">
+    <button class="btn-accetta" onclick="accettaCookie()">Accetta</button>
+    <button class="btn-rifiuta" onclick="rifiutaCookie()">Rifiuta</button>
+    <button class="btn-gestisci" onclick="apriPreferenze()">Gestisci</button>
+  </div>
+</div>
+
+<div id="cookie-preferenze" class="cookie-modal" style="display: none;">
+  <div class="cookie-modal-box">
+    <h3>Gestisci preferenze cookie</h3>
+    <form id="cookie-preferenze-form">
+      <label><input type="checkbox" checked disabled> Cookie tecnici (obbligatori)</label><br>
+      <label><input type="checkbox" id="cookie-analytics"> Cookie analitici (Google Analytics)</label><br>
+      <label><input type="checkbox" id="cookie-marketing"> Cookie di marketing e tracciamento</label><br>
+      <div class="cookie-modal-actions">
+        <button type="submit" class="btn-salva">Salva preferenze</button>
+        <button type="button" class="btn-chiudi" onclick="document.getElementById('cookie-preferenze').style.display = 'none';">Chiudi</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Notifiche -->
+<div id="notificheContainer" class="notifiche-container hidden">
+  <h3><i class="fa fa-envelope-open"></i> Messaggi ricevuti</h3>
+  <ul id="listaNotifiche" class="notifiche-lista"></ul>
+  <button onclick="vaiASezioneMessaggi()" class="btn-messaggi">
+    <i class="fa fa-inbox"></i> Vai ai messaggi
+  </button>
+</div>
+
+</body>
+</html>
+

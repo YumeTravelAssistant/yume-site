@@ -310,7 +310,6 @@ h1.hero-title {
     </div>
   </div>
 
-
 <p class="itinerario-disclaimer">
     *L’itinerario mostrato ha <strong>solo scopo illustrativo</strong>.
     Serve a dare un esempio tipico con le città proposte e il tema del pacchetto;
@@ -425,6 +424,44 @@ h1.hero-title {
   <span id="cartCount" class="cart-count-badge">0</span>
 </button>
 
+<!-- ===== Mini Chat WhatsApp (LEFT) — Singolo Pacchetto ===== -->
+<div id="wa-chat-avatar" class="wa-avatar-left" aria-label="Apri chat WhatsApp" title="Apri chat WhatsApp">
+  <i class="fa fa-whatsapp" aria-hidden="true"></i>
+</div>
+
+<div id="waMiniChat" class="wa-overlay hidden" aria-hidden="true">
+  <div id="wa-chatbox" class="wa-box">
+    <div class="wa-header">
+      <div class="wa-brand">
+        <i class="fa fa-whatsapp" aria-hidden="true"></i>
+        <span>Parla con Yume</span>
+      </div>
+      <button class="wa-close" type="button" aria-label="Chiudi">×</button>
+    </div>
+
+    <div class="wa-body">
+      <p class="wa-preface">
+        Hai domande su questo <strong>pacchetto</strong>? Scrivici su WhatsApp:
+        il messaggio è già pronto (puoi modificarlo).
+      </p>
+
+      <textarea id="waMessage" rows="5" placeholder="Scrivi qui..."></textarea>
+
+      <label class="wa-linkcheck">
+        <input id="waIncludeLink" type="checkbox" checked />
+        Includi il link a questa pagina
+      </label>
+
+      <button id="waSendBtn" class="wa-send">Invia su WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<!-- Avatar flottante: CONTATTACI -->
+<div id="contattaci-avatar">
+  <a href="contatti.html#contatti-form" aria-label="Contattaci">Contattaci</a>
+</div>
+
 <!-- FOOTER -->
 <footer class="main-footer">
   <div class="footer-social">
@@ -453,8 +490,6 @@ h1.hero-title {
     Protezione insolvenza/fallimento: Nobis Compagnia di Assicurazioni S.p.A., n. 204143050.
   </p>
 </footer>
-
-
 
 <!-- Avatar Chatbot Yuki -->
 <div id="yuki-chat-avatar" onclick="toggleYukiChat()" title="Hai bisogno di aiuto?">
@@ -515,6 +550,159 @@ h1.hero-title {
       img.style.borderRadius = '50%';
     }
   });
+</script>
+
+<script>
+(function(){
+  const root = document.documentElement;
+
+  function detectWhatsAppGap(){
+    const cands = Array.from(document.querySelectorAll('[class*="whatsapp"], [href*="wa.me"], [href*="api.whatsapp.com"]'));
+    const btn = cands.find(el => {
+      const style = getComputedStyle(el);
+      if (style.position !== 'fixed') return false;
+      const r = el.getBoundingClientRect();
+      return r.left < (window.innerWidth / 2) && (window.innerHeight - r.bottom) < 150;
+    });
+    if (!btn){ root.style.setProperty('--wa-gap','0px'); return; }
+    const r = btn.getBoundingClientRect();
+    root.style.setProperty('--wa-gap', (Math.ceil(r.height)+12)+'px');
+  }
+
+  function detectCookieGap(){
+    const cand = document.getElementById('cookie-banner');
+    if (!cand){ root.style.setProperty('--cookie-gap','0px'); return; }
+    const style = getComputedStyle(cand);
+    const isFixed = style.position==='fixed' && (style.bottom==='0px' || style.bottom==='0');
+    if (!isFixed || cand.classList.contains('hidden')){ root.style.setProperty('--cookie-gap','0px'); return; }
+    const r = cand.getBoundingClientRect();
+    root.style.setProperty('--cookie-gap', (Math.max(0,Math.ceil(r.height)+10))+'px');
+  }
+
+  window.addEventListener('DOMContentLoaded', ()=>{
+    detectWhatsAppGap();
+    detectCookieGap();
+
+    // Se già su contatti.html → scrolla al form
+    if (location.pathname.endsWith('contatti.html')){
+      document.querySelector('#contattaci-avatar a')?.addEventListener('click',(e)=>{
+        const target = document.getElementById('contatti-form');
+        if(target){
+          e.preventDefault();
+          target.scrollIntoView({behavior:'smooth',block:'start'});
+          target.style.outline='2px solid #8B2C2B';
+          setTimeout(()=>{target.style.outline='none'},1500);
+        }
+      });
+    }
+  });
+  window.addEventListener('resize', detectWhatsAppGap);
+  const cookie=document.getElementById('cookie-banner');
+  if(cookie && 'MutationObserver' in window){
+    new MutationObserver(detectCookieGap).observe(cookie,{attributes:true,attributeFilter:['class','style']});
+  }
+})();
+</script>
+
+<script>
+// ===== Mini Chat WhatsApp — Singolo Pacchetto =====
+(function () {
+  const WHATSAPP_NUMBER = "393703081341"; // <-- il tuo numero
+
+  const avatar      = document.getElementById("wa-chat-avatar");
+  const overlay     = document.getElementById("waMiniChat");
+  const box         = document.getElementById("wa-chatbox");
+  const closeB      = box?.querySelector(".wa-close");
+  const sendB       = document.getElementById("waSendBtn");
+  const area        = document.getElementById("waMessage");
+  const includeLink = document.getElementById("waIncludeLink");
+
+  // Recupera NOME PACCHETTO in modo robusto (h1 .hero-title > h1 > title)
+  function getNomePacchetto(){
+    const cand = document.querySelector(".hero-title")?.textContent
+              || document.querySelector("main h1, .main-wrapper h1, h1")?.textContent
+              || document.title;
+    return (cand || "questo pacchetto").trim();
+  }
+
+  // Tenta di recuperare il nome utente se salvato lato client
+  function getNomeUtente(){
+    try {
+      const p1 = JSON.parse(sessionStorage.getItem("profiloUtente") || "null");
+      const p2 = JSON.parse(localStorage.getItem("profiloUtente") || "null");
+      const p  = p1?.profilo || p1 || p2;
+      return (p?.nome || p?.Nome || "").toString().trim();
+    } catch { return ""; }
+  }
+
+  // Prefill su misura per i singoli pacchetti
+  function templateMessaggioPacchetto(){
+    const who   = getNomeUtente() || "un viaggiatore curioso";
+    const nomeP = getNomePacchetto();
+    return `Ciao Yume, sono ${who}! ✈️
+Sto guardando il pacchetto **${nomeP}** e vorrei qualche informazione in più.
+Mi interessa capire personalizzazione (notti, hotel, tappe), disponibilità e un preventivo.
+Partenza indicativa: __ / Viaggiatori: __ / Budget: __.
+Grazie!`;
+  }
+
+  function buildPrefill(){ return templateMessaggioPacchetto(); }
+
+  function toggleWA() {
+    if (!overlay) return;
+    const willOpen = overlay.classList.contains("hidden");
+    overlay.classList.toggle("hidden");
+    overlay.setAttribute("aria-hidden", String(!willOpen));
+    if (willOpen) {
+      if (area) area.value = buildPrefill();
+      setTimeout(() => area?.focus(), 40);
+    }
+  }
+
+  function openWhatsAppWithMessage(phone, text){
+    const encoded  = encodeURIComponent(text);
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isMobile) {
+      // app nativa se disponibile
+      window.location.href = `whatsapp://send?phone=${phone}&text=${encoded}`;
+      // fallback web
+      setTimeout(() => window.open(`https://wa.me/${phone}?text=${encoded}`, '_blank', 'noopener'), 800);
+    } else {
+      window.open(`https://wa.me/${phone}?text=${encoded}`, '_blank', 'noopener');
+    }
+  }
+
+  function sendWA(){
+    const testo = (area?.value || buildPrefill()).trim();
+    if (!testo) { alert("Scrivi un messaggio oppure chiudi la chat."); return; }
+    let payload = testo;
+    if (includeLink?.checked) payload += `\n\nLink: ${window.location.href}`;
+    openWhatsAppWithMessage(WHATSAPP_NUMBER, payload);
+    overlay?.classList.add("hidden");
+    overlay?.setAttribute("aria-hidden", "true");
+  }
+
+  // Click handlers
+  avatar?.addEventListener("click", toggleWA);
+  closeB?.addEventListener("click", toggleWA);
+  sendB?.addEventListener("click", sendWA);
+
+  // Chiudi cliccando fuori
+  overlay?.addEventListener("click", (e) => {
+    if (e.target === overlay) {
+      overlay.classList.add("hidden");
+      overlay.setAttribute("aria-hidden", "true");
+    }
+  });
+
+  // ESC per chiudere
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && overlay && !overlay.classList.contains("hidden")) {
+      overlay.classList.add("hidden");
+      overlay.setAttribute("aria-hidden", "true");
+    }
+  });
+})();
 </script>
 
 <script src="assets/script.js"></script>

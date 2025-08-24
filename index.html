@@ -11,6 +11,51 @@
 <link rel="stylesheet" href="assets/styles.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+<!-- Choices.css (richiesto per i tag città) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
+
+<style>
+  /* Chip UI (no pallino) */
+  .chip-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-top:8px}
+  .chip{
+    display:inline-flex;align-items:center;gap:6px;
+    border:1px solid rgba(139,44,43,.25);
+    padding:8px 10px;border-radius:999px;cursor:pointer;transition:all .18s;background:#fff;color:#222
+  }
+  .chip input{appearance:none;display:none}
+  /* Default “outline” */
+  .chip.active{border-color:#8B2C2B;color:#8B2C2B;background:#fff}
+  .chip:focus-within{outline:2px solid #C9A86A;outline-offset:2px}
+  /* Interessi (fill rosso + testo bianco) */
+  .chip--fill.active{background:#8B2C2B;color:#fff;border-color:#8B2C2B}
+  /* Esperienze (fill rosso + testo bianco) */
+  .chip--exp.active{background:#8B2C2B;color:#fff;border-color:#8B2C2B}
+
+  /* Layout form */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media (max-width:720px){.two-col,.three-col{grid-template-columns:1fr}}
+  .box{margin:12px 0;border:1px solid #eee;padding:12px;border-radius:10px}
+  .field-note{font-size:.85rem;color:#666;margin:.25rem 0 .5rem}
+  .muted{opacity:.85}
+
+  /* Choices.js come pacchetti */
+  .choices{margin-top:6px}
+  .choices__inner{border-radius:12px;border-color:#e6e6e6}
+  .choices[data-type*="select-multiple"] .choices__list--multiple .choices__item,
+  .choices .choices__list--multiple .choices__item{
+    background-color:#8B2C2B !important;border:1px solid #8B2C2B !important;color:#fff !important;border-radius:16px;
+  }
+  .choices[data-type*="select-multiple"] .choices__list--multiple .choices__item.is-highlighted,
+  .choices .choices__list--multiple .choices__item.is-highlighted{
+    background-color:#C9A86A !important;border-color:#C9A86A !important;color:#fff !important;
+  }
+  .choices.is-focused .choices__inner,
+  .choices.is-open .choices__inner{
+    border-color:#8B2C2B !important;box-shadow:0 0 0 3px rgba(139,44,43,.15) !important;
+  }
+  .choices__list--dropdown .choices__item--selectable.is-highlighted{background:#f8f5f0 !important}
+</style>
 
 </head>
 <body>
@@ -217,6 +262,38 @@
   </div>
 </section>
 
+<section class="pacchetti-flex-section">
+  <h2 class="slide-in">I prossimi viaggi di gruppo</h2>
+  <div class="pacchetti-slider-wrapper">
+    <div class="pacchetti-slider-container">
+      <div class="pacchetti-box slide-in">
+        <!-- Ribbon -->
+        <div class="ribbon">POCHI POSTI</div>
+
+        <img src="assets/kokai.jpg" alt="Kokai – Viaggio di gruppo">
+        <div class="card-content">
+          <h3>Kokai – Viaggio d’autunno</h3>
+          <p><em>Un percorso tra città, laghi e spiritualità nel cuore del Giappone.</em></p>
+          <ul class="icon-list">
+            <li><i class="fa fa-calendar"></i> 18 novembre – 2 dicembre 2025</li>
+            <li><i class="fa fa-map-marker"></i> Tokyo, Kamakura, Yokohama, Kanazawa, Kyoto, Uji, Nara, Osaka, Himeji, Okayama, Hiroshima, Miyajima, Hikone (Lago Biwa)</li>
+            <li><i class="fa fa-user"></i> Max 20 partecipanti</li>
+          </ul>
+          <p class="price-tag">
+            <span style="text-decoration: line-through; color:#8B2C2B;">3190€</span>
+            <strong style="color:#C9A86A; font-size:1.2em;">2940€</strong> per persona, volo incluso
+          </p>
+
+          <!-- CTA primario: scheda viaggio -->
+          <a href="kokai.html" class="modern-btn">Richiedi info <i class="fa fa-arrow-right"></i></a>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
 <!-- 🟥 Corretto blocco bestseller -->
 <section class="bestseller-section">
   <h2 class="bestseller-title slide-in">I nostri bestseller</h2>
@@ -328,9 +405,8 @@
 
 <section class="contatti-section">
   <h2 class="slide-in">Siamo qui per te</h2>
-
-  <!-- niente action: gestiamo via JS/fetch -->
   <form id="contatti-form" novalidate>
+
     <label for="nome">Il tuo nome</label>
     <input type="text" id="nome" name="nome" required>
 
@@ -338,39 +414,228 @@
     <input type="email" id="email" name="email" required>
 
     <label>Cosa ti interessa</label>
-    <div class="row">
-      <label><input type="checkbox" name="interessi" value="Consulenza"> Consulenza</label>
-      <label><input type="checkbox" name="interessi" value="Preventivo"> Preventivo</label>
-      <label><input type="checkbox" name="interessi" value="Info generiche"> Info generiche</label>
+    <div class="row" id="interessi-row">
+      <label class="chip chip--fill"><input type="checkbox" name="interessi" value="Consulenza">Consulenza</label>
+      <label class="chip chip--fill"><input type="checkbox" name="interessi" value="Preventivo">Preventivo</label>
+      <label class="chip chip--fill"><input type="checkbox" name="interessi" value="Info generiche">Info generiche</label>
+    </div>
+
+    <!-- ====== BOX CONSULENZA ====== -->
+    <div id="box-consulenza" class="box hidden">
+      <label for="tipo_servizio">Tipo di consulenza</label>
+      <select id="tipo_servizio">
+        <option value="">Seleziona…</option>
+        <option value="lite">Yume Lite – 1h</option>
+        <option value="smart">Yume Smart – 3h</option>
+        <option value="premium">Yume Premium – 5h</option>
+        <option value="singolo">Yume Experience – Singolo</option>
+        <option value="coppia">Yume Experience – Coppia</option>
+        <option value="famiglia">Yume Experience – Famiglia</option>
+        <option value="minigruppo">Yume Experience – Mini Gruppo</option>
+        <option value="groupatelier">Yume Group Atelier</option>
+      </select>
+
+      <fieldset style="margin-top:10px;">
+        <legend>Giorni preferiti</legend>
+        <div class="chip-grid">
+          <label class="chip"><input type="checkbox" name="giorni_pref" value="Lun">Lun</label>
+          <label class="chip"><input type="checkbox" name="giorni_pref" value="Mar">Mar</label>
+          <label class="chip"><input type="checkbox" name="giorni_pref" value="Mer">Mer</label>
+          <label class="chip"><input type="checkbox" name="giorni_pref" value="Gio">Gio</label>
+          <label class="chip"><input type="checkbox" name="giorni_pref" value="Ven">Ven</label>
+          <label class="chip"><input type="checkbox" name="giorni_pref" value="Sab">Sab</label>
+          <label class="chip"><input type="checkbox" name="giorni_pref" value="Dom">Dom</label>
+        </div>
+      </fieldset>
+
+      <fieldset style="margin-top:10px;">
+        <legend>Fasce orarie preferite</legend>
+        <div class="chip-grid">
+          <label class="chip"><input type="checkbox" name="fasce_pref" value="Mattina (9–12)">Mattina (9–12)</label>
+          <label class="chip"><input type="checkbox" name="fasce_pref" value="Pomeriggio (14–18)">Pomeriggio (14–18)</label>
+          <label class="chip"><input type="checkbox" name="fasce_pref" value="Sera (18–20)">Sera (18–20)</label>
+        </div>
+        <div style="margin-top:6px;">
+          <label for="fasce_altro">Altro (opzionale)</label>
+          <input id="fasce_altro" placeholder="Es. Lunedì 11–13, Martedì dopo le 18">
+        </div>
+      </fieldset>
+    </div>
+
+    <!-- ====== BOX PREVENTIVO ====== -->
+    <div id="box-preventivo" class="box hidden">
+      <div class="two-col">
+        <div>
+          <label for="data_partenza">Data di partenza</label>
+          <input type="date" id="data_partenza">
+        </div>
+        <div>
+          <label for="data_ritorno">Data di ritorno</label>
+          <input type="date" id="data_ritorno">
+        </div>
+      </div>
+
+      <div class="three-col">
+        <div>
+          <label for="n_adulti">Adulti</label>
+          <input type="number" id="n_adulti" min="1" value="2">
+        </div>
+        <div>
+          <label for="n_bambini">Bambini</label>
+          <input type="number" id="n_bambini" min="0" value="0">
+        </div>
+        <div>
+          <label for="budget">Fascia budget</label>
+          <select id="budget">
+            <option value="">Seleziona…</option>
+            <option value="bassa">Bassa</option>
+            <option value="media">Media</option>
+            <option value="alta">Alta</option>
+          </select>
+        </div>
+      </div>
+
+      <label for="dettagli_struttura">Dettagli struttura</label>
+      <textarea id="dettagli_struttura" rows="2" placeholder="Es. 3 stelle, 2 notti in ryokan, 1 notte in onsen-hotel…"></textarea>
+
+      <div class="two-col">
+        <div>
+          <label for="trasporti">Pass trasporti</label>
+          <select id="trasporti">
+            <option value="">Seleziona…</option>
+            <option value="JRP">Japan Rail Pass</option>
+            <option value="regionali">Pass Regionali</option>
+            <option value="bus">Bus notturno</option>
+            <option value="nessuno">Nessun pass</option>
+          </select>
+        </div>
+        <div>
+          <label for="transfer">Transfer</label>
+          <select id="transfer">
+            <option value="">Seleziona…</option>
+            <option value="arrivo">Solo arrivo</option>
+            <option value="partenza">Solo partenza</option>
+            <option value="entrambi">Arrivo + partenza</option>
+            <option value="no">Nessun transfer</option>
+          </select>
+        </div>
+      </div>
+
+      <label>Esperienze richieste</label>
+      <div class="chip-grid" id="esperienze-grid">
+        <label class="chip chip--exp"><input type="checkbox" value="Cerimonia del tè">Cerimonia del tè</label>
+        <label class="chip chip--exp"><input type="checkbox" value="Workshop ceramica">Workshop ceramica</label>
+        <label class="chip chip--exp"><input type="checkbox" value="Lezione di cucina">Lezione di cucina</label>
+        <label class="chip chip--exp"><input type="checkbox" value="Onsen privato">Onsen privato</label>
+        <label class="chip chip--exp"><input type="checkbox" value="Incontri con artigiani">Incontri con artigiani</label>
+        <label class="chip chip--exp"><input type="checkbox" value="Tour anime/manga">Tour anime/manga</label>
+        <label class="chip chip--exp"><input type="checkbox" value="Samurai & ninja">Samurai & ninja</label>
+        <label class="chip chip--exp"><input type="checkbox" value="Fotografia">Fotografia</label>
+      </div>
+      <div style="margin-top:6px;">
+        <label for="esperienze_altro">Altro (opzionale)</label>
+        <input id="esperienze_altro" placeholder="Es. calligrafia, ikebana, sake tasting…">
+      </div>
+
+      <label for="citta_alloggio">Città per alloggi</label>
+      <select id="citta_alloggio" multiple>
+        <option>Tokyo</option>
+        <option>Kyoto</option>
+        <option>Osaka</option>
+        <option>Nara</option>
+        <option>Kanazawa</option>
+        <option>Hiroshima</option>
+        <option>Fukuoka</option>
+        <option>Sapporo</option>
+        <option>Nikko</option>
+        <option>Hakone</option>
+        <option>Yokohama</option>
+        <option>Takayama</option>
+      </select>
+      <p class="field-note">Puoi selezionare più città. Se non presenti:
+        <input id="citta_altre" placeholder="Altre città…" style="margin-left:6px"></p>
+
+      <label for="aeroporto">Aeroporto di partenza (Italia)</label>
+      <input id="aeroporto" list="aeroportiIT" placeholder="Es. ROMA Fiumicino (FCO)">
+      <datalist id="aeroportiIT">
+        <option value="ROMA – Fiumicino (FCO)"></option>
+        <option value="ROMA – Ciampino (CIA)"></option>
+        <option value="MILANO – Malpensa (MXP)"></option>
+        <option value="MILANO – Linate (LIN)"></option>
+        <option value="BERGAMO – Orio al Serio (BGY)"></option>
+        <option value="TORINO – Caselle (TRN)"></option>
+        <option value="VERONA – Villafranca (VRN)"></option>
+        <option value="VENEZIA – Marco Polo (VCE)"></option>
+        <option value="TREVISO – Canova (TSF)"></option>
+        <option value="BOLOGNA – Marconi (BLQ)"></option>
+        <option value="FIRENZE – Peretola (FLR)"></option>
+        <option value="PISA – Galileo Galilei (PSA)"></option>
+        <option value="GENOVA – Cristoforo Colombo (GOA)"></option>
+        <option value="PARMA – Giuseppe Verdi (PMF)"></option>
+        <option value="RIMINI – Fellini (RMI)"></option>
+        <option value="ANCONA – Falconara (AOI)"></option>
+        <option value="PERUGIA – S. Francesco (PEG)"></option>
+        <option value="PESCARA – Abruzzo (PSR)"></option>
+        <option value="NAPOLI – Capodichino (NAP)"></option>
+        <option value="BARI – Palese (BRI)"></option>
+        <option value="BRINDISI – Casale (BDS)"></option>
+        <option value="REGGIO CALABRIA – Tito Minniti (REG)"></option>
+        <option value="LAMEZIA TERME – (SUF)"></option>
+        <option value="PALERMO – Punta Raisi (PMO)"></option>
+        <option value="TRAPANI – Birgi (TPS)"></option>
+        <option value="PANTELLERIA – (PNL)"></option>
+        <option value="LAMPEDUSA – (LMP)"></option>
+        <option value="CATANIA – Fontanarossa (CTA)"></option>
+        <option value="COMISO – (CIY)"></option>
+        <option value="CAGLIARI – Elmas (CAG)"></option>
+        <option value="OLBIA – Costa Smeralda (OLB)"></option>
+        <option value="ALGHERO – Fertilia (AHO)"></option>
+        <option value="BOLZANO – (BZO)"></option>
+        <option value="CUNEO – Levaldigi (CUF)"></option>
+        <option value="TRIESTE – Ronchi (TRS)"></option>
+      </datalist>
+      <div style="margin-top:6px;">
+        <label for="aeroporto_altro">Altro (se non in elenco o extra‑Italia)</label>
+        <input id="aeroporto_altro" placeholder="Es. Zurigo (ZRH), Parigi CDG, Doha (DOH)…">
+      </div>
+
+      <div class="two-col">
+        <div>
+          <label for="scali">Numero di scali</label>
+          <select id="scali">
+            <option value="">Indifferente</option>
+            <option value="0">Diretto (quando disponibile)</option>
+            <option value="1">Max 1 scalo</option>
+            <option value="2">Max 2 scali</option>
+          </select>
+        </div>
+        <div class="muted" style="display:flex;align-items:flex-end;">
+          <p class="field-note">Per aeroporti non principali potrebbero essere necessari più scali.</p>
+        </div>
+      </div>
+
+      <label for="note_preventivo">Dettagli aggiuntivi</label>
+      <textarea id="note_preventivo" rows="3" placeholder="Esigenze particolari, occasioni speciali, ritmi di viaggio…"></textarea>
     </div>
 
     <label for="msg">Messaggio</label>
     <textarea id="msg" name="messaggio" rows="4" required></textarea>
 
-    <!-- honeypot antispam (nascosto via CSS inline) -->
-    <input type="text" name="website" tabindex="-1" autocomplete="off"
-           style="position:absolute;left:-9999px;opacity:0;pointer-events:none">
+    <!-- honeypot antispam -->
+    <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0;pointer-events:none">
 
-<div class="checkbox-gdpr" style="margin:12px 0; display:flex; align-items:center; gap:8px;">
-  <input type="checkbox" id="consensoGDPR_contatti" required>
-  <label for="consensoGDPR_contatti">
-    Acconsento al trattamento dei miei dati personali ai sensi del
-    <a href="privacy.html" target="_blank" style="color:#C9A86A; text-decoration:underline;">
-      Regolamento (UE) 2016/679 (GDPR)
-    </a>.
-  </label>
-</div>
+    <div class="checkbox-gdpr" style="margin:12px 0; display:flex; align-items:center; gap:8px;">
+      <input type="checkbox" id="consensoGDPR_contatti" required>
+      <label for="consensoGDPR_contatti">Acconsento al trattamento dei miei dati personali ai sensi del
+        <a href="privacy.html" target="_blank" style="color:#C9A86A; text-decoration:underline;">Regolamento (UE) 2016/679 (GDPR)</a>.
+      </label>
+    </div>
 
     <button type="submit">Invia</button>
-
-    <!-- area stato/accessibilità -->
     <p id="stato-form" role="status" aria-live="polite"></p>
-
-    <!-- tag invisibile per il proxy/GAS -->
     <input type="hidden" name="tipoRichiesta" value="contatti">
   </form>
 </section>
-
 
 <section class="newsletter-section">
   <h2 class="slide-in">Iscriviti alla newsletter</h2>
@@ -421,6 +686,45 @@
   <i class="fa fa-shopping-bag fa-lg"></i>
   <span id="cartCount" class="cart-count-badge">0</span>
 </button>
+
+<!-- ===== Mini Chat WhatsApp (LEFT) — Home/Index ===== -->
+<div id="wa-chat-avatar" class="wa-avatar-left" aria-label="Apri chat WhatsApp" title="Apri chat WhatsApp">
+  <i class="fa fa-whatsapp" aria-hidden="true"></i>
+</div>
+
+<div id="waMiniChat" class="wa-overlay hidden" aria-hidden="true">
+  <div id="wa-chatbox" class="wa-box">
+    <div class="wa-header">
+      <div class="wa-brand">
+        <i class="fa fa-whatsapp" aria-hidden="true"></i>
+        <span>Parla con Yume</span>
+      </div>
+      <button class="wa-close" type="button" aria-label="Chiudi">×</button>
+    </div>
+
+    <div class="wa-body">
+      <p class="wa-preface">
+        Qualsiasi dubbio o curiosità sul <strong>mondo Yume</strong>? <br>
+        Scrivici su WhatsApp: siamo qui per te! 💬✨
+      </p>
+
+      <textarea id="waMessage" rows="5" placeholder="Scrivi qui..."></textarea>
+
+      <label class="wa-linkcheck">
+        <input id="waIncludeLink" type="checkbox" checked />
+        Includi il link a questa pagina
+      </label>
+
+      <button id="waSendBtn" class="wa-send">Invia su WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<!-- Avatar flottante: CONTATTACI -->
+<div id="contattaci-avatar">
+  <a href="contatti.html#contatti-form" aria-label="Contattaci">Contattaci</a>
+</div>
+
 
 <footer class="main-footer">
   <div class="footer-social">
@@ -493,6 +797,371 @@
       img.style.borderRadius = '50%';
     }
   });
+</script>
+
+<!-- Choices.js -->
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
+<script>
+// ====== LOGICA CONTATTI (come contatti.html) ======
+document.addEventListener("DOMContentLoaded", () => {
+  const ENDPOINT = "https://yume-clienti.azurewebsites.net/api/invio-yume";
+  const form   = document.getElementById("contatti-form");
+  const stato  = document.getElementById("stato-form");
+  const msgEl  = document.getElementById("msg");
+
+  // Choices per città (multi) — stile come pacchetti
+  const cittaSelect = document.getElementById('citta_alloggio');
+  let cittaChoices = null;
+  if (cittaSelect) {
+    cittaChoices = new Choices(cittaSelect, {
+      removeItemButton: true,
+      searchResultLimit: 10,
+      shouldSort: false,
+      placeholderValue: 'Seleziona le città'
+    });
+  }
+
+  // Helper: sync classi attive su tutte le chip
+  function syncAllChips(){
+    document.querySelectorAll('label.chip input[type="checkbox"]').forEach(inp => {
+      const lbl = inp.closest('label.chip');
+      if (!lbl) return;
+      if (inp.checked) { lbl.classList.add('active'); lbl.setAttribute('aria-pressed','true'); }
+      else { lbl.classList.remove('active'); lbl.setAttribute('aria-pressed','false'); }
+    });
+  }
+
+  // Interessi mutuamente esclusivi (Consulenza | Preventivo | Info generiche)
+  const interessiBoxes = Array.from(document.querySelectorAll("input[name='interessi']"));
+  interessiBoxes.forEach(box => box.addEventListener('change', () => {
+    if (box.checked) interessiBoxes.filter(b => b !== box).forEach(b => { b.checked = false; });
+    toggleBoxes();
+    syncAllChips();
+    prefillMessage();
+  }));
+
+  const boxCons = document.getElementById('box-consulenza');
+  const boxPrev = document.getElementById('box-preventivo');
+  function toggleBoxes(){
+    const val = interessiBoxes.find(b=>b.checked)?.value || '';
+    boxCons?.classList.toggle('hidden', val !== 'Consulenza');
+    boxPrev?.classList.toggle('hidden', val !== 'Preventivo');
+  }
+
+  // —— Consulenza helpers
+  const selTipo = document.getElementById('tipo_servizio');
+  const mapLabel = {
+    lite: 'Consulenza Yume Lite – 1h',
+    smart: 'Consulenza Yume Smart – 3h',
+    premium: 'Consulenza Yume Premium – 5h',
+    singolo: 'Yume Experience – Singolo',
+    coppia: 'Yume Experience – Coppia',
+    famiglia: 'Yume Experience – Famiglia',
+    minigruppo: 'Yume Experience – Mini Gruppo',
+    groupatelier: 'Yume Group Atelier'
+  };
+  function composePreferenze(){
+    const giorni = Array.from(document.querySelectorAll('input[name="giorni_pref"]:checked')).map(i=>i.value).join(', ');
+    const fasce  = Array.from(document.querySelectorAll('input[name="fasce_pref"]:checked')).map(i=>i.value).join(', ');
+    const altro  = (document.getElementById('fasce_altro')?.value || '').trim();
+    const parts = [];
+    if (giorni) parts.push(`Giorni: ${giorni}`);
+    if (fasce)  parts.push(`Fasce: ${fasce}`);
+    if (altro)  parts.push(`Altro: ${altro}`);
+    return parts.join(' | ');
+  }
+
+  // —— Preventivo helpers
+  function getMultiSelectValues(sel){ return Array.from(sel.selectedOptions).map(o=>o.value); }
+  function prefillMessage(){
+    const val = interessiBoxes.find(b=>b.checked)?.value || '';
+    if (!msgEl) return;
+    if (val === 'Consulenza'){
+      const lbl = mapLabel[selTipo?.value] || 'Consulenza';
+      const pref = composePreferenze();
+      msgEl.value = `Ciao Yume, vorrei informazioni su: ${lbl}.\n` + (pref ? `Preferenze: ${pref}\n` : '') + `Grazie!`;
+    } else if (val === 'Preventivo'){
+      const part = document.getElementById('data_partenza')?.value || '—';
+      const ritor = document.getElementById('data_ritorno')?.value || '—';
+      const adulti = document.getElementById('n_adulti')?.value || '—';
+      const bimbi = document.getElementById('n_bambini')?.value || '0';
+      const budget = document.getElementById('budget')?.value || '—';
+      const cittaSel = getMultiSelectValues(document.getElementById('citta_alloggio') || {selectedOptions:[]});
+      const cittaAltre = (document.getElementById('citta_altre')?.value || '').trim();
+      const aero = document.getElementById('aeroporto')?.value || '';
+      const aeroAltro = (document.getElementById('aeroporto_altro')?.value || '').trim();
+      const scali = document.getElementById('scali')?.value || 'Indifferente';
+      const expChips = Array.from(document.querySelectorAll('#esperienze-grid input:checked')).map(i=>i.value);
+      const expAltro = (document.getElementById('esperienze_altro')?.value || '').trim();
+      const partAero = aeroAltro ? `Aeroporto: ${aeroAltro} (altro)` : `Aeroporto: ${aero || '—'}`;
+      const righe = [
+        `Richiesta preventivo`,
+        `Date: ${part} → ${ritor}`,
+        `Persone: ${adulti} adulti, ${bimbi} bambini`,
+        `Budget: ${budget}`,
+        `Alloggi: ${[...cittaSel, cittaAltre].filter(Boolean).join(', ') || 'da definire'}`,
+        `${partAero} | Scali: ${scali}`,
+      ];
+      const exps = [...expChips, expAltro].filter(Boolean).join(', ');
+      if (exps) righe.push(`Esperienze: ${exps}`);
+      msgEl.value = `Ciao Yume, ${righe.join(' | ')}.`;
+    } else {
+      msgEl.value = '';
+    }
+  }
+
+  // Chip ON/OFF accessibile (esperienze & interessi)
+  document.querySelectorAll('label.chip input[type="checkbox"]').forEach(inp => {
+    const lbl = inp.closest('label.chip');
+    const sync = () => {
+      if (inp.checked) { lbl.classList.add('active'); lbl.setAttribute('aria-pressed','true'); }
+      else { lbl.classList.remove('active'); lbl.setAttribute('aria-pressed','false'); }
+    };
+    inp.addEventListener('change', () => { sync(); prefillMessage(); });
+    sync();
+  });
+  selTipo?.addEventListener('change', prefillMessage);
+  ['data_partenza','data_ritorno','n_adulti','n_bambini','budget','aeroporto','aeroporto_altro','scali','esperienze_altro','citta_altre']
+    .forEach(id => document.getElementById(id)?.addEventListener('input', prefillMessage));
+  document.getElementById('citta_alloggio')?.addEventListener('change', prefillMessage);
+
+  // Prefill da query ?consulenza=...
+  const qs = new URLSearchParams(location.search);
+  const consulenzaParam = (qs.get('consulenza') || '').toLowerCase();
+  if (consulenzaParam && selTipo){
+    const box = interessiBoxes.find(b=>b.value==='Consulenza');
+    if (box){ box.checked = true; toggleBoxes(); selTipo.value = consulenzaParam; prefillMessage();
+      const stato = document.getElementById('stato-form');
+      if (stato){ stato.textContent = "✍️ Richiesta consulenza precompilata"; stato.style.color = "#8B2C2B"; }
+    }
+  }
+
+  // ===== Calendario: partenza ≥ oggi; ritorno min = partenza e precompilato =====
+  const partenzaEl = document.getElementById('data_partenza');
+  const ritornoEl  = document.getElementById('data_ritorno');
+
+  function todayStr(){
+    const d = new Date(); d.setHours(0,0,0,0);
+    const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0'), dd = String(d.getDate()).padStart(2,'0');
+    return `${y}-${m}-${dd}`;
+  }
+  function clampPartenzaToToday(){
+    if (!partenzaEl) return;
+    const t = todayStr();
+    partenzaEl.min = t;
+    if (!partenzaEl.value || partenzaEl.value < t){ partenzaEl.value = t; }
+  }
+  function syncMinRitorno(){
+    if (!partenzaEl || !ritornoEl) return;
+    const minRit = partenzaEl.value || todayStr();
+    ritornoEl.min = minRit;
+    if (!ritornoEl.value || ritornoEl.value < minRit){ ritornoEl.value = minRit; } // precompila = partenza
+  }
+  clampPartenzaToToday();
+  syncMinRitorno();
+  partenzaEl?.addEventListener('change', () => {
+    const t = todayStr();
+    if (partenzaEl.value < t) partenzaEl.value = t;
+    syncMinRitorno();
+    prefillMessage();
+  });
+  ritornoEl?.addEventListener('change', () => {
+    if (ritornoEl.value < (ritornoEl.min || todayStr())){
+      ritornoEl.value = (ritornoEl.min || todayStr());
+    }
+    prefillMessage();
+  });
+
+  // ===== Submit =====
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!document.getElementById('consensoGDPR_contatti')?.checked){
+      stato.textContent = '⚠️ Devi accettare il consenso GDPR.'; return;
+    }
+    const selezione = interessiBoxes.find(b=>b.checked)?.value || '';
+    const dati = {
+      tipoRichiesta: 'contatti',
+      nome: form.nome.value.trim(),
+      email: form.email.value.trim(),
+      interessi: selezione ? [selezione] : [],
+      messaggio: (msgEl?.value || '').trim()
+    };
+    if (selezione === 'Consulenza'){
+      const tipoServizio = selTipo?.value || '';
+      const preferenze = composePreferenze();
+      if (tipoServizio) dati.tipo_servizio = tipoServizio;
+      if (preferenze)   dati.preferenze_orario = preferenze;
+    }
+    if (selezione === 'Preventivo'){
+      dati.preventivo = {
+        periodo: { partenza: partenzaEl?.value || '', ritorno: ritornoEl?.value || '' },
+        partecipanti: { adulti: Number(document.getElementById('n_adulti')?.value||0), bambini: Number(document.getElementById('n_bambini')?.value||0) },
+        budget: document.getElementById('budget')?.value || '',
+        struttura: (document.getElementById('dettagli_struttura')?.value || '').trim(),
+        trasporti: document.getElementById('trasporti')?.value || '',
+        transfer: document.getElementById('transfer')?.value || '',
+        esperienze: {
+          selezionate: Array.from(document.querySelectorAll('#esperienze-grid input:checked')).map(i=>i.value),
+          altro: (document.getElementById('esperienze_altro')?.value || '').trim()
+        },
+        citta: {
+          selezionate: Array.from(document.getElementById('citta_alloggio')?.selectedOptions || []).map(o=>o.value),
+          altre: (document.getElementById('citta_altre')?.value || '').trim()
+        },
+        volo: {
+          aeroporto: document.getElementById('aeroporto')?.value || '',
+          aeroporto_altro: (document.getElementById('aeroporto_altro')?.value || '').trim(),
+          scali: document.getElementById('scali')?.value || ''
+        },
+        note: (document.getElementById('note_preventivo')?.value || '').trim()
+      };
+    }
+
+    try {
+      stato.textContent = '⏳ Invio in corso…';
+      const res = await fetch(ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(dati) });
+      const data = await res.json();
+      if (data.status === 'ok' || data.status === 'success'){
+        stato.textContent = '✅ Messaggio inviato con successo!';
+        form.reset();
+        cittaChoices?.removeActiveItems();
+        document.querySelectorAll('label.chip').forEach(l=>l.classList.remove('active'));
+        boxCons?.classList.add('hidden');
+        boxPrev?.classList.add('hidden');
+        clampPartenzaToToday(); // ripristina vincoli e default
+        syncMinRitorno();
+      } else {
+        stato.textContent = '❌ Errore: ' + (data.message || 'Invio fallito.');
+      }
+    } catch (err){
+      console.error(err);
+      stato.textContent = '❌ Errore di rete. Riprova.';
+    }
+  });
+});
+</script>
+
+<script>
+(function(){
+  const root = document.documentElement;
+
+  function detectWhatsAppGap(){
+    const cands = Array.from(document.querySelectorAll('[class*="whatsapp"], [href*="wa.me"], [href*="api.whatsapp.com"]'));
+    const btn = cands.find(el => {
+      const style = getComputedStyle(el);
+      if (style.position !== 'fixed') return false;
+      const r = el.getBoundingClientRect();
+      return r.left < (window.innerWidth / 2) && (window.innerHeight - r.bottom) < 150;
+    });
+    if (!btn){ root.style.setProperty('--wa-gap','0px'); return; }
+    const r = btn.getBoundingClientRect();
+    root.style.setProperty('--wa-gap', (Math.ceil(r.height)+12)+'px');
+  }
+
+  function detectCookieGap(){
+    const cand = document.getElementById('cookie-banner');
+    if (!cand){ root.style.setProperty('--cookie-gap','0px'); return; }
+    const style = getComputedStyle(cand);
+    const isFixed = style.position==='fixed' && (style.bottom==='0px' || style.bottom==='0');
+    if (!isFixed || cand.classList.contains('hidden')){ root.style.setProperty('--cookie-gap','0px'); return; }
+    const r = cand.getBoundingClientRect();
+    root.style.setProperty('--cookie-gap', (Math.max(0,Math.ceil(r.height)+10))+'px');
+  }
+
+  window.addEventListener('DOMContentLoaded', ()=>{
+    detectWhatsAppGap();
+    detectCookieGap();
+
+    // Se già su contatti.html → scrolla al form
+    if (location.pathname.endsWith('contatti.html')){
+      document.querySelector('#contattaci-avatar a')?.addEventListener('click',(e)=>{
+        const target = document.getElementById('contatti-form');
+        if(target){
+          e.preventDefault();
+          target.scrollIntoView({behavior:'smooth',block:'start'});
+          target.style.outline='2px solid #8B2C2B';
+          setTimeout(()=>{target.style.outline='none'},1500);
+        }
+      });
+    }
+  });
+  window.addEventListener('resize', detectWhatsAppGap);
+  const cookie=document.getElementById('cookie-banner');
+  if(cookie && 'MutationObserver' in window){
+    new MutationObserver(detectCookieGap).observe(cookie,{attributes:true,attributeFilter:['class','style']});
+  }
+})();
+</script>
+
+<script>
+// ===== Mini Chat WhatsApp — Home/Index =====
+(function () {
+  const WHATSAPP_NUMBER = "393703081341"; // tuo numero
+
+  const avatar      = document.getElementById("wa-chat-avatar");
+  const overlay     = document.getElementById("waMiniChat");
+  const box         = document.getElementById("wa-chatbox");
+  const closeB      = box?.querySelector(".wa-close");
+  const sendB       = document.getElementById("waSendBtn");
+  const area        = document.getElementById("waMessage");
+  const includeLink = document.getElementById("waIncludeLink");
+
+  // Prefill per Home
+  function templateMessaggioIndex(nome){
+    const who = nome && nome.trim() ? nome.trim() : "un viaggiatore curioso";
+    return `Ciao Yume, sono ${who}! 🌸
+Sto esplorando la vostra home e ho qualche domanda sui vostri viaggi e servizi.
+Potete raccontarmi di più su come funziona Yume e quali pacchetti/consulenze mi consigliate? ✈️`;
+  }
+
+  function buildPrefill(){
+    let nome = "";
+    try {
+      const p1 = JSON.parse(sessionStorage.getItem("profiloUtente") || "null");
+      const p2 = JSON.parse(localStorage.getItem("profiloUtente") || "null");
+      const p  = p1?.profilo || p1 || p2;
+      nome = (p?.nome || p?.Nome || "").toString().trim();
+    } catch {}
+    return templateMessaggioIndex(nome);
+  }
+
+  function toggleWA() {
+    if (!overlay) return;
+    const willOpen = overlay.classList.contains("hidden");
+    overlay.classList.toggle("hidden");
+    if (willOpen) {
+      if (area) area.value = buildPrefill();
+      setTimeout(() => area?.focus(), 40);
+    }
+  }
+
+  function openWhatsAppWithMessage(phone, text){
+    const encoded  = encodeURIComponent(text);
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isMobile) {
+      window.location.href = `whatsapp://send?phone=${phone}&text=${encoded}`;
+      setTimeout(() => window.open(`https://wa.me/${phone}?text=${encoded}`, '_blank', 'noopener'), 800);
+    } else {
+      window.open(`https://wa.me/${phone}?text=${encoded}`, '_blank', 'noopener');
+    }
+  }
+
+  function sendWA(){
+    const testo = (area?.value || buildPrefill()).trim();
+    if (!testo) { alert("Scrivi un messaggio oppure chiudi la chat."); return; }
+    let payload = testo;
+    if (includeLink?.checked) payload += `\n\nLink: ${window.location.href}`;
+    openWhatsAppWithMessage(WHATSAPP_NUMBER, payload);
+    overlay?.classList.add("hidden");
+  }
+
+  avatar?.addEventListener("click", toggleWA);
+  closeB?.addEventListener("click", toggleWA);
+  sendB?.addEventListener("click", sendWA);
+  overlay?.addEventListener("click", (e) => { if (e.target === overlay) overlay.classList.add("hidden"); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !overlay.classList.contains("hidden")) overlay.classList.add("hidden"); });
+})();
 </script>
 
 <script>

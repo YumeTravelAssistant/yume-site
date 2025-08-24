@@ -5252,3 +5252,113 @@ body .indice-info-utili {
   overflow: hidden;
 }
 
+/* --- Consulenza: chips eleganti per giorni/fasce --- */
+#box-consulenza fieldset {
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin: 12px 0;
+}
+#box-consulenza fieldset legend {
+  font-weight: 600;
+  color: #4a4a4a;
+  padding: 0 4px;
+}
+
+#box-consulenza .chip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 8px;
+  margin-top: 6px;
+}
+
+/* trasforma i label esistenti in chip senza cambiare l'HTML */
+#box-consulenza label.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  padding: 8px 12px;
+  cursor: pointer;
+  user-select: none;
+  background: #fff;
+  transition: all .15s ease;
+  box-shadow: 0 1px 0 rgba(0,0,0,.04);
+}
+#box-consulenza label.chip:hover { border-color: #c9a86a66; box-shadow: 0 2px 6px rgba(0,0,0,.05); }
+#box-consulenza label.chip.active {
+  background: #F7F1E3;           /* sabbia chiara */
+  border-color: #C9A86A;          /* gold Yume */
+}
+#box-consulenza label.chip input { /* nasconde il checkbox ma resta accessibile */
+  position: absolute;
+  opacity: 0;
+  width: 0; height: 0;
+}
+
+/* input testo “Altro” coerente */
+#fasce_altro {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px 12px;
+  outline: none;
+}
+#fasce_altro:focus { border-color: #C9A86A; box-shadow: 0 0 0 3px rgba(201,168,106,.15); }
+
+
+/* === CONTATTACI – spostato sopra a WhatsApp di almeno 80px === */
+:root{
+  /* dimensione avatar WA dichiarata nel tuo CSS (#wa-chat-avatar = 60px) */
+  --wa-avatar-size: 60px;
+  /* spazio minimo extra richiesto */
+  --contattaci-gap: 0px;
+  /* margine di sicurezza tra elementi */
+  --contattaci-safety: 12px;
+  /* calcolo: 25px (bottom WA) + 60px (WA) + 12px (aria) + 80px (gap) = 177px */
+  --contattaci-bottom: calc(25px + var(--wa-avatar-size) + var(--contattaci-safety) + var(--contattaci-gap));
+}
+
+/* avatar tondo “Contattaci” a sinistra */
+#contattaci-avatar{
+  position: fixed;
+  left: 20px !important;
+  bottom: var(--contattaci-bottom) !important; /* ⬅️ sta sopra WA di 80px+ */
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  z-index: 9997; /* sotto a WA (9998) solo per sicurezza, ma non si sovrappone perché è più in alto */
+  box-shadow: 0 6px 18px rgba(0,0,0,.18);
+  background: #C9A86A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: .95;
+  transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
+}
+#contattaci-avatar a{
+  display:flex;align-items:center;justify-content:center;
+  width:100%;height:100%;
+  border-radius:50%;
+  color: #8B2C2B;
+  text-decoration:none;
+  font-weight:600;
+  font-size:12px;font-family:"Raleway",sans-serif;
+  text-align:center;padding:8px;
+}
+#contattaci-avatar:hover{ transform:translateY(-2px); box-shadow:0 10px 24px rgba(0,0,0,.22); opacity:1; }
+
+/* Mobile: manteniamo comunque il clear sopra WA */
+@media (max-width: 640px){
+  #contattaci-avatar{
+    left: 16px !important;
+    width: 56px; height: 56px;
+    /* se vuoi tenerlo un filo più vicino su mobile, riduci solo il gap */
+    --contattaci-gap: 70px; /* 25 + 60 + 12 + 70 = 167px */
+    bottom: var(--contattaci-bottom) !important;
+  }
+  #contattaci-avatar a{ font-size:11px; padding:6px; }
+}
+

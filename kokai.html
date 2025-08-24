@@ -431,6 +431,11 @@ h1.hero-title {
   <span id="cartCount" class="cart-count-badge">0</span>
 </button>
 
+<!-- Avatar flottante: CONTATTACI -->
+<div id="contattaci-avatar">
+  <a href="contatti.html#contatti-form" aria-label="Contattaci">Contattaci</a>
+</div>
+
 <!-- ===== Mini Chat WhatsApp (LEFT) ===== -->
 <!-- Avatar flottante SINISTRA -->
 <div id="wa-chat-avatar" class="wa-avatar-left" aria-label="Apri chat WhatsApp" title="Apri chat WhatsApp">
@@ -511,6 +516,58 @@ h1.hero-title {
     <button onclick="sendMessage()">Invia</button>
   </div>
 </div>
+
+<script>
+(function(){
+  const root = document.documentElement;
+
+  function detectWhatsAppGap(){
+    const cands = Array.from(document.querySelectorAll('[class*="whatsapp"], [href*="wa.me"], [href*="api.whatsapp.com"]'));
+    const btn = cands.find(el => {
+      const style = getComputedStyle(el);
+      if (style.position !== 'fixed') return false;
+      const r = el.getBoundingClientRect();
+      return r.left < (window.innerWidth / 2) && (window.innerHeight - r.bottom) < 150;
+    });
+    if (!btn){ root.style.setProperty('--wa-gap','0px'); return; }
+    const r = btn.getBoundingClientRect();
+    root.style.setProperty('--wa-gap', (Math.ceil(r.height)+12)+'px');
+  }
+
+  function detectCookieGap(){
+    const cand = document.getElementById('cookie-banner');
+    if (!cand){ root.style.setProperty('--cookie-gap','0px'); return; }
+    const style = getComputedStyle(cand);
+    const isFixed = style.position==='fixed' && (style.bottom==='0px' || style.bottom==='0');
+    if (!isFixed || cand.classList.contains('hidden')){ root.style.setProperty('--cookie-gap','0px'); return; }
+    const r = cand.getBoundingClientRect();
+    root.style.setProperty('--cookie-gap', (Math.max(0,Math.ceil(r.height)+10))+'px');
+  }
+
+  window.addEventListener('DOMContentLoaded', ()=>{
+    detectWhatsAppGap();
+    detectCookieGap();
+
+    // Se già su contatti.html → scrolla al form
+    if (location.pathname.endsWith('contatti.html')){
+      document.querySelector('#contattaci-avatar a')?.addEventListener('click',(e)=>{
+        const target = document.getElementById('contatti-form');
+        if(target){
+          e.preventDefault();
+          target.scrollIntoView({behavior:'smooth',block:'start'});
+          target.style.outline='2px solid #8B2C2B';
+          setTimeout(()=>{target.style.outline='none'},1500);
+        }
+      });
+    }
+  });
+  window.addEventListener('resize', detectWhatsAppGap);
+  const cookie=document.getElementById('cookie-banner');
+  if(cookie && 'MutationObserver' in window){
+    new MutationObserver(detectCookieGap).observe(cookie,{attributes:true,attributeFilter:['class','style']});
+  }
+})();
+</script>
 
 <script>
 // ===== Mini Chat WhatsApp (Left) — Kokai =====
