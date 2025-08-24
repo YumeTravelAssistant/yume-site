@@ -9,9 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // GDPR obbligatorio
+    // ✅ GDPR obbligatorio
     const consenso = document.getElementById("consensoGDPR");
-    if (!consenso.checked) {
+    if (!consenso || consenso.checked !== true) {
       stato.textContent = "Devi acconsentire al trattamento dei dati personali per procedere.";
       return;
     }
@@ -19,12 +19,28 @@ document.addEventListener("DOMContentLoaded", () => {
     stato.textContent = "Invio in corso…";
 
     const dati = {
+      // routing
       tipoRichiesta: "maison",
+
+      // payload "business"
       nome: form.nome.value.trim(),
       email: form.email.value.trim(),
       viaggio: form.viaggio.value,
       messaggio: form.messaggio.value.trim(),
-      website: form.website ? form.website.value : "" // honeypot
+
+      // honeypot
+      website: form.website ? form.website.value : "",
+
+      // ✅ campi consenso privacy → Supabase
+      consensoGDPR: true,
+      policy_key: "privacy",
+      policy_version: "v1.0-2025-08-19",
+      gdpr_url: "https://yume-travel.com/privacy.html",
+
+      // contesto utile (non PII sensibile)
+      referrer: document.referrer || null,
+      lang: document.documentElement.lang || "it"
+      // ip + userAgent li aggiunge il proxy Azure
     };
 
     const btn = form.querySelector('button[type="submit"]');

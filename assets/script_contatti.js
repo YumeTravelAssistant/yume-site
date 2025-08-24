@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
       consensoGDPR: true,
       policy_key: "privacy",
       policy_version: "v1.0-2025-08-19",
-      gdpr_url: "https://yellow-bay-077dd2b03.6.azurestaticapps.net/privacy.html",
+      gdpr_url: "https://yume-travel.com/privacy.html",
 
       // contesto utile
       referrer: document.referrer || null,

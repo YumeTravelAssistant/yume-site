@@ -8,17 +8,17 @@ const CONSENT_CONSTANTS = {
   privacy: {
     key: "privacy",
     version: "v1.0-2025-08-19",
-    url: "https://yellow-bay-077dd2b03.6.azurestaticapps.net/privacy.html",
+    url: "https://yume-travel.com/privacy.html",
   },
   terms: {
     key: "terms",
     version: "v1.0-2025-08-19",
-    url: "https://yellow-bay-077dd2b03.6.azurestaticapps.net/termini-condizioni.html",
+    url: "https://yume-travel.com/termini-condizioni.html",
   },
   newsletter: {
     key: "newsletter",
     version: "v1.0-2025-08-19",
-    url: "https://yellow-bay-077dd2b03.6.azurestaticapps.net/privacy.html",
+    url: "https://yume-travel.com/privacy.html",
   },
 };
 

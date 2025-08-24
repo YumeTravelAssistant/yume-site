@@ -1,7 +1,7 @@
 // === Consenso privacy: identifica la versione del testo che mostri nel link ===
 const POLICY_PRIVACY_KEY = 'privacy';
 const POLICY_PRIVACY_VERSION = 'v1.0-2025-08-19'; // <-- aggiorna quando cambi l'informativa
-const POLICY_PRIVACY_URL = 'https://yellow-bay-077dd2b03.6.azurestaticapps.net/privacy.html';
+const POLICY_PRIVACY_URL = 'https://yume-travel.com/privacy.html';
 
 document.addEventListener('DOMContentLoaded', () => {
   const ver = document.getElementById('privacyVer');
