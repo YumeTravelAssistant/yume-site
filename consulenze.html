@@ -18,20 +18,26 @@
 <!-- Navbar -->
 <nav class="navbar">
   <div class="navbar-left">
-    <img src="assets/logo-yume.jpg" alt="Logo YUME" class="logo-navbar">
+    <a href="index.html" class="logo-link" aria-label="Vai alla home">
+      <img src="assets/logo-yume.jpg" alt="Logo YUME" class="logo-navbar">
+    </a>
   </div>
-<button id="toggleNotificheBtn" class="notif-btn" onclick="toggleNotifiche()" aria-label="Notifiche">
-  <i class="fa fa-bell fa-lg"></i>
-  <span id="notifCount" class="notif-count">0</span>
-</button>
-   
-  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+
+  <button id="toggleNotificheBtn" class="notif-btn" onclick="toggleNotifiche()" aria-label="Notifiche">
+    <i class="fa fa-bell fa-lg"></i>
+    <span id="notifCount" class="notif-count">0</span>
+  </button>
+
+  <button class="hamburger" onclick="toggleSidebar()" aria-label="Apri menu">☰</button>
 </nav>
 
 <div id="sidebar" class="sidebar hidden">
   <div class="sidebar-logo">
-    <img src="assets/logo_bar.png" alt="Logo Yume" class="logo-sidebar">
+    <a href="index.html" class="logo-link" aria-label="Vai alla home">
+      <img src="assets/logo_bar.png" alt="Logo Yume" class="logo-sidebar">
+    </a>
   </div>
+
   <a href="index.html">Home</a>
   <a href="pacchetti.html">Pacchetti flessibili</a>
   <a href="gruppo.html">Viaggi di gruppo</a>
@@ -392,7 +398,7 @@
 <footer class="main-footer">
   <div class="footer-social">
     <p><strong>Seguici su:</strong></p>
-    <a href="https://www.instagram.com/yumeviaggi" target="_blank" aria-label="Instagram" class="fa fa-instagram"></a>
+    <a href="https://www.instagram.com/yume_traveltech" target="_blank" aria-label="Instagram" class="fa fa-instagram"></a>
     <a href="https://www.tiktok.com/@yumetraveltech" target="_blank" aria-label="TikTok" class="fa fa-music"></a>
     <a href="https://wa.me/393703081341" target="_blank" aria-label="WhatsApp" class="fa fa-whatsapp"></a>
     <a href="https://yuta-travel.com" target="_blank" aria-label="Sito YUTA" class="fa fa-globe"></a>
