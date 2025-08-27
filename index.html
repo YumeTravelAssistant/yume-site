@@ -980,72 +980,90 @@ const ENDPOINT = "https://yume-sito-form.azurewebsites.net/api/invia-form";
     prefillMessage();
   });
 
-  // ===== Submit =====
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (!document.getElementById('consensoGDPR_contatti')?.checked){
-      stato.textContent = '⚠️ Devi accettare il consenso GDPR.'; return;
-    }
-    const selezione = interessiBoxes.find(b=>b.checked)?.value || '';
-    const dati = {
-      tipoRichiesta: 'contatti',
-      nome: form.nome.value.trim(),
-      email: form.email.value.trim(),
-      interessi: selezione ? [selezione] : [],
-      messaggio: (msgEl?.value || '').trim()
-    };
-    if (selezione === 'Consulenza'){
-      const tipoServizio = selTipo?.value || '';
-      const preferenze = composePreferenze();
-      if (tipoServizio) dati.tipo_servizio = tipoServizio;
-      if (preferenze)   dati.preferenze_orario = preferenze;
-    }
-    if (selezione === 'Preventivo'){
-      dati.preventivo = {
-        periodo: { partenza: partenzaEl?.value || '', ritorno: ritornoEl?.value || '' },
-        partecipanti: { adulti: Number(document.getElementById('n_adulti')?.value||0), bambini: Number(document.getElementById('n_bambini')?.value||0) },
-        budget: document.getElementById('budget')?.value || '',
-        struttura: (document.getElementById('dettagli_struttura')?.value || '').trim(),
-        trasporti: document.getElementById('trasporti')?.value || '',
-        transfer: document.getElementById('transfer')?.value || '',
-        esperienze: {
-          selezionate: Array.from(document.querySelectorAll('#esperienze-grid input:checked')).map(i=>i.value),
-          altro: (document.getElementById('esperienze_altro')?.value || '').trim()
-        },
-        citta: {
-          selezionate: Array.from(document.getElementById('citta_alloggio')?.selectedOptions || []).map(o=>o.value),
-          altre: (document.getElementById('citta_altre')?.value || '').trim()
-        },
-        volo: {
-          aeroporto: document.getElementById('aeroporto')?.value || '',
-          aeroporto_altro: (document.getElementById('aeroporto_altro')?.value || '').trim(),
-          scali: document.getElementById('scali')?.value || ''
-        },
-        note: (document.getElementById('note_preventivo')?.value || '').trim()
-      };
-    }
+// Submit
+form?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!document.getElementById('consensoGDPR_contatti')?.checked){
+    stato.textContent = '⚠️ Devi accettare il consenso GDPR.'; 
+    return; 
+  }
 
-    try {
-      stato.textContent = '⏳ Invio in corso…';
-      const res = await fetch(ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(dati) });
-      const data = await res.json();
-      if (data.status === 'ok' || data.status === 'success'){
-        stato.textContent = '✅ Messaggio inviato con successo!';
-        form.reset();
-        cittaChoices?.removeActiveItems();
-        document.querySelectorAll('label.chip').forEach(l=>l.classList.remove('active'));
-        boxCons?.classList.add('hidden');
-        boxPrev?.classList.add('hidden');
-        clampPartenzaToToday(); // ripristina vincoli e default
-        syncMinRitorno();
-      } else {
-        stato.textContent = '❌ Errore: ' + (data.message || 'Invio fallito.');
-      }
-    } catch (err){
-      console.error(err);
-      stato.textContent = '❌ Errore di rete. Riprova.';
+  const selezione = interessiBoxes.find(b=>b.checked)?.value || '';
+  const dati = {
+    tipoRichiesta: 'contatti',
+    nome: form.nome.value.trim(),
+    email: form.email.value.trim(),
+    interessi: selezione ? [selezione] : [],
+    messaggio: (msgEl?.value || '').trim()
+  };
+
+  if (selezione === 'Consulenza'){
+    const tipoServizio = selTipo?.value || '';
+    const preferenze = composePreferenze();
+    if (tipoServizio) dati.tipo_servizio = tipoServizio;
+    if (preferenze)   dati.preferenze_orario = preferenze;
+  }
+  if (selezione === 'Preventivo'){
+    dati.preventivo = {
+      periodo: { 
+        partenza: document.getElementById('data_partenza')?.value || '', 
+        ritorno: document.getElementById('data_ritorno')?.value || '' 
+      },
+      partecipanti: { 
+        adulti: Number(document.getElementById('n_adulti')?.value||0), 
+        bambini: Number(document.getElementById('n_bambini')?.value||0) 
+      },
+      budget: document.getElementById('budget')?.value || '',
+      struttura: (document.getElementById('dettagli_struttura')?.value || '').trim(),
+      trasporti: document.getElementById('trasporti')?.value || '',
+      transfer: document.getElementById('transfer')?.value || '',
+      esperienze: {
+        selezionate: Array.from(document.querySelectorAll('#esperienze-grid input:checked')).map(i=>i.value),
+        altro: (document.getElementById('esperienze_altro')?.value || '').trim()
+      },
+      citta: {
+        selezionate: Array.from(document.getElementById('citta_alloggio')?.selectedOptions || []).map(o=>o.value),
+        altre: (document.getElementById('citta_altre')?.value || '').trim()
+      },
+      volo: {
+        aeroporto: document.getElementById('aeroporto')?.value || '',
+        aeroporto_altro: (document.getElementById('aeroporto_altro')?.value || '').trim(),
+        scali: document.getElementById('scali')?.value || ''
+      },
+      note: (document.getElementById('note_preventivo')?.value || '').trim()
+    };
+  }
+
+  try {
+    stato.textContent = '⏳ Invio in corso…';
+    const res = await fetch(ENDPOINT, { 
+      method:'POST', 
+      headers:{'Content-Type':'application/json'}, 
+      body: JSON.stringify(dati) 
+    });
+
+    let data;
+    try { data = await res.json(); } catch { data = {}; }
+
+    const success = (res.ok && (data.ok === true || data.status === 'ok' || data.status === 'success'));
+
+    if (success){
+      stato.textContent = '✅ Messaggio inviato con successo!';
+      form.reset();
+      if (cittaChoices) cittaChoices.removeActiveItems(); // reset Choices
+      syncAllChips();
+      document.getElementById('box-consulenza')?.classList.add('hidden');
+      document.getElementById('box-preventivo')?.classList.add('hidden');
+    } else {
+      const msg = (data.error || data.message || 'Invio fallito.');
+      stato.textContent = '❌ Errore: ' + msg;
     }
-  });
+  } catch (err){
+    console.error(err);
+    stato.textContent = '❌ Errore di rete. Riprova.';
+  }
+});
+
 });
 </script>
 
