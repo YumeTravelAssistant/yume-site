@@ -67,6 +67,16 @@
     .choices__list--dropdown .choices__item--selectable.is-highlighted{
       background:#f8f5f0 !important;
     }
+
+/* === Pannello Koalendar (inline) === */
+.yume-koa-panel{display:none;margin-top:12px;border:1px solid #eee;border-radius:14px;overflow:hidden}
+.yume-koa-panel.open{display:block}
+.yume-koa-header{display:flex;align-items:center;justify-content:space-between;background:#fafafa;border-bottom:1px solid #eee;padding:8px 12px}
+.yume-koa-title{font-weight:600;margin:0;font-size:1rem}
+.yume-koa-close{border:0;background:#8B2C2B;color:#fff;border-radius:10px;padding:6px 10px;cursor:pointer}
+.yume-koa-body{position:relative;min-height:60vh}
+.yume-koa-body iframe{width:100%;height:100%;border:0;display:block}
+
   </style>
 </head>
 <body>
@@ -167,6 +177,46 @@
         <option value="minigruppo">Yume Experience – Mini Gruppo</option>
         <option value="groupatelier">Yume Group Atelier</option>
       </select>
+
+
+  <p style="margin-top:10px; font-size:0.95rem; line-height:1.4;">
+    Puoi <strong>prenotare direttamente</strong> il tuo turno dal calendario cliccando
+    sul pulsante qui sotto, <strong>oppure</strong> indicare i giorni e le fasce orarie preferite:
+    in questo caso verrai ricontattato via email per confermare l’appuntamento.
+  </p>
+
+
+<!-- === Prenota consulenza (Koalendar) === -->
+<button
+  type="button"
+  id="openKoalendarBtn"
+  style="
+    display:inline-block;
+    margin-top:10px;
+    background:#8B2C2B;
+    color:#fff;
+    border:none;
+    padding:10px 14px;
+    border-radius:12px;
+    font-weight:600;
+    cursor:pointer;
+  "
+>
+  Prenota ora con Koalendar
+</button>
+
+
+<div id="yumeKoalendarPanel" class="yume-koa-panel" aria-hidden="true">
+  <div class="yume-koa-header">
+    <h3 class="yume-koa-title">Prenota la tua consulenza</h3>
+    <button type="button" id="closeKoalendarBtn" class="yume-koa-close" aria-label="Chiudi">Chiudi ✕</button>
+  </div>
+  <div class="yume-koa-body">
+    <!-- Koalendar Inline Embed -->
+    <div id="inline-widget-consulenza-yume-travel"></div>
+  </div>
+</div>
+
 
       <fieldset style="margin-top:10px;">
         <legend>Giorni preferiti</legend>
@@ -983,6 +1033,53 @@ form?.addEventListener('submit', async (e) => {
 
 });
 </script>
+
+<!-- Koalendar loader (una sola volta per pagina) -->
+<script>
+  window.Koalendar = window.Koalendar || function(){ (Koalendar.props = Koalendar.props || []).push(arguments) };
+</script>
+<script async src="https://koalendar.com/assets/widget.js"></script>
+
+<script>
+(function(){
+  const KOALENDAR_URL = "https://koalendar.com/e/consulenza-yume-travel"; // <-- il tuo link
+
+  // ⚠️ ID coerenti con l'HTML (Koalendar con 'a')
+  const panel    = document.getElementById('yumeKoalendarPanel');
+  const openBtn  = document.getElementById('openKoalendarBtn');
+  const closeBtn = document.getElementById('closeKoalendarBtn');
+
+  let koaInit = false;
+
+  function openPanel(){
+    if (!panel) return;
+    if (!koaInit){
+      Koalendar('inline', {
+        url: KOALENDAR_URL,
+        selector: '#inline-widget-consulenza-yume-travel'
+      });
+      koaInit = true;
+    }
+    panel.classList.add('open');
+    panel.setAttribute('aria-hidden','false');
+  }
+
+  function closePanel(){
+    if (!panel) return;
+    panel.classList.remove('open');
+    panel.setAttribute('aria-hidden','true');
+  }
+
+  // Attacca i listener solo se gli elementi esistono
+  openBtn && openBtn.addEventListener('click', openPanel);
+  closeBtn && closeBtn.addEventListener('click', closePanel);
+
+  // (opzionale) auto-apri se arrivi con ?open=koalendar
+  const qs = new URLSearchParams(location.search);
+  if (qs.get('open') === 'koalendar') { openPanel(); }
+})();
+</script>
+
 
 <script src="assets/script_prodotti.js"></script>
 <script src="assets/script.js"></script>
