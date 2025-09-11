@@ -410,6 +410,7 @@ document.getElementById("formPacchetto").addEventListener("submit", function (e)
 
     const dati = {
       // --- dati form ---
+      tipoRichiesta: "preventivo",
       nome: form.get("nome"),
       cognome: form.get("cognome"),
       email: form.get("email"),
