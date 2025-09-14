@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const errBox = document.getElementById("err");
   const ENDPOINT = "https://yume-sito-form.azurewebsites.net/api/invia-form";
 
-
   // ====== PRECOMPILA da localStorage (se presente)
   try {
     const saved = JSON.parse(localStorage.getItem("yume_invito") || "null");
@@ -142,7 +141,7 @@ async function loadImageAsDataURL(url) {
   }
 }
 
-// ====== Generatore PDF (immagine grande + dettagli + link)
+// ====== Generatore PDF (immagine grande + dettagli + link) — FIX wrapping note + box dinamica
 async function generaPDFInvito(dati) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit: 'pt', format: 'a4' });
@@ -167,8 +166,8 @@ async function generaPDFInvito(dati) {
   // Immagine grande a larghezza contenuto (931x768 → ratio esatto 0.825)
   const invitoImg = await loadImageAsDataURL('assets/invito.jpg');
   if (invitoImg) {
-    const contentW = W - 2*margin;         // stessa larghezza del contenuto
-    const ratio    = 768 / 931;             // 0.825…
+    const contentW = W - 2*margin;   // stessa larghezza del contenuto
+    const ratio    = 768 / 931;       // 0.825…
     const imgH     = contentW * ratio;
     doc.addImage(invitoImg, 'JPEG', margin, y, contentW, imgH);
     y += imgH + 20; // spazio sotto l'immagine
@@ -211,31 +210,52 @@ async function generaPDFInvito(dati) {
   doc.setFont('helvetica','normal'); doc.setTextColor(0,0,0);
   y += 30;
 
-  // Box riepilogo RSVP
+  // ===== Box riepilogo RSVP — calcolo larghezza interna e altezza dinamica
+  const innerPadding = 12;                                  // padding sx/dx dentro la box
+  const innerW = (W - 2*margin) - innerPadding * 2;         // ✅ larghezza interna corretta
+  const lineStep = 24;                                      // step verticale base per righe
+  const textY1 = y + 48;                                    // righe statiche
+  const textY2 = y + 72;
+  const textY3 = y + 96;
+
+  // Prima preparo il testo Note con wrapping sulla larghezza interna
+  doc.setFont('helvetica','normal'); doc.setTextColor(0,0,0);
+  const noteStr = `Note: ${dati.note || '-'}`;
+  const wrappedNote = doc.splitTextToSize(noteStr, innerW); // ✅ wrap sulla larghezza interna
+  // Altezza stimata del blocco note
+  const noteLineHeight = 14; // px tipici a font 12pt
+  const noteHeight = wrappedNote.length * noteLineHeight;
+
+  // Altezza minima della box + spazio per le note
+  const minBoxH = 130; // come prima
+  const dynamicPart = (textY3 - y) + 16 + noteHeight; // fino a note + bottom padding
+  const boxH = Math.max(minBoxH, dynamicPart);
+
+  // Disegno box
   doc.setDrawColor(201,168,106); doc.setLineWidth(1);
-  const boxH = 130;
   doc.rect(margin, y, W - 2*margin, boxH);
 
+  // Titolo box
   doc.setFont('helvetica','bold'); doc.setTextColor(139,44,43);
-  doc.text("RIEPILOGO RSVP", margin + 12, y + 22);
+  doc.text("RIEPILOGO RSVP", margin + innerPadding, y + 22);
 
+  // Dati
   doc.setFont('helvetica','normal'); doc.setTextColor(0,0,0);
-  doc.text(`Nome: ${dati.nome || ''}`,       margin + 12, y + 48);
-  doc.text(`Cognome: ${dati.cognome || ''}`, margin + 260, y + 48);
-  doc.text(`Persone: ${dati.persone || ''}`, margin + 12, y + 72);
-  doc.text(`Telefono: ${dati.telefono || '-'}`, margin + 260, y + 72);
+  doc.text(`Nome: ${dati.nome || ''}`,       margin + innerPadding, textY1);
+  doc.text(`Cognome: ${dati.cognome || ''}`, margin + innerPadding + 248, textY1);
+  doc.text(`Persone: ${dati.persone || ''}`, margin + innerPadding, textY2);
+  doc.text(`Telefono: ${dati.telefono || '-'}`, margin + innerPadding + 248, textY2);
 
-  const note = `Note: ${dati.note || '-'}`;
-  const wrap = doc.splitTextToSize(note, W - (margin + 24));
-  doc.text(wrap, margin + 12, y + 96);
+  // Note (wrapped) all'interno dei bordi
+  doc.text(wrappedNote, margin + innerPadding, textY3);
 
   // Spazio finale + link ICS dentro il PDF
   y += boxH + 30;
   doc.setFont('helvetica','underline'); doc.setFontSize(12); doc.setTextColor(0,0,255);
-doc.textWithLink("Aggiungi al calendario", W/2, y, {
-  align: "center",
-  url: "https://yume-sito-form.azurewebsites.net/api/invia-form?ics=opening-party"
-});
+  doc.textWithLink("Aggiungi al calendario", W/2, y, {
+    align: "center",
+    url: "https://yume-sito-form.azurewebsites.net/api/invia-form?ics=opening-party"
+  });
 
   const filename = `Invito_Yume_${(dati.cognome||'ospite')}_${(dati.nome||'')}.pdf`.replace(/\s+/g,'_');
   doc.save(filename);
