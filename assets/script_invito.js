@@ -231,7 +231,7 @@ async function generaPDFInvito(dati) {
   // Spazio finale + link ICS dentro il PDF
   y += boxH + 30;
   doc.setFont('helvetica','underline'); doc.setFontSize(12); doc.setTextColor(0,0,255);
-  doc.textWithLink("➕ Aggiungi al calendario", W/2, y, {
+  doc.textWithLink("Aggiungi al calendario", W/2, y, {
     align:"center",
     url: "https://yume-travel.com/assets/Yume_OpeningParty.ics" // opzionale file .ics statico
   });
