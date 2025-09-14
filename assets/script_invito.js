@@ -231,10 +231,10 @@ async function generaPDFInvito(dati) {
   // Spazio finale + link ICS dentro il PDF
   y += boxH + 30;
   doc.setFont('helvetica','underline'); doc.setFontSize(12); doc.setTextColor(0,0,255);
-  doc.textWithLink("Aggiungi al calendario", W/2, y, {
-    align:"center",
-    url: "https://yume-travel.com/assets/Yume_OpeningParty.ics" // opzionale file .ics statico
-  });
+doc.textWithLink("Aggiungi al calendario", W/2, y, {
+  align: "center",
+  url: "https://yume-sito-form.azurewebsites.net/api/invia-form?ics=opening-party"
+});
 
   const filename = `Invito_Yume_${(dati.cognome||'ospite')}_${(dati.nome||'')}.pdf`.replace(/\s+/g,'_');
   doc.save(filename);
