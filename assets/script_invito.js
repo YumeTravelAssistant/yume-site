@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const errBox = document.getElementById("err");
   const ENDPOINT = "https://yume-sito-form.azurewebsites.net/api/invia-form";
 
+
   // ====== PRECOMPILA da localStorage (se presente)
   try {
     const saved = JSON.parse(localStorage.getItem("yume_invito") || "null");
