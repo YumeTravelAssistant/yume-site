@@ -116,9 +116,32 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.disabled = false;
     }
   });
+
+  // 👉 Pulsante "Aggiungi al calendario (.ics)" sotto la mappa
+  const icsBtn = document.getElementById("btn-ics");
+  if (icsBtn && typeof scaricaICS === "function") {
+    icsBtn.addEventListener("click", (e) => { e.preventDefault(); scaricaICS(); });
+  }
 });
 
-// ====== Generatore PDF stile Yume con emoji + link Maps
+// ===== Helpers per immagini → DataURL (logo)
+async function loadImageAsDataURL(url) {
+  try {
+    const res = await fetch(url, { cache: "no-cache" });
+    const blob = await res.blob();
+    return await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch (e) {
+    console.warn("Logo non caricato:", e);
+    return null;
+  }
+}
+
+// ====== Generatore PDF stile Yume (senza emoji) + logo + link Maps
 async function generaPDFInvito(dati) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit: 'pt', format: 'a4' });
@@ -126,6 +149,14 @@ async function generaPDFInvito(dati) {
   const W = doc.internal.pageSize.getWidth();
   const margin = 56;
   let y = margin;
+
+  // Logo (se disponibile)
+  const logoDataURL = await loadImageAsDataURL('assets/home_logo.jpg');
+  if (logoDataURL) {
+    // larghezza ~90px, calcolo proporzioni
+    const logoW = 90, logoH = 90 * 0.42; // stima ratio; regola se serve
+    doc.addImage(logoDataURL, 'JPEG', margin, y - 10, logoW, logoH);
+  }
 
   // Titolo oro
   doc.setFont('helvetica','bold');
@@ -145,28 +176,31 @@ async function generaPDFInvito(dati) {
   doc.line(margin, y, W - margin, y);
   y += 24;
 
-  // Info evento con emoji
+  // Bullet helper (cerchi rossi piccoli)
+  function bullet(x, y){ doc.setFillColor(139,44,43); doc.circle(x, y-4, 3, 'F'); }
+
+  // Info evento (senza emoji)
   doc.setFont('helvetica','bold'); doc.setTextColor(139,44,43);
-  doc.text("📍 Luogo:", margin, y);
+  bullet(margin, y); doc.text("Luogo:", margin + 12, y);
   doc.setFont('helvetica','normal'); doc.setTextColor(0,0,0);
   doc.text("Parco E. Berlinguer – Via Antonio Gramsci 1330/B, Larciano (PT)", margin+80, y);
   y += 20;
 
   doc.setFont('helvetica','bold'); doc.setTextColor(139,44,43);
-  doc.text("📅 Giorno:", margin, y);
+  bullet(margin, y); doc.text("Giorno:", margin + 12, y);
   doc.setFont('helvetica','normal'); doc.setTextColor(0,0,0);
   doc.text("Sabato 11 Ottobre 2025", margin+80, y);
   y += 20;
 
   doc.setFont('helvetica','bold'); doc.setTextColor(139,44,43);
-  doc.text("🕢 Orario:", margin, y);
+  bullet(margin, y); doc.text("Orario:", margin + 12, y);
   doc.setFont('helvetica','normal'); doc.setTextColor(0,0,0);
   doc.text("dalle 19:30", margin+80, y);
-  y += 30;
+  y += 28;
 
   // Link a Google Maps nel PDF
   doc.setFont('helvetica','bold'); doc.setTextColor(139,44,43);
-  doc.text("📍 Mappa:", margin, y);
+  bullet(margin, y); doc.text("Mappa:", margin + 12, y);
   doc.setFont('helvetica','underline'); doc.setTextColor(0,0,255);
   doc.textWithLink("Apri in Google Maps", margin+80, y, {
     url: "https://maps.google.com/?q=Parco+E.+Berlinguer+Via+Antonio+Gramsci+1330/B+Larciano"
@@ -193,11 +227,11 @@ async function generaPDFInvito(dati) {
   const wrap = doc.splitTextToSize(note, W - (margin + 24));
   doc.text(wrap, margin + 12, y + 96);
 
-  // Footer
+  // Footer (solo testo, niente emoji)
   y += boxH + 36;
   doc.setTextColor(139,44,43);
   doc.setFont('helvetica','bold'); doc.setFontSize(13);
-  doc.text("Ti aspettiamo con gioia — Team Yume 🌸", W/2, y, {align:'center'});
+  doc.text("Ti aspettiamo con gioia — Team Yume", W/2, y, {align:'center'});
 
   const filename = `Invito_Yume_${(dati.cognome||'ospite')}_${(dati.nome||'')}.pdf`.replace(/\s+/g,'_');
   doc.save(filename);
