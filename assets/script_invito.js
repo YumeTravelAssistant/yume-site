@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// ===== Helpers per immagini → DataURL (logo)
+// ===== Helpers per immagini → DataURL
 async function loadImageAsDataURL(url) {
   try {
     const res = await fetch(url, { cache: "no-cache" });
@@ -136,12 +136,12 @@ async function loadImageAsDataURL(url) {
       reader.readAsDataURL(blob);
     });
   } catch (e) {
-    console.warn("Logo non caricato:", e);
+    console.warn("Immagine non caricata:", e);
     return null;
   }
 }
 
-// ====== Generatore PDF stile Yume (senza emoji) + logo + link Maps
+// ====== Generatore PDF (immagine grande + dettagli + link)
 async function generaPDFInvito(dati) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit: 'pt', format: 'a4' });
@@ -149,14 +149,6 @@ async function generaPDFInvito(dati) {
   const W = doc.internal.pageSize.getWidth();
   const margin = 56;
   let y = margin;
-
-  // Logo (se disponibile)
-  const logoDataURL = await loadImageAsDataURL('assets/home_logo.jpg');
-  if (logoDataURL) {
-    // larghezza ~90px, calcolo proporzioni
-    const logoW = 90, logoH = 90 * 0.42; // stima ratio; regola se serve
-    doc.addImage(logoDataURL, 'JPEG', margin, y - 10, logoW, logoH);
-  }
 
   // Titolo oro
   doc.setFont('helvetica','bold');
@@ -169,17 +161,27 @@ async function generaPDFInvito(dati) {
   doc.setFontSize(14);
   doc.setTextColor(139,44,43); // rosso
   doc.text("Invito ufficiale per un ospite speciale", W/2, y, {align:"center"});
-  y += 28;
+  y += 24;
+
+  // Immagine grande a larghezza contenuto (931x768 → ratio esatto 0.825)
+  const invitoImg = await loadImageAsDataURL('assets/invito.jpg');
+  if (invitoImg) {
+    const contentW = W - 2*margin;         // stessa larghezza del contenuto
+    const ratio    = 768 / 931;             // 0.825…
+    const imgH     = contentW * ratio;
+    doc.addImage(invitoImg, 'JPEG', margin, y, contentW, imgH);
+    y += imgH + 20; // spazio sotto l'immagine
+  }
 
   // Riga separatrice oro
   doc.setDrawColor(201,168,106); doc.setLineWidth(1);
   doc.line(margin, y, W - margin, y);
-  y += 24;
+  y += 18;
 
   // Bullet helper (cerchi rossi piccoli)
   function bullet(x, y){ doc.setFillColor(139,44,43); doc.circle(x, y-4, 3, 'F'); }
 
-  // Info evento (senza emoji)
+  // Info evento
   doc.setFont('helvetica','bold'); doc.setTextColor(139,44,43);
   bullet(margin, y); doc.text("Luogo:", margin + 12, y);
   doc.setFont('helvetica','normal'); doc.setTextColor(0,0,0);
@@ -222,16 +224,17 @@ async function generaPDFInvito(dati) {
   doc.text(`Persone: ${dati.persone || ''}`, margin + 12, y + 72);
   doc.text(`Telefono: ${dati.telefono || '-'}`, margin + 260, y + 72);
 
-  // Note lunghe spezzate
   const note = `Note: ${dati.note || '-'}`;
   const wrap = doc.splitTextToSize(note, W - (margin + 24));
   doc.text(wrap, margin + 12, y + 96);
 
-  // Footer (solo testo, niente emoji)
-  y += boxH + 36;
-  doc.setTextColor(139,44,43);
-  doc.setFont('helvetica','bold'); doc.setFontSize(13);
-  doc.text("Ti aspettiamo con gioia — Team Yume", W/2, y, {align:'center'});
+  // Spazio finale + link ICS dentro il PDF
+  y += boxH + 30;
+  doc.setFont('helvetica','underline'); doc.setFontSize(12); doc.setTextColor(0,0,255);
+  doc.textWithLink("➕ Aggiungi al calendario", W/2, y, {
+    align:"center",
+    url: "https://yume-travel.com/assets/Yume_OpeningParty.ics" // opzionale file .ics statico
+  });
 
   const filename = `Invito_Yume_${(dati.cognome||'ospite')}_${(dati.nome||'')}.pdf`.replace(/\s+/g,'_');
   doc.save(filename);
@@ -239,7 +242,7 @@ async function generaPDFInvito(dati) {
 
 // ====== ICS universale (Apple / Android / Outlook)
 function scaricaICS() {
-  // NB: orari in UTC (Z). 19:30 Europe/Rome ≈ 17:30Z (considera l’ora legale)
+  // NB: orari in UTC (Z). 19:30 Europe/Rome ≈ 17:30Z
   const ics = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
