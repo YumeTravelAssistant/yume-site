@@ -149,11 +149,14 @@
   <h2 class="slide-in">Siamo qui per te</h2>
   <form id="contatti-form" novalidate>
 
-    <label for="nome">Il tuo nome</label>
-    <input type="text" id="nome" name="nome" required>
+<label for="nome">Il tuo nome</label>
+<input type="text" id="nome" name="nome" required>
 
-    <label for="email">E-mail</label>
-    <input type="email" id="email" name="email" required>
+<label for="email">E-mail</label>
+<input type="email" id="email" name="email" required>
+
+<label for="telefono">Numero di telefono</label>
+<input type="tel" id="telefono" name="telefono" inputmode="tel" pattern="[0-9+ ]{6,20}" placeholder="+39 370 308 1341" required>
 
     <label>Cosa ti interessa</label>
     <div class="row" id="interessi-row">
@@ -960,6 +963,7 @@ form?.addEventListener('submit', async (e) => {
     tipoRichiesta: 'contatti',
     nome: form.nome.value.trim(),
     email: form.email.value.trim(),
+    telefono: form.telefono.value.trim(),
     interessi: selezione ? [selezione] : [],
     messaggio: (msgEl?.value || '').trim()
   };

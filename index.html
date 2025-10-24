@@ -496,6 +496,9 @@
     <label for="email">E-mail</label>
     <input type="email" id="email" name="email" required>
 
+ <label for="telefono">Numero di telefono</label>
+  <input type="tel" id="telefono" name="telefono" inputmode="tel" pattern="[0-9+ ]{6,20}" required>
+
     <label>Cosa ti interessa</label>
     <div class="row" id="interessi-row">
       <label class="chip chip--fill"><input type="checkbox" name="interessi" value="Consulenza">Consulenza</label>
@@ -1140,6 +1143,7 @@ form?.addEventListener('submit', async (e) => {
     tipoRichiesta: 'contatti',
     nome: form.nome.value.trim(),
     email: form.email.value.trim(),
+  telefono: form.telefono.value.trim(),
     interessi: selezione ? [selezione] : [],
     messaggio: (msgEl?.value || '').trim()
   };
