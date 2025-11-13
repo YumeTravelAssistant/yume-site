@@ -5498,3 +5498,59 @@ body .indice-info-utili {
   transition: transform .2s ease, filter .2s ease;
 }
 
+/* --- BLOCCO DOCUMENTO PRECONTRATTUALE --- */
+.documento-precontrattuale-section {
+  width: 100%;
+  padding: 70px 0;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+}
+
+.documento-precontrattuale-container {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  padding: 0 20px;
+}
+
+.documento-precontrattuale-container h2 {
+  font-size: 2rem;
+  margin-bottom: 25px;
+  color: #8B2C2B;
+  font-family: "Playfair Display", serif;
+}
+
+.documento-precontrattuale-container p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #222;
+}
+
+.documento-precontrattuale-btn {
+  margin-top: 45px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #8B2C2B;
+  color: #fff;
+  padding: 14px 32px;
+  border-radius: 6px;
+  border: 2px solid #C9A86A;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: 0.25s ease;
+}
+
+.documento-precontrattuale-btn:hover {
+  background: #C9A86A;
+  color: #8B2C2B;
+}
+
+.doc-note {
+  margin-top: 12px;
+  color: #555;
+  font-size: 0.9rem;
+}
+
