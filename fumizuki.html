@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fumizuki – Viaggio di Gruppo</title>
+  <link rel="icon" type="image/png" href="favicon.ico" />
+
+  <!-- Font Yume -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Raleway:wght@300;500;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Stili principali -->
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="assets/styles_pacchetti.css">
+
+  <style>
+    :root{
+      --wa-avatar-size: 60px;
+      --contattaci-gap: 0px;
+      --contattaci-safety: 12px;
+      --contattaci-bottom: calc(25px + var(--wa-avatar-size) + var(--contattaci-safety) + var(--contattaci-gap));
+    }
+    @media (max-width: 640px){
+      :root{ --contattaci-gap: 70px; }
+    }
+
+    .hero-banner { position: relative; overflow: hidden; }
+    .hero-banner::before {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.5)); z-index: 2;
+    }
+    h1.hero-title {
+      font-family: 'Playfair Display', serif; font-size: clamp(2.4rem, 5vw, 3.5rem);
+      font-weight: 700; color: #C9A86A; margin-bottom: 20px; text-align: center;
+    }
+  </style>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+
+<body>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-left">
+    <a href="index.html" class="logo-link" aria-label="Vai alla home">
+      <img src="assets/logo-yume.jpg" alt="Logo YUME" class="logo-navbar">
+    </a>
+  </div>
+
+  <button id="toggleNotificheBtn" class="notif-btn" onclick="toggleNotifiche()" aria-label="Notifiche">
+    <i class="fa fa-bell fa-lg"></i>
+    <span id="notifCount" class="notif-count">0</span>
+  </button>
+
+  <button class="hamburger" onclick="toggleSidebar()" aria-label="Apri menu">☰</button>
+</nav>
+
+<div id="sidebar" class="sidebar hidden">
+  <div class="sidebar-logo">
+    <a href="index.html" class="logo-link" aria-label="Vai alla home">
+      <img src="assets/logo_bar.png" alt="Logo Yume" class="logo-sidebar">
+    </a>
+  </div>
+
+  <a href="index.html">Home</a>
+  <a href="pacchetti.html">Pacchetti flessibili</a>
+  <a href="gruppo.html">Viaggi di gruppo</a>
+  <a href="maison.html">Viaggi su misura</a>
+  <a href="consulenze.html">Consulenze</a>
+  <a href="prodotti.html">Prodotti</a>
+  <a href="faq.html">FAQ</a>
+  <a href="info-utili.html">Informazioni utili</a>
+  <a href="contatti.html">Contatti</a>
+  <a href="profilo.html">Registrazione</a>
+  <a href="log-in.html">Area Personale</a>
+</div>
+
+<!-- COPERTINA -->
+<header class="hero-banner">
+  <picture>
+    <source srcset="fumizuki/fumizuki_mob.jpg" media="(max-width: 768px)">
+    <img src="fumizuki/fumizuki_desk.jpg" alt="Viaggio di gruppo Fumizuki: Giappone tra Tokyo, Kanazawa, Kyoto e Kansai" class="hero-banner-img">
+  </picture>
+  <div class="hero-overlay">
+    <h1 class="hero-title">Fumizuki</h1>
+    <p class="hero-subtitle">Giappone tra Tokyo, Kanazawa, Kyoto e Kansai</p>
+  </div>
+  <div class="scroll-indicator" onclick="scrollToMain()">
+    <span class="arrow-down"></span>
+  </div>
+</header>
+
+<!-- CONTENUTO PRINCIPALE -->
+<div class="main-wrapper">
+  <section class="hajimete-intro slide-in">
+    <h1>Fumizuki – Viaggio di Gruppo</h1>
+    <p class="lead">12 notti tra Tokyo, Kanazawa, Kyoto e Kansai: città iconiche, cultura e panorami autentici.</p>
+    <p class="intro-desc">
+      Un itinerario completo che unisce la Tokyo sacra e profana, l’eleganza senza tempo di Kanazawa, la bellezza di Kyoto e la ricchezza del Kansai con escursioni memorabili.
+    </p>
+    <ul class="icon-list">
+      <li><i class="fa fa-calendar"></i> Date: <strong>29 luglio – 12 agosto 2026</strong></li>
+      <li><i class="fa fa-map-marker"></i> Città: Tokyo, Kamakura, Yokohama, Kanazawa, Kyoto, Nara, Osaka, Hiroshima, Miyajima, Himeji, Okayama, Lago Biwa (Hikone/Ōtsu/Monte Hiei)</li>
+      <li><i class="fa fa-user"></i> Gruppo ridotto</li>
+    </ul>
+    <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
+      <p class="price-tag" style="margin:0;">
+        <span style="text-decoration: line-through; color:#8B2C2B;">3890€</span>
+        <strong style="color:#C9A86A; font-size:1.3em;">3490€</strong> per persona, volo incluso
+      </p>
+      <div style="background:#8B2C2B; color:#fff; border:2px solid #C9A86A;
+                  border-radius:50%; width:120px; height:120px;
+                  display:flex; align-items:center; justify-content:center;
+                  font-size:0.85em; font-weight:bold; text-align:center;
+                  line-height:1.2; box-shadow:0 4px 10px rgba(0,0,0,0.2);">
+        Offerta<br>White Day<br>3490€ PP
+      </div>
+    </div>
+  </section>
+</div>
+
+<section class="cta-gruppo-haru slide-in">
+  <a href="contatti.html#contatti-form" class="modern-btn light">Contattaci</a>
+</section>
+
+<section class="focus-tags slide-in">
+  <div class="focus-item">
+    <div class="focus-icon"><i class="fa fa-star"></i></div>
+    <p class="focus-label">Esperienza</p>
+    <div class="focus-bar"><div class="bar-fill" style="width: 90%; background-color: #C9A86A;"></div></div>
+    <div class="score-text">90%</div>
+  </div>
+  <div class="focus-item">
+    <div class="focus-icon"><i class="fa fa-balance-scale"></i></div>
+    <p class="focus-label">Cultura</p>
+    <div class="focus-bar"><div class="bar-fill" style="width: 85%; background-color: #C9A86A;"></div></div>
+    <div class="score-text">85%</div>
+  </div>
+  <div class="focus-item">
+    <div class="focus-icon"><i class="fa fa-cutlery"></i></div>
+    <p class="focus-label">Gastronomia</p>
+    <div class="focus-bar"><div class="bar-fill" style="width: 80%; background-color: #C9A86A;"></div></div>
+    <div class="score-text">80%</div>
+  </div>
+  <div class="focus-item">
+    <div class="focus-icon"><i class="fa fa-leaf"></i></div>
+    <p class="focus-label">Natura</p>
+    <div class="focus-bar"><div class="bar-fill" style="width: 75%; background-color: #C9A86A;"></div></div>
+    <div class="score-text">75%</div>
+  </div>
+  <div class="focus-item">
+    <div class="focus-icon"><i class="fa fa-shopping-bag"></i></div>
+    <p class="focus-label">Shopping</p>
+    <div class="focus-bar"><div class="bar-fill" style="width: 70%; background-color: #C9A86A;"></div></div>
+    <div class="score-text">70%</div>
+  </div>
+</section>
+
+<section class="itinerario-esteso slide-in">
+  <h2>Itinerario (29 luglio – 12 agosto 2026)</h2>
+
+  <!-- G1 -->
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 1 – 29 luglio: Partenza da Roma → Tokyo</button>
+    <div class="giorno-content">
+      <p>Ritrovo dei partecipanti all’aeroporto di Roma, assistenza Yume alle procedure di check-in e briefing di benvenuto. Partenza con volo intercontinentale per Tokyo. Pasti e pernottamento a bordo. Inizia così il viaggio estivo tra grandi città, cultura e tradizioni senza tempo.</p>
+      <p><i class="fa fa-star"></i> Assistenza Yume in partenza • Briefing pre-volo</p>
+    </div>
+  </div>
+
+  <!-- G2 -->
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 2 – 30 luglio: Arrivo a Tokyo – Asakusa, Sensō-ji e luci serali</button>
+    <div class="giorno-content">
+      <p>Atterreremo a Tokyo, dove ritireremo SIM o pocket Wi-Fi. Dopo il trasferimento ad <strong>Asakusa</strong> e il pranzo insieme nelle vie parallele alla <strong>Nakamise-dōri</strong>, raggiungeremo l’hotel (con deposito bagagli disponibile prima del check-in). Nel pomeriggio visiteremo il <strong>Tempio Sensō-ji</strong>, percorrendo la storica Nakamise-dōri e assaggiando snack tradizionali, per poi salire alla <strong>Asahi Beer Hall Sky Room</strong> e goderci la vista sulla città, seguita da una passeggiata lungo il <strong>fiume Sumida</strong>. In serata potremo cenare ad Asakusa tra le lanterne rosse di <strong>Hoppy Dori</strong>, oppure spostarci a <strong>Shibuya</strong> per vivere il famoso incrocio e la sua vibrante atmosfera notturna.</p>
+      <p><i class="fa fa-star"></i> Asakusa • Sensō-ji • Asahi Sky Room • Sumida • Shibuya</p>
+    </div>
+  </div>
+
+  <!-- G3 -->
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 3 – 31 luglio: Tokyo urbana – Meiji Jingu, Harajuku, Shinjuku, Akihabara e Ueno</button>
+    <div class="giorno-content">
+      <p>Partiremo da Asakusa verso Shibuya con la <strong>Ginza Line</strong>. Proseguiremo poi verso il <strong>Santuario Meiji Jingu</strong>, immerso in un bosco sacro di oltre 100.000 alberi, dove ammireremo la grande torii in legno, il muro di botti di sake e i sentieri che conducono al santuario principale. Passeggeremo lungo <strong>Takeshita Street</strong> ad Harajuku, tra moda giovanile e dolci colorati, e verso pranzo ci sposteremo a <strong>Shinjuku</strong> per visitare lo <strong>Shinjuku Gyoen National Garden</strong>. Nel pomeriggio sarà la volta di <strong>Akihabara</strong>, tra elettronica, fumetti, maid café e il santuario <strong>Kanda Myōjin</strong>. Alle 16:30 visiteremo il mercato <strong>Ameya-Yokochō</strong> a Ueno, perfetto per street food e shopping a buon prezzo. Rientro in hotel e possibilità di cena tra Shibuya, izakaya o una serata più elegante a Roppongi.</p>
+      <p><i class="fa fa-star"></i> Meiji Jingu • Harajuku • Shinjuku Gyoen • Akihabara • Ueno</p>
+    </div>
+  </div>
+
+  <!-- G4 -->
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 4 – 1 agosto: Escursione a Kamakura e Yokohama</button>
+    <div class="giorno-content">
+      <p>Presto la mattina partiremo da Tokyo verso <strong>Kamakura</strong> (circa 1h di treno con JR Yokosuka Line o Enoden). Visiteremo il <strong>Santuario Tsurugaoka Hachimangū</strong>, passeggiando tra giardini, lanterne e l’area nascosta di Inari con i suoi torii rossi. Alle 10:30 esploreremo <strong>Komachi-dōri</strong>, ricca di botteghe, street food e artigianato locale. Nella tarda mattinata raggiungeremo il tempio <strong>Hase-dera</strong>, e alle 12:30 il <strong>Grande Buddha</strong> di Kamakura. Nel pomeriggio ci sposteremo a <strong>Yokohama</strong> per visitare <strong>Minato Mirai 21</strong> e i <strong>Red Brick Warehouse</strong>. Saliremo poi sulla <strong>Cosmo Clock 21</strong> per una vista spettacolare sulla baia. Alle 18:30 chiuderemo la giornata a <strong>Chinatown</strong>, tra lanterne e street food, oppure rientreremo a Tokyo per esplorare altri quartieri.</p>
+      <p><i class="fa fa-star"></i> Kamakura • Grande Buddha • Minato Mirai • Chinatown</p>
+    </div>
+  </div>
+
+  <!-- G5 -->
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 5 – 2 agosto: Incontro con Kanazawa – Ōmichō, Nagamachi e Higashi Chaya</button>
+    <div class="giorno-content">
+      <p>Al mattino partiremo da Tokyo Station a bordo dello <em>shinkansen</em> diretto a <strong>Kanazawa</strong> con scorci suggestivi sulle Alpi giapponesi lungo il tragitto. Verso mezzogiorno arriveremo in città, lasceremo i bagagli in hotel (o nei coin locker) e inizieremo dal <strong>Mercato di Ōmichō</strong>, cuore gastronomico di Kanazawa. Nel pomeriggio esploreremo il quartiere samuraico di <strong>Nagamachi</strong>, visitando la <strong>Nomura-ke</strong>, quindi ci sposteremo nel quartiere delle geisha di <strong>Higashi Chaya</strong>, tra case da tè e atmosfere del periodo Edo. Serata libera tra Korinbo e Katamachi o degustazione in un bar di sakè.</p>
+      <p><i class="fa fa-star"></i> Ōmichō • Nagamachi • Nomura-ke • Higashi Chaya</p>
+    </div>
+  </div>
+
+  <!-- G6 -->
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 6 – 3 agosto: Kanazawa – Kenroku-en, castello e foglia d’oro</button>
+    <div class="giorno-content">
+      <p>Dedicheremo la mattinata al <strong>Kenroku-en</strong>, uno dei tre giardini più belli del Giappone. Proprio accanto visiteremo il <strong>Castello di Kanazawa</strong>, con scorci spettacolari sul paesaggio urbano. Dopo una piccola pausa merenda, passeremo in un laboratorio specializzato per un <strong>workshop di decorazione con foglia d’oro</strong>, di cui Kanazawa produce oltre il 99% del totale giapponese: potremo personalizzare una bacchetta, una tazza o un piccolo oggetto da portare a casa. Nel pomeriggio, in alternativa, possibilità di visita al teatro Nō. Verso sera passeggiata a <strong>Teramachi</strong> e cena con cucina locale <strong>Kaga ryōri</strong>; conclusione lungo il fiume Asano.</p>
+      <p><i class="fa fa-star"></i> Kenroku-en • Castello di Kanazawa • Foglia d’oro • Teramachi</p>
+    </div>
+  </div>
+
+  <!-- G7 -->
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 7 – 4 agosto: Kyoto – Kiyomizu-dera, Ninenzaka e Pontochō</button>
+    <div class="giorno-content">
+      <p>Partiremo da Kanazawa verso <strong>Kyoto</strong> in treno. All’arrivo in mattinata, lasceremo i bagagli in hotel e pranzeremo in zona centrale (possibile tappa al <strong>Nishiki Market</strong>). Nel pomeriggio visiteremo il <strong>Kiyomizu-dera</strong>, con la celebre terrazza panoramica e la cascata Otowa, quindi passeggiata tra le vie storiche di <strong>Ninenzaka</strong> e <strong>Sannenzaka</strong>, tra botteghe artigiane e dolci stagionali. Proseguiremo con il <strong>Kōdai-ji</strong> e concluderemo al <strong>Maruyama Park</strong>. Cena nella zona di <strong>Pontochō</strong>, tra lanterne e ristoranti affacciati sul fiume Kamo.</p>
+      <p><i class="fa fa-star"></i> Kiyomizu-dera • Ninenzaka/Sannenzaka • Kōdai-ji • Pontochō</p>
+    </div>
+  </div>
+
+  <!-- G8 -->
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 8 – 5 agosto: Kyoto – Nijō, Kinkaku-ji, Ninna-ji e Gion</button>
+    <div class="giorno-content">
+      <p>Inizieremo la giornata con la visita al <strong>Castello Nijō</strong>, celebre per i “pavimenti dell’usignolo”. Proseguiremo verso il <strong>Kinkaku-ji</strong>, il Padiglione d’Oro che si riflette nel laghetto Kyōko-chi. Dopo pranzo visiteremo il <strong>Ninna-ji</strong> e il <strong>Santuario Kitano Tenmangū</strong>, con breve sosta a <strong>Kamishichiken</strong> per una pausa a base di tè matcha. Nel tardo pomeriggio scopriremo <strong>Shinnyo-dō</strong> e concluderemo a <strong>Gion</strong> tra machiya e lanterne rosse. Possibilità di assistere ad arti tradizionali al Gion Corner.</p>
+      <p><i class="fa fa-star"></i> Nijō • Kinkaku-ji • Ninna-ji • Kitano Tenmangū • Gion</p>
+    </div>
+  </div>
+
+  <!-- G9 -->
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 9 – 6 agosto: Nara – Tōdai-ji e ryokan con onsen</button>
+    <div class="giorno-content">
+      <p>Ci sposteremo verso <strong>Nara</strong> e, una volta lasciati i bagagli in struttura, inizieremo la scoperta dell’antica capitale. Visiteremo il maestoso <strong>Tōdai-ji</strong>, il più grande edificio in legno del mondo, che custodisce il celebre Daibutsu. Passeggeremo nel <strong>Nara Park</strong> tra i cervi sacri e i viali alberati, fino al raffinato <strong>Kasuga Taisha</strong>, noto per le sue lanterne. Se il tempo lo permette, visita al <strong>Giardino Isuien</strong> o al quartiere storico di <strong>Naramachi</strong>. In serata rientro nel nostro <strong>ryokan</strong> (1 notte) per rilassarci nelle <strong>onsen</strong> e cenare nei pressi dell’alloggio.</p>
+      <p><i class="fa fa-star"></i> Tōdai-ji • Nara Park • Kasuga Taisha • Ryokan + onsen</p>
+    </div>
+  </div>
+
+  <!-- G10 -->
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 10 – 7 agosto: Osaka – templi, castello e Dōtonbori</button>
+    <div class="giorno-content">
+      <p>Dopo colazione ci sposteremo verso <strong>Osaka</strong>. La prima tappa sarà lo <strong>Shitennō-ji</strong>, tempio buddhista tra i più antichi del Giappone. Proseguiremo verso il <strong>Namba Yasaka Jinja</strong>, celebre per l’enorme testa di leone, e poi al <strong>Sumiyoshi Taisha</strong>, attraversando il ponte rosso Sorihashi. Visiteremo quindi il <strong>Castello di Osaka</strong> e il parco circostante. Concluderemo la giornata nella vita cittadina di <strong>Dōtonbori</strong>, tra insegne luminose e street food, con cena in izakaya o ristorante tradizionale.</p>
+      <p><i class="fa fa-star"></i> Shitennō-ji • Namba Yasaka • Sumiyoshi Taisha • Castello di Osaka • Dōtonbori</p>
+    </div>
+  </div>
+
+  <!-- G11 (REFUSO BROCHURE: NON DA KYOTO, MA DA OSAKA) -->
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 11 – 8 agosto: Hiroshima & Miyajima – torii sull’acqua e Parco della Pace</button>
+    <div class="giorno-content">
+      <p><strong>Partiremo da Osaka</strong> in <em>shinkansen</em> per raggiungere <strong>Hiroshima</strong> in circa due ore. Dopo aver lasciato i bagagli, ci sposteremo verso <strong>Miyajima</strong> (treno + traghetto) per visitare il <strong>Santuario di Itsukushima</strong>, patrimonio UNESCO, con il torii che sembra galleggiare sull’acqua. Avremo tempo per passeggiare lungo <strong>Omotesandō</strong>, tra botteghe e specialità locali. Nel pomeriggio rientro in centro e visita al <strong>Parco della Pace</strong>: <strong>Genbaku Dome</strong>, Cenotafio, Fiamma della Pace e <strong>Museo della Pace</strong>. Pernottamento a Osaka.</p>
+      <p><i class="fa fa-star"></i> Miyajima • Itsukushima • Parco della Pace • Museo della Pace</p>
+    </div>
+  </div>
+
+  <!-- G12 -->
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 12 – 9 agosto: Himeji & Okayama – e scorci su Hiroshima</button>
+    <div class="giorno-content">
+      <p>La giornata inizierà con la visita al <strong>Castello di Himeji</strong>, Patrimonio UNESCO e simbolo del Giappone feudale. Proseguiremo poi in treno verso <strong>Okayama</strong> (circa 30 minuti) per pranzare e visitare il <strong>Giardino Kōraku-en</strong>, tra i tre più belli del Giappone. Continueremo con il <strong>Castello di Hiroshima</strong> (Carp Castle), oggi ricostruito e circondato da un ampio fossato, e con il raffinato <strong>giardino Shukkeien</strong>. Infine, passeggiata nel centro moderno di Hiroshima tra le vie di <strong>Hondōri</strong>. Pernottamento a Osaka.</p>
+     <p><i class="fa fa-star"></i> Himeji • Kōraku-en • Shukkeien • Hondōri</p>
+    </div>
+  </div>
+
+  <!-- G13 -->
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 13 – 10 agosto: Lago Biwa & Monte Hiei – natura, spiritualità e shopping a Osaka</button>
+    <div class="giorno-content">
+      <p>Trasferimento da Osaka verso il <strong>Lago Biwa</strong>, il più grande del Giappone, per una mattinata tra passeggiate rilassanti lungo la riva. Poi ci sposteremo verso <strong>Ōtsu</strong> per salire con la suggestiva funicolare di <strong>Sakamoto</strong> sul <strong>Monte Hiei</strong> e visitare il complesso di <strong>Enryaku-ji</strong>, patrimonio UNESCO e cuore del Buddhismo Tendai. Nel pomeriggio rientreremo a Osaka per gli ultimi acquisti: <strong>Kuromon Ichiba Market</strong>, poi le luci di <strong>Dōtonbori</strong> e infine <strong>Den Den Town</strong> per manga, anime e oggetti tech.</p>
+      <p><i class="fa fa-star"></i> Lago Biwa • Enryaku-ji • Kuromon Ichiba • Dōtonbori • Den Den Town</p>
+    </div>
+  </div>
+
+  <!-- G14 -->
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 14 – 11 agosto: Ultimi momenti a Osaka & volo di rientro</button>
+    <div class="giorno-content">
+      <p>Giornata dedicata alla partenza, con ultimi momenti per esplorare Osaka e rilassarsi nelle vie commerciali prima del trasferimento in aeroporto. Partenza con volo di rientro verso Roma. Pasti e pernottamento a bordo.</p>
+      <p><i class="fa fa-star"></i> Ultimo shopping • Assistenza Yume • Partenza</p>
+    </div>
+  </div>
+
+  <!-- G15 -->
+  <div class="giorno-box">
+    <button class="giorno-toggle">Giorno 15 – 12 agosto: Arrivo a Roma</button>
+    <div class="giorno-content">
+      <p>Arrivo a Roma e fine dei servizi. Un viaggio estivo completo tra grandi capitali, quartieri storici, spiritualità e panorami indimenticabili.</p>
+      <p><i class="fa fa-star"></i> Arrivo in Italia • Fine del viaggio</p>
+    </div>
+  </div>
+</section>
+
+<section class="mappa-itinerario slide-in">
+  <h2 class="section-title">Itinerario tipo – su mappa</h2>
+  <div id="map-itinerario" style="height: 500px; border-radius: 12px; overflow: hidden;"></div>
+</section>
+
+<div class="mappa-legend">
+  <p><i class="fa fa-map" aria-hidden="true"></i> <strong>Come usare la mappa</strong></p>
+  <ul>
+    <li><i class="fa fa-location-arrow"></i> Clicca sui torii <img src="fumizuki/marker-yume.png" alt="marker" class="mini-marker"> per scoprire le tappe del viaggio</li>
+    <li><i class="fa fa-arrows-alt"></i> Trascina per esplorare liberamente la mappa</li>
+    <li><i class="fa fa-search-plus"></i> Usa lo zoom per avvicinarti alle zone locali</li>
+  </ul>
+</div>
+
+<section class="foto-slider-section slide-in">
+  <h2 class="foto-slider-title">I luoghi del viaggio Fumizuki</h2>
+  <div class="foto-slider-wrapper">
+    <button class="slider-arrow left" onclick="scrollFotoSlider(-1)"></button>
+
+    <div class="foto-slider-container" id="fotoSlider">
+      <!-- ORDINE SFALSATO (non 1→9) -->
+      <div class="foto-box"><img src="kokai/2.jpg" alt="Tokyo – Asakusa e atmosfera serale" loading="lazy" onclick="apriFotoFullscreen(0)"></div>
+      <div class="foto-box"><img src="kokai/5.jpg" alt="Kanazawa – quartieri storici" loading="lazy" onclick="apriFotoFullscreen(1)"></div>
+      <div class="foto-box"><img src="kokai/1.jpg" alt="Kyoto – vie storiche e templi" loading="lazy" onclick="apriFotoFullscreen(2)"></div>
+      <div class="foto-box"><img src="kokai/4.jpg" alt="Nara – cervi sacri e spiritualità" loading="lazy" onclick="apriFotoFullscreen(3)"></div>
+      <div class="foto-box"><img src="kokai/9.jpg" alt="Hiroshima – Parco della Pace" loading="lazy" onclick="apriFotoFullscreen(4)"></div>
+      <div class="foto-box"><img src="kokai/3.jpg" alt="Osaka – luci e street food" loading="lazy" onclick="apriFotoFullscreen(5)"></div>
+      <div class="foto-box"><img src="kokai/7.jpg" alt="Miyajima – torii sull’acqua" loading="lazy" onclick="apriFotoFullscreen(6)"></div>
+      <div class="foto-box"><img src="kokai/6.jpg" alt="Himeji – il castello" loading="lazy" onclick="apriFotoFullscreen(7)"></div>
+      <div class="foto-box"><img src="kokai/8.jpg" alt="Lago Biwa / Monte Hiei – Enryaku-ji" loading="lazy" onclick="apriFotoFullscreen(8)"></div>
+    </div>
+
+    <button class="slider-arrow right" onclick="scrollFotoSlider(1)"></button>
+  </div>
+</section>
+
+<!-- ACCORDION -->
+<section class="accordion-section slide-in">
+  <div class="info-boxes-container">
+    <div class="info-box">
+      <button class="info-toggle"><span class="info-number">1.</span> Cosa include il pacchetto <i class="fa fa-chevron-down toggle-icon"></i></button>
+      <div class="info-content">
+        <ul>
+          <li><strong>Volo A/R</strong>: andata Roma→Tokyo e ritorno Osaka→Roma, tasse aeroportuali incluse</li>
+          <li><strong>Pernottamenti</strong>: hotel almeno 3★ con colazione inclusa per tutto il viaggio; <em>1 notte in ryokan</em></li>
+          <li><strong>Assicurazione completa</strong>: annullamento + bagaglio + medica</li>
+          <li><strong>Connettività</strong>: a scelta del cliente <em>eSIM/SIM dati</em> o <em>Pocket Wi-Fi</em> (1 ogni 2 persone)</li>
+          <li><strong>Trasporti</strong>: Tokyo Metro Pass; <em>Shinkansen</em> Tokyo→Kanazawa; <em>Shinkansen</em> Kanazawa→Kyoto; <strong>Pass regionale Kansai</strong>; <strong>transfer A/R aeroporto</strong></li>
+          <li><strong>Esperienze esclusive</strong>: <strong>tutti gli ingressi alle attrazioni da brochure</strong></li>
+          <li><strong>Guide esclusive</strong>: tax-free, import/export farmaci, usi e costumi, shopping/ristoranti, guida <em>Tokyo e dintorni</em> e <em>Compendio di Cultura Giapponese</em></li>
+          <li><strong>Itinerario</strong>: itinerario giornaliero con attrazioni consigliate sul profilo del cliente, costi, aperture/chiusure e festival stagionali</li>
+          <li><strong>Assistenza</strong>: videochiamate 1 mese e 1 settimana prima; app & consigli; assistente virtuale <strong>YUTA</strong></li>
+          <li><strong>Tour leader</strong>: presenza durante il soggiorno di esperti formati su storia e cultura giapponese</li>
+        </ul>
+        <p style="margin-top:8px"><strong>Supplemento singola:</strong> 400€.</p>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <button class="info-toggle"><span class="info-number">2.</span> Cosa non è incluso <i class="fa fa-chevron-down toggle-icon"></i></button>
+      <div class="info-content">
+        <ul>
+          <li>Pasti e bevande non espressamente indicati come inclusi</li>
+          <li>Tasse di soggiorno da corrispondere in loco (ove previste)</li>
+          <li>Biglietti/ingressi ad attrazioni non esplicitamente inclusi</li>
+          <li>Trasferimenti non menzionati tra i servizi inclusi</li>
+          <li>Spese personali ed extra non indicati</li>
+          <li>Tutto ciò non espressamente indicato come incluso</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <button class="info-toggle"><span class="info-number">3.</span> Eventi a richiesta <i class="fa fa-chevron-down toggle-icon"></i></button>
+      <div class="info-content">
+        <ul>
+          <li>Cerimonia del tè / vestizione in kimono</li>
+          <li>Onsen privato o ryokan con cena kaiseki</li>
+          <li>Workshop di calligrafia, cucina o artigianato</li>
+          <li>Biglietti speciali (mostre, musei, esperienze extra)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <button class="info-toggle"><span class="info-number">4.</span> Note importanti <i class="fa fa-chevron-down toggle-icon"></i></button>
+      <div class="info-content">
+        <p>
+          I pasti sui voli sono gestiti dalla compagnia aerea (segnalabili esigenze speciali).<br>
+          Camera singola su richiesta (supplemento come indicato) o condivisione con persona compatibile.<br>
+          <strong>Pagamenti:</strong> acconto 50% alla prenotazione e saldo 50% a 45 giorni dalla partenza.<br>
+          Rateizzazione possibile in 3 o 4 rate senza interessi. Si accettano bonifico e carta (+2% per spese di transazione).
+        </p>
+        <p>
+          NOTA: l’itinerario potrà essere soggetto a variazioni in caso di condizioni meteorologiche avverse, chiusure impreviste o altri eventi non programmabili.<br>
+          Ai sensi dell’art. 34 del D. Lgs. 79/2011 (Codice del Turismo), il presente documento ha valore puramente informativo e non costituisce contratto di pacchetto turistico.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-gruppo-haru slide-in">
+  <a href="contatti.html#contatti-form" class="modern-btn light">Contattaci</a>
+</section>
+
+<!-- Carrello Laterale Yume -->
+<div id="carrelloContainer" class="yume-cart hidden">
+  <div class="cart-header">
+    <h3>Il tuo carrello</h3>
+    <button onclick="toggleCarrello()" class="close-cart" aria-label="Chiudi il carrello">×</button>
+  </div>
+  <ul id="listaCarrello" class="cart-list"></ul>
+  <div class="cart-footer">
+    <div class="cart-total">Totale: <span id="carrelloTotale">€0,00</span></div>
+    <button class="negozio btn" onclick="vaiAllaCassa()">Procedi al pagamento</button>
+  </div>
+</div>
+
+<!-- Pulsante flottante fisso con icona -->
+<button id="toggleCarrelloBtn" class="yume-cart-toggle" onclick="toggleCarrello()" aria-label="Apri il carrello">
+  <i class="fa fa-shopping-bag fa-lg"></i>
+  <span id="cartCount" class="cart-count-badge">0</span>
+</button>
+
+<!-- Avatar flottante: CONTATTACI -->
+<div id="contattaci-avatar">
+  <a href="contatti.html#contatti-form" aria-label="Contattaci">Contattaci</a>
+</div>
+
+<!-- ===== Mini Chat WhatsApp (LEFT) — Fumizuki ===== -->
+<div id="wa-chat-avatar" class="wa-avatar-left" aria-label="Apri chat WhatsApp" title="Apri chat WhatsApp">
+  <i class="fa fa-whatsapp" aria-hidden="true"></i>
+</div>
+
+<div id="waMiniChat" class="wa-overlay hidden" aria-hidden="true">
+  <div id="wa-chatbox" class="wa-box">
+    <div class="wa-header">
+      <div class="wa-brand">
+        <i class="fa fa-whatsapp" aria-hidden="true"></i>
+        <span>Parla con Yume</span>
+      </div>
+      <button class="wa-close" type="button" aria-label="Chiudi">×</button>
+    </div>
+
+    <div class="wa-body">
+      <p class="wa-preface">Scrivici su WhatsApp. Il messaggio è già pronto per <strong>Fumizuki</strong>, ma puoi modificarlo.</p>
+      <textarea id="waMessage" rows="5" placeholder="Scrivi qui..."></textarea>
+      <label class="wa-linkcheck">
+        <input id="waIncludeLink" type="checkbox" checked />
+        Includi il link a questa pagina
+      </label>
+      <button id="waSendBtn" class="wa-send">Invia su WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<footer class="main-footer">
+  <div class="footer-social">
+    <p><strong>Seguici su:</strong></p>
+    <a href="https://www.instagram.com/yume_traveltech" target="_blank" aria-label="Instagram" class="fa fa-instagram"></a>
+    <a href="https://www.tiktok.com/@yumetraveltech" target="_blank" aria-label="TikTok" class="fa fa-music"></a>
+    <a href="https://wa.me/393703081341" target="_blank" aria-label="WhatsApp" class="fa fa-whatsapp"></a>
+    <a href="https://yuta-travel.com" target="_blank" aria-label="Sito YUTA" class="fa fa-globe"></a>
+  </div>
+
+  <p>
+    <a href="privacy.html">Privacy Policy</a> |
+    <a href="termini-condizioni.html">Termini e Condizioni</a> |
+    <a href="cookie-policy.html">Cookie Policy</a> |
+    <a href="#" onclick="apriBannerCookie()">Modifica preferenze cookie</a>
+  </p>
+
+  <p class="footer-copy">
+    © 2025 Yume Travel Tech S.r.l. – Tutti i diritti riservati. <br>
+    C.F./P.IVA 02115540474 – Via Marconi 933/A, 51036 Larciano (PT) – Capitale sociale € 10.000,00 – REA PT-623031 <br>
+    PEC: <a href="mailto:yumetravel@pec.it">yumetravel@pec.it</a> – Email: <a href="mailto:yume.traveltech@gmail.com">yume.traveltech@gmail.com</a>
+  </p>
+
+  <p class="footer-legal">
+    Polizza RC: Revo Insurance S.p.A., n. OX00053974. <br>
+    Protezione insolvenza/fallimento: Nobis Compagnia di Assicurazioni S.p.A., n. 204143050.
+  </p>
+</footer>
+
+<!-- Avatar Chatbot Yuki -->
+<div id="yuki-chat-avatar" onclick="toggleYukiChat()" title="Hai bisogno di aiuto?">
+  <img src="assets/yuki-avatar.png" alt="Yuki" />
+</div>
+
+<!-- Finestra Chat -->
+<div id="yuki-chatbox" class="hidden">
+  <div class="chatbox-header">
+    <span>Yuki, assistente AI</span>
+    <button onclick="toggleYukiChat()">✕</button>
+  </div>
+  <div class="chatbox-messages" id="chatbox-messages"></div>
+  <div class="chatbox-input">
+    <input type="text" id="userMessage" placeholder="Scrivi qui..." />
+    <button onclick="sendMessage()">Invia</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  const root = document.documentElement;
+  function detectWhatsAppGap(){
+    const cands = Array.from(document.querySelectorAll('[class*="whatsapp"], [href*="wa.me"], [href*="api.whatsapp.com"]'));
+    const btn = cands.find(el => {
+      const style = getComputedStyle(el);
+      if (style.position !== 'fixed') return false;
+      const r = el.getBoundingClientRect();
+      return r.left < (window.innerWidth / 2) && (window.innerHeight - r.bottom) < 150;
+    });
+    if (!btn){ root.style.setProperty('--wa-gap','0px'); return; }
+    const r = btn.getBoundingClientRect();
+    root.style.setProperty('--wa-gap', (Math.ceil(r.height)+12)+'px');
+  }
+  function detectCookieGap(){
+    const cand = document.getElementById('cookie-banner');
+    if (!cand){ root.style.setProperty('--cookie-gap','0px'); return; }
+    const style = getComputedStyle(cand);
+    const isFixed = style.position==='fixed' && (style.bottom==='0px' || style.bottom==='0');
+    if (!isFixed || cand.classList.contains('hidden')){ root.style.setProperty('--cookie-gap','0px'); return; }
+    const r = cand.getBoundingClientRect();
+    root.style.setProperty('--cookie-gap', (Math.max(0,Math.ceil(r.height)+10))+'px');
+  }
+  window.addEventListener('DOMContentLoaded', ()=>{ detectWhatsAppGap(); detectCookieGap(); });
+  window.addEventListener('resize', detectWhatsAppGap);
+  const cookie=document.getElementById('cookie-banner');
+  if(cookie && 'MutationObserver' in window){
+    new MutationObserver(detectCookieGap).observe(cookie,{attributes:true,attributeFilter:['class','style']});
+  }
+})();
+</script>
+
+<script>
+// ===== Mini Chat WhatsApp (Left) — Fumizuki =====
+(function () {
+  const WHATSAPP_NUMBER = "393703081341";
+  const avatar      = document.getElementById("wa-chat-avatar");
+  const overlay     = document.getElementById("waMiniChat");
+  const box         = document.getElementById("wa-chatbox");
+  const closeB      = box?.querySelector(".wa-close");
+  const sendB       = document.getElementById("waSendBtn");
+  const area        = document.getElementById("waMessage");
+  const includeLink = document.getElementById("waIncludeLink");
+
+  function templateMessaggioFumizuki(nome){
+    const who = nome && nome.trim() ? nome.trim() : "un viaggiatore curioso";
+    return `Ciao Yume, sono ${who}.
+Vorrei informazioni sul viaggio Fumizuki 🇯🇵
+Ho visto che è un tour estivo (29 lug – 12 ago 2026) tra Tokyo, Kanazawa, Kyoto e Kansai: come funziona l’esperienza in gruppo?`;
+  }
+  function buildPrefill(){
+    let nome = "";
+    try {
+      const p1 = JSON.parse(sessionStorage.getItem("profiloUtente") || "null");
+      const p2 = JSON.parse(localStorage.getItem("profiloUtente") || "null");
+      const p  = p1?.profilo || p1 || p2;
+      nome = (p?.nome || p?.Nome || "").toString().trim();
+    } catch {}
+    return templateMessaggioFumizuki(nome);
+  }
+  function toggleWA() {
+    if (!overlay) return;
+    const willOpen = overlay.classList.contains("hidden");
+    overlay.classList.toggle("hidden");
+    if (willOpen) { if (area) area.value = buildPrefill(); setTimeout(() => area?.focus(), 40); }
+  }
+  function openWhatsAppWithMessage(phone, text){
+    const encoded  = encodeURIComponent(text);
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isMobile) {
+      window.location.href = `whatsapp://send?phone=${phone}&text=${encoded}`;
+      setTimeout(() => window.open(`https://wa.me/${phone}?text=${encoded}`, '_blank', 'noopener'), 800);
+    } else {
+      window.open(`https://wa.me/${phone}?text=${encoded}`, '_blank', 'noopener');
+    }
+  }
+  function sendWA(){
+    const testo = (area?.value || buildPrefill()).trim();
+    if (!testo) { alert("Scrivi un messaggio oppure chiudi la chat."); return; }
+    let payload = testo;
+    if (includeLink?.checked) payload += `\n\nLink: ${window.location.href}`;
+    openWhatsAppWithMessage(WHATSAPP_NUMBER, payload);
+    overlay?.classList.add("hidden");
+  }
+  avatar?.addEventListener("click", toggleWA);
+  closeB?.addEventListener("click", toggleWA);
+  sendB?.addEventListener("click", sendWA);
+  overlay?.addEventListener("click", (e) => { if (e.target === overlay) overlay.classList.add("hidden"); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && overlay && !overlay.classList.contains("hidden")) overlay.classList.add("hidden"); });
+})();
+</script>
+
+<script>
+(function () {
+  function buildPrefill() {
+    return {
+      origine: "Fumizuki",
+      messaggio: `Ciao Yume, sono un viaggiatore curioso.
+Mi interessa il viaggio di gruppo **Fumizuki** (29 lug – 12 ago 2026).
+Vorrei info su disponibilità, modalità di prenotazione e cosa include. Grazie!`,
+      interessi: ["viaggi-di-gruppo","fumizuki","estate"]
+    };
+  }
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll('a[href^="contatti.html"]').forEach(link => {
+      link.addEventListener("click", e => {
+        sessionStorage.setItem("contatti_prefill", JSON.stringify(buildPrefill()));
+      });
+    });
+  });
+})();
+</script>
+
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    const el = document.querySelector('#yuki-chat-avatar');
+    if (!el) return;
+    el.style.position = 'fixed'; el.style.bottom = '25px'; el.style.right = '25px';
+    el.style.width = '90px'; el.style.height = '90px'; el.style.zIndex = '9999';
+    el.style.borderRadius = '50%'; el.style.overflow = 'hidden'; el.style.boxShadow = '0 4px 10px rgba(0,0,0,0.2)';
+    el.style.backgroundColor = '#fff';
+    const img = el.querySelector('img');
+    if (img) { img.style.width = '100%'; img.style.height = '100%'; img.style.objectFit = 'cover'; img.style.borderRadius = '50%'; }
+  });
+</script>
+
+<script src="assets/script.js"></script>
+<script src="assets/script_prodotti.js"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const profilo = JSON.parse(sessionStorage.getItem("profiloUtente"));
+    if (profilo) {
+      document.querySelectorAll("a[href='log-in.html']").forEach(link => { link.href = "area-clienti.html"; });
+      const sidebar = document.querySelector(".sidebar");
+      if (sidebar && !document.getElementById("userBox")) {
+        const userBox = document.createElement("div");
+        userBox.id = "userBox"; userBox.style.marginTop = "30px"; userBox.style.padding = "10px"; userBox.style.textAlign = "center"; userBox.style.borderTop = "1px solid #ccc";
+        const avatar = document.createElement("img");
+        avatar.src = localStorage.getItem("userAvatar") || "https://api.dicebear.com/7.x/avataaars/svg?seed=yume";
+        avatar.alt = "Avatar"; avatar.style.width = "60px"; avatar.style.height = "60px"; avatar.style.borderRadius = "50%"; avatar.style.objectFit = "cover"; avatar.style.border = "2px solid #C9A86A"; avatar.style.marginBottom = "8px";
+        const logoutBtn = document.createElement("button");
+        logoutBtn.textContent = "Logout"; logoutBtn.style.marginTop = "6px"; logoutBtn.style.background = "#8B2C2B"; logoutBtn.style.color = "#fff"; logoutBtn.style.border = "none"; logoutBtn.style.padding = "6px 12px"; logoutBtn.style.borderRadius = "20px"; logoutBtn.style.cursor = "pointer";
+        logoutBtn.onclick = () => { sessionStorage.removeItem("profiloUtente"); localStorage.removeItem("userAvatar"); localStorage.removeItem("codice_cliente"); window.location.href = "index.html"; };
+        userBox.appendChild(avatar); userBox.appendChild(logoutBtn); sidebar.appendChild(userBox);
+      }
+    } else {
+      document.querySelectorAll("a[href='area-clienti.html']").forEach(link => { link.href = "log-in.html"; });
+      document.getElementById("toggleNotificheBtn")?.classList.add("hidden");
+    }
+  });
+</script>
+
+<script>
+  // Animazione barre focus
+  document.addEventListener("DOMContentLoaded", function () {
+    const barObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const bars = entry.target.querySelectorAll(".bar-fill");
+          bars.forEach(bar => { const width = bar.getAttribute("data-fill"); if (width) bar.style.width = width; });
+          barObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll(".focus-item").forEach(item => {
+      const bar = item.querySelector(".bar-fill");
+      if (bar) { const widthMatch = bar.getAttribute("style")?.match(/width:\s*(\d+%)/); if (widthMatch) { bar.setAttribute("data-fill", widthMatch[1]); bar.style.width = "0"; } barObserver.observe(item); }
+    });
+  });
+</script>
+
+<script>
+  // Toggle per sezione itinerario
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('.giorno-toggle').forEach(btn => { btn.addEventListener('click', () => { btn.parentElement.classList.toggle('active'); }); });
+  });
+</script>
+
+<script>
+  // Slider foto orizzontale
+  function scrollFotoSlider(direction) {
+    const container = document.getElementById("fotoSlider");
+    const scrollAmount = 280;
+    if (container) {
+      container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+    }
+  }
+</script>
+
+<script>
+  // Fullscreen Gallery — ordine identico allo slider (sfalsato)
+  const immagini = [
+    "kokai/2.jpg","kokai/5.jpg","kokai/1.jpg","kokai/4.jpg","kokai/9.jpg","kokai/3.jpg","kokai/7.jpg","kokai/6.jpg","kokai/8.jpg"
+  ];
+  let indexAttuale = 0; let startX = 0;
+  function apriFotoFullscreen(index) {
+    indexAttuale = index; const overlay = document.createElement('div'); overlay.classList.add('fullscreen-overlay');
+    const img = document.createElement('img'); img.src = immagini[index]; img.alt = "Foto " + (index + 1); img.classList.add("fullscreen-img");
+    const btnChiudi = document.createElement('span'); btnChiudi.innerHTML = "&times;"; btnChiudi.classList.add("btn-close"); btnChiudi.onclick = () => document.body.removeChild(overlay);
+    const frecciaSx = document.createElement('button'); frecciaSx.classList.add('fullscreen-arrow', 'left'); frecciaSx.innerHTML = '<i class="fa fa-chevron-left"></i>'; frecciaSx.onclick = (e) => { e.stopPropagation(); cambiaFoto(-1); };
+    const frecciaDx = document.createElement('button'); frecciaDx.classList.add('fullscreen-arrow', 'right'); frecciaDx.innerHTML = '<i class="fa fa-chevron-right"></i>'; frecciaDx.onclick = (e) => { e.stopPropagation(); cambiaFoto(1); };
+    overlay.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; });
+    overlay.addEventListener('touchend', (e) => { const endX = e.changedTouches[0].clientX; const diff = startX - endX; if (Math.abs(diff) > 50) { if (diff > 0) { cambiaFoto(1); } else { cambiaFoto(-1); } } });
+    overlay.appendChild(btnChiudi); overlay.appendChild(frecciaSx); overlay.appendChild(img); overlay.appendChild(frecciaDx); document.body.appendChild(overlay);
+  }
+  function cambiaFoto(direz) { indexAttuale = (indexAttuale + direz + immagini.length) % immagini.length; const img = document.querySelector(".fullscreen-img"); img.src = immagini[indexAttuale]; img.alt = "Foto " + (indexAttuale + 1); }
+</script>
+
+<script>
+  // Mappa Leaflet – tappe Fumizuki
+  document.addEventListener("DOMContentLoaded", function () {
+    const customMarker = L.icon({ iconUrl: 'fumizuki/marker-yume.png', iconSize: [32, 42], iconAnchor: [16, 42], popupAnchor: [0, -36] });
+    const map2 = L.map('map-itinerario').setView([35.6, 136.8], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap contributors' }).addTo(map2);
+
+    const tappeFumizuki = [
+      ["Tokyo", 35.682839, 139.759455],
+      ["Kamakura", 35.3191, 139.5466],
+      ["Yokohama", 35.4437, 139.6380],
+      ["Kanazawa", 36.5613, 136.6562],
+      ["Kyoto", 35.0116, 135.7681],
+      ["Nara", 34.6851, 135.8048],
+      ["Osaka", 34.6937, 135.5023],
+      ["Hiroshima", 34.3853, 132.4553],
+      ["Miyajima", 34.2956, 132.3197],
+      ["Himeji", 34.8156, 134.6853],
+      ["Okayama", 34.6551, 133.9195],
+      ["Hikone (Lago Biwa)", 35.2749, 136.2594],
+      ["Monte Hiei / Ōtsu", 35.1566, 135.8486]
+    ];
+
+    tappeFumizuki.forEach(([nome, lat, lon]) => {
+      L.marker([lat, lon], { icon: customMarker }).addTo(map2).bindPopup(`<strong>${nome}</strong>`);
+    });
+
+    const percorso = [
+      [35.682839, 139.759455], // Tokyo
+      [35.3191, 139.5466],     // Kamakura
+      [35.4437, 139.6380],     // Yokohama
+      [36.5613, 136.6562],     // Kanazawa
+      [35.0116, 135.7681],     // Kyoto
+      [34.6851, 135.8048],     // Nara
+      [34.6937, 135.5023],     // Osaka
+      [34.3853, 132.4553],     // Hiroshima
+      [34.2956, 132.3197],     // Miyajima
+      [34.6937, 135.5023],     // Osaka (base)
+      [34.8156, 134.6853],     // Himeji
+      [34.6551, 133.9195],     // Okayama
+      [35.2749, 136.2594],     // Hikone (Lago Biwa)
+      [35.1566, 135.8486],     // Monte Hiei / Ōtsu
+      [34.6937, 135.5023]      // Osaka (base)
+    ];
+    L.polyline(percorso, { color: '#8B2C2B', weight: 4, opacity: 0.8 }).addTo(map2);
+  });
+</script>
+
+<!-- Banner Cookie Yume -->
+<div id="cookie-banner" class="cookie-banner slide-up">
+  <p>
+    Utilizziamo cookie tecnici per garantire il funzionamento del sito e, previo consenso, cookie analitici e di terze parti per migliorare la tua esperienza.
+    <a href="privacy.html" target="_blank">Leggi la nostra informativa</a>.
+  </p>
+  <div class="cookie-buttons">
+    <button class="btn-accetta" onclick="accettaCookie()">Accetta</button>
+    <button class="btn-rifiuta" onclick="rifiutaCookie()">Rifiuta</button>
+    <button class="btn-gestisci" onclick="apriPreferenze()">Gestisci</button>
+  </div>
+</div>
+
+<!-- Modale Preferenze Cookie -->
+<div id="cookie-preferenze" class="cookie-modal" style="display: none;">
+  <div class="cookie-modal-box">
+    <h3>Gestisci preferenze cookie</h3>
+    <form id="cookie-preferenze-form">
+      <label><input type="checkbox" checked disabled> Cookie tecnici (obbligatori)</label><br>
+      <label><input type="checkbox" id="cookie-analytics"> Cookie analitici (Google Analytics)</label><br>
+      <label><input type="checkbox" id="cookie-marketing"> Cookie di marketing e tracciamento</label><br>
+      <div class="cookie-modal-actions">
+        <button type="submit" class="btn-salva">Salva preferenze</button>
+        <button type="button" class="btn-chiudi" onclick="document.getElementById('cookie-preferenze').style.display = 'none';">Chiudi</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="notificheContainer" class="notifiche-container hidden">
+  <h3><i class="fa fa-envelope-open"></i> Messaggi ricevuti</h3>
+  <ul id="listaNotifiche" class="notifiche-lista"></ul>
+  <button onclick="vaiASezioneMessaggi()" class="btn-messaggi">
+    <i class="fa fa-inbox"></i> Vai ai messaggi
+  </button>
+</div>
+
+</body>
+</html>
