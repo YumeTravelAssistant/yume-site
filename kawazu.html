@@ -13,24 +13,6 @@
   <link rel="stylesheet" href="assets/styles.css">
   <link rel="stylesheet" href="assets/styles_pacchetti.css">
 
-<style>
-  /* Fallback variabili per posizionare l’avatar “Contattaci”
-     identico a kokai: resta sopra l’avatar WhatsApp di ~80px */
-  :root{
-    --wa-avatar-size: 60px;       /* #wa-chat-avatar in styles.css */
-    --contattaci-gap: 0px;        /* extra spazio, se serve */
-    --contattaci-safety: 12px;    /* aria tra i due avatar */
-    /* 25px (bottom WA) + 60px (WA) + 12px (aria) + gap opzionale */
-    --contattaci-bottom: calc(25px + var(--wa-avatar-size) + var(--contattaci-safety) + var(--contattaci-gap));
-  }
-
-  /* (opzionale) se vuoi tenerlo ancora un filo più su nei telefoni */
-  @media (max-width: 640px){
-    :root{ --contattaci-gap: 70px; }
-  }
-</style>
-
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

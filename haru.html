@@ -14,29 +14,6 @@
   <link rel="stylesheet" href="assets/styles.css">
   <link rel="stylesheet" href="assets/styles_pacchetti.css">
 
-  <style>
-    /* Fallback variabili posizione avatar “Contattaci” (identico a kawazu) */
-    :root{
-      --wa-avatar-size: 60px;       /* #wa-chat-avatar in styles.css */
-      --contattaci-gap: 0px;
-      --contattaci-safety: 12px;
-      --contattaci-bottom: calc(25px + var(--wa-avatar-size) + var(--contattaci-safety) + var(--contattaci-gap));
-    }
-    @media (max-width: 640px){
-      :root{ --contattaci-gap: 70px; }
-    }
-
-    .hero-banner { position: relative; overflow: hidden; }
-    .hero-banner::before {
-      content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.5)); z-index: 2;
-    }
-    h1.hero-title {
-      font-family: 'Playfair Display', serif; font-size: clamp(2.4rem, 5vw, 3.5rem);
-      font-weight: 700; color: #C9A86A; margin-bottom: 20px; text-align: center;
-    }
-  </style>
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
