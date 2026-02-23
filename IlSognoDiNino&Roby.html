@@ -897,6 +897,71 @@
         <div class="deadline">Si prega di dare gentile conferma entro il 30 Aprile 2026</div>
       </section>
 
+      
+      <!-- MAPPA + CALENDARIO -->
+      <section class="section" id="mappa-matrimonio">
+        <h2><i class="fa-solid fa-location-dot"></i> Dove ci trovi</h2>
+
+        <div class="trip-intro" style="margin-bottom:14px;">
+          <p style="margin:0;">
+            Qui sotto trovi la mappa per raggiungere <b>cerimonia</b> e <b>ricevimento</b>.
+            Puoi anche aggiungere l’evento al tuo calendario.
+          </p>
+        </div>
+
+        <div class="row2" style="align-items:stretch;">
+          <div class="card" style="padding:14px;">
+            <div style="font-weight:800; color: var(--burgundy); margin-bottom:8px;">
+              Cerimonia — Basilica di Santa Maria Salome
+            </div>
+            <iframe
+              title="Mappa cerimonia"
+              src="https://www.google.com/maps?q=Basilica%20di%20Santa%20Maria%20Salome%2C%20Veroli%20FR&output=embed"
+              width="100%" height="280"
+              style="border:1px solid rgba(111,143,120,.34); border-radius:14px;"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+            <p style="margin:8px 0 0; text-align:center;">
+              <a href="https://maps.google.com/?q=Basilica+di+Santa+Maria+Salome,+Veroli+FR" target="_blank"
+                 style="color: var(--burgundy); font-weight:700; text-decoration:underline;">
+                Apri in Google Maps
+              </a>
+            </p>
+          </div>
+
+          <div class="card" style="padding:14px;">
+            <div style="font-weight:800; color: var(--burgundy); margin-bottom:8px;">
+              Ricevimento — Borgo Antico (Ceprano)
+            </div>
+            <iframe
+              title="Mappa ricevimento"
+              src="https://www.google.com/maps?q=Borgo%20Antico%2C%20Via%20Campidoglio%20266%2C%20Ceprano%20FR%2003024&output=embed"
+              width="100%" height="280"
+              style="border:1px solid rgba(111,143,120,.34); border-radius:14px;"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+            <p style="margin:8px 0 0; text-align:center;">
+              <a href="https://maps.google.com/?q=Borgo+Antico,+Via+Campidoglio+266,+Ceprano+FR+03024" target="_blank"
+                 style="color: var(--burgundy); font-weight:700; text-decoration:underline;">
+                Apri in Google Maps
+              </a>
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top:12px; text-align:center;">
+          <a href="#" id="btn-ics" class="btn" style="display:inline-flex; gap:10px; justify-content:center; align-items:center;">
+            <i class="fa-solid fa-calendar-plus"></i> Aggiungi al calendario (.ics)
+          </a>
+          <div class="hint" style="margin-top:8px;">
+            Se l’orario non è indicato nell’invito, l’evento verrà salvato come <b>giornata intera</b>.
+          </div>
+        </div>
+      </section>
+
+
       <!-- ITINERARIO -->
       <section class="section" id="viaggio">
         <h2><i class="fa-solid fa-torii-gate"></i> Il nostro viaggio di nozze in Giappone</h2>
@@ -1376,6 +1441,55 @@
       document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeOverlay(false); });
     })();
 
+    // === Aggiungi al calendario (.ics) — come in secret_opening_party.html ===
+    function scaricaICS(){
+      // Evento come giornata intera (orario non indicato nell’invito)
+      const dtStart = "20260606"; // 06/06/2026
+      const dtEnd   = "20260607"; // giorno dopo (DTEND esclusivo)
+
+      const ceremony = "Basilica di Santa Maria Salome — Piazza Santa Maria Salome, Veroli (FR)";
+      const reception = "Borgo Antico — Via Campidoglio 266, Ceprano (FR) 03024";
+
+      const uid = `nino-roby-${Date.now()}@ilsognodinino`;
+      const ics =
+`BEGIN:VCALENDAR
+VERSION:2.0
+CALSCALE:GREGORIAN
+PRODID:-//Il Sogno di Nino & Roby//IT
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:${uid}
+DTSTAMP:${new Date().toISOString().replace(/[-:]/g,"").split(".")[0]}Z
+DTSTART;VALUE=DATE:${dtStart}
+DTEND;VALUE=DATE:${dtEnd}
+SUMMARY:Matrimonio Nino & Roby
+LOCATION:${ceremony} | ${reception}
+DESCRIPTION:Cerimonia: ${ceremony}\nRicevimento: ${reception}\n\nOrario: come da invito.
+END:VEVENT
+END:VCALENDAR`;
+
+      const blob = new Blob([ics], { type:"text/calendar;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "Matrimonio_Nino_Roby.ics";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    document.addEventListener("DOMContentLoaded", function(){
+      const icsBtn = document.getElementById("btn-ics");
+      if(icsBtn){
+        icsBtn.addEventListener("click", function(e){
+          e.preventDefault();
+          scaricaICS();
+        });
+      }
+    });
+
+
     document.addEventListener("DOMContentLoaded", function(){
       document.querySelectorAll(".giorno-toggle").forEach(btn=>{
         btn.addEventListener("click", ()=> btn.parentElement.classList.toggle("active"));
@@ -1608,58 +1722,20 @@
       sectionTitle("Invito");
       getInvitationTextLines().forEach(line => writeParagraph(line, 10.8, 5.2));
 
-      sectionTitle("Itinerario — giorno per giorno");
-      const giorni = Array.from(document.querySelectorAll(".giorno-box"));
-      giorni.forEach((box)=>{
-        const badge = box.querySelector(".g-badge")?.innerText?.trim() || "";
-        const title = box.querySelector(".giorno-title")?.innerText?.trim() || "";
-        const text  = box.querySelector(".giorno-content")?.innerText?.trim() || "";
+      sectionTitle("Regalo selezionato");
 
-        ensureSpace(8);
-        doc.setFont("helvetica","bold");
-        doc.setTextColor(...sage);
-        doc.setFontSize(11.2);
-        doc.text(`${badge} — ${title}`.trim(), marginX, y);
-        y += 5.8;
+      const giftVal = String(sub.gift_choice || "").trim();
+      if(giftVal){
+        const opt = document.querySelector(`#gift_choice option[value="${giftVal}"]`);
+        const optTxt = (opt ? (opt.textContent || "").trim() : "").replace(/\s+/g," ");
+        const pretty = optTxt || (`€${giftVal} — Regalo selezionato`);
 
-        doc.setFont("helvetica","normal");
-        doc.setTextColor(...ink);
-        doc.setFontSize(10.6);
+        writeParagraph(`Grazie di cuore! Hai indicato come regalo: ${pretty}.`, 10.8, 5.2);
+      }else{
+        writeParagraph("Regalo: non indicato (va benissimo così).", 10.8, 5.2);
+      }
 
-        const lines = doc.splitTextToSize(text, contentW);
-        const leading = 5.0;
-        ensureSpace(lines.length*leading + 4);
-        doc.text(lines, marginX, y);
-        y += lines.length*leading + 4;
-      });
-
-      sectionTitle("Regali + IBAN");
-      writeParagraph("Qui sotto trovi le idee regalo (50€ → 500€) e l’IBAN per contribuire al nostro viaggio.");
-
-      const gifts = Array.from(document.querySelectorAll(".gift-card")).map(card => {
-        const price = card.querySelector(".gift-price b")?.innerText?.trim() || "";
-        const label = card.querySelector(".gift-body b")?.innerText?.trim() || "";
-        const desc  = card.querySelector(".gift-body p")?.innerText?.trim() || "";
-        return { price, label, desc };
-      });
-
-      gifts.forEach(g=>{
-        ensureSpace(10);
-        doc.setFont("helvetica","bold");
-        doc.setTextColor(...burgundy);
-        doc.setFontSize(10.8);
-        doc.text(`${g.price} — ${g.label}`, marginX, y);
-        y += 5.2;
-
-        doc.setFont("helvetica","normal");
-        doc.setTextColor(...ink);
-        doc.setFontSize(10.4);
-        const lines = doc.splitTextToSize(g.desc, contentW);
-        const leading = 4.8;
-        ensureSpace(lines.length*leading + 3);
-        doc.text(lines, marginX, y);
-        y += lines.length*leading + 3;
-      });
+      sectionTitle("IBAN");
 
       const ibanTxt = document.querySelector("#ibanBlock code")?.innerText?.trim() || "(INSERISCI QUI L’IBAN)";
       ensureSpace(16);
