@@ -1432,6 +1432,60 @@ END:VCALENDAR`;
     const stato = document.getElementById("stato");
     const errbox = document.getElementById("errbox");
 
+    form.addEventListener("submit", async (e) => {
+  e.preventDefault(); // ⛔ blocca il reload della pagina
+
+  errbox.style.display = "none";
+  stato.textContent = "";
+  btnSubmit.disabled = true;
+
+  try {
+    const fd = new FormData(form);
+
+    const sub = {
+      nome: (fd.get("nome") || "").toString().trim(),
+      telefono: (fd.get("telefono") || "").toString().trim(),
+      email: (fd.get("email") || "").toString().trim(),
+      partecipazione: fd.get("partecipazione"),
+      persone: fd.get("persone"),
+      giorno: fd.get("giorno"),
+      intolleranze: (fd.get("intolleranze") || "").toString().trim(),
+      messaggio: (fd.get("messaggio") || "").toString().trim(),
+      regalo: (fd.get("regalo") || "").toString().trim()
+    };
+
+    if (!sub.nome || !sub.telefono || !sub.partecipazione) {
+      throw new Error("Compila tutti i campi obbligatori.");
+    }
+
+    stato.textContent = "Invio in corso…";
+
+    const response = await fetch(FORM_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(sub)
+    });
+
+    if (!response.ok) {
+      throw new Error("Errore durante l’invio.");
+    }
+
+    stato.textContent = "Conferma ricevuta 💌 Generazione PDF…";
+
+    await generatePdf(sub); // ✅ qui parte il download
+
+    stato.textContent = "Grazie! Il PDF è stato scaricato.";
+
+    form.reset();
+
+  } catch (err) {
+    errbox.textContent = err.message || "Errore inatteso.";
+    errbox.style.display = "block";
+  } finally {
+    btnSubmit.disabled = false;
+  }
+});
+    
     let lastSubmission = null;
 
     function setBusy(b){
