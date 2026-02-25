@@ -104,6 +104,15 @@
       position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
       pointer-events:none;
     }
+
+.flap-logo-img{
+  width:120px;
+  height:auto;
+  object-fit:contain;
+  filter: drop-shadow(0 12px 28px rgba(0,0,0,.18));
+  pointer-events:none;
+}
+
     .invito-flap-logo .monogram{
       width: 104px; height: 104px;
       border-radius: 18px;
@@ -815,29 +824,39 @@
 
 
   <!-- OVERLAY animato -->
-  <div class="invito-overlay" aria-hidden="true" role="dialog" aria-label="Invito ufficiale">
-    <div class="invito-stage">
-      <div class="invito-envelope" aria-hidden="true">
-        <div class="invito-envelope__flap">
-          <div class="invito-flap-logo">
-            <div class="monogram">NR</div>
-          </div>
+<div class="invito-overlay" aria-hidden="true" role="dialog" aria-label="Invito ufficiale">
+  <div class="invito-stage">
+    <div class="invito-envelope" aria-hidden="true">
+      
+      <div class="invito-envelope__flap">
+        <div class="invito-flap-logo">
+          <img src="wedding/nino_roby/1.png"
+               alt="Nino & Roby"
+               class="flap-logo-img">
         </div>
-        <div class="invito-envelope__paper">
-          <div class="invito-banner">
-            <span>Nino &amp; Roby</span>
-            <small>Benvenuti nel nostro sogno</small>
-          </div>
-        </div>
-        <div class="invito-envelope__body"></div>
       </div>
 
-      <div class="invito-cta">
-        <button class="invito-open-btn" type="button"><i class="fa-regular fa-envelope-open"></i> Apri</button>
-        <button class="invito-skip-btn" type="button">Salta</button>
+      <div class="invito-envelope__paper">
+        <div class="invito-banner">
+          <span>Nino &amp; Roby</span>
+          <small>Benvenuti nel nostro sogno</small>
+        </div>
       </div>
+
+      <div class="invito-envelope__body"></div>
     </div>
+
+    <div class="invito-cta">
+      <button class="invito-open-btn" type="button">
+        <i class="fa-regular fa-envelope-open"></i> Apri
+      </button>
+      <button class="invito-skip-btn" type="button">
+        Salta
+      </button>
+    </div>
+
   </div>
+</div>
 
   <!-- HERO -->
   <header class="hero" aria-label="Copertina">
@@ -862,105 +881,14 @@
   <main class="wrap" id="main">
     <div class="paper">
 
-      <div class="topbar">
-        <div class="logo" aria-hidden="true">
-          <img id="logoSposi" src="wedding/nino_roby/logo.png" alt="Logo Nino &amp; Roby"
-               onerror="this.style.display='none'; this.parentElement.style.display='none';">
-        </div>
-        <h2 class="title">Nino &amp; Roby</h2>
-      </div>
-
-      <!-- LETTERA -->
-      <section class="invito" aria-label="Invito">
-        <div class="names">Nino e Roby</div>
-
-        <div class="script">Siamo felici di annunciare che ci sposiamo!</div>
-        <div class="script">Vi aspettiamo per festeggiare con noi il giorno</div>
-
-        <div class="date">06 Giugno 2026 alla</div>
-        <div class="place">Basilica di Santa Maria Salome,</div>
-        <div class="smallcaps">PIAZZA SANTA MARIA SALOME, VEROLI (FR)</div>
-
-        <div class="divider"></div>
-
-        <div class="script">Dopo la cerimonia saremo lieti</div>
-        <div class="script">di festeggiare con tutti voi presso</div>
-
-        <div class="place">Borgo Antico,</div>
-        <div class="smallcaps">VIA CAMPIDOGLIO 266, CEPRANO (FR) 03024</div>
-
-        <div class="divider"></div>
-
-        <div class="script small">La vostra presenza è il regalo più bello,</div>
-        <div class="script small">ma se desiderate contribuire al nostro viaggio di nozze,</div>
-
-        <div class="deadline">Si prega di dare gentile conferma entro il 30 Aprile 2026</div>
-      </section>
-
-      
-      <!-- MAPPA + CALENDARIO -->
-      <section class="section" id="mappa-matrimonio">
-        <h2><i class="fa-solid fa-location-dot"></i> Dove ci trovi</h2>
-
-        <div class="trip-intro" style="margin-bottom:14px;">
-          <p style="margin:0;">
-            Qui sotto trovi la mappa per raggiungere <b>cerimonia</b> e <b>ricevimento</b>.
-            Puoi anche aggiungere l’evento al tuo calendario.
-          </p>
-        </div>
-
-        <div class="row2" style="align-items:stretch;">
-          <div class="card" style="padding:14px;">
-            <div style="font-weight:800; color: var(--burgundy); margin-bottom:8px;">
-              Cerimonia — Basilica di Santa Maria Salome
-            </div>
-            <iframe
-              title="Mappa cerimonia"
-              src="https://www.google.com/maps?q=Basilica%20di%20Santa%20Maria%20Salome%2C%20Veroli%20FR&output=embed"
-              width="100%" height="280"
-              style="border:1px solid rgba(111,143,120,.34); border-radius:14px;"
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade">
-            </iframe>
-            <p style="margin:8px 0 0; text-align:center;">
-              <a href="https://maps.google.com/?q=Basilica+di+Santa+Maria+Salome,+Veroli+FR" target="_blank"
-                 style="color: var(--burgundy); font-weight:700; text-decoration:underline;">
-                Apri in Google Maps
-              </a>
-            </p>
-          </div>
-
-          <div class="card" style="padding:14px;">
-            <div style="font-weight:800; color: var(--burgundy); margin-bottom:8px;">
-              Ricevimento — Borgo Antico (Ceprano)
-            </div>
-            <iframe
-              title="Mappa ricevimento"
-              src="https://www.google.com/maps?q=Borgo%20Antico%2C%20Via%20Campidoglio%20266%2C%20Ceprano%20FR%2003024&output=embed"
-              width="100%" height="280"
-              style="border:1px solid rgba(111,143,120,.34); border-radius:14px;"
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade">
-            </iframe>
-            <p style="margin:8px 0 0; text-align:center;">
-              <a href="https://maps.google.com/?q=Borgo+Antico,+Via+Campidoglio+266,+Ceprano+FR+03024" target="_blank"
-                 style="color: var(--burgundy); font-weight:700; text-decoration:underline;">
-                Apri in Google Maps
-              </a>
-            </p>
-          </div>
-        </div>
-
-        <div style="margin-top:12px; text-align:center;">
-          <a href="#" id="btn-ics" class="btn" style="display:inline-flex; gap:10px; justify-content:center; align-items:center;">
-            <i class="fa-solid fa-calendar-plus"></i> Aggiungi al calendario (.ics)
-          </a>
-          <div class="hint" style="margin-top:8px;">
-            Se l’orario non è indicato nell’invito, l’evento verrà salvato come <b>giornata intera</b>.
-          </div>
-        </div>
-      </section>
-
+<div class="topbar">
+  <div class="logo" style="width:220px; height:220px;">
+    <img id="logoSposi"
+         src="wedding/nino_roby/2.png"
+         alt="Nino & Roby"
+         style="padding:0; object-fit:contain;">
+  </div>
+</div>
 
       <!-- ITINERARIO -->
       <section class="section" id="viaggio">
@@ -968,8 +896,8 @@
 
         <div class="trip-intro">
           <p style="margin:0;">
-            Qui trovi l’itinerario: un mix di grandi classici, natura e tappe autentiche.
-            Se vuoi, puoi scegliere un “regalo” legato a un’esperienza del viaggio.
+            Ecco il nostro itinerario di viaggio per una luna di miele indimenticabile in Giappone. Abbiamo scelto un mix di grandi classici, natura e tappe autentiche.
+            Se vuoi, puoi scegliere un “regalo” legato a un’esperienza del viaggio per prendere parte al nostro sogno.
           </p>
         </div>
 
@@ -978,7 +906,7 @@
             <div class="dot"></div>
             <div>
               <button class="city city-link" type="button" data-map-target="Tokyo">Tokyo (6 notti)</button>
-              <div class="meta">Quartieri iconici + escursioni in giornata (Hakone / Nikkō).</div>
+              <div class="meta">Quartieri iconici ed escursioni in giornata come Hakone e Nikkō.</div>
             </div>
           </div>
 
@@ -1018,7 +946,7 @@
             <div class="dot"></div>
             <div>
               <button class="city city-link" type="button" data-map-target="Osaka">Osaka (4 notti) + escursioni</button>
-              <div class="meta">Himeji, Okayama, Hiroshima e Miyajima + serate a Dōtonbori.</div>
+              <div class="meta">Himeji, Okayama, Hiroshima e Miyajima e serate a Dōtonbori.</div>
             </div>
           </div>
         </div>
@@ -1032,7 +960,7 @@
               <i class="fa-solid fa-chevron-down"></i>
             </button>
             <div class="giorno-content">
-              <p>Partenza dall’Italia con volo intercontinentale verso il Giappone. Check-in e controlli, tempo per sistemarsi a bordo e iniziare a entrare nel mood del viaggio. Notte in volo, con arrivo il giorno successivo (in base all’operativo).</p>
+              <p>Partiremo dall’Italia con volo intercontinentale verso il Giappone. Check-in e controlli, tempo per sistemarsi a bordo e iniziare a entrare nel mood del viaggio. Notte in volo, con arrivo il giorno successivo.</p>
             </div>
           </div>
 
@@ -1042,7 +970,7 @@
               <i class="fa-solid fa-chevron-down"></i>
             </button>
             <div class="giorno-content">
-              <p>Arrivo a Tokyo e trasferimento in zona <b>Asakusa</b>. Dopo il deposito bagagli in hotel (se disponibile), prima passeggiata tra vicoli e botteghe del quartiere storico: <b>Tempio Sensō-ji</b>, lanterne e atmosfera di <b>Nakamise-dōri</b>. Nel tardo pomeriggio ci concediamo i primi panorami sul <b>Sumida</b> e, se vi va, una prima serata più “wow” a <b>Shibuya</b> per vedere l’incrocio e le luci di Tokyo appena arrivati.</p>
+              <p>Finalmente arrivo a Tokyo e trasferimento in zona <b>Asakusa</b>. Dopo il deposito bagagli in hotel faremo una prima passeggiata tra vicoli e botteghe del quartiere storico: <b>Tempio Sensō-ji</b>, lanterne e atmosfera di <b>Nakamise-dōri</b>. Nel tardo pomeriggio ci concediamo i primi panorami sul <b>Sumida</b> e, se vi va, una prima serata più “wow” a <b>Shibuya</b> per vedere l’incrocio e le luci di Tokyo appena arrivati.</p>
             </div>
           </div>
 
@@ -1052,7 +980,7 @@
               <i class="fa-solid fa-chevron-down"></i>
             </button>
             <div class="giorno-content">
-              <p>Giornata dedicata alla Tokyo più iconica: <b>Shibuya</b> (incrocio, Hachikō e vie principali), poi <b>Harajuku</b> con il contrasto tra street style e la quiete del <b>Meiji Jingū</b> nel verde. Nel pomeriggio ci spostiamo verso <b>Shinjuku</b> tra skyline, punti panoramici e quartieri pieni di vita; in serata scegliamo il ritmo: vicoli e lanterne tra izakaya oppure rientro tranquillo dopo la prima grande immersione urbana.</p>
+              <p>Giornata dedicata alla Tokyo più iconica: <b>Shibuya</b> (incrocio, Hachikō e vie principali), poi <b>Harajuku</b> con il contrasto tra street style e la quiete del <b>Meiji Jingū</b> nel verde. Nel pomeriggio ci sposteremo verso <b>Shinjuku</b> tra skyline, punti panoramici e quartieri pieni di vita; in serata sarà la stanchezza a decidere il ritmo: vicoli e lanterne tra izakaya oppure rientro tranquillo dopo la prima grande immersione urbana.</p>
             </div>
           </div>
 
@@ -1072,7 +1000,7 @@
               <i class="fa-solid fa-chevron-down"></i>
             </button>
             <div class="giorno-content">
-              <p>Escursione a <b>Nikkō</b> (UNESCO): complesso di santuari e templi immersi nella foresta, con un’atmosfera completamente diversa dalla metropoli. Visitiamo le aree principali, camminando tra ponti, portali e viali di cedri; se i tempi lo permettono, tappa anche per un punto naturale panoramico. Rientro a Tokyo in serata.</p>
+              <p>Escursione a <b>Nikkō</b> (UNESCO): complesso di santuari e templi immersi nella foresta, con un’atmosfera completamente diversa dalla metropoli. Visiteremo le aree principali, camminando tra ponti, portali e viali di cedri; se i tempi lo permettono, tappa anche per un punto naturale panoramico. Rientro a Tokyo in serata.</p>
             </div>
           </div>
 
@@ -1082,7 +1010,7 @@
               <i class="fa-solid fa-chevron-down"></i>
             </button>
             <div class="giorno-content">
-              <p>Tokyo più “di nicchia” e rilassata: tra giardini e santuari tranquilli come <b>Nezu-jinja</b>, stradine residenziali e piccole botteghe. Giornata ideale per chi vuole alternare ritmi più soft a scorci autentici, con tempo per caffè, shopping mirato o musei (in base a gusti e meteo). Serata libera: si può rientrare presto o scegliere un quartiere più vivace.</p>
+              <p>Tokyo più “di nicchia” e rilassata: tra giardini e santuari tranquilli come <b>Nezu-jinja</b>, stradine residenziali e piccole botteghe. Giornata ideale per alternare ritmi più soft a scorci autentici, con tempo per caffè, shopping mirato o musei (in base a vibes e meteo). Serata libera: si può rientrare presto o scegliere un quartiere più vivace.</p>
             </div>
           </div>
 
@@ -1092,7 +1020,7 @@
               <i class="fa-solid fa-chevron-down"></i>
             </button>
             <div class="giorno-content">
-              <p>Tokyo tra panorami e cultura pop: mattina con food-walk/mercato (es. area <b>Tsukiji</b> / alternative) e poi saliamo per un punto vista sulla città. Nel pomeriggio ci muoviamo tra quartieri più moderni, arcades, gacha e shopping a tema; chi vuole può chiudere con una zona serale piena di luci e insegne per foto memorabili.</p>
+              <p>Tokyo tra panorami e cultura pop: mattina con food-walk/mercato (es. area <b>Tsukiji</b>) e poi saliremo per un punto vista sulla città. Nel pomeriggio ci muoviamo tra quartieri più moderni, arcades, gacha e shopping a tema; chiuderemo la giornata con una zona serale piena di luci e insegne per foto memorabili.</p>
             </div>
           </div>
 
@@ -1102,7 +1030,7 @@
               <i class="fa-solid fa-chevron-down"></i>
             </button>
             <div class="giorno-content">
-              <p>Trasferimento verso <b>Kawaguchi-ko</b> (area Monte Fuji). Arrivo e prime passeggiate sul lago per cercare i migliori scorci del <b>Fuji</b>, tra punti panoramici e angoli tranquilli. In base all’orario, tempo per sistemazione, onsen/relax e una serata più slow con cena e aria di montagna.</p>
+              <p>Trasferimento verso <b>Kawaguchi-ko</b> (area Monte Fuji). Non appena arrivati ci concederemo una prima passeggiata sul lago per cercare i migliori scorci del <b>Fuji</b>, tra punti panoramici e angoli tranquilli. In base all’orario, tempo per sistemazione, relax e una serata più slow con cena e aria di montagna.</p>
             </div>
           </div>
 
@@ -1112,7 +1040,7 @@
               <i class="fa-solid fa-chevron-down"></i>
             </button>
             <div class="giorno-content">
-              <p>Giornata dedicata al Fuji: ci muoviamo tra punti panoramici e luoghi simbolo (es. <b>Arakurayama Sengen</b> / pagoda, o spot alternativi in base alle condizioni). Possibile passaggio in villaggi tradizionali e soste fotografiche lungo laghi e strade scenografiche. Rientro in serata con tempo per relax e, se vi va, onsen.</p>
+              <p>Giornata dedicata al Fuji: ci muoveremo tra punti panoramici e luoghi simbolo (es. <b>Arakurayama Sengen</b> / pagoda, o spot alternativi in base alle condizioni). Possibile passaggio in villaggi tradizionali e soste fotografiche lungo laghi e strade scenografiche. Rientro in serata con tempo per relax e immersione culinaria in izakaya locali.</p>
             </div>
           </div>
 
@@ -1122,7 +1050,7 @@
               <i class="fa-solid fa-chevron-down"></i>
             </button>
             <div class="giorno-content">
-              <p>Arrivo a <b>Kanazawa</b>: primo assaggio di città tra <b>Mercato Ōmichō</b> (street food e colori), quartieri storici e artigianato locale. Passeggiata tra vie eleganti e atmosfere da “piccola Kyoto”, con tempo per visitare una zona samurai o geisha (in base al ritmo). Serata tranquilla in centro.</p>
+              <p>Arriveremo a <b>Kanazawa</b>: primo assaggio di città tra <b>Mercato Ōmichō</b> (street food e colori), quartieri storici e artigianato locale. Passeggiata tra vie eleganti e atmosfere da “piccola Kyoto”, con tempo per visitare una zona samurai o geisha. Serata tranquilla in centro.</p>
             </div>
           </div>
 
@@ -1132,7 +1060,7 @@
               <i class="fa-solid fa-chevron-down"></i>
             </button>
             <div class="giorno-content">
-              <p>Kanazawa storica e raffinata: <b>Kenroku-en</b> (uno dei giardini più belli del Giappone) e dintorni, con passeggiate lente tra ponti, stagni e scorci perfetti per foto. Proseguiamo con una zona museale/artistica e, se vi interessa, un laboratorio o bottega di artigianato. Tempo libero per shopping e caffè prima della serata.</p>
+              <p>Kanazawa storica e raffinata: <b>Kenroku-en</b> (uno dei giardini più belli del Giappone) e dintorni, con passeggiate lente tra ponti, stagni e scorci perfetti per foto. Proseguiremo con una zona museale/artistica e un laboratorio o bottega di artigianato. Tempo libero per shopping e caffè prima della serata.</p>
             </div>
           </div>
 
@@ -1222,7 +1150,7 @@
               <i class="fa-solid fa-chevron-down"></i>
             </button>
             <div class="giorno-content">
-              <p>Ultime ore in Giappone (in base all’operativo voli): tempo per shopping finale, una colazione o pranzo insieme e un ultimo sguardo alla città. Trasferimento in aeroporto, procedure di rientro e volo verso l’Italia. Arrivo il giorno successivo (a seconda degli orari) e fine del nostro grande sogno.</p>
+              <p>Ultime ore in Giappone: dopo colazione trasferimento in aeroporto, procedure di rientro e volo verso l’Italia. Arrivo il giorno stesso, e il sogno diventa ricordo indelebile nella nostra mente e nel nostro cuore.</p>
             </div>
           </div>
         </div>
@@ -1318,7 +1246,8 @@
 
         <div class="iban" id="ibanBlock">
           <div style="font-weight:900; letter-spacing:.12em; text-transform:uppercase; color: rgba(28,28,28,.70);">IBAN sposi</div>
-          <code id="ibanValue">(QUI METTEREMO LE VOSTRE COORDINATE BANCARIE,L’IBAN)</code>
+          <code id="ibanValue">IT91S0200805321000107266136</code>
+          <div class="hint">Beneficiario: “FRANCHINA ANTONINO, FIORINI ROBERTA”.</div>
           <div class="hint">Causale consigliata: “Regalo matrimonio – Nome Cognome”.</div>
         </div>
       </section>
@@ -1558,266 +1487,205 @@ END:VCALENDAR`;
       ];
     }
 
-    async function generatePdf(sub){
-      const { jsPDF } = window.jspdf || {};
-      if(!jsPDF){
-        alert("Libreria PDF non caricata. Riprova tra un momento.");
-        return;
-      }
+async function generatePdf(sub){
+  const { jsPDF } = window.jspdf || {};
+  if(!jsPDF){
+    alert("Libreria PDF non caricata. Riprova tra un momento.");
+    return;
+  }
 
-      const doc = new jsPDF({ unit:"mm", format:"a4" });
+  const doc = new jsPDF({ unit:"mm", format:"a4" });
 
-      const sage = [111, 143, 120];
-      const burgundy = [139, 44, 43];
-      const ink = [28, 28, 28];
+  const sage = [111, 143, 120];
+  const burgundy = [139, 44, 43];
+  const ink = [28, 28, 28];
 
-      const marginX = 14;
-      const pageW = doc.internal.pageSize.getWidth();
-      const pageH = doc.internal.pageSize.getHeight();
-      const contentW = pageW - marginX*2;
+  const marginX = 14;
+  const pageW = doc.internal.pageSize.getWidth();
+  const pageH = doc.internal.pageSize.getHeight();
+  const contentW = pageW - marginX*2;
 
-      const logoEl = document.getElementById("logoSposi");
-      const logoUrl = logoEl ? logoEl.getAttribute("src") : null;
-      const logoDataUrl = logoUrl ? await fetchImageAsDataUrl(logoUrl) : null;
+  // ✅ MODIFICA RICHIESTA: logo PDF fisso (1.jpg) invece di #logoSposi
+  const logoUrl = "wedding/nino_roby/1.png";
+  const logoDataUrl = await fetchImageAsDataUrl(logoUrl);
 
-      const headerH = 22;
-      const footerH = 12;
+  const headerH = 22;
+  const footerH = 12;
 
-      function header(pageNo){
-        doc.setDrawColor(220);
-        doc.setLineWidth(0.2);
-        doc.line(marginX, headerH + 10, pageW - marginX, headerH + 10);
+  function header(pageNo){
+    doc.setDrawColor(220);
+    doc.setLineWidth(0.2);
+    doc.line(marginX, headerH + 10, pageW - marginX, headerH + 10);
 
-        if(logoDataUrl){
-          try { doc.addImage(logoDataUrl, "PNG", marginX, 10, 16, 16); } catch(_){}
-        }
-
-        doc.setFont("helvetica", "bold");
-        doc.setTextColor(...sage);
-        doc.setFontSize(14);
-        doc.text("Il Sogno di Nino & Roby", marginX + 20, 17);
-
-        doc.setFont("helvetica", "normal");
-        doc.setTextColor(90,90,90);
-        doc.setFontSize(10.5);
-        doc.text("Riepilogo partecipazione", marginX + 20, 22.5);
-
-        doc.setFontSize(9.5);
-        doc.text(`Pag. ${pageNo}`, pageW - marginX, 17, { align:"right" });
-      }
-
-      function footer(pageNo){
-        doc.setDrawColor(220);
-        doc.setLineWidth(0.2);
-        doc.line(marginX, pageH - footerH - 4, pageW - marginX, pageH - footerH - 4);
-
-        doc.setFont("helvetica", "normal");
-        doc.setTextColor(120,120,120);
-        doc.setFontSize(9);
-        doc.text("Nino & Roby • 06.06.2026", marginX, pageH - 7);
-        doc.text(`Pag. ${pageNo}`, pageW - marginX, pageH - 7, { align:"right" });
-      }
-
-      let pageNo = 1;
-      header(pageNo);
-      footer(pageNo);
-
-      let y = headerH + 18;
-
-      function newPage(){
-        doc.addPage();
-        pageNo += 1;
-        header(pageNo);
-        footer(pageNo);
-        y = headerH + 18;
-      }
-
-      function ensureSpace(hNeeded){
-        if(y + hNeeded > pageH - footerH - 10) newPage();
-      }
-
-      function sectionTitle(txt){
-        ensureSpace(12);
-        doc.setFont("helvetica","bold");
-        doc.setTextColor(...burgundy);
-        doc.setFontSize(12.5);
-        doc.text(txt, marginX, y);
-        y += 7;
-        doc.setDrawColor(210);
-        doc.setLineWidth(0.2);
-        doc.line(marginX, y, pageW - marginX, y);
-        y += 8;
-      }
-
-      function writeParagraph(text, fontSize=10.8, leading=5.2){
-        doc.setFont("helvetica","normal");
-        doc.setTextColor(...ink);
-        doc.setFontSize(fontSize);
-
-        // Normalizza spaziature e spezza parole lunghissime per evitare sforamenti
-        const safeText = String(text || "")
-          .replace(/\s+/g, " ")
-          .replace(/([^\s]{40,})/g, (m)=> m.replace(/(.{20})/g, "$1 " ))
-          .trim();
-
-        const lines = doc.splitTextToSize(safeText, contentW);
-        ensureSpace(lines.length*leading + 2);
-        doc.text(lines, marginX, y);
-        y += lines.length*leading + 2;
-      }
-
-      function drawInfoBox(title, rows){
-        const boxPad = 4;
-        const rowLeading = 5.2;
-
-        let h = 10;
-        rows.forEach(r=>{
-          const lines = doc.splitTextToSize(`${r[0]} ${r[1]}`, contentW - boxPad*2);
-          h += Math.max(1, lines.length)*rowLeading;
-        });
-        h += 6;
-
-        ensureSpace(h + 4);
-
-        doc.setDrawColor(200);
-        doc.setLineWidth(0.2);
-        doc.rect(marginX, y, contentW, h, "S");
-
-        doc.setFont("helvetica","bold");
-        doc.setTextColor(...sage);
-        doc.setFontSize(11.5);
-        doc.text(title, marginX + boxPad, y + 7);
-
-        let yy = y + 13;
-        doc.setFont("helvetica","normal");
-        doc.setTextColor(...ink);
-        doc.setFontSize(10.8);
-
-        rows.forEach(([k,v])=>{
-          const line = `${k} ${v}`;
-          const lines = doc.splitTextToSize(line, contentW - boxPad*2);
-          doc.text(lines, marginX + boxPad, yy);
-          yy += lines.length*rowLeading;
-        });
-
-        y += h + 10;
-      }
-
-      drawInfoBox("Dati invitato", [
-        ["Nome:", `${sub.nome} ${sub.cognome}`],
-        ["Email:", sub.email],
-        ["Telefono:", sub.telefono || "—"]
-      ]);
-
-      drawInfoBox("Dettagli", [
-        ["Numero persone:", sub.persone],
-        ["Regalo scelto:", sub.gift_choice ? ("€ " + sub.gift_choice) : "—"]
-      ]);
-
-      if(sub.messaggio && String(sub.messaggio).trim()){
-        sectionTitle("Messaggio");
-        writeParagraph(String(sub.messaggio).trim());
-      }
-
-      sectionTitle("Invito");
-      getInvitationTextLines().forEach(line => writeParagraph(line, 10.8, 5.2));
-
-      sectionTitle("Regalo selezionato");
-
-      const giftVal = String(sub.gift_choice || "").trim();
-      if(giftVal){
-        const opt = document.querySelector(`#gift_choice option[value="${giftVal}"]`);
-        const optTxt = (opt ? (opt.textContent || "").trim() : "").replace(/\s+/g," ");
-        const pretty = optTxt || (`€${giftVal} — Regalo selezionato`);
-
-        writeParagraph(`Grazie di cuore! Hai indicato come regalo: ${pretty}.`, 10.8, 5.2);
-      }else{
-        writeParagraph("Regalo: non indicato (va benissimo così).", 10.8, 5.2);
-      }
-
-      sectionTitle("IBAN");
-
-      const ibanTxt = document.querySelector("#ibanBlock code")?.innerText?.trim() || "(INSERISCI QUI L’IBAN)";
-      ensureSpace(16);
-      doc.setFont("helvetica","bold");
-      doc.setTextColor(...sage);
-      doc.setFontSize(11.2);
-      doc.text("IBAN", marginX, y);
-      y += 6;
-      doc.setFont("helvetica","normal");
-      doc.setTextColor(...ink);
-      doc.setFontSize(10.8);
-      writeParagraph(ibanTxt);
-
-      doc.save(`RSVP_${sub.nome}_${sub.cognome}.pdf`);
+    // ✅ Logo più bello e centrato
+    if(logoDataUrl){
+      try {
+        const imgW = 26;          // dimensione logo
+        const imgH = 26;
+        const imgX = (pageW - imgW) / 2;
+        const imgY = 8;           // alto ma non attaccato
+        doc.addImage(logoDataUrl, "JPEG", imgX, imgY, imgW, imgH);
+      } catch(_){}
     }
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      stato.textContent = "";
-      hide(errbox);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...sage);
+    doc.setFontSize(14);
+    doc.text("Il Sogno di Nino & Roby", marginX + 20, 17);
 
-      const website = (form.querySelector("input[name='website']")?.value || "").trim();
-      if (website.length > 0) return;
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(90,90,90);
+    doc.setFontSize(10.5);
+    doc.text("Riepilogo partecipazione", marginX + 20, 22.5);
 
-      const nome = (document.getElementById("nome").value || "").trim();
-      const cognome = (document.getElementById("cognome").value || "").trim();
-      const email = (document.getElementById("email").value || "").trim();
-      const telefono = (document.getElementById("telefono").value || "").trim();
-      const messaggio = (document.getElementById("messaggio").value || "").trim();
-      const persone = (document.getElementById("persone").value || "").trim();
-      const giftChoice = (document.getElementById("gift_choice").value || "").trim();
-      const consensoGDPR = document.getElementById("consensoGDPR").checked;
+    doc.setFontSize(9.5);
+    doc.text(`Pag. ${pageNo}`, pageW - marginX, 17, { align:"right" });
+  }
 
-      if(!nome || !cognome){
-        stato.textContent = "Compila Nome e Cognome.";
-        return;
-      }
-      if(!isValidEmail(email)){
-        stato.textContent = "Inserisci un’email valida.";
-        return;
-      }
-      if(!persone){
-        stato.textContent = "Seleziona il numero di persone.";
-        return;
-      }
-      if(!consensoGDPR){
-        stato.textContent = "Devi accettare il consenso GDPR per inviare.";
-        return;
-      }
+  function footer(pageNo){
+    doc.setDrawColor(220);
+    doc.setLineWidth(0.2);
+    doc.line(marginX, pageH - footerH - 4, pageW - marginX, pageH - footerH - 4);
 
-      const sub = {
-        tipoRichiesta: "matrimonio_roberta_fiorini",
-        nome, cognome, email, telefono,
-        persone,
-        gift_choice: giftChoice,
-        messaggio,
-        gdpr: "yes",
-        page: "IlSognoDiNino&Roby"
-      };
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(120,120,120);
+    doc.setFontSize(9);
+    doc.text("Nino & Roby • 06.06.2026", marginX, pageH - 7);
+    doc.text(`Pag. ${pageNo}`, pageW - marginX, pageH - 7, { align:"right" });
+  }
 
-      setBusy(true);
-      stato.textContent = "Invio in corso… (poi scarico il PDF)";
-      try{
-        const res = await fetch(FORM_ENDPOINT, {
-          method: "POST",
-          headers: { "Content-Type":"application/json" },
-          body: JSON.stringify(sub)
-        });
-        if(!res.ok) throw new Error("Bad response");
+  let pageNo = 1;
+  header(pageNo);
+  footer(pageNo);
 
-        lastSubmission = sub;
+  let y = headerH + 18;
 
-        stato.textContent = "Perfetto! Sto generando il PDF…";
-        await generatePdf(sub);
-        stato.textContent = "PDF scaricato ✅ Grazie!";
-      }catch(err){
-        show(errbox);
-        stato.textContent = "";
-      }finally{
-        setBusy(false);
-      }
+  function newPage(){
+    doc.addPage();
+    pageNo += 1;
+    header(pageNo);
+    footer(pageNo);
+    y = headerH + 18;
+  }
+
+  function ensureSpace(hNeeded){
+    if(y + hNeeded > pageH - footerH - 10) newPage();
+  }
+
+  function sectionTitle(txt){
+    ensureSpace(12);
+    doc.setFont("helvetica","bold");
+    doc.setTextColor(...burgundy);
+    doc.setFontSize(12.5);
+    doc.text(txt, marginX, y);
+    y += 7;
+    doc.setDrawColor(210);
+    doc.setLineWidth(0.2);
+    doc.line(marginX, y, pageW - marginX, y);
+    y += 8;
+  }
+
+  function writeParagraph(text, fontSize=10.8, leading=5.2){
+    doc.setFont("helvetica","normal");
+    doc.setTextColor(...ink);
+    doc.setFontSize(fontSize);
+
+    // Normalizza spaziature e spezza parole lunghissime per evitare sforamenti
+    const safeText = String(text || "")
+      .replace(/\s+/g, " ")
+      .replace(/([^\s]{40,})/g, (m)=> m.replace(/(.{20})/g, "$1 " ))
+      .trim();
+
+    const lines = doc.splitTextToSize(safeText, contentW);
+    ensureSpace(lines.length*leading + 2);
+    doc.text(lines, marginX, y);
+    y += lines.length*leading + 2;
+  }
+
+  function drawInfoBox(title, rows){
+    const boxPad = 4;
+    const rowLeading = 5.2;
+
+    let h = 10;
+    rows.forEach(r=>{
+      const lines = doc.splitTextToSize(`${r[0]} ${r[1]}`, contentW - boxPad*2);
+      h += Math.max(1, lines.length)*rowLeading;
     });
+    h += 6;
+
+    ensureSpace(h + 4);
+
+    doc.setDrawColor(200);
+    doc.setLineWidth(0.2);
+    doc.rect(marginX, y, contentW, h, "S");
+
+    doc.setFont("helvetica","bold");
+    doc.setTextColor(...sage);
+    doc.setFontSize(11.5);
+    doc.text(title, marginX + boxPad, y + 7);
+
+    let yy = y + 13;
+    doc.setFont("helvetica","normal");
+    doc.setTextColor(...ink);
+    doc.setFontSize(10.8);
+
+    rows.forEach(([k,v])=>{
+      const line = `${k} ${v}`;
+      const lines = doc.splitTextToSize(line, contentW - boxPad*2);
+      doc.text(lines, marginX + boxPad, yy);
+      yy += lines.length*rowLeading;
+    });
+
+    y += h + 10;
+  }
+
+  drawInfoBox("Dati invitato", [
+    ["Nome:", `${sub.nome} ${sub.cognome}`],
+    ["Email:", sub.email],
+    ["Telefono:", sub.telefono || "—"]
+  ]);
+
+  drawInfoBox("Dettagli", [
+    ["Numero persone:", sub.persone],
+    ["Regalo scelto:", sub.gift_choice ? ("€ " + sub.gift_choice) : "—"]
+  ]);
+
+  if(sub.messaggio && String(sub.messaggio).trim()){
+    sectionTitle("Messaggio");
+    writeParagraph(String(sub.messaggio).trim());
+  }
+
+  sectionTitle("Invito");
+  getInvitationTextLines().forEach(line => writeParagraph(line, 10.8, 5.2));
+
+  sectionTitle("Regalo selezionato");
+
+  const giftVal = String(sub.gift_choice || "").trim();
+  if(giftVal){
+    const opt = document.querySelector(`#gift_choice option[value="${giftVal}"]`);
+    const optTxt = (opt ? (opt.textContent || "").trim() : "").replace(/\s+/g," ");
+    const pretty = optTxt || (`€${giftVal} — Regalo selezionato`);
+    writeParagraph(`Grazie di cuore! Hai indicato come regalo: ${pretty}.`, 10.8, 5.2);
+  }else{
+    writeParagraph("Regalo: non indicato (va benissimo così).", 10.8, 5.2);
+  }
+
+  sectionTitle("IBAN");
+
+  const ibanTxt = document.querySelector("#ibanBlock code")?.innerText?.trim() || "(INSERISCI QUI L’IBAN)";
+  ensureSpace(16);
+  doc.setFont("helvetica","bold");
+  doc.setTextColor(...sage);
+  doc.setFontSize(11.2);
+  doc.text("IBAN", marginX, y);
+  y += 6;
+  doc.setFont("helvetica","normal");
+  doc.setTextColor(...ink);
+  doc.setFontSize(10.8);
+  writeParagraph(ibanTxt);
+
+  doc.save(`RSVP_${sub.nome}_${sub.cognome}.pdf`);
+}
   </script>
 
   <script>
