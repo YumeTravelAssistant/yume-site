@@ -68,7 +68,7 @@
        ========================================================= */
    /* ===== INVITO / BUSTA (stabile online) ===== */
 
-.invito-overlay{
+  .invito-overlay{
   position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,.75);
   display:flex; align-items:center; justify-content:center;
   transition:opacity .5s ease, visibility .5s ease;
@@ -88,16 +88,6 @@
   perspective:1200px;
 }
 
-/* Stabilizzazione layer (anti “blink” online) — SENZA rompere i transform originali */
-.invito-envelope__flap,
-.invito-envelope__paper,
-.invito-banner{
-  backface-visibility:hidden;
-  -webkit-backface-visibility:hidden;
-  will-change:transform, opacity;
-  /* ❗ NON mettere transform qui */
-}
-
 .invito-envelope__body{
   position:absolute; inset:0;
   background:#fff;
@@ -106,6 +96,7 @@
   box-shadow:0 18px 50px rgba(0,0,0,.35);
 }
 
+/* ✅ FLAP: come 2.html (NO backface hidden qui) */
 .invito-envelope__flap{
   position:absolute; left:0; right:0; top:0; height:56%;
   transform-origin:top center;
@@ -116,13 +107,14 @@
   border-radius:14px 14px 0 0;
   z-index:3;
   animation:invito-flap 1.2s 0.55s cubic-bezier(.2,.8,.2,1) forwards;
+  will-change: transform;
 }
 @keyframes invito-flap{
   0%{ transform:rotateX(0deg); }
   100%{ transform:rotateX(-180deg); }
 }
 
-/* Logo “timbro” sul flap (NO filter: drop-shadow) */
+/* Logo “timbro” sul flap (NO filter) */
 .invito-flap-logo{
   position:absolute;
   top:50%;
@@ -132,6 +124,14 @@
   height:auto;
   opacity:.95;
   pointer-events:none;
+}
+
+/* ✅ Stabilizzazione SOLO dove serve (paper + banner) */
+.invito-envelope__paper,
+.invito-banner{
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  will-change:transform, opacity;
 }
 
 .invito-envelope__paper{
@@ -163,6 +163,7 @@
     radial-gradient(900px 420px at 55% 120%, rgba(232,198,200,.55) 0%, rgba(232,198,200,0) 65%);
   color:#111;
 }
+
 .invito-banner span{
   display:block;
   font-family:'Allura', cursive;
