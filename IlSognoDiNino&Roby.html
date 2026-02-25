@@ -1433,29 +1433,40 @@ END:VCALENDAR`;
     const errbox = document.getElementById("errbox");
 
     form.addEventListener("submit", async (e) => {
-  e.preventDefault(); // ⛔ blocca il reload della pagina
+  e.preventDefault(); // blocca reload -> niente flicker busta
 
   errbox.style.display = "none";
+  errbox.textContent = "Ops, non siamo riusciti a salvare. Riprova.";
   stato.textContent = "";
   btnSubmit.disabled = true;
 
   try {
     const fd = new FormData(form);
 
+    // honeypot anti-bot
+    const hp = (fd.get("website") || "").toString().trim();
+    if (hp) return; // se compilato, non fare nulla
+
     const sub = {
       nome: (fd.get("nome") || "").toString().trim(),
-      telefono: (fd.get("telefono") || "").toString().trim(),
+      cognome: (fd.get("cognome") || "").toString().trim(),
       email: (fd.get("email") || "").toString().trim(),
-      partecipazione: fd.get("partecipazione"),
-      persone: fd.get("persone"),
-      giorno: fd.get("giorno"),
-      intolleranze: (fd.get("intolleranze") || "").toString().trim(),
+      telefono: (fd.get("telefono") || "").toString().trim(),
+      persone: (fd.get("persone") || "").toString().trim(),
+      gift_choice: (fd.get("gift_choice") || "").toString().trim(),
       messaggio: (fd.get("messaggio") || "").toString().trim(),
-      regalo: (fd.get("regalo") || "").toString().trim()
+      consenso: document.getElementById("consensoGDPR")?.checked === true
     };
 
-    if (!sub.nome || !sub.telefono || !sub.partecipazione) {
-      throw new Error("Compila tutti i campi obbligatori.");
+    // validazioni coerenti col form
+    if (!sub.nome || !sub.cognome || !sub.email || !sub.persone) {
+      throw new Error("Compila Nome, Cognome, Email e Numero persone.");
+    }
+    if (!isValidEmail(sub.email)) {
+      throw new Error("Inserisci un'email valida.");
+    }
+    if (!sub.consenso) {
+      throw new Error("Devi accettare il consenso al trattamento dati.");
     }
 
     stato.textContent = "Invio in corso…";
@@ -1467,25 +1478,24 @@ END:VCALENDAR`;
     });
 
     if (!response.ok) {
-      throw new Error("Errore durante l’invio.");
+      throw new Error("Errore durante l’invio. Riprova.");
     }
 
     stato.textContent = "Conferma ricevuta 💌 Generazione PDF…";
 
-    await generatePdf(sub); // ✅ qui parte il download
+    lastSubmission = sub;
+    await generatePdf(sub); // qui parte davvero il download
 
     stato.textContent = "Grazie! Il PDF è stato scaricato.";
-
     form.reset();
 
   } catch (err) {
-    errbox.textContent = err.message || "Errore inatteso.";
+    errbox.textContent = err?.message || "Errore inatteso.";
     errbox.style.display = "block";
   } finally {
     btnSubmit.disabled = false;
   }
-});
-    
+});    
     let lastSubmission = null;
 
     function setBusy(b){
@@ -1578,7 +1588,7 @@ async function generatePdf(sub){
         const imgH = 26;
         const imgX = (pageW - imgW) / 2;
         const imgY = 8;           // alto ma non attaccato
-        doc.addImage(logoDataUrl, "JPEG", imgX, imgY, imgW, imgH);
+        doc.addImage(logoDataUrl, "PNG", imgX, imgY, imgW, imgH);
       } catch(_){}
     }
 
