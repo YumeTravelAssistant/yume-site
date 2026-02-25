@@ -1488,6 +1488,7 @@ END:VCALENDAR`;
     }
 
 async function generatePdf(sub){
+ async function generatePdf(sub){
   const { jsPDF } = window.jspdf || {};
   if(!jsPDF){
     alert("Libreria PDF non caricata. Riprova tra un momento.");
@@ -1505,9 +1506,13 @@ async function generatePdf(sub){
   const pageH = doc.internal.pageSize.getHeight();
   const contentW = pageW - marginX*2;
 
-  // ✅ MODIFICA RICHIESTA: logo PDF fisso (1.jpg) invece di #logoSposi
+  // ✅ Logo centrato (come nel tuo snippet)
   const logoUrl = "wedding/nino_roby/1.png";
   const logoDataUrl = await fetchImageAsDataUrl(logoUrl);
+
+  // ✅ NUOVO: logo-titolo al posto della scritta
+  const titleLogoUrl = "wedding/nino_roby/2.png";
+  const titleDataUrl = await fetchImageAsDataUrl(titleLogoUrl);
 
   const headerH = 22;
   const footerH = 12;
@@ -1524,14 +1529,32 @@ async function generatePdf(sub){
         const imgH = 26;
         const imgX = (pageW - imgW) / 2;
         const imgY = 8;           // alto ma non attaccato
-        doc.addImage(logoDataUrl, "JPEG", imgX, imgY, imgW, imgH);
+        doc.addImage(logoDataUrl, "PNG", imgX, imgY, imgW, imgH); // <-- PNG (coerente con 1.png)
       } catch(_){}
     }
 
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(...sage);
-    doc.setFontSize(14);
-    doc.text("Il Sogno di Nino & Roby", marginX + 20, 17);
+    // ✅ QUI: sostituisce SOLO la scritta del titolo con il logo 2.png
+    if(titleDataUrl){
+      try{
+        const x = marginX + 20;   // stessa posizione della vecchia scritta
+        const y = 12.2;           // tarato per stare dove era la scritta
+        const w = 62;             // larghezza logo titolo
+        const h = 12;             // altezza logo titolo
+        doc.addImage(titleDataUrl, "PNG", x, y, w, h);
+      }catch(_){
+        // fallback di sicurezza: se l’immagine fallisce, torna al testo come prima
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(...sage);
+        doc.setFontSize(14);
+        doc.text("Il Sogno di Nino & Roby", marginX + 20, 17);
+      }
+    }else{
+      // fallback: se non carica l’immagine
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(...sage);
+      doc.setFontSize(14);
+      doc.text("Il Sogno di Nino & Roby", marginX + 20, 17);
+    }
 
     doc.setFont("helvetica", "normal");
     doc.setTextColor(90,90,90);
