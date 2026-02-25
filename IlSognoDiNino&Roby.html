@@ -88,14 +88,14 @@
   perspective:1200px;
 }
 
-/* Stabilizzazione layer (anti “blink” online) */
+/* Stabilizzazione layer (anti “blink” online) — SENZA rompere i transform originali */
 .invito-envelope__flap,
 .invito-envelope__paper,
 .invito-banner{
   backface-visibility:hidden;
   -webkit-backface-visibility:hidden;
   will-change:transform, opacity;
-  transform:translateZ(0);
+  /* ❗ NON mettere transform qui */
 }
 
 .invito-envelope__body{
