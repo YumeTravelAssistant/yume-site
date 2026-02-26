@@ -1474,68 +1474,80 @@ END:VCALENDAR`;
     const errbox = document.getElementById("errbox");
 
     form.addEventListener("submit", async (e) => {
-  e.preventDefault(); // blocca reload -> niente flicker busta
-
-  errbox.style.display = "none";
-  errbox.textContent = "Ops, non siamo riusciti a salvare. Riprova.";
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
   stato.textContent = "";
-  btnSubmit.disabled = true;
+  hide(errbox);
 
-  try {
-    const fd = new FormData(form);
+  const website = (form.querySelector("input[name='website']")?.value || "").trim();
+  if (website.length > 0) return;
 
-    // honeypot anti-bot
-    const hp = (fd.get("website") || "").toString().trim();
-    if (hp) return; // se compilato, non fare nulla
+  const nome = (document.getElementById("nome").value || "").trim();
+  const cognome = (document.getElementById("cognome").value || "").trim();
+  const email = (document.getElementById("email").value || "").trim();
+  const telefono = (document.getElementById("telefono").value || "").trim();
+  const messaggio = (document.getElementById("messaggio").value || "").trim();
+  const giftChoice = (document.getElementById("gift_choice").value || "").trim();
+  const consensoGDPR = document.getElementById("consensoGDPR").checked;
 
-    const sub = {
-      nome: (fd.get("nome") || "").toString().trim(),
-      cognome: (fd.get("cognome") || "").toString().trim(),
-      email: (fd.get("email") || "").toString().trim(),
-      telefono: (fd.get("telefono") || "").toString().trim(),
-      gift_choice: (fd.get("gift_choice") || "").toString().trim(),
-      messaggio: (fd.get("messaggio") || "").toString().trim(),
-      consenso: document.getElementById("consensoGDPR")?.checked === true
-    };
+  if(!nome || !cognome){
+    stato.textContent = "Compila Nome e Cognome.";
+    return;
+  }
+  if(!isValidEmail(email)){
+    stato.textContent = "Inserisci un’email valida.";
+    return;
+  }
+  if(!consensoGDPR){
+    stato.textContent = "Devi accettare il consenso GDPR per inviare.";
+    return;
+  }
 
-    // validazioni coerenti col form
-    if (!sub.nome || !sub.cognome || !sub.email) {
-      throw new Error("Compila Nome, Cognome e Email.");
-    }
-    if (!isValidEmail(sub.email)) {
-      throw new Error("Inserisci un'email valida.");
-    }
-    if (!sub.consenso) {
-      throw new Error("Devi accettare il consenso al trattamento dati.");
-    }
+  // ✅ Payload compatibile con il tuo GAS (routing + consenso nel formato atteso)
+  const sub = {
+    tipoRichiesta: "matrimonio_roberta_fiorini",
+    page: "IlSognoDiNino&Roby",
+    source: "IlSognoDiNino&Roby",
 
-    stato.textContent = "Invio in corso…";
+    nome, cognome, email, telefono,
 
-    const response = await fetch(FORM_ENDPOINT, {
+    gift_choice: giftChoice,
+    messaggio,
+
+    // il GAS matrimonio accetta gdpr:"yes" oppure consensoGDPR:true
+    gdpr: "yes",
+    consensoGDPR: true
+  };
+
+  setBusy(true);
+  stato.textContent = "Invio in corso… (poi scarico il PDF)";
+
+  try{
+    const res = await fetch(FORM_ENDPOINT, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type":"application/json" },
       body: JSON.stringify(sub)
     });
 
-    if (!response.ok) {
-      throw new Error("Errore durante l’invio. Riprova.");
+    // ✅ IMPORTANTISSIMO: Apps Script spesso risponde 200 anche quando ok:false
+    const data = await res.json().catch(() => null);
+    if(!res.ok || !data || data.ok !== true){
+      throw new Error(data?.error || "Errore durante il salvataggio.");
     }
 
-    stato.textContent = "Conferma ricevuta 💌 Generazione PDF…";
-
     lastSubmission = sub;
-    await generatePdf(sub); // qui parte davvero il download
 
-    stato.textContent = "Grazie! Il PDF è stato scaricato.";
-    form.reset();
+    stato.textContent = "Perfetto! Sto generando il PDF…";
+    await generatePdf(sub);
+    stato.textContent = "PDF scaricato ✅ Grazie!";
 
-  } catch (err) {
-    errbox.textContent = err?.message || "Errore inatteso.";
-    errbox.style.display = "block";
-  } finally {
-    btnSubmit.disabled = false;
+  }catch(err){
+    show(errbox);
+    stato.textContent = (err && err.message) ? err.message : "";
+  }finally{
+    setBusy(false);
   }
-});    
+});   
     let lastSubmission = null;
 
     function setBusy(b){
