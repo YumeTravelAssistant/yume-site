@@ -234,15 +234,18 @@
       display:block;
       object-fit: cover;
     }
+  
     .hero .overlay{
-      position:absolute; inset:0;
-      z-index:3;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      padding: 0 16px;
-    }
+  position:absolute;
+  left:0;
+  right:0;
+  bottom: 90px;   /* distanza dal fondo */
+  z-index:3;
+  display:flex;
+  justify-content:center;   /* centro orizzontale */
+  text-align:center;
+  padding: 0 16px;
+}
     .hero h1{
       margin:0;
       font-family:'Allura', cursive;
@@ -920,7 +923,7 @@
     <div class="overlay">
       <div>
         <h1>Il Sogno di Nino &amp; Roby</h1>
-        <p>06 giugno 2026 • Veroli / Ceprano</p>
+        <p>06 giugno 2026</p>
       </div>
     </div>
 
@@ -1306,7 +1309,7 @@
 
       <!-- FORM -->
       <section class="section" id="rsvp">
-        <h2><i class="fa-solid fa-pen-nib"></i> Conferma presenza</h2>
+        <h2><i class="fa-solid fa-pen-nib"></i>Lascia una dedica</h2>
 
         <form id="matrimonio-form" autocomplete="on">
           <div class="row2">
@@ -1331,21 +1334,7 @@
             </div>
           </div>
 
-          <div class="row2">
-            <div>
-              <label for="persone">Numero persone*</label>
-              <select id="persone" name="persone" required>
-                <option value="">Seleziona…</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6+">6+</option>
-              </select>
-            </div>
-
-            <div>
+        
               <label for="gift_choice">Regalo scelto (opzionale)</label>
               <select id="gift_choice" name="gift_choice">
                 <option value="">Nessuno / lo scegliamo dopo</option>
@@ -1762,7 +1751,6 @@ async function generatePdf(sub){
   ]);
 
   drawInfoBox("Dettagli", [
-    ["Numero persone:", sub.persone],
     ["Regalo scelto:", sub.gift_choice ? ("€ " + sub.gift_choice) : "—"]
   ]);
 
