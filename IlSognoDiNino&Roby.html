@@ -1493,15 +1493,14 @@ END:VCALENDAR`;
       cognome: (fd.get("cognome") || "").toString().trim(),
       email: (fd.get("email") || "").toString().trim(),
       telefono: (fd.get("telefono") || "").toString().trim(),
-      persone: (fd.get("persone") || "").toString().trim(),
       gift_choice: (fd.get("gift_choice") || "").toString().trim(),
       messaggio: (fd.get("messaggio") || "").toString().trim(),
       consenso: document.getElementById("consensoGDPR")?.checked === true
     };
 
     // validazioni coerenti col form
-    if (!sub.nome || !sub.cognome || !sub.email || !sub.persone) {
-      throw new Error("Compila Nome, Cognome, Email e Numero persone.");
+    if (!sub.nome || !sub.cognome || !sub.email) {
+      throw new Error("Compila Nome, Cognome e Email.");
     }
     if (!isValidEmail(sub.email)) {
       throw new Error("Inserisci un'email valida.");
