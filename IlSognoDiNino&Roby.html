@@ -1473,48 +1473,55 @@ END:VCALENDAR`;
     const stato = document.getElementById("stato");
     const errbox = document.getElementById("errbox");
 
-    form.addEventListener("submit", async (e) => {
-form.addEventListener("submit", async (e) => {
+  form.addEventListener("submit", async (e) => {
   e.preventDefault();
+
+  // ✅ reset stato UI (anti-glitch)
   stato.textContent = "";
   hide(errbox);
 
+  // ✅ honeypot
   const website = (form.querySelector("input[name='website']")?.value || "").trim();
   if (website.length > 0) return;
 
-  const nome = (document.getElementById("nome").value || "").trim();
-  const cognome = (document.getElementById("cognome").value || "").trim();
-  const email = (document.getElementById("email").value || "").trim();
-  const telefono = (document.getElementById("telefono").value || "").trim();
-  const messaggio = (document.getElementById("messaggio").value || "").trim();
-  const giftChoice = (document.getElementById("gift_choice").value || "").trim();
-  const consensoGDPR = document.getElementById("consensoGDPR").checked;
+  // ✅ lettura campi
+  const nome = (document.getElementById("nome")?.value || "").trim();
+  const cognome = (document.getElementById("cognome")?.value || "").trim();
+  const email = (document.getElementById("email")?.value || "").trim();
+  const telefono = (document.getElementById("telefono")?.value || "").trim();
+  const messaggio = (document.getElementById("messaggio")?.value || "").trim();
+  const giftChoice = (document.getElementById("gift_choice")?.value || "").trim();
+  const consensoGDPR = document.getElementById("consensoGDPR")?.checked === true;
 
-  if(!nome || !cognome){
+  // ✅ validazioni
+  if (!nome || !cognome) {
     stato.textContent = "Compila Nome e Cognome.";
     return;
   }
-  if(!isValidEmail(email)){
+  if (!isValidEmail(email)) {
     stato.textContent = "Inserisci un’email valida.";
     return;
   }
-  if(!consensoGDPR){
+  if (!consensoGDPR) {
     stato.textContent = "Devi accettare il consenso GDPR per inviare.";
     return;
   }
 
-  // ✅ Payload compatibile con il tuo GAS (routing + consenso nel formato atteso)
+  // ✅ Payload compatibile con GAS: routing + consenso nel formato atteso
   const sub = {
-    tipoRichiesta: "matrimonio_roberta_fiorini",
+    tipoRichiesta: "matrimonio_roberta_fiorini", // <-- deve matchare il tuo GAS
     page: "IlSognoDiNino&Roby",
     source: "IlSognoDiNino&Roby",
 
-    nome, cognome, email, telefono,
+    nome,
+    cognome,
+    email,
+    telefono,
 
     gift_choice: giftChoice,
     messaggio,
 
-    // il GAS matrimonio accetta gdpr:"yes" oppure consensoGDPR:true
+    // ✅ GAS accetta gdpr:"yes" oppure consensoGDPR:true
     gdpr: "yes",
     consensoGDPR: true
   };
@@ -1522,32 +1529,33 @@ form.addEventListener("submit", async (e) => {
   setBusy(true);
   stato.textContent = "Invio in corso… (poi scarico il PDF)";
 
-  try{
+  try {
     const res = await fetch(FORM_ENDPOINT, {
       method: "POST",
-      headers: { "Content-Type":"application/json" },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(sub)
     });
 
-    // ✅ IMPORTANTISSIMO: Apps Script spesso risponde 200 anche quando ok:false
+    // ✅ IMPORTANTISSIMO: se backend risponde 200 ma ok:false, lo intercettiamo qui
     const data = await res.json().catch(() => null);
-    if(!res.ok || !data || data.ok !== true){
+    if (!res.ok || !data || data.ok !== true) {
       throw new Error(data?.error || "Errore durante il salvataggio.");
     }
 
+    // salva ultimo payload utile per PDF
     lastSubmission = sub;
 
     stato.textContent = "Perfetto! Sto generando il PDF…";
     await generatePdf(sub);
     stato.textContent = "PDF scaricato ✅ Grazie!";
 
-  }catch(err){
+  } catch (err) {
     show(errbox);
-    stato.textContent = (err && err.message) ? err.message : "";
-  }finally{
+    stato.textContent = (err && err.message) ? err.message : "Errore imprevisto.";
+  } finally {
     setBusy(false);
   }
-});   
+});
     let lastSubmission = null;
 
     function setBusy(b){
