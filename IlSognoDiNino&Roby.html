@@ -1256,103 +1256,139 @@
       </section>
 
       <!-- ✅ REGALI + IBAN (sempre visibili) -->
-      <section id="regaliBlock" class="section">
-        <h2><i class="fa-solid fa-gift"></i> Lista regali</h2>
+      <!-- ✅ REGALI + IBAN (sempre visibili) -->
+<section id="regaliBlock" class="section">
+  <h2><i class="fa-solid fa-gift"></i> Lista regali</h2>
 
-        <div class="gift-grid" aria-label="Tabella regali">
-          <div class="gift-card">
-            <div class="gift-price"><span>Regalo</span><b>€ 50</b></div>
-            <div class="gift-body"><b>Una notte “dolce” (quota)</b><p>Un contributo per una notte speciale lungo il viaggio.</p></div>
-          </div>
-          <div class="gift-card">
-            <div class="gift-price"><span>Regalo</span><b>€ 80</b></div>
-            <div class="gift-body"><b>Street food night</b><p>Una serata tra sapori locali (Osaka / Tokyo).</p></div>
-          </div>
-          <div class="gift-card">
-            <div class="gift-price"><span>Regalo</span><b>€ 100</b></div>
-            <div class="gift-body"><b>Una notte in ryokan (quota)</b><p>Tatami, atmosfera e relax.</p></div>
-          </div>
-          <div class="gift-card">
-            <div class="gift-price"><span>Regalo</span><b>€ 120</b></div>
-            <div class="gift-body"><b>Cerimonia del tè (quota)</b><p>Matcha e rituali in stile Kyoto.</p></div>
-          </div>
-          <div class="gift-card">
-            <div class="gift-price"><span>Regalo</span><b>€ 150</b></div>
-            <div class="gift-body"><b>Cena speciale (quota)</b><p>Una sera da ricordare.</p></div>
-          </div>
-          <div class="gift-card">
-            <div class="gift-price"><span>Regalo</span><b>€ 200</b></div>
-            <div class="gift-body"><b>Esperienza artigianale</b><p>Workshop / tradizioni (Kanazawa / Kyoto).</p></div>
-          </div>
-          <div class="gift-card">
-            <div class="gift-price"><span>Regalo</span><b>€ 250</b></div>
-            <div class="gift-body"><b>Gita in giornata</b><p>Un’escursione (Hakone / Nikkō) come regalo.</p></div>
-          </div>
-          <div class="gift-card">
-            <div class="gift-price"><span>Regalo</span><b>€ 300</b></div>
-            <div class="gift-body"><b>Upgrade romantico</b><p>Vista / sorpresa / piccolo upgrade.</p></div>
-          </div>
-          <div class="gift-card">
-            <div class="gift-price"><span>Regalo</span><b>€ 400</b></div>
-            <div class="gift-body"><b>Cena omakase (quota)</b><p>Fiducia allo chef.</p></div>
-          </div>
-          <div class="gift-card">
-            <div class="gift-price"><span>Regalo</span><b>€ 500</b></div>
-            <div class="gift-body"><b>La “tappa sogno”</b><p>Il momento wow del viaggio.</p></div>
-          </div>
-        </div>
+  <div class="gift-grid" aria-label="Tabella regali">
+    <div class="gift-card">
+      <div class="gift-body">
+        <b>Regalami una notte “dolce”</b>
+        <p>Un contributo per una notte speciale lungo il viaggio.</p>
+      </div>
+    </div>
 
-        <div class="iban" id="ibanBlock">
-          <div style="font-weight:900; letter-spacing:.12em; text-transform:uppercase; color: rgba(28,28,28,.70);">IBAN sposi</div>
-          <code id="ibanValue">IT91S0200805321000107266136</code>
-          <div class="hint">Beneficiario: “FRANCHINA ANTONINO, FIORINI ROBERTA”.</div>
-          <div class="hint">Causale consigliata: “Regalo matrimonio – Nome Cognome”.</div>
-        </div>
-      </section>
+    <div class="gift-card">
+      <div class="gift-body">
+        <b>Regalami una street food night</b>
+        <p>Una serata tra sapori locali (Osaka / Tokyo).</p>
+      </div>
+    </div>
 
-      <!-- FORM -->
-      <section class="section" id="rsvp">
-        <h2><i class="fa-solid fa-pen-nib"></i>Lascia una dedica</h2>
+    <div class="gift-card">
+      <div class="gift-body">
+        <b>Regalami una notte in ryokan</b>
+        <p>Tatami, atmosfera e relax.</p>
+      </div>
+    </div>
 
-        <form id="matrimonio-form" autocomplete="on">
-          <div class="row2">
-            <div>
-              <label for="nome">Nome*</label>
-              <input id="nome" name="nome" required />
-            </div>
-            <div>
-              <label for="cognome">Cognome*</label>
-              <input id="cognome" name="cognome" required />
-            </div>
-          </div>
+    <div class="gift-card">
+      <div class="gift-body">
+        <b>Regalami una cerimonia del tè</b>
+        <p>Matcha e rituali in stile Kyoto.</p>
+      </div>
+    </div>
 
-          <div class="row2">
-            <div>
-              <label for="email">Email*</label>
-              <input id="email" name="email" type="email" required />
-            </div>
-            <div>
-              <label for="telefono">Telefono</label>
-              <input id="telefono" name="telefono" inputmode="tel" />
-            </div>
-          </div>
+    <div class="gift-card">
+      <div class="gift-body">
+        <b>Regalami una cena speciale</b>
+        <p>Una sera da ricordare.</p>
+      </div>
+    </div>
 
-        
-              <label for="gift_choice">Regalo scelto (opzionale)</label>
-              <select id="gift_choice" name="gift_choice">
-                <option value="">Nessuno / lo scegliamo dopo</option>
-                <option value="50">€50 — Notte “dolce” (quota)</option>
-                <option value="80">€80 — Street food night</option>
-                <option value="100">€100 — Notte in ryokan (quota)</option>
-                <option value="120">€120 — Cerimonia del tè (quota)</option>
-                <option value="150">€150 — Cena speciale (quota)</option>
-                <option value="200">€200 — Esperienza artigianale</option>
-                <option value="250">€250 — Gita in giornata</option>
-                <option value="300">€300 — Upgrade romantico</option>
-                <option value="400">€400 — Cena omakase (quota)</option>
-                <option value="500">€500 — Tappa sogno</option>
-              </select>
-            </div>
+    <div class="gift-card">
+      <div class="gift-body">
+        <b>Regalami un’esperienza artigianale</b>
+        <p>Workshop / tradizioni (Kanazawa / Kyoto).</p>
+      </div>
+    </div>
+
+    <div class="gift-card">
+      <div class="gift-body">
+        <b>Regalami una gita in giornata</b>
+        <p>Un’escursione (Hakone / Nikkō) come regalo.</p>
+      </div>
+    </div>
+
+    <div class="gift-card">
+      <div class="gift-body">
+        <b>Regalami un upgrade romantico</b>
+        <p>Vista / sorpresa / piccolo upgrade.</p>
+      </div>
+    </div>
+
+    <div class="gift-card">
+      <div class="gift-body">
+        <b>Regalami una cena omakase</b>
+        <p>Fiducia allo chef.</p>
+      </div>
+    </div>
+
+    <div class="gift-card">
+      <div class="gift-body">
+        <b>Regalami la “tappa sogno”</b>
+        <p>Il momento wow del viaggio.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="hint" style="margin-top:10px; font-size:13px; line-height:1.5;">
+    Il regalo è indicativo e facoltativo.
+  </div>
+
+  <div class="iban" id="ibanBlock">
+    <div style="font-weight:900; letter-spacing:.12em; text-transform:uppercase; color: rgba(28,28,28,.70);">
+      IBAN sposi
+    </div>
+    <code id="ibanValue">IT91S0200805321000107266136</code>
+    <div class="hint">Beneficiario: “FRANCHINA ANTONINO, FIORINI ROBERTA”.</div>
+    <div class="hint">Causale consigliata: “Regalo matrimonio – Nome Cognome”.</div>
+  </div>
+</section>
+
+<!-- FORM -->
+<section class="section" id="rsvp">
+  <h2><i class="fa-solid fa-pen-nib"></i>Lascia una dedica</h2>
+
+  <form id="matrimonio-form" autocomplete="on">
+    <div class="row2">
+      <div>
+        <label for="nome">Nome*</label>
+        <input id="nome" name="nome" required />
+      </div>
+      <div>
+        <label for="cognome">Cognome*</label>
+        <input id="cognome" name="cognome" required />
+      </div>
+    </div>
+
+    <div class="row2">
+      <div>
+        <label for="email">Email*</label>
+        <input id="email" name="email" type="email" required />
+      </div>
+      <div>
+        <label for="telefono">Telefono</label>
+        <input id="telefono" name="telefono" inputmode="tel" />
+      </div>
+    </div>
+
+    <div>
+      <label for="gift_choice">Regalo scelto (opzionale)</label>
+      <select id="gift_choice" name="gift_choice">
+        <option value="">Nessuno / lo scegliamo dopo</option>
+        <option value="notte_dolce">Regalami una notte “dolce”</option>
+        <option value="street_food">Regalami una street food night</option>
+        <option value="ryokan">Regalami una notte in ryokan</option>
+        <option value="cerimonia_te">Regalami una cerimonia del tè</option>
+        <option value="cena_speciale">Regalami una cena speciale</option>
+        <option value="artigianale">Regalami un’esperienza artigianale</option>
+        <option value="gita_giornata">Regalami una gita in giornata</option>
+        <option value="upgrade_romantico">Regalami un upgrade romantico</option>
+        <option value="omakase">Regalami una cena omakase</option>
+        <option value="tappa_sogno">Regalami la “tappa sogno”</option>
+      </select>
+    </div>
           </div>
 
           <label for="messaggio">Messaggio per gli sposi</label>
@@ -1772,9 +1808,12 @@ async function generatePdf(sub){
     ["Telefono:", sub.telefono || "—"]
   ]);
 
-  drawInfoBox("Dettagli", [
-    ["Regalo scelto:", sub.gift_choice ? ("€ " + sub.gift_choice) : "—"]
-  ]);
+  const selectedGiftLabel =
+  document.querySelector(`#gift_choice option[value="${sub.gift_choice}"]`)?.textContent?.trim() || "—";
+
+drawInfoBox("Dettagli", [
+  ["Regalo scelto:", sub.gift_choice ? selectedGiftLabel : "—"]
+]);
 
   if(sub.messaggio && String(sub.messaggio).trim()){
     sectionTitle("Messaggio");
@@ -1786,15 +1825,17 @@ async function generatePdf(sub){
 
   sectionTitle("Regalo selezionato");
 
-  const giftVal = String(sub.gift_choice || "").trim();
-  if(giftVal){
-    const opt = document.querySelector(`#gift_choice option[value="${giftVal}"]`);
-    const optTxt = (opt ? (opt.textContent || "").trim() : "").replace(/\s+/g," ");
-    const pretty = optTxt || (`€${giftVal} — Regalo selezionato`);
-    writeParagraph(`Grazie di cuore! Hai indicato come regalo: ${pretty}.`, 10.8, 5.2);
-  }else{
-    writeParagraph("Regalo: non indicato (va benissimo così).", 10.8, 5.2);
-  }
+const giftVal = String(sub.gift_choice || "").trim();
+if(giftVal){
+  const opt = document.querySelector(`#gift_choice option[value="${giftVal}"]`);
+  const optTxt = (opt ? (opt.textContent || "").trim() : "").replace(/\s+/g," ");
+  const pretty = optTxt || "Regalo selezionato";
+  writeParagraph(`Grazie di cuore! Hai indicato come regalo: ${pretty}.`, 10.8, 5.2);
+}else{
+  writeParagraph("Regalo: non indicato (va benissimo così).", 10.8, 5.2);
+}
+
+writeParagraph("Nota: il regalo è indicativo e facoltativo.", 10.2, 5);
 
   sectionTitle("IBAN");
 
