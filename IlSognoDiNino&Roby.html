@@ -607,39 +607,32 @@
     @media (max-width: 820px){ .gift-grid{ grid-template-columns: 1fr; } }
 
     .gift-card{
-      background: rgba(255,255,255,.72);
-      border: 1px solid var(--stroke);
-      border-radius: 14px;
-      padding: 12px;
-      display:flex;
-      gap: 10px;
-      align-items:flex-start;
-    }
-    .gift-price{
-      flex: 0 0 auto;
-      min-width: 96px;
-      text-align:center;
-      padding: 10px 10px;
-      border-radius: 14px;
-      background: rgba(232,198,200,.45);
-      border: 1px solid rgba(232,198,200,.70);
-      color: rgba(111,31,30,.92);
-      font-weight: 900;
-      letter-spacing: .06em;
-    }
-    .gift-price span{
-      display:block;
-      font-size: 11px;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      opacity: .86;
-      margin-bottom: 2px;
-    }
-    .gift-price b{
-      display:block;
-      font-size: 18px;
-      line-height: 1;
-    }
+  background: rgba(255,255,255,.72);
+  border: 1px solid var(--stroke);
+  border-radius: 14px;
+  padding: 12px;
+  display:flex;
+  gap: 10px;
+  align-items:flex-start;
+}
+
+.gift-icon{
+  flex: 0 0 auto;
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+  background: rgba(232,198,200,.45);
+  border: 1px solid rgba(232,198,200,.70);
+  color: rgba(111,31,30,.92);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.gift-icon i{
+  font-size: 24px;
+  line-height: 1;
+}
     .gift-body b{
       display:block;
       color: rgba(28,28,28,.86);
@@ -1261,7 +1254,11 @@
   <h2><i class="fa-solid fa-gift"></i> Lista regali</h2>
 
   <div class="gift-grid" aria-label="Tabella regali">
+
     <div class="gift-card">
+      <div class="gift-icon">
+        <i class="fa-solid fa-heart"></i>
+      </div>
       <div class="gift-body">
         <b>Regalami una notte “dolce”</b>
         <p>Un contributo per una notte speciale lungo il viaggio.</p>
@@ -1269,6 +1266,9 @@
     </div>
 
     <div class="gift-card">
+      <div class="gift-icon">
+        <i class="fa-solid fa-utensils"></i>
+      </div>
       <div class="gift-body">
         <b>Regalami una street food night</b>
         <p>Una serata tra sapori locali (Osaka / Tokyo).</p>
@@ -1276,6 +1276,9 @@
     </div>
 
     <div class="gift-card">
+      <div class="gift-icon">
+        <i class="fa-solid fa-moon"></i>
+      </div>
       <div class="gift-body">
         <b>Regalami una notte in ryokan</b>
         <p>Tatami, atmosfera e relax.</p>
@@ -1283,6 +1286,9 @@
     </div>
 
     <div class="gift-card">
+      <div class="gift-icon">
+        <i class="fa-solid fa-mug-hot"></i>
+      </div>
       <div class="gift-body">
         <b>Regalami una cerimonia del tè</b>
         <p>Matcha e rituali in stile Kyoto.</p>
@@ -1290,6 +1296,9 @@
     </div>
 
     <div class="gift-card">
+      <div class="gift-icon">
+        <i class="fa-solid fa-champagne-glasses"></i>
+      </div>
       <div class="gift-body">
         <b>Regalami una cena speciale</b>
         <p>Una sera da ricordare.</p>
@@ -1297,6 +1306,9 @@
     </div>
 
     <div class="gift-card">
+      <div class="gift-icon">
+        <i class="fa-solid fa-palette"></i>
+      </div>
       <div class="gift-body">
         <b>Regalami un’esperienza artigianale</b>
         <p>Workshop / tradizioni (Kanazawa / Kyoto).</p>
@@ -1304,6 +1316,9 @@
     </div>
 
     <div class="gift-card">
+      <div class="gift-icon">
+        <i class="fa-solid fa-train"></i>
+      </div>
       <div class="gift-body">
         <b>Regalami una gita in giornata</b>
         <p>Un’escursione (Hakone / Nikkō) come regalo.</p>
@@ -1311,6 +1326,9 @@
     </div>
 
     <div class="gift-card">
+      <div class="gift-icon">
+        <i class="fa-solid fa-star"></i>
+      </div>
       <div class="gift-body">
         <b>Regalami un upgrade romantico</b>
         <p>Vista / sorpresa / piccolo upgrade.</p>
@@ -1318,6 +1336,9 @@
     </div>
 
     <div class="gift-card">
+      <div class="gift-icon">
+        <i class="fa-solid fa-utensils"></i>
+      </div>
       <div class="gift-body">
         <b>Regalami una cena omakase</b>
         <p>Fiducia allo chef.</p>
@@ -1325,11 +1346,15 @@
     </div>
 
     <div class="gift-card">
+      <div class="gift-icon">
+        <i class="fa-solid fa-gift"></i>
+      </div>
       <div class="gift-body">
         <b>Regalami la “tappa sogno”</b>
         <p>Il momento wow del viaggio.</p>
       </div>
     </div>
+
   </div>
 
   <div class="hint" style="margin-top:10px; font-size:13px; line-height:1.5;">
@@ -1389,7 +1414,7 @@
         <option value="tappa_sogno">Regalami la “tappa sogno”</option>
       </select>
     </div>
-          </div>
+        
 
           <label for="messaggio">Messaggio per gli sposi</label>
           <textarea id="messaggio" name="messaggio" placeholder="Scrivi qui un messaggio per Nino & Roby…"></textarea>
