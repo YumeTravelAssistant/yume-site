@@ -1,0 +1,1840 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Il Viaggio di Luca e Federica</title>
+  <meta name="robots" content="noindex,nofollow" />
+
+  <!-- Font (simile alla partecipazione: calligrafico + sans pulito) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Allura&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Leaflet (mappa con marker) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+  <!-- jsPDF (client-side) -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+    :root{
+      --sage: #C9A86A;
+      --sage-dark: #B7924E;
+      --burgundy: #8B2C2B;
+      --burgundy-dark: #6F1F1E;
+
+      --paper: #F4F0E2;
+      --ink: #1c1c1c;
+
+      --wash-pink: rgba(201,168,106,.22);
+      --wash-green: rgba(139,44,43,.10);
+      --wash-green-2: rgba(201,168,106,.14);
+
+      --card: rgba(255,255,255,.72);
+      --stroke: rgba(201,168,106,.26);
+      --stroke-strong: rgba(139,44,43,.28);
+      --shadow: 0 20px 60px rgba(0,0,0,.10);
+      --radius: 18px;
+
+      --focus: rgba(201,168,106,.30);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      color:var(--ink);
+      font-family:'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background:
+        radial-gradient(1200px 700px at 70% 95%, var(--wash-pink) 0%, rgba(232,198,200,0) 60%),
+        radial-gradient(900px 600px at 25% 15%, var(--wash-green) 0%, rgba(111,143,120,0) 55%),
+        radial-gradient(700px 500px at 90% 25%, var(--wash-green-2) 0%, rgba(111,143,120,0) 55%),
+        linear-gradient(180deg, var(--paper), #fffdf7 65%);
+      min-height:100vh;
+    }
+
+    a{ color:inherit; }
+    .sr-only{
+      position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0;
+    }
+
+    /* =========================================================
+       OVERLAY “LETTERA CHE SI APRE”
+       ========================================================= */
+   /* ===== INVITO / BUSTA (stabile online) ===== */
+
+  .invito-overlay{
+  position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,.75);
+  display:flex; align-items:center; justify-content:center;
+  transition:opacity .5s ease, visibility .5s ease;
+  visibility:visible; opacity:1;
+  padding:18px;
+}
+.invito-overlay.is-hidden{ opacity:0; visibility:hidden; }
+
+.invito-stage{ text-align:center; color:#fff; width:100%; max-width:620px; }
+
+.invito-envelope{
+  position:relative;
+  width:min(520px,92vw);
+  height:min(340px,58vw);
+  margin:0 auto 16px;
+  transform-style:preserve-3d;
+  perspective:1200px;
+}
+
+.invito-envelope__body{
+  position:absolute; inset:0;
+  background:#fff;
+  border:2px solid var(--stroke-strong);
+  border-radius:14px;
+  box-shadow:0 18px 50px rgba(0,0,0,.35);
+}
+
+/* ✅ FLAP: come 2.html (NO backface hidden qui) */
+.invito-envelope__flap{
+  position:absolute; left:0; right:0; top:0; height:56%;
+  transform-origin:top center;
+  background:linear-gradient(180deg, #fff, rgba(246,244,241,.9));
+  border-left:2px solid var(--stroke-strong);
+  border-right:2px solid var(--stroke-strong);
+  border-top:2px solid var(--stroke-strong);
+  border-radius:14px 14px 0 0;
+  z-index:3;
+  animation:invito-flap 1.2s 0.55s cubic-bezier(.2,.8,.2,1) forwards;
+  will-change: transform;
+}
+@keyframes invito-flap{
+  0%{ transform:rotateX(0deg); }
+  100%{ transform:rotateX(-180deg); }
+}
+
+
+/* ✅ Stabilizzazione SOLO dove serve (paper + banner) */
+.invito-envelope__paper,
+.invito-banner{
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  will-change:transform, opacity;
+}
+
+.invito-envelope__paper{
+  position:absolute; left:7%; right:7%; top:14%; bottom:10%;
+  background:#fff;
+  border:2px solid var(--stroke-strong);
+  border-radius:12px;
+  z-index:2;
+  transform:translateY(18%) scale(.98);
+  opacity:0;
+  animation:invito-paper 1.2s 0.95s ease-out forwards;
+  overflow:hidden;
+}
+@keyframes invito-paper{
+  0%{ transform:translateY(18%) scale(.98); opacity:0; }
+  100%{ transform:translateY(-6%) scale(1); opacity:1; }
+}
+
+.invito-banner{
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+  text-align:center;
+  background:
+    radial-gradient(520px 320px at 30% 30%, rgba(111,143,120,.18) 0%, rgba(111,143,120,0) 70%),
+    radial-gradient(900px 420px at 55% 120%, rgba(232,198,200,.55) 0%, rgba(232,198,200,0) 65%);
+  color:#111;
+}
+
+.invito-banner span{
+  display:block;
+  font-family:'Allura', cursive;
+  font-size:clamp(34px,6vw,46px);
+  color:var(--sage);
+  letter-spacing:.4px;
+}
+.invito-banner small{
+  display:block;
+  margin-top:6px;
+  font-family:'Montserrat',sans-serif;
+  font-weight:800;
+  font-size:clamp(12px,2.6vw,14px);
+  color:rgba(28,28,28,.75);
+  letter-spacing:.16em;
+  text-transform: uppercase;
+}
+
+.invito-cta{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+.invito-open-btn, .invito-skip-btn{
+  appearance:none; border:0;
+  padding:12px 18px;
+  border-radius:999px;
+  cursor:pointer;
+  font-weight:900;
+  font-size:14px;
+}
+.invito-open-btn{
+  background:linear-gradient(135deg, var(--sage), var(--sage-dark));
+  color:#fff;
+  box-shadow:0 10px 26px rgba(111,143,120,.35);
+  transition:transform .06s, box-shadow .2s;
+}
+.invito-open-btn:hover{ transform:translateY(-1px); box-shadow:0 14px 32px rgba(111,143,120,.45); }
+.invito-skip-btn{
+  background:#fff;
+  color:var(--sage-dark);
+  border:2px solid var(--stroke-strong);
+  opacity:.95;
+  transition:opacity .2s;
+}
+.invito-skip-btn:hover{ opacity:1; }
+
+@media (max-width:420px){
+  .invito-envelope{ height:56vw; }
+}
+
+    /* =========================================================
+       HERO
+       ========================================================= */
+    .hero{
+      position:relative;
+      width:100%;
+      height: 82vh;
+      min-height: 520px;
+      overflow:hidden;
+      border-bottom: 1px solid rgba(111,143,120,.20);
+    }
+    .hero::before{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(to bottom, rgba(0,0,0,.18), rgba(0,0,0,.62));
+      z-index:2;
+    }
+    .hero picture, .hero img{
+      width:100%;
+      height:100%;
+      display:block;
+      object-fit: cover;
+    }
+  
+    .hero .overlay{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom: 90px;   /* distanza dal fondo */
+  z-index:3;
+  display:flex;
+  justify-content:center;   /* centro orizzontale */
+  text-align:center;
+  padding: 0 16px;
+}
+    .hero h1{
+      margin:0;
+      font-family:'Allura', cursive;
+      font-size: clamp(3.1rem, 7vw, 4.6rem);
+      line-height: 1;
+      color: rgba(255,255,255,.95);
+      text-shadow: 0 20px 70px rgba(0,0,0,.55);
+    }
+    .hero p{
+      margin: 10px 0 0;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.86);
+      font-size: 12px;
+    }
+    .scroll-indicator{
+      position:absolute;
+      left:50%;
+      transform: translateX(-50%);
+      bottom: 18px;
+      z-index:4;
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.55);
+      background: rgba(255,255,255,.12);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      backdrop-filter: blur(6px);
+    }
+    .arrow-down{
+      width: 10px;
+      height: 10px;
+      border-right: 2px solid rgba(255,255,255,.85);
+      border-bottom: 2px solid rgba(255,255,255,.85);
+      transform: rotate(45deg);
+      margin-top: -2px;
+    }
+
+    /* =========================================================
+       LAYOUT
+       ========================================================= */
+    .wrap{
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 22px 16px 54px;
+    }
+    .paper{
+      background: rgba(246,244,241,.92);
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: 18px;
+      backdrop-filter: blur(4px);
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      margin-bottom: 14px;
+      flex-wrap:wrap;
+    }
+    .logo{
+      width: 110px;
+      height: 110px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.6);
+      border: 1px solid var(--stroke);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+    .logo img{
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 10px;
+      display:block;
+    }
+    .topbar .title{
+      text-align:center;
+      font-family:'Allura', cursive;
+      font-size: clamp(2.3rem, 5.6vw, 3.2rem);
+      color: var(--sage);
+      line-height: 1.05;
+      margin:0;
+    }
+
+    /* =========================================================
+       LETTERA
+       ========================================================= */
+    .invito{
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+      padding: 22px 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.66);
+      border: 1px solid rgba(111,143,120,.18);
+    }
+    .invito::before{
+      content:"";
+      position:absolute;
+      inset:-40px -40px -60px -40px;
+      background:
+        radial-gradient(520px 320px at 20% 20%, rgba(111,143,120,.18) 0%, rgba(111,143,120,0) 70%),
+        radial-gradient(580px 340px at 85% 30%, rgba(111,143,120,.10) 0%, rgba(111,143,120,0) 70%),
+        radial-gradient(900px 420px at 50% 115%, rgba(232,198,200,.55) 0%, rgba(232,198,200,0) 65%);
+      pointer-events:none;
+      z-index:0;
+    }
+    .invito > *{ position:relative; z-index:1; }
+
+    .names{
+      font-family:'Allura', cursive;
+      font-size: clamp(2.5rem, 5.5vw, 3.4rem);
+      color: var(--sage);
+      margin: 6px 0 6px;
+      line-height:1.05;
+    }
+    .script{
+      font-family:'Allura', cursive;
+      font-size: clamp(1.6rem, 3.9vw, 2.1rem);
+      color: var(--sage);
+      line-height: 1.25;
+      margin: 8px 0;
+    }
+    .script.small{ font-size: clamp(1.35rem, 3.2vw, 1.85rem); }
+    .date{
+      font-family:'Allura', cursive;
+      font-size: clamp(2.2rem, 5.4vw, 2.95rem);
+      color: var(--sage);
+      margin: 12px 0 4px;
+      line-height: 1.1;
+    }
+    .place{
+      font-family:'Allura', cursive;
+      font-size: clamp(2.0rem, 4.8vw, 2.75rem);
+      color: var(--burgundy);
+      margin: 6px 0 0;
+      line-height: 1.1;
+    }
+    .smallcaps{
+      margin: 6px 0 0;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: rgba(28,28,28,.72);
+    }
+    .divider{
+      height:1px;
+      width: 78%;
+      max-width: 560px;
+      margin: 16px auto;
+      background: linear-gradient(90deg, rgba(111,143,120,0), rgba(111,143,120,.35), rgba(111,143,120,0));
+    }
+    .deadline{
+      margin-top: 16px;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(111,143,120,.95);
+    }
+
+    /* =========================================================
+       SEZIONI
+       ========================================================= */
+    .section{ margin-top: 18px; }
+    .section h2{
+      margin: 0 0 10px;
+      font-size: 14px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(28,28,28,.68);
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .section h2 i{ color: var(--sage-dark); }
+
+    .trip-intro{
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 14px;
+      padding: 12px;
+      line-height: 1.55;
+      color: rgba(28,28,28,.86);
+    }
+
+    .trip-steps{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:10px;
+      margin-top:10px;
+    }
+    .trip-step{
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 14px;
+      padding: 12px;
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
+    }
+    .dot{
+      width:12px; height:12px; border-radius: 999px;
+      background: var(--sage);
+      margin-top: 7px;
+      flex: 0 0 auto;
+      box-shadow: 0 0 0 6px rgba(111,143,120,.12);
+    }
+    .city{
+      font-weight: 900;
+      color: var(--burgundy);
+      letter-spacing: .02em;
+    }
+    .meta{
+      opacity: .88;
+      font-weight: 600;
+      margin-top: 2px;
+      line-height: 1.45;
+    }
+
+    .giorni-section{ margin-top: 10px; }
+    .giorno-box{
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.70);
+      border-radius: 14px;
+      overflow:hidden;
+      margin-bottom: 10px;
+    }
+    .giorno-toggle{
+      width:100%;
+      border:0;
+      background: transparent;
+      padding: 12px 12px;
+      font-weight: 900;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      letter-spacing: .02em;
+      color: rgba(28,28,28,.86);
+    }
+    .giorno-toggle .left{
+      display:flex; align-items:center; gap:10px; min-width:0;
+    }
+    .g-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(111,143,120,.12);
+      border: 1px solid rgba(111,143,120,.22);
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: rgba(111,143,120,.92);
+      flex: 0 0 auto;
+    }
+    .giorno-title{
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .giorno-toggle i{ color: rgba(111,143,120,.95); transition: transform .18s ease; }
+    .giorno-box.active .giorno-toggle i{ transform: rotate(180deg); }
+
+    .giorno-content{
+      display:none;
+      padding: 0 12px 12px;
+      line-height: 1.6;
+      color: rgba(28,28,28,.86);
+      border-top: 1px solid rgba(111,143,120,.16);
+    }
+    .giorno-box.active .giorno-content{ display:block; }
+    .giorno-content p{ margin: 10px 0 0; }
+
+    .markers{
+      display:flex;
+      gap: 8px;
+      flex-wrap:wrap;
+      margin-top: 10px;
+    }
+    .marker{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.70);
+      border: 1px solid var(--stroke);
+      text-decoration:none;
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: rgba(28,28,28,.80);
+    }
+    button.marker.marker-btn{appearance:none;-webkit-appearance:none;border:0;cursor:pointer;}
+    button.marker.marker-btn:focus-visible{outline:3px solid var(--focus);outline-offset:3px;}
+    button.marker.marker-btn:active{transform:translateY(1px);}
+    .marker i{ color: var(--burgundy); }
+
+    .gallery{
+      display:grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .ph{
+      grid-column: span 2;
+      background: rgba(255,255,255,.75);
+      border: 1px solid var(--stroke);
+      border-radius: 14px;
+      overflow:hidden;
+      aspect-ratio: 4 / 3;
+      position:relative;
+    }
+    .ph img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      filter: saturate(1.02);
+    }
+    .ph .cap{
+      position:absolute;
+      left:10px; right:10px; bottom:10px;
+      padding: 7px 10px;
+      border-radius: 12px;
+      background: rgba(0,0,0,.35);
+      color: rgba(255,255,255,.92);
+      font-weight: 900;
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      backdrop-filter: blur(4px);
+    }
+    @media (max-width: 820px){
+      .gallery{ grid-template-columns: repeat(2, 1fr); }
+      .ph{ grid-column: span 1; }
+    }
+
+    .gift-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 820px){ .gift-grid{ grid-template-columns: 1fr; } }
+
+    .gift-card{
+  background: rgba(255,255,255,.72);
+  border: 1px solid var(--stroke);
+  border-radius: 14px;
+  padding: 12px;
+  display:flex;
+  gap: 10px;
+  align-items:flex-start;
+}
+
+.gift-icon{
+  flex: 0 0 auto;
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+  background: rgba(232,198,200,.45);
+  border: 1px solid rgba(232,198,200,.70);
+  color: rgba(111,31,30,.92);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.gift-icon i{
+  font-size: 24px;
+  line-height: 1;
+}
+    .gift-body b{
+      display:block;
+      color: rgba(28,28,28,.86);
+      margin-bottom: 4px;
+      font-weight: 900;
+    }
+    .gift-body p{
+      margin: 0;
+      color: rgba(28,28,28,.74);
+      line-height: 1.45;
+      font-weight: 600;
+    }
+
+    .iban{
+      background: rgba(255,255,255,.70);
+      border: 1px solid rgba(111,143,120,.22);
+      border-radius: 14px;
+      padding: 12px;
+      line-height: 1.6;
+      margin-top: 10px;
+    }
+    .iban code{
+      display:block;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(111,143,120,.10);
+      border: 1px solid rgba(111,143,120,.18);
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: .06em;
+      overflow-wrap:anywhere;
+    }
+    .hint{
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(28,28,28,.70);
+      margin-top: 6px;
+    }
+
+    form{ display:grid; gap: 10px; }
+    label{
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      color: rgba(28,28,28,.70);
+    }
+    input, textarea, select{
+      width:100%;
+      border-radius: 14px;
+      border: 1px solid rgba(111,143,120,.24);
+      background: rgba(255,255,255,.85);
+      padding: 12px 12px;
+      font-size: 15px;
+      outline:none;
+      transition: box-shadow .15s ease, border-color .15s ease, transform .06s ease;
+      color: var(--ink);
+    }
+    input:focus, textarea:focus, select:focus{
+      border-color: rgba(111,143,120,.46);
+      box-shadow: 0 0 0 5px var(--focus);
+    }
+    textarea{ min-height: 110px; resize: vertical; }
+
+    .row2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 720px){ .row2{ grid-template-columns: 1fr; } }
+
+    .check{
+      display:flex;
+      align-items:flex-start;
+      gap: 10px;
+      background: rgba(255,255,255,.65);
+      border: 1px solid rgba(111,143,120,.18);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .check input{ width: 18px; height: 18px; margin-top: 2px; }
+    .check p{ margin:0; font-size: 13px; font-weight: 600; line-height: 1.45; color: rgba(28,28,28,.78); }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
+      padding: 14px 18px;
+      border-radius: 999px;
+      border: 0;
+      cursor:pointer;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+      color:#fff;
+      box-shadow: 0 18px 40px rgba(111,143,120,.24);
+      transition: transform .06s ease, box-shadow .2s ease, filter .2s ease;
+      width: 100%;
+    }
+    .btn:hover{ filter: brightness(1.03); box-shadow: 0 20px 46px rgba(111,143,120,.30); transform: translateY(-1px); }
+    .btn:disabled{ opacity:.6; cursor:not-allowed; transform:none; box-shadow:none; }
+
+    .status{
+      margin: 6px 0 0;
+      font-weight: 800;
+      color: rgba(28,28,28,.78);
+      line-height: 1.5;
+    }
+
+    .okbox, .errbox{
+      display:none;
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(111,143,120,.20);
+      background: rgba(255,255,255,.72);
+      font-weight: 800;
+      line-height: 1.5;
+    }
+    .okbox{
+      background: rgba(111,143,120,.10);
+      border: 1px solid rgba(111,143,120,.22);
+    }
+    .errbox{
+      background: rgba(139,44,43,.08);
+      border: 1px solid rgba(139,44,43,.18);
+      color: rgba(139,44,43,.92);
+    }
+    .reveal{ display:none; }
+
+    .btn-ghost{
+      appearance:none;
+      border: 1px solid rgba(111,143,120,.28);
+      background: rgba(255,255,255,.75);
+      color: rgba(28,28,28,.82);
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 12px 16px;
+      border-radius: 999px;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    footer{
+      margin-top: 18px;
+      text-align:center;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: rgba(28,28,28,.55);
+    }
+  
+    /* ====== YUME TOPBAR (minimale) ====== */
+    .yume-topbar{
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 14px;
+      z-index: 9000; /* sotto overlay invito (9999), sopra contenuti */
+      background: rgba(246,244,241,.78);
+      border-bottom: 1px solid rgba(111,143,120,.22);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .yume-topbar__brand{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      text-decoration:none;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(111,143,120,.22);
+      background: rgba(255,255,255,.72);
+      box-shadow: 0 10px 30px rgba(0,0,0,.06);
+    }
+    .yume-topbar__logo{
+      height: 34px;
+      width: auto;
+      display:block;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+    .yume-topbar__text{
+      font-weight: 800;
+      letter-spacing: .02em;
+      color: rgba(28,28,28,.86);
+      font-size: 13px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .yume-topbar__brand:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 16px 38px rgba(0,0,0,.08);
+    }
+    .yume-topbar__brand{ transition: transform .18s ease, box-shadow .18s ease; }
+
+    /* City link (lista città -> mappa) */
+    .city-link{
+      background:none;
+      border:0;
+      padding:0;
+      margin:0;
+      font: inherit;
+      font-weight: 900;
+      color: var(--burgundy);
+      letter-spacing: .02em;
+      cursor: pointer;
+      text-align: left;
+    }
+    .city-link:hover{ text-decoration: underline; text-underline-offset: 4px; }
+    .city-link:focus{ outline: 3px solid var(--focus); outline-offset: 4px; border-radius: 8px; }
+
+    /* Piccolo respiro su top per non coprire i titoli quando si scrolla a un anchor */
+    [id]{ scroll-margin-top: 86px; }
+
+  </style>
+</head>
+
+<body>
+
+  <nav class="yume-topbar" aria-label="Vai al sito Yume">
+  <a class="yume-topbar__brand" href="https://www.yume-travel.com" target="_blank" rel="noopener" aria-label="Apri yume-travel.com">
+    <span class="yume-topbar__text">YUME-TRAVEL.COM</span>
+  </a>
+</nav>
+
+  <!-- OVERLAY animato -->
+<div class="invito-overlay" aria-hidden="true" role="dialog" aria-label="Partecipazione viaggio di nozze">
+  <div class="invito-stage">
+    <div class="invito-envelope" aria-hidden="true">
+
+      <div class="invito-envelope__flap">
+      </div>
+
+      <div class="invito-envelope__paper">
+        <div class="invito-banner">
+          <span>Luca e Federica</span>
+          <small>Il viaggio di nozze</small>
+        </div>
+      </div>
+
+      <div class="invito-envelope__body"></div>
+    </div>
+
+    <div class="invito-cta">
+      <button class="invito-open-btn" type="button">
+        <i class="fa-regular fa-envelope-open"></i> Apri
+      </button>
+      <button class="invito-skip-btn" type="button">Salta</button>
+    </div>
+  </div>
+</div>
+
+  <!-- HERO -->
+  <header class="hero" aria-label="Copertina">
+    <picture>
+      <source srcset="honeymoon/federica/cover_mob.jpg" media="(max-width: 768px)">
+      <img src="honeymoon/federica/cover_desk.jpg" alt="Il Viaggio di Luca e Federica" loading="eager">
+    </picture>
+
+<div class="overlay">
+  <div>
+    <h1>
+      Il Sogno di<br>
+      Luca e Federica
+    </h1>
+    <p>20 ottobre – 5 novembre 2026</p>
+  </div>
+</div>
+
+    <div class="scroll-indicator" onclick="scrollToMain()">
+      <span class="arrow-down"></span>
+      <span class="sr-only">Scorri</span>
+    </div>
+  </header>
+
+  <main class="wrap" id="main">
+    <div class="paper">
+
+
+      <!-- ITINERARIO -->
+      <section class="section" id="viaggio">
+        <h2><i class="fa-solid fa-torii-gate"></i> Itinerario di viaggio</h2>
+
+        <div class="trip-intro">
+          <p style="margin:0;">
+            Un viaggio di nozze pensato come un racconto da vivere insieme: partenza il <b>20/10/26</b>, rientro il <b>05/11/26</b>, con 15 notti tra Tokyo, Kawaguchi-ko, Kanazawa, Kyoto, Hiroshima e Osaka. Una traversata del Giappone tra metropoli luminose, templi, ryokan, paesaggi del Fuji e momenti speciali da regalare agli sposi.
+          </p>
+        </div>
+
+        <div class="trip-steps" aria-label="Città in ordine">
+          <div class="trip-step"><div class="dot"></div><div><button class="city city-link" type="button" data-map-target="Tokyo">Tokyo (3 notti)</button><div class="meta">Asakusa, Shibuya, Shinjuku, Akihabara, Kamakura e Yokohama.</div></div></div>
+          <div class="trip-step"><div class="dot"></div><div><button class="city city-link" type="button" data-map-target="Kawaguchi-ko">Kawaguchi-ko / Monte Fuji (2 notti)</button><div class="meta">Lago Kawaguchi, crociera En Soleil, ropeway, Oshino Hakkai e ryokan.</div></div></div>
+          <div class="trip-step"><div class="dot"></div><div><button class="city city-link" type="button" data-map-target="Kanazawa">Kanazawa (2 notti)</button><div class="meta">Kenroku-en, quartieri samurai e geisha, Shirakawa-go e Gokayama.</div></div></div>
+          <div class="trip-step"><div class="dot"></div><div><button class="city city-link" type="button" data-map-target="Kyoto">Kyoto (3 notti)</button><div class="meta">Higashiyama, Arashiyama, templi iconici e cerimonia del tè.</div></div></div>
+          <div class="trip-step"><div class="dot"></div><div><button class="city city-link" type="button" data-map-target="Hiroshima">Hiroshima (2 notti)</button><div class="meta">Miyajima, Parco della Pace, museo, castello e Shukkeien.</div></div></div>
+          <div class="trip-step"><div class="dot"></div><div><button class="city city-link" type="button" data-map-target="Osaka">Osaka (3 notti)</button><div class="meta">Dōtonbori, Nara, Uji e Universal Studios Japan.</div></div></div>
+        </div>
+
+        <div class="section giorni-section" style="margin-top:16px;">
+          <h2><i class="fa-regular fa-calendar"></i> Giorno per giorno (apri e scorri)</h2>
+
+          <div class="giorno-box active">
+            <button class="giorno-toggle" type="button">
+              <span class="left"><span class="g-badge">Giorno 1</span><span class="giorno-title">Partenza</span></span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="giorno-content">
+              <p>Il viaggio di nozze inizia con la partenza dall’Italia verso il Giappone. Sarà il momento in cui il sogno prende finalmente forma: check-in, volo intercontinentale, prime emozioni condivise e quella sensazione speciale di stare per entrare in un Paese che unisce bellezza, spiritualità e stupore. Notte in volo con arrivo il giorno successivo.</p>
+            </div>
+          </div>
+
+          <div class="giorno-box">
+            <button class="giorno-toggle" type="button">
+              <span class="left"><span class="g-badge">Giorno 2</span><span class="giorno-title">Arrivo &amp; Tokyo romantica</span></span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="giorno-content">
+              <p>Atterrati a Tokyo, dopo il ritiro di SIM o pocket Wi-Fi e il trasferimento ad Asakusa, inizierà il primo vero incontro con il Giappone. Tra le lanterne del Sensō-ji, la storica Nakamise-dōri e i profumi degli snack tradizionali, vivrete una prima immersione nel fascino più iconico della capitale. Più tardi potrete salire alla Asahi Beer Hall Sky Room per una vista sulla città e passeggiare lungo il fiume Sumida, scegliendo poi se concludere la serata tra le luci di Hoppy Dori oppure con il primo assaggio dell’energia di Shibuya.</p>
+            </div>
+          </div>
+
+          <div class="giorno-box">
+            <button class="giorno-toggle" type="button">
+              <span class="left"><span class="g-badge">Giorno 3</span><span class="giorno-title">Tokyo urbana tra sacro, moda e skyline</span></span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="giorno-content">
+              <p>La giornata vi porterà nella Tokyo più varia e sorprendente. Si parte dal bosco sacro del Meiji Jingū, con il grande torii, le botti di sake e l’atmosfera sospesa del santuario, per poi passare all’estro di Harajuku tra Takeshita Street e Omotesandō. Dopo una pausa a Shinjuku Gyoen, continuerete verso Akihabara e il santuario Kanda Myōjin, fino ad Ameya-Yokochō a Ueno per street food e shopping. In serata, Tokyo cambierà di nuovo volto con Roppongi, perfetta per una cena elegante o un drink con vista.</p>
+            </div>
+          </div>
+
+          <div class="giorno-box">
+            <button class="giorno-toggle" type="button">
+              <span class="left"><span class="g-badge">Giorno 4</span><span class="giorno-title">Kamakura &amp; Yokohama</span></span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="giorno-content">
+              <p>Da Tokyo vi sposterete verso Kamakura, antica capitale dei samurai, dove visiterete il Tsurugaoka Hachimangū, Komachi-dōri, il tempio Hase-dera e il Grande Buddha. Nel pomeriggio il viaggio proseguirà verso Yokohama, con il contrasto tra la baia moderna di Minato Mirai, i Red Brick Warehouse e l’atmosfera vibrante di Chinatown. Sarà una giornata ricca di scorci diversi, tra spiritualità, mare e skyline urbani perfetti da vivere in due.</p>
+            </div>
+          </div>
+
+          <div class="giorno-box">
+            <button class="giorno-toggle" type="button">
+              <span class="left"><span class="g-badge">Giorno 5</span><span class="giorno-title">Incontro con Kawaguchi-ko</span></span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="giorno-content">
+              <p>Lasciata Tokyo, vi dirigerete verso Kawaguchi-ko, entrando in un Giappone più lento e intimo. Dopo l’arrivo sul lago inizierete con una passeggiata panoramica, la crociera En Soleil e la salita in Kachi Kachi Ropeway per ammirare il Fuji dall’alto. Nel pomeriggio visiterete il Kubota Itchiku Art Museum, il Maple Corridor e il villaggio tradizionale Saiko Iyashi-no-Sato Nenba. La giornata si chiuderà con check-in in ryokan o struttura tradizionale: il momento ideale per rallentare, godersi il paesaggio e vivere una notte dal sapore autentico.</p>
+            </div>
+          </div>
+
+          <div class="giorno-box">
+            <button class="giorno-toggle" type="button">
+              <span class="left"><span class="g-badge">Giorno 6</span><span class="giorno-title">Monte Fuji tra scorci iconici e sapori locali</span></span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="giorno-content">
+              <p>Questa giornata sarà dedicata alla zona del Fuji e ad alcuni dei suoi luoghi più suggestivi. Salirete all’Arakurayama Sengen Park per la celebre vista sulla pagoda Chūreitō, proseguirete per Oshino Hakkai tra sorgenti cristalline e case rurali, e visiterete il santuario Kitaguchi Hongū Fuji Sengen Taisha. Non mancheranno la scenografica Honchō-dōri di Fujiyoshida, una degustazione in distilleria o birrificio e una cena tradizionale in izakaya locale, con il monte sullo sfondo a rendere l’atmosfera ancora più speciale.</p>
+            </div>
+          </div>
+
+          <div class="giorno-box">
+            <button class="giorno-toggle" type="button">
+              <span class="left"><span class="g-badge">Giorno 7</span><span class="giorno-title">Kanazawa elegante e senza tempo</span></span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="giorno-content">
+              <p>Con un lungo ma affascinante trasferimento raggiungerete Kanazawa, città raffinata e ricca di atmosfera. Inizierete dal Mercato Ōmichō, cuore gastronomico cittadino, per poi scoprire il quartiere samurai di Nagamachi, la residenza Nomura-ke, il magnifico Kenroku-en e il Castello di Kanazawa. Al tramonto sarà il momento del quartiere delle geisha Higashi Chaya, tra case da tè in legno scuro e una bellezza discreta, perfetta per una tappa romantica del viaggio.</p>
+            </div>
+          </div>
+
+          <div class="giorno-box">
+            <button class="giorno-toggle" type="button">
+              <span class="left"><span class="g-badge">Giorno 8</span><span class="giorno-title">Escursione tra Gokayama e Shirakawa-go</span></span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="giorno-content">
+              <p>Dalla stazione di Kanazawa partirete per i villaggi montani UNESCO di Gokayama e Shirakawa-go. Qui entrerete in contatto con un Giappone rurale e silenzioso, tra case gassho-zukuri dai tetti in paglia, piccoli musei etnografici, botteghe artigiane e punti panoramici spettacolari sulla vallata. Al rientro a Kanazawa potrete, se lo desiderate, aggiungere il suggestivo Tempio Ninja Myōryū-ji oppure concedervi una cena tradizionale in città.</p>
+            </div>
+          </div>
+
+          <div class="giorno-box">
+            <button class="giorno-toggle" type="button">
+              <span class="left"><span class="g-badge">Giorno 9</span><span class="giorno-title">Kyoto: Higashiyama, tè e lanterne</span></span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="giorno-content">
+              <p>Da Kanazawa raggiungerete Kyoto, cuore del Giappone tradizionale. Dopo il deposito bagagli inizierete dal Nishiki Market, per poi salire verso il Kiyomizu-dera e passeggiare tra Ninenzaka e Sannenzaka, tra botteghe, ceramiche, profumi d’incenso e scorci da cartolina. Visiterete il Kōdai-ji, il Parco Maruyama e il santuario Yasaka, con la possibilità di vivere anche un’autentica cerimonia del tè. La giornata si chiuderà tra le luci di Pontochō o Gion, in una delle atmosfere più romantiche di tutto il viaggio.</p>
+            </div>
+          </div>
+
+          <div class="giorno-box">
+            <button class="giorno-toggle" type="button">
+              <span class="left"><span class="g-badge">Giorno 10</span><span class="giorno-title">Kyoto classica</span></span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="giorno-content">
+              <p>La giornata sarà dedicata ai grandi classici di Kyoto: il Castello Nijō con i celebri pavimenti dell’usignolo, il Padiglione d’Oro Kinkaku-ji, il giardino di pietra di Ryōan-ji e il Ninna-ji. Proseguirete poi verso il Kitano Tenmangū, il complesso monastico di Daitoku-ji e il tranquillo Shinnyodō, alternando siti celebri e luoghi più raccolti. In serata tornerete tra le vie di Gion o lungo il Kamo, per una cena che sappia di Kyoto vera.</p>
+            </div>
+          </div>
+
+          <div class="giorno-box">
+            <button class="giorno-toggle" type="button">
+              <span class="left"><span class="g-badge">Giorno 11</span><span class="giorno-title">Kyoto: Arashiyama e templi poetici</span></span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="giorno-content">
+              <p>La mattina vi porterà ad Arashiyama, tra la Foresta di Bambù, il Tenryū-ji, il ponte Togetsukyō e la Kimono Forest. Se vorrete, potrete spingervi anche verso la Saga Toriimoto Preserved Street e i templi Gioji, Adashino e Otagi Nembutsuji, pieni di fascino silenzioso. Nel pomeriggio tornerete in città per visitare il Tō-ji, il Ginkaku-ji e il Sanjūsangen-dō con le sue 1001 statue della dea Kannon. Una giornata intensa ma bellissima, fatta di dettagli, armonia e atmosfera.</p>
+            </div>
+          </div>
+
+          <div class="giorno-box">
+            <button class="giorno-toggle" type="button">
+              <span class="left"><span class="g-badge">Giorno 12</span><span class="giorno-title">Miyajima</span></span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="giorno-content">
+              <p>Partenza in Shinkansen per Hiroshima e poi proseguimento verso Miyajima, una delle isole più affascinanti del Giappone. Tra il santuario di Itsukushima con il celebre torii rosso sospeso sull’acqua, le vie di Omotesandō, i momiji manju, il Momijidani Park e il tempio Daishō-in, vivrete una giornata di forte impatto paesaggistico e spirituale. Se il meteo sarà favorevole, potrete anche salire verso il Monte Misen per un panorama splendido sul Mare Interno di Seto.</p>
+            </div>
+          </div>
+
+          <div class="giorno-box">
+            <button class="giorno-toggle" type="button">
+              <span class="left"><span class="g-badge">Giorno 13</span><span class="giorno-title">Hiroshima</span></span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="giorno-content">
+              <p>Hiroshima sarà una giornata più intensa e riflessiva, dedicata al Peace Memorial Park, al Genbaku Dome, al Cenotafio, alla Fiamma della Pace e al Museo della Pace. Dopo questo momento di memoria e consapevolezza potrete visitare anche il Castello di Hiroshima, il giardino Shukkeien e la vivace Hondōri. La sera, tra le luci lungo il fiume e un piatto di okonomiyaki locale, la città saprà restituirvi anche il suo volto di rinascita.</p>
+            </div>
+          </div>
+
+          <div class="giorno-box">
+            <button class="giorno-toggle" type="button">
+              <span class="left"><span class="g-badge">Giorno 14</span><span class="giorno-title">Arrivo a Osaka</span></span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="giorno-content">
+              <p>Da Hiroshima raggiungerete Osaka, città vivace, calorosa e piena di contrasti. Dopo l’arrivo visiterete lo Shitennō-ji, il Namba Yasaka Jinja con la sua gigantesca testa di leone, il Sumiyoshi Taisha e il Castello di Osaka. La giornata si chiuderà poi a Dōtonbori, tra neon, canali, street food e insegne leggendarie: il lato più giocoso e luminoso del vostro viaggio di nozze.</p>
+            </div>
+          </div>
+
+          <div class="giorno-box">
+            <button class="giorno-toggle" type="button">
+              <span class="left"><span class="g-badge">Giorno 15</span><span class="giorno-title">Fushimi Inari, Uji e Nara</span></span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="giorno-content">
+              <p>La giornata inizierà presto al Fushimi Inari-taisha, quando i torii rossi sono ancora più suggestivi e il percorso è più silenzioso. Proseguirete poi verso Uji per il Byōdō-in e, se vorrete, per una pausa tè in una delle città più legate al matcha in tutto il Giappone. Nel pomeriggio visiterete Nara con il Tōdai-ji, il Grande Buddha e il Nara Park con i suoi cervi sacri. In serata rientro a Osaka, magari con cena a Shinsekai per chiudere la giornata in un’atmosfera popolare e autentica.</p>
+            </div>
+          </div>
+
+          <div class="giorno-box">
+            <button class="giorno-toggle" type="button">
+              <span class="left"><span class="g-badge">Giorno 16</span><span class="giorno-title">Universal Studios Japan</span></span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="giorno-content">
+              <p>Questa sarà la giornata più giocosa e spensierata del viaggio: gli Universal Studios Japan. Tra Super Nintendo World, Harry Potter, Jurassic Park e attrazioni iconiche come Flying Dinosaur, vivrete un lato più pop e sorprendente del Giappone. Nel tardo pomeriggio potrete rientrare in centro per una passeggiata a Umeda, salire sull’Umeda Sky Building e concludere la serata nella Kita District Nightlife, tra locali eleganti e panorami notturni.</p>
+            </div>
+          </div>
+
+          <div class="giorno-box">
+            <button class="giorno-toggle" type="button">
+              <span class="left"><span class="g-badge">Giorno 17/18</span><span class="giorno-title">Rientro</span></span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="giorno-content">
+              <p>Le ultime ore saranno dedicate al rientro, con trasferimento verso l’aeroporto e volo di ritorno in Italia. A seconda della soluzione aerea, l’arrivo potrà avvenire in serata o il giorno successivo. Si chiuderà così un viaggio di nozze intenso, ricco di immagini, emozioni e ricordi destinati a restare.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- MAPPA INTERATTIVA -->
+        <div class="section" style="margin-top:16px;">
+          <h2><i class="fa-solid fa-location-dot"></i> La mappa del viaggio</h2>
+
+          <div class="trip-intro" style="margin-top:10px;">
+            <p style="margin:0;">
+              Ecco la <b>mappa interattiva dell’itinerario</b>: le mete sono collegate in ordine, città per città, per seguire il percorso del viaggio di Luca e Federica attraverso il Giappone.
+            </p>
+          </div>
+
+          <div id="map-itinerario" style="height: 520px; border-radius: 14px; overflow: hidden; border: 1px solid rgba(201,168,106,.26); background: rgba(255,255,255,.55); margin-top:10px;"></div>
+
+          <div class="markers" aria-label="Elenco tappe del viaggio" style="margin-top:10px;">
+            <button class="marker marker-btn" type="button" data-map-target="Tokyo"><i class="fa-solid fa-location-dot"></i> Tokyo</button>
+            <button class="marker marker-btn" type="button" data-map-target="Kamakura"><i class="fa-solid fa-location-dot"></i> Kamakura</button>
+            <button class="marker marker-btn" type="button" data-map-target="Yokohama"><i class="fa-solid fa-location-dot"></i> Yokohama</button>
+            <button class="marker marker-btn" type="button" data-map-target="Kawaguchi-ko"><i class="fa-solid fa-location-dot"></i> Kawaguchi-ko</button>
+            <button class="marker marker-btn" type="button" data-map-target="Oshino Hakkai"><i class="fa-solid fa-location-dot"></i> Oshino Hakkai</button>
+            <button class="marker marker-btn" type="button" data-map-target="Kanazawa"><i class="fa-solid fa-location-dot"></i> Kanazawa</button>
+            <button class="marker marker-btn" type="button" data-map-target="Shirakawa-go"><i class="fa-solid fa-location-dot"></i> Shirakawa-go</button>
+            <button class="marker marker-btn" type="button" data-map-target="Kyoto"><i class="fa-solid fa-location-dot"></i> Kyoto</button>
+            <button class="marker marker-btn" type="button" data-map-target="Arashiyama"><i class="fa-solid fa-location-dot"></i> Arashiyama</button>
+            <button class="marker marker-btn" type="button" data-map-target="Hiroshima"><i class="fa-solid fa-location-dot"></i> Hiroshima</button>
+            <button class="marker marker-btn" type="button" data-map-target="Miyajima"><i class="fa-solid fa-location-dot"></i> Miyajima</button>
+            <button class="marker marker-btn" type="button" data-map-target="Osaka"><i class="fa-solid fa-location-dot"></i> Osaka</button>
+            <button class="marker marker-btn" type="button" data-map-target="Nara"><i class="fa-solid fa-location-dot"></i> Nara</button>
+            <button class="marker marker-btn" type="button" data-map-target="Uji"><i class="fa-solid fa-location-dot"></i> Uji</button>
+            <button class="marker marker-btn" type="button" data-map-target="Universal Studios Japan"><i class="fa-solid fa-location-dot"></i> Universal Studios Japan</button>
+          </div>
+        </div>
+      </section>
+
+<section id="regaliBlock" class="section">
+  <h2><i class="fa-solid fa-gift"></i> Lista regali</h2>
+
+  <div class="gift-grid" aria-label="Tabella regali">
+
+    <div class="gift-card">
+      <div class="gift-icon"><i class="fa-solid fa-heart"></i></div>
+      <div class="gift-body">
+        <b>Regalami una notte romantica a Tokyo</b>
+        <p>Un contributo per una serata speciale tra skyline, luci e prime emozioni in Giappone.</p>
+      </div>
+    </div>
+
+    <div class="gift-card">
+      <div class="gift-icon"><i class="fa-solid fa-mountain"></i></div>
+      <div class="gift-body">
+        <b>Regalami il Monte Fuji</b>
+        <p>Un pensiero dedicato alle giornate tra lago, villaggi tradizionali e panorami indimenticabili.</p>
+      </div>
+    </div>
+
+    <div class="gift-card">
+      <div class="gift-icon"><i class="fa-solid fa-moon"></i></div>
+      <div class="gift-body">
+        <b>Regalami una notte in ryokan</b>
+        <p>Tatami, quiete, atmosfera autentica e una parentesi di puro Giappone tradizionale.</p>
+      </div>
+    </div>
+
+    <div class="gift-card">
+      <div class="gift-icon"><i class="fa-solid fa-mug-hot"></i></div>
+      <div class="gift-body">
+        <b>Regalami una cerimonia del tè</b>
+        <p>Un momento di armonia e bellezza da vivere nel cuore di Kyoto.</p>
+      </div>
+    </div>
+
+    <div class="gift-card">
+      <div class="gift-icon"><i class="fa-solid fa-champagne-glasses"></i></div>
+      <div class="gift-body">
+        <b>Regalami una cena speciale</b>
+        <p>Una sera da ricordare, tra cucina giapponese, atmosfera e brindisi d’amore.</p>
+      </div>
+    </div>
+
+    <div class="gift-card">
+      <div class="gift-icon"><i class="fa-solid fa-palette"></i></div>
+      <div class="gift-body">
+        <b>Regalami un’esperienza artigianale</b>
+        <p>Un ricordo fatto di mani, tradizione, botteghe e meraviglia.</p>
+      </div>
+    </div>
+
+    <div class="gift-card">
+      <div class="gift-icon"><i class="fa-solid fa-train"></i></div>
+      <div class="gift-body">
+        <b>Regalami una gita in giornata</b>
+        <p>Un contributo per una delle escursioni che renderanno il viaggio ancora più ricco.</p>
+      </div>
+    </div>
+
+    <div class="gift-card">
+      <div class="gift-icon"><i class="fa-solid fa-star"></i></div>
+      <div class="gift-body">
+        <b>Regalami un momento wow</b>
+        <p>Quel dettaglio inatteso che rende una luna di miele ancora più indimenticabile.</p>
+      </div>
+    </div>
+
+    <div class="gift-card">
+      <div class="gift-icon"><i class="fa-solid fa-landmark"></i></div>
+      <div class="gift-body">
+        <b>Regalami Kyoto</b>
+        <p>Templi, vicoli, lanterne e tutto il fascino del Giappone più poetico.</p>
+      </div>
+    </div>
+
+    <div class="gift-card">
+      <div class="gift-icon"><i class="fa-solid fa-gift"></i></div>
+      <div class="gift-body">
+        <b>Regalami la tappa sogno</b>
+        <p>Un gesto libero per contribuire a uno dei momenti più belli del viaggio di nozze.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="hint" style="margin-top:10px; font-size:13px; line-height:1.5;">
+    L'opzione scelta è indicativa.
+  </div>
+
+  <div class="iban" id="ibanBlock">
+    <div style="font-weight:900; letter-spacing:.12em; text-transform:uppercase; color: rgba(28,28,28,.70);">
+      IBAN sposi
+    </div>
+    <code id="ibanValue">IT00X0000000000000000000000</code>
+    <div class="hint">Beneficiario: “Luca e Federica”.</div>
+    <div class="hint">Causale consigliata: “Regalo viaggio di nozze – Nome Cognome”.</div>
+  </div>
+</section>
+
+<!-- FORM --><!-- FORM -->
+<section class="section" id="rsvp">
+  <h2><i class="fa-solid fa-pen-nib"></i>Lascia una dedica</h2>
+
+  <form id="viaggio-form" autocomplete="on">
+    <div class="row2">
+      <div>
+        <label for="nome">Nome*</label>
+        <input id="nome" name="nome" required />
+      </div>
+      <div>
+        <label for="cognome">Cognome*</label>
+        <input id="cognome" name="cognome" required />
+      </div>
+    </div>
+
+    <div class="row2">
+      <div>
+        <label for="email">Email*</label>
+        <input id="email" name="email" type="email" required />
+      </div>
+      <div>
+        <label for="telefono">Telefono</label>
+        <input id="telefono" name="telefono" inputmode="tel" />
+      </div>
+    </div>
+
+    <div>
+      <label for="gift_choice">Regalo scelto (opzionale)</label>
+      <select id="gift_choice" name="gift_choice">
+        <option value="">Nessuno / lo scegliamo dopo</option>
+        <option value="tokyo_romantica">Regalami una notte romantica a Tokyo</option>
+        <option value="monte_fuji">Regalami il Monte Fuji</option>
+        <option value="ryokan">Regalami una notte in ryokan</option>
+        <option value="cerimonia_te">Regalami una cerimonia del tè</option>
+        <option value="cena_speciale">Regalami una cena speciale</option>
+        <option value="artigianale">Regalami un’esperienza artigianale</option>
+        <option value="gita_giornata">Regalami una gita in giornata</option>
+        <option value="momento_wow">Regalami un momento wow</option>
+        <option value="kyoto">Regalami Kyoto</option>
+        <option value="tappa_sogno">Regalami la tappa sogno</option>
+      </select>
+    </div>
+        
+
+          <label for="messaggio">Messaggio per gli sposi</label>
+          <textarea id="messaggio" name="messaggio" placeholder="Scrivi qui un messaggio per Luca e Federica…"></textarea>
+
+          <input type="text" name="website" tabindex="-1" autocomplete="off"
+                 style="position:absolute;left:-9999px;opacity:0;pointer-events:none">
+
+          <div class="check">
+            <input type="checkbox" id="consensoGDPR" required>
+            <p>
+              Acconsento al trattamento dei miei dati per la gestione della partecipazione e del messaggio lasciato agli sposi.
+            </p>
+          </div>
+
+          <button id="btnSubmit" class="btn" type="submit">
+            <i class="fa-solid fa-paper-plane"></i>
+            Invia conferma
+          </button>
+
+          <p id="stato" class="status" role="status" aria-live="polite"></p>
+
+          <div class="hint" style="margin-top:10px;">
+            Dopo l’invio, il PDF riepilogo viene scaricato automaticamente.
+          </div>
+
+          <div id="errbox" class="errbox">
+            Ops, non siamo riusciti a salvare. Riprova.
+          </div>
+        </form>
+      </section>
+
+      <footer>© Luca e Federica • 20.10.2026 – 05.11.2026</footer>
+    </div>
+  </main>
+
+  <script>
+    function scrollToMain(){
+      const el = document.getElementById("main");
+      if(el) el.scrollIntoView({ behavior:"smooth", block:"start" });
+    }
+
+    (function(){
+      const overlay = document.querySelector('.invito-overlay');
+      const openBtn = document.querySelector('.invito-open-btn');
+      const skipBtn = document.querySelector('.invito-skip-btn');
+
+      function closeOverlay(scrollToContent = true){
+        if(!overlay) return;
+        overlay.classList.add('is-hidden');
+        if(scrollToContent){ setTimeout(()=> scrollToMain(), 150); }
+      }
+
+      setTimeout(()=> closeOverlay(false), 3200);
+
+      openBtn && openBtn.addEventListener('click', ()=> closeOverlay(true));
+      skipBtn && skipBtn.addEventListener('click', ()=> closeOverlay(false));
+      document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeOverlay(false); });
+    })();
+
+    // === Aggiungi al calendario (.ics) — come in secret_opening_party.html ===
+    function scaricaICS(){
+      // Evento come giornata intera (orario non indicato nell’invito)
+      const dtStart = "20261020";
+      const dtEnd   = "20261106";
+
+      const ceremony = "Partenza Italia → Tokyo";
+      const reception = "Rientro Osaka → Italia";
+
+      const uid = `luca-federica-${Date.now()}@yume-travel`;
+      const ics =
+`BEGIN:VCALENDAR
+VERSION:2.0
+CALSCALE:GREGORIAN
+PRODID:-//Il Viaggio di Luca e Federica//IT
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:${uid}
+DTSTAMP:${new Date().toISOString().replace(/[-:]/g,"").split(".")[0]}Z
+DTSTART;VALUE=DATE:${dtStart}
+DTEND;VALUE=DATE:${dtEnd}
+SUMMARY:Il Viaggio di Luca e Federica
+LOCATION:${ceremony} | ${reception}
+DESCRIPTION:Cerimonia: ${ceremony}\nRicevimento: ${reception}\n\nOrario: come da invito.
+END:VEVENT
+END:VCALENDAR`;
+
+      const blob = new Blob([ics], { type:"text/calendar;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "Viaggio_Luca_Federica.ics";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    document.addEventListener("DOMContentLoaded", function(){
+      const icsBtn = document.getElementById("btn-ics");
+      if(icsBtn){
+        icsBtn.addEventListener("click", function(e){
+          e.preventDefault();
+          scaricaICS();
+        });
+      }
+    });
+
+
+    document.addEventListener("DOMContentLoaded", function(){
+      document.querySelectorAll(".giorno-toggle").forEach(btn=>{
+        btn.addEventListener("click", ()=> btn.parentElement.classList.toggle("active"));
+      });
+    });
+
+    const FORM_ENDPOINT = "https://yume-sito-form.azurewebsites.net/api/invia-form";
+
+    const form = document.getElementById("viaggio-form");
+    const btnSubmit = document.getElementById("btnSubmit");
+    const stato = document.getElementById("stato");
+    const errbox = document.getElementById("errbox");
+
+  if (form) form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  // Reset stato UI
+  stato.textContent = "";
+  hide(errbox);
+
+  // Honeypot
+  const website = (form.querySelector("input[name='website']")?.value || "").trim();
+  if (website.length > 0) return;
+
+  // Lettura campi
+  const nome = (document.getElementById("nome")?.value || "").trim();
+  const cognome = (document.getElementById("cognome")?.value || "").trim();
+  const email = (document.getElementById("email")?.value || "").trim();
+  const telefono = (document.getElementById("telefono")?.value || "").trim();
+  const messaggio = (document.getElementById("messaggio")?.value || "").trim();
+  const giftChoice = (document.getElementById("gift_choice")?.value || "").trim();
+  const consensoGDPR = document.getElementById("consensoGDPR")?.checked === true;
+
+  // Validazioni
+  if (!nome || !cognome) {
+    stato.textContent = "Compila nome e cognome.";
+    return;
+  }
+  if (!isValidEmail(email)) {
+    stato.textContent = "Inserisci un’email valida.";
+    return;
+  }
+  if (!consensoGDPR) {
+    stato.textContent = "Devi accettare il consenso GDPR per inviare.";
+    return;
+  }
+
+  // Payload invio
+  const sub = {
+    tipoRichiesta: "viaggio_luca_federica",
+    page: "ViaggioLucaFederica",
+    source: "ViaggioLucaFederica",
+
+    nome,
+    cognome,
+    email,
+    telefono,
+
+    gift_choice: giftChoice,
+    messaggio,
+
+    // Consenso privacy
+    gdpr: "yes",
+    consensoGDPR: true
+  };
+
+  setBusy(true);
+  stato.textContent = "Invio in corso… (poi scarico il PDF)";
+
+  try {
+    const res = await fetch(FORM_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(sub)
+    });
+
+    // ✅ IMPORTANTISSIMO: se backend risponde 200 ma ok:false, lo intercettiamo qui
+    const rawText = await res.text();
+    let data = null;
+    try { data = rawText ? JSON.parse(rawText) : null; } catch (_) { data = null; }
+    if (!res.ok || !data || data.ok !== true) {
+      throw new Error(data?.error || rawText || "Errore durante il salvataggio.");
+    }
+
+    // Salva ultimo payload utile per PDF
+    lastSubmission = sub;
+
+    stato.textContent = "Perfetto! Sto generando il PDF…";
+    await generatePdf(sub);
+    stato.textContent = "PDF scaricato ✅ Grazie!";
+
+  } catch (err) {
+    show(errbox);
+    stato.textContent = (err && err.message) ? err.message : "Errore imprevisto.";
+  } finally {
+    setBusy(false);
+  }
+});
+    let lastSubmission = null;
+
+    function setBusy(b){
+      btnSubmit.disabled = !!b;
+      btnSubmit.style.opacity = b ? ".72" : "1";
+    }
+    function isValidEmail(email){
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || "").trim());
+    }
+    function show(el){ if(el) el.style.display = "block"; }
+    function hide(el){ if(el) el.style.display = "none"; }
+
+    async function fetchImageAsDataUrl(url){
+      try{
+        const res = await fetch(url, { cache:"force-cache" });
+        if(!res.ok) return null;
+        const blob = await res.blob();
+        return await new Promise((resolve) => {
+          const r = new FileReader();
+          r.onload = () => resolve(r.result);
+          r.onerror = () => resolve(null);
+          r.readAsDataURL(blob);
+        });
+      }catch(_){ return null; }
+    }
+
+    function getInvitationTextLines(){
+      return [
+        "Il Viaggio di Luca e Federica",
+        "Tour da 15 notti • 20/10/26 – 05/11/26",
+        "Tappe principali: Tokyo, Kawaguchi-ko, Kanazawa, Kyoto, Hiroshima, Osaka.",
+        "Un itinerario pensato per attraversare il Giappone tra città iconiche, tradizione, paesaggi e momenti speciali da vivere in due.",
+        "Tra i momenti più belli: Monte Fuji, villaggi tradizionali, Kyoto, Miyajima, Hiroshima e Osaka.",
+        "Grazie per aver contribuito a rendere ancora più speciale questo viaggio di nozze."
+      ];
+    }
+
+async function generatePdf(sub){
+  const { jsPDF } = window.jspdf || {};
+  if(!jsPDF){
+    alert("Libreria PDF non caricata. Riprova tra un momento.");
+    return;
+  }
+
+  const doc = new jsPDF({ unit:"mm", format:"a4" });
+
+  const sage = [201, 168, 106];
+  const burgundy = [139, 44, 43];
+  const ink = [28, 28, 28];
+
+  const marginX = 14;
+  const pageW = doc.internal.pageSize.getWidth();
+  const pageH = doc.internal.pageSize.getHeight();
+  const contentW = pageW - marginX*2;
+
+  // PDF senza loghi: partecipazione privata
+  const logoDataUrl = null;
+
+  const headerH = 22;
+  const footerH = 12;
+
+  function header(pageNo){
+    doc.setDrawColor(220);
+    doc.setLineWidth(0.2);
+    doc.line(marginX, headerH + 10, pageW - marginX, headerH + 10);
+
+    // ✅ Logo più bello e centrato
+    if(logoDataUrl){
+      try {
+        const imgW = 26;          // dimensione logo
+        const imgH = 26;
+        const imgX = (pageW - imgW) / 2;
+        const imgY = 8;           // alto ma non attaccato
+        doc.addImage(logoDataUrl, "PNG", imgX, imgY, imgW, imgH);
+      } catch(_){}
+    }
+
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...sage);
+    doc.setFontSize(14);
+    doc.text("Il Viaggio di Luca e Federica", marginX, 17);
+
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(90,90,90);
+    doc.setFontSize(10.5);
+    doc.text("Riepilogo dedica", marginX, 22.5);
+
+    doc.setFontSize(9.5);
+    doc.text(`Pag. ${pageNo}`, pageW - marginX, 17, { align:"right" });
+  }
+
+  function footer(pageNo){
+    doc.setDrawColor(220);
+    doc.setLineWidth(0.2);
+    doc.line(marginX, pageH - footerH - 4, pageW - marginX, pageH - footerH - 4);
+
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(120,120,120);
+    doc.setFontSize(9);
+    doc.text("Il Viaggio di Luca e Federica • 20.10.2026 – 05.11.2026", marginX, pageH - 7);
+    doc.text(`Pag. ${pageNo}`, pageW - marginX, pageH - 7, { align:"right" });
+  }
+
+  let pageNo = 1;
+  header(pageNo);
+  footer(pageNo);
+
+  let y = headerH + 18;
+
+  function newPage(){
+    doc.addPage();
+    pageNo += 1;
+    header(pageNo);
+    footer(pageNo);
+    y = headerH + 18;
+  }
+
+  function ensureSpace(hNeeded){
+    if(y + hNeeded > pageH - footerH - 10) newPage();
+  }
+
+  function sectionTitle(txt){
+    ensureSpace(12);
+    doc.setFont("helvetica","bold");
+    doc.setTextColor(...burgundy);
+    doc.setFontSize(12.5);
+    doc.text(txt, marginX, y);
+    y += 7;
+    doc.setDrawColor(210);
+    doc.setLineWidth(0.2);
+    doc.line(marginX, y, pageW - marginX, y);
+    y += 8;
+  }
+
+  function writeParagraph(text, fontSize=10.8, leading=5.2){
+    doc.setFont("helvetica","normal");
+    doc.setTextColor(...ink);
+    doc.setFontSize(fontSize);
+
+    // Normalizza spaziature e spezza parole lunghissime per evitare sforamenti
+    const safeText = String(text || "")
+      .replace(/\s+/g, " ")
+      .replace(/([^\s]{40,})/g, (m)=> m.replace(/(.{20})/g, "$1 " ))
+      .trim();
+
+    const lines = doc.splitTextToSize(safeText, contentW);
+    ensureSpace(lines.length*leading + 2);
+    doc.text(lines, marginX, y);
+    y += lines.length*leading + 2;
+  }
+
+  function drawInfoBox(title, rows){
+    const boxPad = 4;
+    const rowLeading = 5.2;
+
+    let h = 10;
+    rows.forEach(r=>{
+      const lines = doc.splitTextToSize(`${r[0]} ${r[1]}`, contentW - boxPad*2);
+      h += Math.max(1, lines.length)*rowLeading;
+    });
+    h += 6;
+
+    ensureSpace(h + 4);
+
+    doc.setDrawColor(200);
+    doc.setLineWidth(0.2);
+    doc.rect(marginX, y, contentW, h, "S");
+
+    doc.setFont("helvetica","bold");
+    doc.setTextColor(...sage);
+    doc.setFontSize(11.5);
+    doc.text(title, marginX + boxPad, y + 7);
+
+    let yy = y + 13;
+    doc.setFont("helvetica","normal");
+    doc.setTextColor(...ink);
+    doc.setFontSize(10.8);
+
+    rows.forEach(([k,v])=>{
+      const line = `${k} ${v}`;
+      const lines = doc.splitTextToSize(line, contentW - boxPad*2);
+      doc.text(lines, marginX + boxPad, yy);
+      yy += lines.length*rowLeading;
+    });
+
+    y += h + 10;
+  }
+
+  drawInfoBox("Dati richiedente", [
+    ["Nome:", `${sub.nome} ${sub.cognome}`],
+    ["Email:", sub.email],
+    ["Telefono:", sub.telefono || "—"]
+  ]);
+
+  const selectedGiftLabel =
+  document.querySelector(`#gift_choice option[value="${sub.gift_choice}"]`)?.textContent?.trim() || "—";
+
+drawInfoBox("Focus richiesta", [
+  ["Servizio selezionato:", sub.gift_choice ? selectedGiftLabel : "—"]
+]);
+
+  if(sub.messaggio && String(sub.messaggio).trim()){
+    sectionTitle("Messaggio");
+    writeParagraph(String(sub.messaggio).trim());
+  }
+
+  sectionTitle("Riepilogo viaggio");
+  getInvitationTextLines().forEach(line => writeParagraph(line, 10.8, 5.2));
+
+  sectionTitle("Servizio selezionato");
+
+const giftVal = String(sub.gift_choice || "").trim();
+if(giftVal){
+  const opt = document.querySelector(`#gift_choice option[value="${giftVal}"]`);
+  const optTxt = (opt ? (opt.textContent || "").trim() : "").replace(/\s+/g," ");
+  const pretty = optTxt || "Servizio selezionato";
+  writeParagraph(`Interesse espresso su: ${pretty}.`, 10.8, 5.2);
+}else{
+  writeParagraph("Nessun focus selezionato.", 10.8, 5.2);
+}
+
+writeParagraph("Nota: il focus selezionato serve solo a indirizzare la richiesta.", 10.2, 5);
+
+  sectionTitle("Note");
+
+  const ibanTxt = document.querySelector("#ibanBlock code")?.innerText?.trim() || "(INSERISCI QUI L’Note)";
+  ensureSpace(16);
+  doc.setFont("helvetica","bold");
+  doc.setTextColor(...sage);
+  doc.setFontSize(11.2);
+  doc.text("Note", marginX, y);
+  y += 6;
+  doc.setFont("helvetica","normal");
+  doc.setTextColor(...ink);
+  doc.setFontSize(10.8);
+  writeParagraph(ibanTxt);
+
+  doc.save(`Dedica_${sub.nome}_${sub.cognome}.pdf`);
+}
+  </script>
+
+  <script>
+    // Mappa Leaflet – tappe del viaggio (marker su ogni città, senza link esterni)
+    document.addEventListener("DOMContentLoaded", function () {
+      if (typeof L === "undefined") return;
+      const el = document.getElementById("map-itinerario");
+      if (!el) return;
+
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="42" viewBox="0 0 30 42">
+          <path d="M15 0C8.4 0 3 5.4 3 12c0 9 12 30 12 30s12-21 12-30C27 5.4 21.6 0 15 0z" fill="#8B2C2B"/>
+          <circle cx="15" cy="12" r="5.2" fill="#F6F4F1"/>
+        </svg>`;
+      const icon = L.divIcon({
+        className: "",
+        html: svg,
+        iconSize: [30, 42],
+        iconAnchor: [15, 42],
+        popupAnchor: [0, -34]
+      });
+
+      const map = L.map("map-itinerario", { scrollWheelZoom: false }).setView([35.6, 136.8], 6);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "© OpenStreetMap contributors"
+      }).addTo(map);
+
+      const tappe = [
+        ["Tokyo", 35.682839, 139.759455],
+        ["Kamakura", 35.3193, 139.5467],
+        ["Yokohama", 35.4437, 139.6380],
+        ["Kawaguchi-ko", 35.4983, 138.7687],
+        ["Oshino Hakkai", 35.4601, 138.8326],
+        ["Kanazawa", 36.5613, 136.6562],
+        ["Shirakawa-go", 36.2600, 136.9062],
+        ["Kyoto", 35.0116, 135.7681],
+        ["Arashiyama", 35.0170, 135.6771],
+        ["Hiroshima", 34.3853, 132.4553],
+        ["Miyajima", 34.2956, 132.3197],
+        ["Osaka", 34.6937, 135.5023],
+        ["Nara", 34.6851, 135.8048],
+        ["Uji", 34.8894, 135.8070],
+        ["Universal Studios Japan", 34.6654, 135.4323]
+      ];
+
+      const markersByName = {};
+      tappe.forEach(([nome, lat, lon]) => {
+        const mk = L.marker([lat, lon], { icon }).addTo(map).bindPopup(`<strong>${nome}</strong>`);
+        markersByName[nome] = mk;
+      });
+
+      function focusTappa(nome){
+        const mk = markersByName[nome];
+        if (!mk) return;
+        const latlng = mk.getLatLng();
+        map.flyTo(latlng, Math.max(map.getZoom(), 9), { duration: 0.9 });
+        mk.openPopup();
+      }
+
+      // Espone utilità (debug / click da lista)
+      window.__yumeItinerarioMap = { map, markersByName, focusTappa };
+
+      // Città in alto -> scroll alla mappa + focus marker
+      document.querySelectorAll('[data-map-target]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const target = btn.getAttribute('data-map-target');
+          const mapEl = document.getElementById('map-itinerario');
+          if (mapEl) mapEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+          // Dopo lo scroll, ridisegna la mappa e centra sul marker
+          window.setTimeout(() => {
+            try{ map.invalidateSize(); }catch(_){}
+            focusTappa(target);
+          }, 550);
+        });
+      });
+
+      const percorso = [
+        [35.682839, 139.759455],
+        [35.3193, 139.5467],
+        [35.4437, 139.6380],
+        [35.682839, 139.759455],
+        [35.4983, 138.7687],
+        [35.4601, 138.8326],
+        [35.4983, 138.7687],
+        [36.5613, 136.6562],
+        [36.2600, 136.9062],
+        [36.5613, 136.6562],
+        [35.0116, 135.7681],
+        [35.0170, 135.6771],
+        [35.0116, 135.7681],
+        [34.3853, 132.4553],
+        [34.2956, 132.3197],
+        [34.3853, 132.4553],
+        [34.6937, 135.5023],
+        [34.8894, 135.8070],
+        [34.6851, 135.8048],
+        [34.6937, 135.5023],
+        [34.6654, 135.4323]
+      ];
+      L.polyline(percorso, { color: "#8B2C2B", weight: 4, opacity: 0.85 }).addTo(map);
+
+      try{
+        const bounds = L.latLngBounds(tappe.map(t => [t[1], t[2]]));
+        map.fitBounds(bounds.pad(0.18));
+      }catch(_){}
+    });
+  </script>
+
+</body>
+</html>
