@@ -1419,7 +1419,7 @@
           <label for="messaggio">Messaggio per gli sposi</label>
           <textarea id="messaggio" name="messaggio" placeholder="Scrivi qui un messaggio per Nino & Roby…"></textarea>
 
-          <input type="text" name="website" tabindex="-1" autocomplete="off"
+          <input type="text" name="website_hidden_field" tabindex="-1" autocomplete="off"
                  style="position:absolute;left:-9999px;opacity:0;pointer-events:none">
 
           <div class="check">
@@ -1545,7 +1545,7 @@ END:VCALENDAR`;
   hide(errbox);
 
   // ✅ honeypot
-  const website = (form.querySelector("input[name='website']")?.value || "").trim();
+  const website = (form.querySelector("input[name='website_hidden_field']")?.value || "").trim();
   if (website.length > 0) return;
 
   // ✅ lettura campi
