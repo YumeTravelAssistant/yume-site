@@ -1661,18 +1661,8 @@ END:VCALENDAR`;
       const addr2  = (smalls[1] || "VIA CAMPIDOGLIO 266, CEPRANO (FR) 03024");
 
       return [
-        "Siamo felici di annunciare che ci sposiamo!",
-        "Vi aspettiamo per festeggiare con noi il giorno",
-        `${dateTxt} • Orario come da invito`,
-        place1,
-        addr1,
-        "Dopo la cerimonia saremo lieti di festeggiare con tutti voi presso",
-        place2,
-        addr2,
-        "La vostra presenza è il regalo più bello,",
-        "ma se desiderate contribuire al nostro viaggio di nozze,",
-        "SI PREGA DI DARE GENTILE CONFERMA ENTRO IL 30 APRILE 2026"
-      ];
+  "Ogni sogno inizia con un passo... e il nostro viaggio di nozze sarà ancora più speciale grazie a voi!"
+];
     }
 
 async function generatePdf(sub){
@@ -1845,7 +1835,7 @@ drawInfoBox("Dettagli", [
     writeParagraph(String(sub.messaggio).trim());
   }
 
-  sectionTitle("Invito");
+  sectionTitle("GRAZIE");
   getInvitationTextLines().forEach(line => writeParagraph(line, 10.8, 5.2));
 
   sectionTitle("Regalo selezionato");
