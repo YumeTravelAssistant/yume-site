@@ -10,7 +10,15 @@
     const escape = window.YumeJournalRenderer.escapeHtml;
     const date = window.YumeJournalRenderer.formatDate(article.published_at);
     const category = article.category?.name || "Journal";
+    const heroUrl = article.hero_asset ? (() => {
+      const config = window.YUME_JOURNAL_CONFIG || {};
+      const base = String(config.supabaseUrl || "").replace(/\/$/, "");
+      const bucket = encodeURIComponent(String(article.hero_asset.storage_bucket || ""));
+      const path = String(article.hero_asset.storage_path || "").split("/").map(encodeURIComponent).join("/");
+      return base && bucket && path ? `${base}/storage/v1/object/public/${bucket}/${path}` : "";
+    })() : "";
     return `<article class="journal-card ${article.featured ? "is-featured" : ""}">
+      ${heroUrl ? `<div class="journal-card-image"><img src="${escape(heroUrl)}" alt="${escape(article.hero_asset.alt_text || article.title)}" loading="lazy"></div>` : ""}
       <a class="journal-card-link" href="/blog/${encodeURIComponent(article.slug)}" aria-label="Apri ${escape(article.title)}">
         <div class="journal-card-topline">
           <span>${escape(category)}</span>
