@@ -1,0 +1,562 @@
+.journal-preview {
+          --jp-red: #8b2c2b;
+          --jp-dark-red: #721f1e;
+          --jp-gold: #c9a86a;
+          --jp-beige: #f4f0e2;
+          --jp-ivory: #fff8f4;
+          --jp-ink: #2d211b;
+          --jp-muted: #755e51;
+          --jp-accent: var(--jp-red);
+          --jp-accent-dark: var(--jp-dark-red);
+          --jp-accent-soft: rgba(139,44,43,.12);
+          --jp-paper: #fffaf4;
+          --jp-hero-text: var(--jp-dark-red);
+
+          margin: 0 auto;
+          background: var(--jp-paper);
+          color: var(--jp-ink);
+          border: 1px solid rgba(139,44,43,.14);
+          box-shadow: 0 24px 70px rgba(49,31,21,.12);
+          overflow: hidden;
+          scroll-behavior: smooth;
+        }
+
+        .journal-preview * {
+          box-sizing: border-box;
+        }
+
+        .journal-preview a {
+          text-underline-offset: 3px;
+        }
+
+        .journal-preview-hero {
+          position: relative;
+          min-height: 290px;
+          padding: 48px;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          overflow: hidden;
+          background:
+            radial-gradient(circle at 78% 22%, rgba(201,168,106,.34), transparent 26%),
+            radial-gradient(circle at 18% 80%, rgba(139,44,43,.20), transparent 30%),
+            linear-gradient(135deg, #f4f0e2 0%, #fff8f4 58%, #eadfca 100%);
+          border-bottom: 1px solid rgba(139,44,43,.12);
+        }
+
+        .journal-preview-hero::after {
+          content: "";
+          position: absolute;
+          inset: auto -50px -80px auto;
+          width: 240px;
+          height: 240px;
+          border: 1px solid rgba(139,44,43,.12);
+          border-radius: 50%;
+          pointer-events: none;
+        }
+
+        .journal-preview-mobile .journal-preview-hero {
+          min-height: 255px;
+          padding: 28px 24px;
+        }
+
+        .journal-preview-kicker {
+          position: relative;
+          z-index: 1;
+          margin-bottom: 16px;
+          color: var(--jp-accent);
+          font-family: Raleway, Arial, sans-serif;
+          font-size: 11px;
+          font-weight: 800;
+          letter-spacing: .17em;
+          text-transform: uppercase;
+        }
+
+        .journal-preview-title {
+          position: relative;
+          z-index: 1;
+          max-width: 720px;
+          margin: 0;
+          color: var(--jp-hero-text);
+          font-family: Georgia, "Playfair Display", serif;
+          font-size: 50px;
+          line-height: 1.03;
+          font-weight: 700;
+          letter-spacing: -.02em;
+        }
+
+        .journal-preview-mobile .journal-preview-title {
+          font-size: 35px;
+        }
+
+        .journal-preview-subtitle {
+          position: relative;
+          z-index: 1;
+          max-width: 690px;
+          margin: 18px 0 0;
+          font-size: 18px;
+          line-height: 1.48;
+          color: #5e463a;
+        }
+
+        .journal-preview-mobile .journal-preview-subtitle {
+          font-size: 16px;
+        }
+
+        .journal-preview-body {
+          max-width: 700px;
+          margin: 0 auto;
+          padding: 48px 36px 80px;
+        }
+
+        .journal-preview-mobile .journal-preview-body {
+          padding: 32px 22px 60px;
+        }
+
+        .journal-preview-meta {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px 18px;
+          padding-bottom: 26px;
+          margin-bottom: 34px;
+          border-bottom: 1px solid var(--jp-accent-soft);
+          color: var(--jp-muted);
+          font-size: 13px;
+        }
+
+        .journal-preview-excerpt {
+          margin: 0 0 36px;
+          color: var(--jp-accent-dark);
+          font-family: Georgia, serif;
+          font-size: 23px;
+          line-height: 1.5;
+        }
+
+        .journal-preview-mobile .journal-preview-excerpt {
+          font-size: 20px;
+        }
+
+        .journal-preview-toc {
+          margin: 0 0 42px;
+          padding: 25px 28px;
+          border: 1px solid var(--jp-accent-soft);
+          border-radius: 22px;
+          background: rgba(255,255,255,.56);
+          box-shadow: inset 0 1px 0 rgba(255,255,255,.7);
+        }
+
+        .journal-preview-toc-label {
+          margin: 0 0 14px;
+          color: var(--jp-accent-dark);
+          font-family: Georgia, "Playfair Display", serif;
+          font-size: 21px;
+          font-weight: 700;
+        }
+
+        .journal-preview-toc-list {
+          display: flex;
+          flex-direction: column;
+          gap: 9px;
+          margin: 0 !important;
+          padding: 0 !important;
+          list-style: none !important;
+        }
+
+        .journal-preview-toc-list li {
+          display: block !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          list-style: none !important;
+        }
+
+        .journal-preview-toc-list li.is-level-3 {
+          padding-left: 20px !important;
+        }
+
+        .journal-preview-toc-list a {
+          display: grid;
+          grid-template-columns: 22px minmax(0, 1fr);
+          gap: 8px;
+          align-items: start;
+          color: var(--jp-ink);
+          font-size: 14px;
+          line-height: 1.45;
+          text-decoration: none;
+        }
+
+        .journal-preview-toc-list a:hover {
+          color: var(--jp-accent);
+        }
+
+        .journal-preview-toc-number {
+          color: var(--jp-gold);
+          font-weight: 800;
+        }
+
+        .journal-preview-paragraph {
+          margin: 0 0 25px;
+          font-size: 17px;
+          line-height: 1.78;
+          white-space: pre-wrap;
+        }
+
+        .journal-preview h2,
+        .journal-preview h3 {
+          scroll-margin-top: 120px;
+          color: var(--jp-accent-dark);
+          font-family: Georgia, "Playfair Display", serif;
+          line-height: 1.18;
+        }
+
+        .journal-preview h2 {
+          margin: 52px 0 18px;
+          padding-top: 4px;
+          font-size: 33px;
+        }
+
+        .journal-preview h3 {
+          margin: 36px 0 14px;
+          font-size: 25px;
+        }
+
+        .journal-preview-heading-anchor {
+          color: inherit;
+          text-decoration: none;
+        }
+
+        .journal-preview-quote {
+          margin: 38px 0;
+          padding: 8px 0 8px 28px;
+          border-left: 4px solid var(--jp-gold);
+          font-family: Georgia, serif;
+          font-size: 24px;
+          line-height: 1.5;
+          color: var(--jp-accent-dark);
+        }
+
+        .journal-preview-quote small {
+          display: block;
+          margin-top: 12px;
+          font-family: Raleway, Arial, sans-serif;
+          font-size: 12px;
+          color: var(--jp-muted);
+        }
+
+        /* Correzione esplicita contro i reset globali di Tailwind/CSS. */
+        .journal-preview ul.journal-preview-list,
+        .journal-preview ol.journal-preview-list {
+          display: block !important;
+          margin: 0 0 30px !important;
+          padding-left: 30px !important;
+          font-size: 17px;
+          line-height: 1.72;
+          list-style-position: outside !important;
+        }
+
+        .journal-preview ul.journal-preview-list {
+          list-style-type: disc !important;
+        }
+
+        .journal-preview ol.journal-preview-list {
+          list-style-type: decimal !important;
+        }
+
+        .journal-preview .journal-preview-list li {
+          display: list-item !important;
+          margin: 0 0 9px !important;
+          padding-left: 5px !important;
+          list-style: inherit !important;
+        }
+
+        .journal-preview .journal-preview-list li::marker {
+          color: var(--jp-accent);
+          font-weight: 800;
+        }
+
+        .journal-preview-callout {
+          margin: 38px 0;
+          padding: 26px 28px;
+          border: 1px solid var(--jp-accent-soft);
+          border-radius: 22px;
+          background:
+            linear-gradient(135deg, rgba(244,240,226,.96), rgba(255,248,244,.96));
+        }
+
+        .journal-preview-callout.is-common_mistake {
+          border-left: 5px solid #a7493f;
+        }
+
+        .journal-preview-callout.is-suitable_for {
+          border-left: 5px solid #4f795a;
+        }
+
+        .journal-preview-callout.is-not_suitable_for {
+          border-left: 5px solid #946a37;
+        }
+
+        .journal-preview-callout.is-beyond_image,
+        .journal-preview-callout.is-real_value {
+          border-left: 5px solid var(--jp-gold);
+        }
+
+        .journal-preview-callout strong {
+          display: block;
+          margin-bottom: 8px;
+          color: var(--jp-accent);
+          font-family: Georgia, serif;
+          font-size: 21px;
+        }
+
+        .journal-preview-callout p {
+          margin: 0;
+          font-size: 16px;
+          line-height: 1.62;
+          white-space: pre-wrap;
+        }
+
+        .journal-preview-comparison {
+          margin: 38px 0;
+          overflow: hidden;
+          border: 1px solid var(--jp-accent-soft);
+          border-radius: 20px;
+        }
+
+        .journal-preview-comparison-head,
+        .journal-preview-comparison-row {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .journal-preview-comparison-head {
+          background: var(--jp-accent);
+          color: white;
+          font-weight: 700;
+        }
+
+        .journal-preview-comparison-head > div,
+        .journal-preview-comparison-row > div {
+          padding: 14px;
+          border-right: 1px solid rgba(139,44,43,.13);
+        }
+
+        .journal-preview-comparison-row {
+          background: rgba(255,255,255,.54);
+          border-top: 1px solid var(--jp-accent-soft);
+          font-size: 14px;
+          line-height: 1.45;
+        }
+
+        .journal-preview-mobile .journal-preview-comparison {
+          overflow-x: auto;
+        }
+
+        .journal-preview-mobile .journal-preview-comparison-head,
+        .journal-preview-mobile .journal-preview-comparison-row {
+          min-width: 560px;
+        }
+
+        .journal-preview-faq {
+          margin: 20px 0;
+          padding: 20px 0;
+          border-bottom: 1px solid var(--jp-accent-soft);
+        }
+
+        .journal-preview-faq strong {
+          display: block;
+          color: var(--jp-accent-dark);
+          font-family: Georgia, serif;
+          font-size: 20px;
+          line-height: 1.35;
+        }
+
+        .journal-preview-faq p {
+          margin: 10px 0 0;
+          font-size: 16px;
+          line-height: 1.62;
+          white-space: pre-wrap;
+        }
+
+        .journal-preview-cta {
+          margin: 54px 0 0;
+          padding: 34px;
+          border-radius: 26px;
+          background: var(--jp-accent-dark);
+          color: white;
+        }
+
+        .journal-preview-cta-eyebrow {
+          color: #e8cc95;
+          font-size: 11px;
+          font-weight: 800;
+          letter-spacing: .16em;
+        }
+
+        .journal-preview-cta h3 {
+          margin: 10px 0;
+          color: white;
+          font-size: 28px;
+        }
+
+        .journal-preview-cta p {
+          margin: 0 0 20px;
+          line-height: 1.55;
+        }
+
+        .journal-preview-cta a {
+          display: inline-block;
+          padding: 12px 18px;
+          border-radius: 999px;
+          background: var(--jp-beige);
+          color: var(--jp-accent-dark);
+          font-weight: 800;
+          text-decoration: none;
+        }
+
+        .journal-preview-divider {
+          width: 90px;
+          height: 2px;
+          margin: 48px auto;
+          background: var(--jp-gold);
+        }
+
+        .journal-preview-image-placeholder {
+          margin: 34px 0;
+          min-height: 220px;
+          display: grid;
+          place-items: center;
+          border: 1px dashed rgba(139,44,43,.35);
+          border-radius: 20px;
+          background: rgba(244,240,226,.55);
+          color: var(--jp-accent);
+          text-align: center;
+          padding: 24px;
+        }
+
+        /*
+         * I template non cambiano struttura, ordine o dimensione dei contenuti.
+         * Cambiano soltanto palette, bordi e piccoli accenti visivi.
+         */
+
+        /* TEMPLATE: GUIDA PRATICA — YUME CLASSICO */
+        .journal-template-guide {
+          --jp-accent: #8b2c2b;
+          --jp-accent-dark: #721f1e;
+          --jp-accent-soft: rgba(139,44,43,.16);
+          --jp-paper: #fffaf4;
+          --jp-hero-text: #721f1e;
+        }
+
+        .journal-template-guide .journal-preview-hero {
+          border-top: 5px solid #8b2c2b;
+        }
+
+        .journal-template-guide h2 {
+          padding-left: 15px;
+          border-left: 3px solid var(--jp-gold);
+        }
+
+        /* TEMPLATE: SCELTA E CONFRONTO — ORO PIÙ PRESENTE */
+        .journal-template-comparison {
+          --jp-accent: #98743b;
+          --jp-accent-dark: #60471f;
+          --jp-accent-soft: rgba(152,116,59,.20);
+          --jp-paper: #fffaf2;
+          --jp-hero-text: #60471f;
+        }
+
+        .journal-template-comparison .journal-preview-hero {
+          border-top: 5px solid #c9a86a;
+          background:
+            radial-gradient(circle at 78% 22%, rgba(201,168,106,.34), transparent 27%),
+            linear-gradient(135deg, #f5eddc, #fffaf2 64%, #f0e4cd);
+        }
+
+        .journal-template-comparison .journal-preview-comparison-head {
+          background: #765526;
+        }
+
+        .journal-template-comparison .journal-preview-divider {
+          width: 112px;
+        }
+
+        /* TEMPLATE: CULTURA — AVORIO E ORO CALDO */
+        .journal-template-culture {
+          --jp-accent: #8d7041;
+          --jp-accent-dark: #57442b;
+          --jp-accent-soft: rgba(141,112,65,.18);
+          --jp-paper: #fbf7ee;
+          --jp-hero-text: #57442b;
+        }
+
+        .journal-template-culture .journal-preview-hero {
+          border-top: 5px solid #b89a62;
+          background:
+            radial-gradient(circle at 75% 25%, rgba(184,154,98,.23), transparent 28%),
+            linear-gradient(135deg, #eee4d0, #fbf7ee 66%, #f2eadb);
+        }
+
+        .journal-template-culture h2::after {
+          content: "";
+          display: block;
+          width: 46px;
+          height: 2px;
+          margin-top: 10px;
+          background: #b89a62;
+        }
+
+        /* TEMPLATE: STORIA YUME — GRAFITE E ORO */
+        .journal-template-story {
+          --jp-accent: #a8874e;
+          --jp-accent-dark: #1f1f1f;
+          --jp-accent-soft: rgba(31,31,31,.16);
+          --jp-paper: #fbf8f1;
+          --jp-hero-text: #fff8f4;
+        }
+
+        .journal-template-story .journal-preview-hero {
+          border-top: 5px solid #c9a86a;
+          background:
+            radial-gradient(circle at 82% 20%, rgba(201,168,106,.18), transparent 28%),
+            linear-gradient(145deg, #171717, #292929 72%, #343434);
+        }
+
+        .journal-template-story .journal-preview-kicker,
+        .journal-template-story .journal-preview-subtitle {
+          color: #e9d4aa;
+        }
+
+        .journal-template-story .journal-preview-quote {
+          border-left-color: #c9a86a;
+        }
+
+        .journal-template-story .journal-preview-cta {
+          background: #1f1f1f;
+        }
+
+        /* TEMPLATE: NEWS — BIANCO, GRAFITE E ROSSO */
+        .journal-template-news {
+          --jp-accent: #2a2a2a;
+          --jp-accent-dark: #111111;
+          --jp-accent-soft: rgba(17,17,17,.15);
+          --jp-paper: #ffffff;
+          --jp-hero-text: #111111;
+        }
+
+        .journal-template-news .journal-preview-hero {
+          border-top: 5px solid #8b2c2b;
+          background:
+            linear-gradient(135deg, #ffffff, #faf8f4 72%, #f1ece4);
+        }
+
+        .journal-template-news .journal-preview-kicker {
+          color: #8b2c2b;
+        }
+
+        .journal-template-news h2 {
+          padding-bottom: 9px;
+          border-bottom: 2px solid #8b2c2b;
+        }
+
+        .journal-template-news .journal-preview-cta {
+          background: #111111;
+        }
