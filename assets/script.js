@@ -1615,4 +1615,26 @@ function scrollToMessaggi() {
     badge.style.display = "none";
   }
 }
+/* ===== YUME JOURNAL · link automatico nel menu pubblico =====
+   Incolla questo blocco UNA VOLTA in fondo a yume-site/assets/script.js.
+   In questo modo non devi modificare manualmente tutte le pagine HTML esistenti.
+*/
+document.addEventListener("DOMContentLoaded", () => {
+  const sidebar = document.querySelector(".sidebar");
+  if (!sidebar) return;
 
+  const alreadyPresent = Array.from(sidebar.querySelectorAll("a")).some((link) => {
+    const href = link.getAttribute("href") || "";
+    return href === "/blog/" || href === "blog/" || href === "blog/index.html";
+  });
+
+  if (alreadyPresent) return;
+
+  const journalLink = document.createElement("a");
+  journalLink.href = "/blog/";
+  journalLink.textContent = "Journal";
+
+  const links = Array.from(sidebar.querySelectorAll("a"));
+  const faqLink = links.find((link) => /faq/i.test(link.textContent || ""));
+  sidebar.insertBefore(journalLink, faqLink || null);
+});
