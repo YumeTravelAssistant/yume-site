@@ -33,6 +33,24 @@
     return fallback;
   }
 
+  function assetPublicUrl(asset) {
+    if (!asset?.storage_bucket || !asset?.storage_path) return "";
+    const config = window.YUME_JOURNAL_CONFIG || {};
+    const base = String(config.supabaseUrl || "").replace(/\/$/, "");
+    if (!base) return "";
+    const bucket = encodeURIComponent(String(asset.storage_bucket));
+    const path = String(asset.storage_path).split("/").map(encodeURIComponent).join("/");
+    return `${base}/storage/v1/object/public/${bucket}/${path}`;
+  }
+
+  function assetMapFromPayload(payload) {
+    return new Map((Array.isArray(payload?.assets) ? payload.assets : []).map((asset) => [String(asset.id), { ...asset, publicUrl: assetPublicUrl(asset) }]));
+  }
+
+  function aspectClass(value) {
+    return ["auto", "landscape", "square", "portrait"].includes(value) ? value : "landscape";
+  }
+
   function headingAnchor(blockId) {
     return `journal-heading-${String(blockId).replace(/[^a-zA-Z0-9_-]/g, "")}`;
   }
@@ -73,7 +91,7 @@
     }).format(date);
   }
 
-  function renderBlock(block) {
+  function renderBlock(block, assetMap) {
     const payload = block?.payload || {};
     switch (block?.block_type) {
       case "paragraph":
@@ -118,16 +136,26 @@
         return `<div class="journal-preview-divider" aria-hidden="true"></div>`;
 
       case "image": {
-        const url = safeUrl(payload.url || payload.publicUrl || "", "");
-        if (!url) return "";
-        return `<figure class="journal-public-figure"><img src="${escapeHtml(url)}" alt="${escapeHtml(payload.alt || "")}" loading="lazy">${payload.caption ? `<figcaption>${escapeHtml(payload.caption)}</figcaption>` : ""}</figure>`;
+        const asset = assetMap.get(String(payload.asset_id || ""));
+        if (!asset?.publicUrl) return "";
+        const layout = ["reading", "wide", "full"].includes(payload.layout) ? payload.layout : "wide";
+        const fit = payload.fit === "contain" ? "contain" : "cover";
+        const focalX = Number.isFinite(Number(payload.focal_x)) ? Number(payload.focal_x) : 50;
+        const focalY = Number.isFinite(Number(payload.focal_y)) ? Number(payload.focal_y) : 50;
+        const aspect = aspectClass(payload.aspect_ratio);
+        return `<figure class="journal-public-figure is-${layout} is-${aspect}"><div class="journal-public-media-frame"><img src="${escapeHtml(asset.publicUrl)}" alt="${escapeHtml(asset.alt_text || "")}" loading="lazy" style="object-fit:${fit};object-position:${focalX}% ${focalY}%"></div>${asset.caption || asset.credit ? `<figcaption>${escapeHtml(asset.caption || "")}${asset.credit ? `<small>Foto: ${escapeHtml(asset.credit)}</small>` : ""}</figcaption>` : ""}</figure>`;
       }
 
       case "gallery": {
-        const images = Array.isArray(payload.images) ? payload.images : [];
-        const valid = images.map((image) => ({ ...image, url: safeUrl(image?.url || image?.publicUrl || "", "") })).filter((image) => image.url);
-        if (!valid.length) return "";
-        return `<div class="journal-public-gallery">${valid.map((image) => `<figure><img src="${escapeHtml(image.url)}" alt="${escapeHtml(image.alt || "")}" loading="lazy">${image.caption ? `<figcaption>${escapeHtml(image.caption)}</figcaption>` : ""}</figure>`).join("")}</div>`;
+        const ids = Array.isArray(payload.asset_ids) ? payload.asset_ids : [];
+        const images = ids.map((id) => assetMap.get(String(id))).filter((asset) => asset?.publicUrl);
+        if (!images.length) return "";
+        const columns = Number(payload.columns) === 3 ? 3 : 2;
+        const fit = payload.fit === "contain" ? "contain" : "cover";
+        const focalX = Number.isFinite(Number(payload.focal_x)) ? Number(payload.focal_x) : 50;
+        const focalY = Number.isFinite(Number(payload.focal_y)) ? Number(payload.focal_y) : 50;
+        const aspect = aspectClass(payload.aspect_ratio);
+        return `<div class="journal-public-gallery columns-${columns} is-${aspect}">${images.map((asset) => `<figure><img src="${escapeHtml(asset.publicUrl)}" alt="${escapeHtml(asset.alt_text || "")}" loading="lazy" style="object-fit:${fit};object-position:${focalX}% ${focalY}%">${asset.caption || asset.credit ? `<figcaption>${escapeHtml(asset.caption || "")}${asset.credit ? `<small>Foto: ${escapeHtml(asset.credit)}</small>` : ""}</figcaption>` : ""}</figure>`).join("")}</div>`;
       }
 
       default:
@@ -140,6 +168,7 @@
     const author = payload?.author;
     const category = payload?.category;
     const blocks = Array.isArray(payload?.blocks) ? payload.blocks : [];
+    const assetMap = assetMapFromPayload(payload);
     if (!article) throw new Error("Articolo pubblico non disponibile.");
 
     let h2Counter = 0;
@@ -160,9 +189,14 @@
     const template = cleanText(article.template_type) || "guide";
     const kicker = TEMPLATE_KICKERS[template] || "Journal";
     const date = formatDate(article.published_at);
+    const heroAsset = assetMap.get(String(article.hero_asset_id || ""));
+    const heroFit = article.metadata?.hero_fit === "contain" ? "contain" : "cover";
+    const heroFocalX = Number.isFinite(Number(article.metadata?.hero_focal_x)) ? Number(article.metadata.hero_focal_x) : 50;
+    const heroFocalY = Number.isFinite(Number(article.metadata?.hero_focal_y)) ? Number(article.metadata.hero_focal_y) : 50;
+    const heroOverlay = ["none", "light", "dark"].includes(article.metadata?.hero_overlay) ? article.metadata.hero_overlay : "dark";
 
     return `<article class="journal-preview journal-preview-desktop journal-template-${escapeHtml(template)}">
-      <header class="journal-preview-hero">
+      <header class="journal-preview-hero ${heroAsset?.publicUrl ? `has-image overlay-${heroOverlay}` : ""}"${heroAsset?.publicUrl ? ` style="background-image:url('${escapeHtml(heroAsset.publicUrl)}');background-size:${heroFit};background-position:${heroFocalX}% ${heroFocalY}%;background-repeat:no-repeat"` : ""}>${heroAsset?.publicUrl && heroOverlay !== "none" ? `<div class="journal-preview-hero-overlay"></div>` : ""}
         <div class="journal-preview-kicker">YUME JOURNAL · ${escapeHtml(kicker)}${category?.name ? ` · ${escapeHtml(category.name)}` : ""}</div>
         <h1 class="journal-preview-title">${escapeHtml(article.title || "Articolo YUME")}</h1>
         ${article.subtitle ? `<p class="journal-preview-subtitle">${escapeHtml(article.subtitle)}</p>` : ""}
@@ -175,7 +209,7 @@
         </div>
         ${article.excerpt ? `<p class="journal-preview-excerpt">${escapeHtml(article.excerpt)}</p>` : ""}
         ${showToc ? `<nav class="journal-preview-toc" aria-label="Indice articolo"><div class="journal-preview-toc-label">${escapeHtml(tocTitle)}</div><ol class="journal-preview-toc-list">${headings.map((heading) => `<li class="${heading.level === 3 ? "is-level-3" : ""}"><a href="#${heading.anchor}"><span class="journal-preview-toc-number">${heading.number}</span><span>${escapeHtml(heading.text)}</span></a></li>`).join("")}</ol></nav>` : ""}
-        ${blocks.map(renderBlock).join("")}
+        ${blocks.map((block) => renderBlock(block, assetMap)).join("")}
       </div>
     </article>`;
   }
