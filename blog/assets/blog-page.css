@@ -297,3 +297,82 @@ body.journal-public-page {
     font-size: 0.8rem;
   }
 }
+
+/* =========================================================
+   FIX YUKI · dimensioni identiche al sito YUME principale
+   ========================================================= */
+
+.journal-public-page #yuki-chat-avatar {
+  position: fixed !important;
+
+  right: 25px !important;
+  bottom: 25px !important;
+
+  width: 90px !important;
+  height: 90px !important;
+  min-width: 90px !important;
+  min-height: 90px !important;
+  max-width: 90px !important;
+  max-height: 90px !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  overflow: hidden !important;
+  border-radius: 50% !important;
+
+  background-color: #ffffff !important;
+
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.2) !important;
+
+  cursor: pointer !important;
+  z-index: 11000 !important;
+}
+
+.journal-public-page #yuki-chat-avatar img {
+  display: block !important;
+
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  min-height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  object-fit: cover !important;
+  object-position: center !important;
+
+  border-radius: 50% !important;
+}
+
+/* Mantiene il box della chat sopra gli altri elementi flottanti */
+.journal-public-page #yuki-chatbox {
+  position: fixed !important;
+  right: 25px !important;
+  bottom: 120px !important;
+  z-index: 11001 !important;
+}
+
+@media (max-width: 650px) {
+  .journal-public-page #yuki-chat-avatar {
+    right: 16px !important;
+    bottom: 18px !important;
+
+    width: 82px !important;
+    height: 82px !important;
+    min-width: 82px !important;
+    min-height: 82px !important;
+    max-width: 82px !important;
+    max-height: 82px !important;
+  }
+
+  .journal-public-page #yuki-chatbox {
+    right: 12px !important;
+    bottom: 112px !important;
+    width: min(340px, calc(100vw - 24px)) !important;
+  }
+}
