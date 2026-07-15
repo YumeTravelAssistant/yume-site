@@ -15,7 +15,7 @@ body.journal-public-page {
 }
 
 .journal-public-page .navbar { z-index: 10001; }
-.journal-public-page .sidebar { z-index: 10002; }
+.journal-public-page .sidebar { z-index: 10000; }
 
 .journal-page-main {
   min-height: 70vh;
@@ -250,4 +250,50 @@ body.journal-public-page {
 @media(max-width:650px){
   .journal-public-figure.is-wide,.journal-public-figure.is-full{width:100%;margin-left:0}
   .journal-public-gallery.columns-2,.journal-public-gallery.columns-3{grid-template-columns:1fr}
+}
+
+
+/* ===== Allineamento della shell Journal al sito principale ===== */
+.journal-public-page .navbar {
+  z-index: 10001;
+}
+
+.journal-public-page .sidebar {
+  z-index: 10000;
+}
+
+.journal-public-page .main-footer {
+  margin-top: 0;
+}
+
+.journal-public-page .footer-legal {
+  color: #8b2c2b;
+  font-size: 0.95rem;
+  line-height: 1.8;
+}
+
+.journal-public-page .notif-btn.hidden,
+.journal-public-page #notificheContainer.hidden,
+.journal-public-page #carrelloContainer.hidden {
+  display: none !important;
+}
+
+/* Impedisce ai controlli flottanti di essere coperti dal contenuto Journal. */
+.journal-public-page #contattaci-avatar,
+.journal-public-page #wa-chat-avatar,
+.journal-public-page #yuki-chat-avatar,
+.journal-public-page .yume-cart-toggle {
+  position: fixed;
+}
+
+@media (max-width: 650px) {
+  .journal-public-page .main-footer {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .journal-public-page .footer-copy,
+  .journal-public-page .footer-legal {
+    font-size: 0.8rem;
+  }
 }
