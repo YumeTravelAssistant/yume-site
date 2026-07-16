@@ -7,7 +7,6 @@
   --journal-ink: #2d211b;
 }
 
-
 body.journal-public-page {
   margin: 0;
   background: var(--journal-beige);
