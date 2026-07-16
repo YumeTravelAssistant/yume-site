@@ -376,3 +376,257 @@ body.journal-public-page {
     width: min(340px, calc(100vw - 24px)) !important;
   }
 }
+/* =========================================================
+   YUME JOURNAL Â· CONDIVISIONE, REAZIONI E YUME ON BOARD
+   Incollare in fondo a blog/assets/blog-page.css
+   ========================================================= */
+
+.journal-engagement {
+  display: grid;
+  gap: 24px;
+  margin-top: 64px;
+  padding-top: 42px;
+  border-top: 1px solid rgba(139, 44, 43, 0.16);
+}
+
+.journal-engagement h2 {
+  margin: 5px 0 10px;
+  color: #721f1e;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(25px, 3vw, 34px);
+  line-height: 1.12;
+}
+
+.journal-engagement-eyebrow {
+  margin: 0;
+  color: #8b2c2b;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.journal-engagement-intro {
+  margin: 0 0 20px;
+  color: #6d5549;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.journal-reactions,
+.journal-share {
+  padding: 28px;
+  border: 1px solid rgba(139, 44, 43, 0.14);
+  border-radius: 24px;
+  background:
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(201, 168, 106, 0.14),
+      transparent 30%
+    ),
+    rgba(255, 248, 244, 0.92);
+  box-shadow: 0 18px 45px rgba(49, 31, 21, 0.06);
+}
+
+.journal-reaction-actions,
+.journal-share-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.journal-reaction-actions button,
+.journal-share-actions button,
+.journal-share-actions a {
+  min-height: 46px;
+  margin: 0;
+  padding: 11px 16px;
+  border: 1px solid rgba(139, 44, 43, 0.2);
+  border-radius: 999px;
+  background: #fff;
+  color: #721f1e;
+  font-family: "Quicksand", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease,
+    color 0.18s ease;
+}
+
+.journal-reaction-actions button:hover,
+.journal-share-actions button:hover,
+.journal-share-actions a:hover {
+  transform: translateY(-2px);
+  border-color: rgba(139, 44, 43, 0.55);
+}
+
+.journal-reaction-actions button.is-selected {
+  border-color: #8b2c2b;
+  background: #8b2c2b;
+  color: #fff8f4;
+}
+
+.journal-reaction-actions button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.journal-reaction-icon {
+  font-size: 17px;
+}
+
+.journal-reaction-count {
+  min-width: 25px;
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: rgba(201, 168, 106, 0.2);
+  font-size: 11px;
+  text-align: center;
+}
+
+.journal-reaction-actions button.is-selected
+  .journal-reaction-count {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.journal-reaction-feedback,
+.journal-share-feedback {
+  min-height: 20px;
+  margin: 13px 0 0;
+  color: #6d5549;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.journal-share-actions i {
+  font-size: 16px;
+}
+
+.journal-on-board {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  padding: 32px;
+  overflow: hidden;
+  border-radius: 26px;
+  background:
+    radial-gradient(
+      circle at 90% 20%,
+      rgba(201, 168, 106, 0.32),
+      transparent 30%
+    ),
+    linear-gradient(135deg, #721f1e, #8b2c2b);
+  color: #fff8f4;
+  box-shadow: 0 24px 60px rgba(114, 31, 30, 0.2);
+}
+
+.journal-on-board .journal-engagement-eyebrow,
+.journal-on-board h2,
+.journal-on-board p {
+  color: inherit;
+}
+
+.journal-on-board h2 {
+  margin-top: 7px;
+}
+
+.journal-on-board p:not(.journal-engagement-eyebrow) {
+  max-width: 620px;
+  margin: 0;
+  color: rgba(255, 248, 244, 0.86);
+  line-height: 1.65;
+}
+
+.journal-on-board > a {
+  flex: 0 0 auto;
+  padding: 13px 19px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  background: #fff8f4;
+  color: #721f1e;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.journal-article-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  padding: 24px 28px;
+  border: 1px solid rgba(139, 44, 43, 0.14);
+  border-radius: 22px;
+  background: #f4f0e2;
+}
+
+.journal-article-question strong {
+  display: block;
+  color: #721f1e;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 22px;
+}
+
+.journal-article-question p {
+  margin: 5px 0 0;
+  color: #6d5549;
+  font-size: 13px;
+}
+
+.journal-article-question button {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: #8b2c2b;
+  color: #fff8f4;
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .journal-engagement {
+    margin-top: 46px;
+    padding-top: 32px;
+  }
+
+  .journal-reactions,
+  .journal-share {
+    padding: 22px;
+    border-radius: 20px;
+  }
+
+  .journal-reaction-actions,
+  .journal-share-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .journal-reaction-actions button,
+  .journal-share-actions button,
+  .journal-share-actions a {
+    width: 100%;
+  }
+
+  .journal-on-board,
+  .journal-article-question {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .journal-on-board > a,
+  .journal-article-question button {
+    width: 100%;
+    text-align: center;
+    white-space: normal;
+  }
+}
