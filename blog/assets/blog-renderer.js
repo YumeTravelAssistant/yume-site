@@ -400,7 +400,7 @@
             </ul>
 
             <p class="journal-on-board-note">
-              Pochi messaggi, scelti bene. Nessun gruppo, nessun rumore.
+              Pochi messaggi, scelti bene.
             </p>
           </div>
 
