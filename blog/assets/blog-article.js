@@ -1,3 +1,4 @@
+
 (function () {
   "use strict";
 
@@ -17,7 +18,6 @@
       : "";
   }
 
-  
   function setMeta(selector, attribute, value) {
     const element = document.querySelector(selector);
     if (element && value) element.setAttribute(attribute, value);
@@ -344,23 +344,58 @@
     const link = document.querySelector(
       "[data-whatsapp-channel]"
     );
+    const status = document.querySelector(
+      "[data-whatsapp-channel-status]"
+    );
+
+    if (!box || !link) return;
 
     if (!channelUrl) {
-      box?.remove();
+      link.removeAttribute("href");
+      link.removeAttribute("target");
+      link.setAttribute("aria-disabled", "true");
+      link.classList.add("is-disabled");
+      link.textContent = "Inserisci il link del canale";
+      if (status) {
+        status.textContent =
+          "Configura whatsappChannelUrl in blog-config.js.";
+      }
       return;
     }
 
     try {
       const url = new URL(channelUrl);
 
-      if (url.protocol !== "https:") {
-        throw new Error("Link canale non valido.");
+      if (
+        url.protocol !== "https:" ||
+        !/whatsapp\.com$/i.test(url.hostname) &&
+        !/www\.whatsapp\.com$/i.test(url.hostname)
+      ) {
+        throw new Error("Link del canale WhatsApp non valido.");
       }
 
-      if (link) link.href = url.toString();
+      link.href = url.toString();
+      link.setAttribute("target", "_blank");
+      link.setAttribute("rel", "noopener");
+      link.removeAttribute("aria-disabled");
+      link.classList.remove("is-disabled");
+
+      if (status) {
+        status.textContent =
+          "Canale ufficiale YUME su WhatsApp · accesso gratuito.";
+      }
     } catch (error) {
       console.error(error);
-      box?.remove();
+      link.removeAttribute("href");
+      link.removeAttribute("target");
+      link.setAttribute("aria-disabled", "true");
+      link.classList.add("is-disabled");
+      link.textContent = "Link del canale non valido";
+
+      if (status) {
+        status.textContent =
+          "Controlla whatsappChannelUrl in blog-config.js.";
+      }
     }
   }
 
