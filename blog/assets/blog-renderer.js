@@ -1,3 +1,4 @@
+
 (function () {
   "use strict";
 
@@ -377,18 +378,45 @@
         </div>
 
         <aside class="journal-on-board" data-whatsapp-channel-box>
-          <div>
-            <p class="journal-engagement-eyebrow">YUME ON BOARD</p>
-            <h2>Il Giappone continua su WhatsApp.</h2>
+          <div class="journal-on-board-content">
+            <div class="journal-on-board-badge">
+              YUME ON BOARD · IL CANALE WHATSAPP DI YUME
+            </div>
+
+            <p class="journal-engagement-eyebrow">IL JOURNAL È SOLO L’INIZIO</p>
+
+            <h2>Hai letto la punta dell’iceberg. Ora entra nel mondo YUME.</h2>
+
             <p>
-              Partenze, posti disponibili, anteprime e momenti reali
-              dai viaggi YUME, direttamente nel nostro canale.
+              Nel broadcast YUME ON BOARD trovi ciò che non sempre arriva sui social:
+              partenze in anteprima, posti che si liberano, offerte riservate,
+              aggiornamenti utili e momenti reali dai nostri viaggi in Giappone.
+            </p>
+
+            <ul class="journal-on-board-benefits">
+              <li>Anteprime e disponibilità prima del feed</li>
+              <li>Offerte e opportunità riservate alla community</li>
+              <li>Dietro le quinte, consigli e aggiornamenti dal Giappone</li>
+            </ul>
+
+            <p class="journal-on-board-note">
+              Pochi messaggi, scelti bene. Nessun gruppo, nessun rumore.
             </p>
           </div>
 
-          <a href="#" data-whatsapp-channel target="_blank" rel="noopener">
-            Segui il canale
-          </a>
+          <div class="journal-on-board-action">
+            <a
+              href="#"
+              data-whatsapp-channel
+              target="_blank"
+              rel="noopener"
+              aria-label="Entra gratuitamente nel canale WhatsApp YUME ON BOARD"
+            >
+              Entra gratis in YUME ON BOARD
+            </a>
+
+            <small data-whatsapp-channel-status></small>
+          </div>
         </aside>
 
         <div class="journal-article-question">
