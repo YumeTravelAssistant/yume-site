@@ -12,9 +12,9 @@ window.YUME_JOURNAL_CONFIG = Object.freeze({
   /**
    * Incolla qui il link pubblico reale del canale YUME ON BOARD.
    * Esempio: https://whatsapp.com/channel/XXXXXXXXXXXXXXXX
-   * Se resta vuoto, il box viene nascosto automaticamente.
+   * Se resta vuoto, la card resta visibile ma il pulsante viene disabilitato.
    */
-  whatsappChannelUrl: "",
+  whatsappChannelUrl: "https://whatsapp.com/channel/0029VbDUpvF0AgW7LA4y102G",
 
   shareCampaign: "yume_journal",
 });
