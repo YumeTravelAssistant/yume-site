@@ -10,7 +10,6 @@
     return value;
   }
 
-  
   async function rpc(functionName, payload) {
     const { supabaseUrl, supabasePublishableKey } = getConfig();
 
