@@ -1,3 +1,4 @@
+
 (function () {
   "use strict";
 
@@ -11,6 +12,7 @@
 
   async function rpc(functionName, payload) {
     const { supabaseUrl, supabasePublishableKey } = getConfig();
+
     const response = await fetch(`${supabaseUrl}/rest/v1/rpc/${functionName}`, {
       method: "POST",
       cache: "no-store",
@@ -25,10 +27,12 @@
 
     if (!response.ok) {
       let message = `Errore Journal (${response.status})`;
+
       try {
         const data = await response.json();
         message = data?.message || data?.hint || message;
       } catch (_) {}
+
       throw new Error(message);
     }
 
@@ -45,7 +49,24 @@
     },
 
     getArticle(slug) {
-      return rpc("journal_public_get", { p_slug: String(slug || "").trim() });
+      return rpc("journal_public_get", {
+        p_slug: String(slug || "").trim(),
+      });
+    },
+
+    getReactionSummary(slug, voterToken) {
+      return rpc("journal_public_reaction_summary", {
+        p_slug: String(slug || "").trim(),
+        p_voter_token: voterToken || null,
+      });
+    },
+
+    react(slug, reaction, voterToken) {
+      return rpc("journal_public_react", {
+        p_slug: String(slug || "").trim(),
+        p_reaction: String(reaction || "").trim(),
+        p_voter_token: voterToken,
+      });
     },
   });
 })();
