@@ -496,44 +496,166 @@
     // A) partecipazione evento + codice
     // B) solo codice promozionale
     // ============================================================
-    function pdfBase(doc, title, subtitle){
+    const PDF_LOGO_URL = 'assets/logo-yume.png';
+    const PDF_SITE_URL = 'https://yume-travel.com/';
+    const PDF_MAPS_URL = 'https://maps.app.goo.gl/ppCQRp2AqVdsQ7ei8?g_st=ic';
+    const PDF_EMAIL_URL = 'mailto:yume.traveltech@gmail.com';
+    const PDF_PHONE_URL = 'tel:+393703081341';
+    let pdfLogoDataUrlPromise = null;
+
+    function getPdfLogoDataUrl(){
+      if(!pdfLogoDataUrlPromise){
+        pdfLogoDataUrlPromise = fetch(PDF_LOGO_URL)
+          .then(response => {
+            if(!response.ok) throw new Error('Logo PDF non disponibile');
+            return response.blob();
+          })
+          .then(blob => new Promise((resolve,reject)=>{
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+          }))
+          .catch(err => {
+            console.warn('Logo PDF non caricato:', err);
+            return null;
+          });
+      }
+      return pdfLogoDataUrlPromise;
+    }
+
+    function pdfCenteredLink(doc, text, y, url, color=[139,44,43]){
+      doc.setTextColor(color[0],color[1],color[2]);
+      const width = doc.getTextWidth(text);
+      const x = (210-width)/2;
+      doc.text(text,x,y);
+      doc.link(x,y-4,width,5.5,{url});
+    }
+
+    function pdfLinkButton(doc, text, url, x, y, w, h, variant='primary'){
+      if(variant==='primary'){
+        doc.setFillColor(139,44,43);
+        doc.setDrawColor(139,44,43);
+        doc.setTextColor(255,255,255);
+      }else{
+        doc.setFillColor(255,248,244);
+        doc.setDrawColor(201,168,106);
+        doc.setTextColor(139,44,43);
+      }
+      doc.setLineWidth(.35);
+      doc.roundedRect(x,y,w,h,2.5,2.5,'FD');
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(9.2);
+      const textW = doc.getTextWidth(text);
+      doc.text(text,x+(w-textW)/2,y+(h/2)+1.6);
+      doc.link(x,y,w,h,{url});
+    }
+
+    async function pdfBase(doc, title, subtitle){
       doc.setFillColor(244,240,226);doc.rect(0,0,210,297,'F');
       doc.setFillColor(139,44,43);doc.rect(0,0,210,38,'F');
-      doc.setTextColor(255,255,255);doc.setFont('times','bold');doc.setFontSize(27);doc.text('YUME',18,22);
-      doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.text('TRAVEL TECH',18,30);
+
+      const logoData = await getPdfLogoDataUrl();
+
+      if(logoData){
+        doc.setFillColor(244,240,226);
+        doc.setDrawColor(201,168,106);
+        doc.setLineWidth(.35);
+        doc.roundedRect(17,6.5,41,25.5,2.5,2.5,'FD');
+        doc.addImage(logoData,'PNG',21,9,33,19,undefined,'FAST');
+        // Il logo è anche un link al sito YUME.
+        doc.link(17,6.5,41,25.5,{url:PDF_SITE_URL});
+      }else{
+        doc.setTextColor(255,255,255);doc.setFont('times','bold');doc.setFontSize(27);doc.text('YUME',18,22);
+        doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.text('TRAVEL TECH',18,30);
+        doc.link(17,8,45,23,{url:PDF_SITE_URL});
+      }
+
+      // Richiamo digitale discreto in testata.
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(8.5);
+      doc.setTextColor(255,255,255);
+      const siteLabel='VISITA YUME-TRAVEL.COM';
+      const sw=doc.getTextWidth(siteLabel);
+      doc.text(siteLabel,192-sw,22);
+      doc.link(192-sw,18,sw,6,{url:PDF_SITE_URL});
+
       doc.setTextColor(139,44,43);doc.setFont('times','bold');doc.setFontSize(23);doc.text(title,18,57);
       doc.setTextColor(80,69,65);doc.setFont('helvetica','normal');doc.setFontSize(10);doc.text(subtitle,18,66);
       doc.setDrawColor(201,168,106);doc.setLineWidth(.5);doc.line(18,73,192,73);
     }
+
     function pdfCodeBox(doc, code, y){
       doc.setFillColor(255,248,244);doc.setDrawColor(201,168,106);doc.roundedRect(18,y,174,36,4,4,'FD');
       doc.setTextColor(100,87,82);doc.setFont('helvetica','bold');doc.setFontSize(9);doc.text('IL TUO CODICE PERSONALE',105,y+10,{align:'center'});
       doc.setTextColor(139,44,43);doc.setFont('courier','bold');doc.setFontSize(20);doc.text(code,105,y+25,{align:'center'});
     }
+
     function pdfFooter(doc){
-      doc.setDrawColor(201,168,106);doc.line(18,272,192,272);doc.setTextColor(105,92,88);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.text('YUME Travel Tech · Via G. Matteotti 845 A/B · Larciano (PT)',105,280,{align:'center'});doc.text('+39 370 3081341 · yume.traveltech@gmail.com',105,286,{align:'center'});
+      doc.setDrawColor(201,168,106);
+      doc.line(18,270,192,270);
+
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(8);
+      doc.setTextColor(105,92,88);
+      doc.text('YUME Travel Tech · Via G. Matteotti 845 A/B · Larciano (PT)',105,278,{align:'center'});
+
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(8.2);
+      pdfCenteredLink(doc,'yume-travel.com',283,PDF_SITE_URL,[139,44,43]);
+
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(7.8);
+
+      const phone='+39 370 3081341';
+      const mail='yume.traveltech@gmail.com';
+      const gap='  ·  ';
+      const total=doc.getTextWidth(phone)+doc.getTextWidth(gap)+doc.getTextWidth(mail);
+      let x=(210-total)/2;
+
+      doc.setTextColor(139,44,43);
+      doc.text(phone,x,288);
+      doc.link(x,284,doc.getTextWidth(phone),5,{url:PDF_PHONE_URL});
+      x+=doc.getTextWidth(phone);
+
+      doc.setTextColor(105,92,88);
+      doc.text(gap,x,288);
+      x+=doc.getTextWidth(gap);
+
+      doc.setTextColor(139,44,43);
+      doc.text(mail,x,288);
+      doc.link(x,284,doc.getTextWidth(mail),5,{url:PDF_EMAIL_URL});
     }
+
     function writeWrapped(doc,text,x,y,maxWidth,lineHeight=5){const lines=doc.splitTextToSize(text,maxWidth);doc.text(lines,x,y);return y+(lines.length*lineHeight)}
 
-    function downloadPersonalizedPdf(){
+    async function downloadPersonalizedPdf(){
       if(!lastRegistration)return;
       if(!window.jspdf?.jsPDF){showStatus('error','Libreria PDF non disponibile. Ricarica la pagina e riprova.');return}
       const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:'mm',format:'a4'});const d=lastRegistration;
       if(d.event_attendance){
-        pdfBase(doc,'OPENING PARTY 2026','Conferma di partecipazione + YUME WELCOME 100');
+        await pdfBase(doc,'OPENING PARTY 2026','Conferma di partecipazione + YUME WELCOME 100');
         doc.setTextColor(28,28,28);doc.setFont('helvetica','bold');doc.setFontSize(13);doc.text(`Ciao ${d.firstName}, la tua presenza è confermata.`,18,88);
         doc.setFont('helvetica','normal');doc.setFontSize(10.5);let y=99;
         y=writeWrapped(doc,'Siamo felici di accoglierti nella nuova casa YUME. Conserva questo PDF come riepilogo della tua registrazione e del benefit promozionale personale.',18,y,174,5.4)+5;
         doc.setFont('helvetica','bold');doc.setTextColor(139,44,43);doc.text('SABATO 26 SETTEMBRE 2026',18,y);y+=7;
-        doc.setFont('helvetica','normal');doc.setTextColor(28,28,28);doc.text('Dalle 17:00 fino a tarda serata',18,y);y+=6;doc.text('YUME Travel Tech · Via G. Matteotti 845 A/B · Larciano (PT)',18,y);y+=6;doc.text('Google Maps: maps.app.goo.gl/ppCQRp2AqVdsQ7ei8',18,y);y+=8;
-        doc.setFont('helvetica','bold');doc.text(`Partecipanti registrati: ${d.partySize||'-'}`,18,y);y+=10;
+        doc.setFont('helvetica','normal');doc.setTextColor(28,28,28);
+        doc.text('Dalle 17:00 fino a tarda serata',18,y);y+=6;
+        doc.text('YUME Travel Tech · Via G. Matteotti 845 A/B · Larciano (PT)',18,y);y+=10;
+
+        pdfLinkButton(doc,'APRI SU GOOGLE MAPS',PDF_MAPS_URL,18,y,64,10,'secondary');
+        y+=17;
+
+        doc.setFont('helvetica','bold');doc.setTextColor(28,28,28);
+        doc.text(`Partecipanti registrati: ${d.partySize||'-'}`,18,y);y+=10;
         pdfCodeBox(doc,d.promo_code,y);y+=47;
         doc.setTextColor(80,69,65);doc.setFont('helvetica','normal');doc.setFontSize(9.5);
         y=writeWrapped(doc,`WELCOME 100 vale EUR 100 su una pratica YUME ammessa di almeno EUR 1.500. La prenotazione deve essere perfezionata entro ${d.bookingDeadline}; il viaggio o servizio deve avere partenza/erogazione entro ${d.travelDeadline}.`,18,y,174,5)+4;
-        y=writeWrapped(doc,'Il codice è personale, utilizzabile una sola volta secondo il regolamento dell’iniziativa. Comunicalo a YUME prima della conferma definitiva della pratica.',18,y,174,5);
+        y=writeWrapped(doc,'Il codice è personale, utilizzabile una sola volta secondo il regolamento dell’iniziativa. Comunicalo a YUME prima della conferma definitiva della pratica.',18,y,174,5)+7;
+        pdfLinkButton(doc,'SCOPRI IL MONDO YUME',PDF_SITE_URL,74,y,62,10,'primary');
         pdfFooter(doc);doc.save(`YUME_OpeningParty_${d.lastName}_${d.promo_code}.pdf`);
       }else{
-        pdfBase(doc,'YUME WELCOME 100','Codice promozionale personale · Inaugurazione 2026');
+        await pdfBase(doc,'YUME WELCOME 100','Codice promozionale personale · Inaugurazione 2026');
         doc.setTextColor(139,44,43);doc.setFont('times','bold');doc.setFontSize(19);doc.text(`Congratulazioni, ${d.firstName}!`,18,90);
         doc.setTextColor(28,28,28);doc.setFont('helvetica','normal');doc.setFontSize(10.5);let y=102;
         y=writeWrapped(doc,'Il tuo benefit WELCOME 100 è stato attivato correttamente. Hai scelto di ricevere soltanto il codice promozionale e non risulti registrato come partecipante all’Opening Party.',18,y,174,5.4)+9;
@@ -542,7 +664,8 @@
         doc.setTextColor(28,28,28);doc.setFont('helvetica','normal');doc.setFontSize(10);
         doc.text(`Prenotazione da perfezionare entro: ${d.bookingDeadline}`,18,y);y+=7;doc.text(`Partenza / erogazione del viaggio entro: ${d.travelDeadline}`,18,y);y+=10;
         y=writeWrapped(doc,'Valore: EUR 100 di riduzione su una pratica YUME ammessa di importo complessivo pari o superiore a EUR 1.500. Il codice è personale, non frazionabile, non convertibile in denaro e utilizzabile una sola volta.',18,y,174,5.2)+5;
-        y=writeWrapped(doc,'Per utilizzarlo, comunicalo a YUME prima della conferma definitiva della pratica. Restano applicabili tutte le condizioni del regolamento YUME WELCOME 100 - Inaugurazione 2026.',18,y,174,5.2);
+        y=writeWrapped(doc,'Per utilizzarlo, comunicalo a YUME prima della conferma definitiva della pratica. Restano applicabili tutte le condizioni del regolamento YUME WELCOME 100 - Inaugurazione 2026.',18,y,174,5.2)+8;
+        pdfLinkButton(doc,'SCOPRI I VIAGGI YUME',PDF_SITE_URL,74,y,62,10,'primary');
         pdfFooter(doc);doc.save(`YUME_WELCOME100_${d.lastName}_${d.promo_code}.pdf`);
       }
     }
@@ -550,3 +673,4 @@
   </script>
 </body>
 </html>
+
