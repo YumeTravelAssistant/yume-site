@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YUME Opening Party 2026 · WELCOME 100</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="icon" type="image/png" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Raleway:wght@300;400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+    :root{
+      --yume-red:#8B2C2B;
+      --yume-red-dark:#611E1E;
+      --yume-gold:#C9A86A;
+      --yume-beige:#F4F0E2;
+      --yume-blush:#FFF8F4;
+      --yume-ink:#1C1C1C;
+      --yume-border:rgba(139,44,43,.14);
+      --shadow:0 22px 60px rgba(82,48,42,.10);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--yume-beige);color:var(--yume-ink);font-family:'Raleway',sans-serif;overflow-x:hidden}
+    a{color:var(--yume-red)}
+    button,input,select,textarea{font:inherit}
+
+    /* ===== BUSTA INIZIALE ===== */
+    .invite-overlay{
+      position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;
+      background:radial-gradient(circle at 50% 25%,rgba(201,168,106,.15),transparent 28%),rgba(18,12,11,.92);
+      opacity:1;visibility:visible;transition:opacity .65s ease,visibility .65s ease;
+    }
+    .invite-overlay.is-hidden{opacity:0;visibility:hidden;pointer-events:none}
+    .invite-stage{text-align:center;color:#fff;padding:20px;width:min(560px,96vw)}
+    .envelope{position:relative;width:min(500px,90vw);height:min(330px,60vw);min-height:245px;margin:0 auto 18px;perspective:1200px}
+    .envelope-body{position:absolute;inset:0;background:#fff;border:2px solid var(--yume-gold);border-radius:14px;box-shadow:0 25px 70px rgba(0,0,0,.45)}
+    .envelope-flap{position:absolute;left:0;right:0;top:0;height:55%;transform-origin:top center;background:linear-gradient(180deg,#fff,#F7F1E5);border:2px solid var(--yume-gold);border-bottom:0;border-radius:14px 14px 0 0;z-index:5;animation:flap-open 1.15s .55s cubic-bezier(.2,.8,.2,1) forwards}
+    @keyframes flap-open{to{transform:rotateX(-180deg)}}
+    .flap-logo{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:118px;max-height:55px;object-fit:contain}
+    .invite-paper{position:absolute;left:7%;right:7%;top:12%;bottom:8%;z-index:3;padding:17px 14px;border:1px solid rgba(201,168,106,.7);border-radius:11px;background:linear-gradient(160deg,#fff,#fffaf3);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transform:translateY(22%) scale(.97);animation:paper-rise 1.15s 1.05s ease-out forwards}
+    @keyframes paper-rise{to{opacity:1;transform:translateY(-7%) scale(1)}}
+    .invite-eyebrow{font-family:'Quicksand',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#6a5b57}
+    .invite-title{margin-top:7px;font-family:'Playfair Display',serif;font-size:clamp(1.8rem,7vw,3.3rem);font-weight:700;color:var(--yume-red);line-height:1}
+    .invite-amount{font-family:'Playfair Display',serif;font-size:clamp(3rem,10vw,5.5rem);font-weight:700;color:var(--yume-gold);line-height:1.02}
+    .invite-paper p{max-width:340px;margin:8px 0;font-size:.85rem;line-height:1.45;color:#403634}
+    .invite-date{font-family:'Quicksand',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.12em;color:var(--yume-red)}
+    .invite-open{border:0;border-radius:999px;padding:13px 20px;background:var(--yume-red);color:#fff;font-weight:700;cursor:pointer;box-shadow:0 10px 30px rgba(139,44,43,.35)}
+    .invite-note{margin:11px 0 0;font-size:.76rem;opacity:.72}
+    .invite-auto{margin:6px 0 0;font-size:.7rem;opacity:.55}
+
+    /* ===== HERO ===== */
+    .hero{position:relative;min-height:78vh;display:grid;place-items:center;overflow:hidden;background:linear-gradient(145deg,#6f2424,#2e1917)}
+    .hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.68}
+    .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(17,10,10,.18),rgba(17,10,10,.70))}
+    .hero-content{position:relative;z-index:2;text-align:center;color:#fff;padding:70px 22px 85px;max-width:900px}
+    .hero-logo{width:150px;max-height:70px;object-fit:contain;margin-bottom:26px;border-radius:8px}
+    .hero-kicker{font-family:'Quicksand',sans-serif;text-transform:uppercase;letter-spacing:.20em;font-size:.78rem;font-weight:700;color:#F0D6A2}
+    .hero h1{font-family:'Playfair Display',serif;font-size:clamp(3.2rem,9vw,7rem);line-height:.98;margin:13px 0 16px;color:#fff}
+    .hero p{font-size:clamp(1rem,2vw,1.18rem);line-height:1.7;max-width:680px;margin:0 auto}
+    .hero-date{display:inline-flex;gap:9px;align-items:center;margin-top:25px;padding:11px 16px;border:1px solid rgba(255,255,255,.25);border-radius:999px;background:rgba(255,255,255,.10);backdrop-filter:blur(8px);font-weight:600}
+    .scroll-link{position:absolute;z-index:3;bottom:24px;left:50%;transform:translateX(-50%);color:#fff;font-size:1.3rem;animation:bob 1.6s ease-in-out infinite}
+    @keyframes bob{50%{transform:translate(-50%,7px)}}
+
+    /* ===== PAGE ===== */
+    .page{width:min(1180px,calc(100% - 28px));margin:0 auto;padding:72px 0 90px}
+    .section{margin-bottom:26px}
+    .card{background:rgba(255,255,255,.82);border:1px solid var(--yume-border);border-radius:28px;box-shadow:var(--shadow);backdrop-filter:blur(8px)}
+    .card-pad{padding:clamp(24px,5vw,46px)}
+    .event-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:24px;align-items:stretch}
+    .section-kicker{margin:0 0 8px;font-family:'Quicksand',sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:.75rem;font-weight:700;color:var(--yume-gold)}
+    .section-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.5rem);line-height:1.05;color:var(--yume-red);margin:0 0 18px}
+    .lead{font-size:1rem;line-height:1.75;color:#554a47}
+    .event-info{display:grid;gap:11px;margin-top:26px}
+    .event-row{display:grid;grid-template-columns:42px 1fr;gap:12px;align-items:start;padding:12px;border-radius:16px;background:var(--yume-blush);border:1px solid rgba(139,44,43,.08)}
+    .event-row i{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:#fff;color:var(--yume-red);border:1px solid var(--yume-border)}
+    .event-row strong{display:block;color:var(--yume-red);margin-bottom:2px}
+
+    .promo-card{position:relative;overflow:hidden;min-height:100%;background:radial-gradient(circle at 90% 10%,rgba(201,168,106,.28),transparent 32%),linear-gradient(145deg,#7c2727,#54191a);color:#fff;border-radius:28px;padding:clamp(24px,5vw,42px)}
+    .promo-card::after{content:"100";position:absolute;right:-20px;bottom:-55px;font-family:'Playfair Display',serif;font-size:12rem;font-weight:700;color:rgba(255,255,255,.045);pointer-events:none}
+    .promo-label{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.20);font-size:.78rem;font-weight:700;letter-spacing:.10em;text-transform:uppercase}
+    .promo-card h2{margin:22px 0 4px;font-family:'Playfair Display',serif;font-size:clamp(2.4rem,6vw,4.4rem);line-height:.95;color:#F1D79D}
+    .promo-card .amount{font-family:'Playfair Display',serif;font-size:clamp(4rem,9vw,7rem);line-height:1;font-weight:700}
+    .promo-card p{position:relative;z-index:1;line-height:1.65}.promo-mini{font-size:.86rem;opacity:.9}.promo-link{color:#F1D79D;font-weight:700}
+
+    .terms-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+    .term-chip{padding:16px;border-radius:16px;background:#fff;border:1px solid var(--yume-border)}
+    .term-chip strong{display:block;color:var(--yume-red);margin-bottom:4px}.fineprint{margin-top:16px;font-size:.84rem;line-height:1.6;color:#655b57}
+
+    .map-wrap{overflow:hidden;border-radius:28px}.map-wrap iframe{width:100%;height:390px;display:block;border:0}
+    .map-actions{display:flex;flex-wrap:wrap;gap:10px;padding:16px;background:#fff;border-top:1px solid var(--yume-border)}
+    .action-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:11px 16px;border-radius:999px;border:1px solid rgba(139,44,43,.16);background:var(--yume-blush);color:var(--yume-red);font-weight:700;text-decoration:none;cursor:pointer}
+    .action-btn.primary{background:var(--yume-red);color:#fff;border-color:var(--yume-red)}
+
+    /* ===== SCELTA FLOW ===== */
+    .flow-choice{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:25px 0}
+    .flow-card{position:relative;border:1px solid var(--yume-border);border-radius:21px;background:#fff;padding:20px;cursor:pointer;transition:.2s ease;text-align:left}
+    .flow-card:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(139,44,43,.09)}
+    .flow-card.active{border:2px solid var(--yume-red);background:#fff9f6;box-shadow:0 0 0 4px rgba(139,44,43,.07)}
+    .flow-card input{position:absolute;opacity:0;pointer-events:none}
+    .flow-icon{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:var(--yume-blush);color:var(--yume-red);font-size:1.1rem;margin-bottom:13px}
+    .flow-card strong{font-family:'Playfair Display',serif;color:var(--yume-red);font-size:1.25rem;display:block;margin-bottom:6px}
+    .flow-card span{display:block;font-size:.88rem;line-height:1.5;color:#665b57}
+
+    /* ===== FORM ===== */
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field.full{grid-column:1/-1}
+    .field label{display:block;margin-bottom:7px;font-family:'Quicksand',sans-serif;font-size:.9rem;font-weight:700;color:#4b3c39}
+    .field input,.field select,.field textarea{width:100%;border:1px solid rgba(139,44,43,.16);border-radius:14px;background:#fff;color:var(--yume-ink);padding:13px 14px;outline:none;transition:border-color .2s,box-shadow .2s}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--yume-red);box-shadow:0 0 0 4px rgba(139,44,43,.08)}
+    .field textarea{min-height:105px;resize:vertical}.field-hint{margin:6px 0 0;font-size:.77rem;color:#80736f;line-height:1.4}
+    .event-only{display:none}.event-only.show{display:block}.hp{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;opacity:0!important}
+
+    .consent-box{margin-top:20px;padding:18px;border-radius:18px;background:#fff;border:1px solid var(--yume-border)}
+    .check-row{display:grid;grid-template-columns:22px 1fr;gap:10px;align-items:start;margin:10px 0}.check-row input{margin-top:3px;accent-color:var(--yume-red)}.check-row label{font-size:.88rem;line-height:1.55}
+    .commercial-choice{margin-top:16px;padding:19px;border-radius:19px;background:#fffaf5;border:1px solid rgba(201,168,106,.38)}
+    .commercial-choice h3{font-family:'Playfair Display',serif;color:var(--yume-red);margin:0 0 8px;font-size:1.25rem}.commercial-choice p{margin:0;line-height:1.55;font-size:.9rem}
+    .radio-pills{display:flex;gap:10px;margin:15px 0}.radio-pill input{position:absolute;opacity:0}.radio-pill label{display:inline-flex;align-items:center;justify-content:center;min-width:100px;padding:10px 16px;border-radius:999px;background:#fff;border:1px solid var(--yume-border);cursor:pointer;font-weight:700;color:#5f514d}.radio-pill input:checked+label{background:var(--yume-red);color:#fff;border-color:var(--yume-red)}
+    .revocation-note{font-size:.78rem!important;color:#766966!important;margin-top:9px!important}
+    .submit-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;margin-top:20px;border:0;border-radius:999px;padding:14px 22px;background:linear-gradient(135deg,var(--yume-red),var(--yume-red-dark));color:#fff;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 12px 28px rgba(139,44,43,.22)}
+    .submit-btn:disabled{opacity:.55;cursor:not-allowed}
+    .form-status{display:none;margin-top:16px;padding:15px 16px;border-radius:15px;line-height:1.55}.form-status.show{display:block}.form-status.ok{background:#edf8f0;color:#1e5b2a;border:1px solid #cfe9d4}.form-status.error{background:#fff0f0;color:#7b2323;border:1px solid #efc9c9}
+
+    .promo-result{display:none;margin-top:18px;padding:22px;border-radius:20px;background:linear-gradient(145deg,#fff,#fff8ef);border:1px solid rgba(201,168,106,.55);text-align:center}.promo-result.show{display:block}
+    .result-badge{display:inline-flex;align-items:center;gap:7px;padding:7px 11px;border-radius:999px;background:#edf8f0;color:#236233;font-size:.78rem;font-weight:700;margin-bottom:10px}
+    .promo-code{font-family:'Quicksand',sans-serif;font-size:clamp(1.4rem,5vw,2.2rem);font-weight:700;letter-spacing:.08em;color:var(--yume-red);margin:10px 0;word-break:break-word}
+    .result-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:9px;margin-top:15px}.result-actions button,.result-actions a{border:0;text-decoration:none}
+
+    footer{padding:28px 22px 45px;text-align:center;color:#6a5b57;font-size:.86rem;line-height:1.7}
+
+    @media(max-width:820px){.event-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.terms-grid{grid-template-columns:1fr 1fr}.map-wrap iframe{height:330px}.flow-choice{grid-template-columns:1fr}}
+    @media(max-width:520px){.page{width:min(100% - 20px,1180px);padding:42px 0 70px}.card{border-radius:22px}.card-pad{padding:22px 18px}.terms-grid{grid-template-columns:1fr}.radio-pills{flex-direction:column}.map-actions{flex-direction:column}.action-btn{width:100%}.envelope{width:92vw}.invite-paper{padding:12px}.result-actions{flex-direction:column}.result-actions>*{width:100%}}
+  </style>
+</head>
+<body>
+
+  <!-- BUSTA: si chiude automaticamente dopo 5,2 secondi -->
+  <div class="invite-overlay" id="inviteOverlay" role="dialog" aria-modal="true" aria-labelledby="inviteTitle">
+    <div class="invite-stage">
+      <div class="envelope" aria-hidden="true">
+        <div class="envelope-body"></div>
+        <div class="envelope-flap"><img src="assets/home_logo.jpg" alt="" class="flap-logo"></div>
+        <div class="invite-paper">
+          <div class="invite-eyebrow">YUME Travel Tech presenta</div>
+          <div class="invite-title" id="inviteTitle">WELCOME 100</div>
+          <div class="invite-amount">€100</div>
+          <p>La nuova casa YUME apre le porte. Partecipa all’Opening Party oppure richiedi soltanto il tuo benefit di benvenuto.</p>
+          <div class="invite-date">26 SETTEMBRE 2026 · LARCIANO</div>
+        </div>
+      </div>
+      <button type="button" class="invite-open" id="openInviteBtn"><i class="fa-regular fa-envelope-open"></i> Entra nella pagina</button>
+      <p class="invite-note">YUME Opening Party · WELCOME 100</p>
+      <p class="invite-auto">La pagina si aprirà automaticamente tra pochi secondi.</p>
+    </div>
+  </div>
+
+  <header class="hero" aria-label="YUME Opening Party 2026">
+    <img src="assets/opening_desktop.jpg" alt="YUME Opening Party">
+    <div class="hero-content">
+      <img src="assets/home_logo.jpg" alt="YUME Travel Tech" class="hero-logo">
+      <div class="hero-kicker">YUME ha una nuova casa</div>
+      <h1>Opening Party</h1>
+      <p>Un nuovo spazio da vivere insieme, tra Giappone, viaggi, idee e tutto quello che verrà dopo.</p>
+      <div class="hero-date"><i class="fa-regular fa-calendar"></i> Sabato 26 settembre 2026 · dalle 17:00</div>
+    </div>
+    <a class="scroll-link" href="#invito" aria-label="Scopri l'invito"><i class="fa-solid fa-chevron-down"></i></a>
+  </header>
+
+  <main class="page" id="invito">
+    <section class="section event-grid">
+      <div class="card card-pad">
+        <p class="section-kicker">Un momento speciale per noi</p>
+        <h2 class="section-title">YUME ha una nuova casa.</h2>
+        <p class="lead">Abbiamo il piacere di invitarvi all’inaugurazione ufficiale dei nostri nuovi uffici. Per noi rappresenta l’inizio di un nuovo capitolo e ci farebbe davvero piacere condividerlo con voi.</p>
+        <div class="event-info">
+          <div class="event-row"><i class="fa-regular fa-calendar"></i><div><strong>Sabato 26 settembre 2026</strong>Inaugurazione ufficiale della nuova sede YUME.</div></div>
+          <div class="event-row"><i class="fa-regular fa-clock"></i><div><strong>Dalle 17:00</strong>Fino a tarda serata.</div></div>
+          <div class="event-row"><i class="fa-solid fa-location-dot"></i><div><strong>YUME Travel Tech</strong>Via G. Matteotti 845 A/B · Larciano (PT)</div></div>
+          <div class="event-row"><i class="fa-solid fa-champagne-glasses"></i><div><strong>Brindiamo insieme</strong>Nuovo spazio YUME, Giappone, viaggi e nuove avventure.</div></div>
+        </div>
+      </div>
+
+      <aside class="promo-card" aria-label="Promozione YUME WELCOME 100">
+        <div class="promo-label"><i class="fa-solid fa-gift"></i> Opening benefit</div>
+        <h2>YUME WELCOME</h2>
+        <div class="amount">€100</div>
+        <p>Puoi <strong>confermare la presenza all’evento</strong> oppure richiedere <strong>soltanto il codice WELCOME 100</strong>. In entrambi i casi il codice è personale e viene generato una sola volta.</p>
+        <p class="promo-mini">Il consenso alle finalità commerciali è facoltativo: il “No” non impedisce né l’RSVP né l’emissione del codice.</p>
+        <p class="promo-mini"><a class="promo-link" href="yume_welcome_100_terms.html" target="_blank" rel="noopener">Leggi termini e condizioni completi →</a></p>
+      </aside>
+    </section>
+
+    <section class="section card card-pad" id="promo-disclaimer">
+      <p class="section-kicker">WELCOME 100</p>
+      <h2 class="section-title">Condizioni essenziali</h2>
+      <div class="terms-grid">
+        <div class="term-chip"><strong>€100 di sconto</strong>Su una pratica YUME di almeno €1.500.</div>
+        <div class="term-chip"><strong>Codice personale</strong>Un solo codice per persona e un solo codice per pratica.</div>
+        <div class="term-chip"><strong>Prenotazione</strong>Da perfezionare entro il 31/12/2026.</div>
+        <div class="term-chip"><strong>Viaggio</strong>Partenza o servizio entro il 31/12/2027.</div>
+      </div>
+      <p class="fineprint">Il codice non è denaro, non è una gift card, non è frazionabile e non è convertibile in denaro. La disponibilità di posti, voli, camere, servizi e tariffe resta quella esistente al momento della prenotazione. <a href="yume_welcome_100_terms.html" target="_blank" rel="noopener"><strong>Consulta il regolamento completo.</strong></a></p>
+    </section>
+
+    <section class="section card map-wrap" aria-label="Mappa YUME Travel Tech">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2878.480537766468!2d10.864069475420122!3d43.82513327109454!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x132a6313eb088deb%3A0x20f45894f7137f87!2sYUME%20TRAVEL%20TECH!5e0!3m2!1sit!2sit!4v1789564902535!5m2!1sit!2sit" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" title="YUME Travel Tech – Via G. Matteotti 845 A/B, Larciano"></iframe>
+      <div class="map-actions">
+        <a class="action-btn primary" href="https://maps.app.goo.gl/ppCQRp2AqVdsQ7ei8?g_st=ic" target="_blank" rel="noopener"><i class="fa-solid fa-location-arrow"></i> Apri in Google Maps</a>
+        <button type="button" class="action-btn" id="downloadIcsBtn"><i class="fa-regular fa-calendar-plus"></i> Aggiungi al calendario (.ICS)</button>
+      </div>
+    </section>
+
+    <section class="section card card-pad" id="rsvp">
+      <p class="section-kicker">Scegli come aderire</p>
+      <h2 class="section-title">Partecipo oppure richiedo solo il buono.</h2>
+      <p class="lead">La scelta modifica automaticamente il modulo. Se partecipi raccogliamo anche le informazioni utili per accoglierti al meglio; se vuoi solo WELCOME 100 chiediamo esclusivamente nome, cognome, e-mail e telefono.</p>
+
+      <form id="openingForm" novalidate>
+        <div class="flow-choice" role="radiogroup" aria-label="Modalità di adesione">
+          <label class="flow-card" id="flowEventCard">
+            <input type="radio" name="registrationType" value="event" id="registrationEvent" required>
+            <span class="flow-icon"><i class="fa-solid fa-champagne-glasses"></i></span>
+            <strong>Partecipo all’Opening Party</strong>
+            <span>Confermo la presenza, indico il numero di persone ed eventuali allergie, restrizioni o esigenze.</span>
+          </label>
+          <label class="flow-card" id="flowVoucherCard">
+            <input type="radio" name="registrationType" value="voucher" id="registrationVoucher" required>
+            <span class="flow-icon"><i class="fa-solid fa-ticket"></i></span>
+            <strong>Voglio solo WELCOME 100</strong>
+            <span>Non confermo la presenza all’evento. Ricevo soltanto il codice promozionale personale.</span>
+          </label>
+        </div>
+
+        <div class="form-grid">
+          <div class="field"><label for="firstName">Nome *</label><input id="firstName" name="firstName" type="text" autocomplete="given-name" required maxlength="80" placeholder="Es. Francesco"></div>
+          <div class="field"><label for="lastName">Cognome *</label><input id="lastName" name="lastName" type="text" autocomplete="family-name" required maxlength="80" placeholder="Es. Rossi"></div>
+          <div class="field"><label for="email">E-mail *</label><input id="email" name="email" type="email" autocomplete="email" required maxlength="160" placeholder="nome@email.it"></div>
+          <div class="field"><label for="phone">Telefono *</label><input id="phone" name="phone" type="tel" autocomplete="tel" required maxlength="40" placeholder="+39 …"></div>
+
+          <div class="field event-only" id="partySizeField">
+            <label for="partySize">Numero persone *</label>
+            <select id="partySize" name="partySize">
+              <option value="">Seleziona…</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6+">6+</option>
+            </select>
+          </div>
+
+          <div class="field full event-only" id="dietaryField">
+            <label for="dietaryRestrictions">Allergie, intolleranze o restrizioni alimentari</label>
+            <textarea id="dietaryRestrictions" name="dietaryRestrictions" maxlength="1200" placeholder="Es. allergia alla frutta a guscio; celiachia; senza lattosio; vegetariano…"></textarea>
+            <p class="field-hint">Se non hai esigenze particolari puoi lasciare vuoto.</p>
+          </div>
+
+          <div class="field full event-only" id="accessibilityField">
+            <label for="accessibilityNotes">Accessibilità o altre esigenze</label>
+            <textarea id="accessibilityNotes" name="accessibilityNotes" maxlength="1200" placeholder="Es. accesso senza barriere, necessità di seduta, altre indicazioni utili…"></textarea>
+          </div>
+        </div>
+
+        <input class="hp" type="text" name="website" id="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+        <div class="consent-box">
+          <div class="check-row"><input type="checkbox" id="privacyAcknowledged" required><label for="privacyAcknowledged">Ho preso visione dell’<a href="privacy.html" target="_blank" rel="noopener">informativa privacy</a> relativa alla gestione dei dati conferiti tramite il modulo. *</label></div>
+          <div class="check-row"><input type="checkbox" id="promoTermsAccepted" required><label for="promoTermsAccepted">Accetto il regolamento <a href="yume_welcome_100_terms.html" target="_blank" rel="noopener">YUME WELCOME €100 – Inaugurazione 2026</a>. *</label></div>
+        </div>
+
+        <div class="commercial-choice">
+          <h3>Finalità commerciali: scegli Sì o No *</h3>
+          <p>Desidero che YUME utilizzi i recapiti forniti per comunicazioni commerciali, promozionali e informative relative a viaggi, eventi e servizi YUME.</p>
+          <div class="radio-pills" role="radiogroup" aria-label="Consenso finalità commerciali">
+            <div class="radio-pill"><input type="radio" id="commercialYes" name="commercialConsent" value="yes" required><label for="commercialYes"><i class="fa-solid fa-check"></i>&nbsp; Sì</label></div>
+            <div class="radio-pill"><input type="radio" id="commercialNo" name="commercialConsent" value="no" required><label for="commercialNo"><i class="fa-solid fa-xmark"></i>&nbsp; No</label></div>
+          </div>
+          <p class="revocation-note">La scelta è facoltativa rispetto alla promo e all’evento. Se scegli “Sì”, puoi revocare successivamente la disponibilità alle comunicazioni commerciali in qualsiasi momento contattando YUME al <a href="tel:+393703081341">+39 370 3081341</a> oppure scrivendo a <a href="mailto:yume.traveltech@gmail.com">yume.traveltech@gmail.com</a>.</p>
+        </div>
+
+        <button class="submit-btn" id="submitBtn" type="submit" disabled><i class="fa-solid fa-paper-plane"></i> Seleziona una modalità</button>
+
+        <div id="formStatus" class="form-status" role="status" aria-live="polite"></div>
+        <div id="promoResult" class="promo-result" aria-live="polite">
+          <div class="result-badge"><i class="fa-solid fa-circle-check"></i> Registrazione completata</div>
+          <h3 id="resultTitle" style="font-family:'Playfair Display',serif;color:#8B2C2B;margin:5px 0 8px;font-size:1.7rem"></h3>
+          <p id="resultMessage" style="margin:0 auto 8px;max-width:720px;line-height:1.6;color:#5f544f"></p>
+          <div style="font-weight:700;color:#5f544f;margin-top:14px">Il tuo codice personale</div>
+          <div id="promoCode" class="promo-code"></div>
+          <p id="resultValidity" style="margin:8px 0 0;font-size:.86rem;line-height:1.55;color:#655b57"></p>
+          <div class="result-actions">
+            <button type="button" class="action-btn primary" id="downloadPdfBtn"><i class="fa-regular fa-file-pdf"></i> Scarica PDF</button>
+            <button type="button" class="action-btn" id="resultIcsBtn" style="display:none"><i class="fa-regular fa-calendar-plus"></i> Salva evento (.ICS)</button>
+            <a class="action-btn" id="resultMapsBtn" style="display:none" href="https://maps.app.goo.gl/ppCQRp2AqVdsQ7ei8?g_st=ic" target="_blank" rel="noopener"><i class="fa-solid fa-location-dot"></i> Indicazioni</a>
+          </div>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer>YUME Travel Tech · Via G. Matteotti 845 A/B · Larciano (PT)<br><a href="tel:+393703081341">+39 370 3081341</a> · <a href="mailto:yume.traveltech@gmail.com">yume.traveltech@gmail.com</a></footer>
+
+  <script>
+    // ============================================================
+    // ENDPOINT FORM YUME
+    // La landing NON contiene chiavi Supabase.
+    // Flusso: Landing -> Azure proxy YUME -> GAS -> Supabase EventGo.
+    // ============================================================
+    const FORM_ENDPOINT = "https://yume-sito-form.azurewebsites.net/api/invia-form";
+
+    // ============================================================
+    // BUSTA AUTOMATICA
+    // Dopo 5,2 secondi l'overlay scompare e l'utente entra nella pagina.
+    // Il pulsante permette di entrare prima.
+    // ============================================================
+    const AUTO_OPEN_MS = 5200;
+    const overlay = document.getElementById('inviteOverlay');
+    const openInviteBtn = document.getElementById('openInviteBtn');
+    let inviteClosed = false;
+
+    function closeInvite() {
+      if (inviteClosed) return;
+      inviteClosed = true;
+      overlay.classList.add('is-hidden');
+      document.body.style.overflow = '';
+      setTimeout(() => overlay.setAttribute('aria-hidden', 'true'), 700);
+    }
+    document.body.style.overflow = 'hidden';
+    openInviteBtn.addEventListener('click', closeInvite);
+    document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeInvite(); });
+    window.setTimeout(closeInvite, AUTO_OPEN_MS);
+
+    // ============================================================
+    // .ICS - Sabato 26/09/2026 ore 17:00 Europe/Rome (CEST)
+    // 17:00 locali = 15:00 UTC. Fine tecnica 23:59 = 21:59 UTC.
+    // ============================================================
+    function escapeIcs(value){return String(value).replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;')}
+    function downloadICS(){
+      const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//YUME Travel Tech//Opening Party 2026//IT','CALSCALE:GREGORIAN','METHOD:PUBLISH','BEGIN:VEVENT','UID:yume-opening-party-2026@yume-travel.com','DTSTAMP:20260916T130000Z','DTSTART:20260926T150000Z','DTEND:20260926T215900Z','SUMMARY:'+escapeIcs('YUME Opening Party 2026'),'LOCATION:'+escapeIcs('YUME Travel Tech, Via G. Matteotti 845 A/B, Larciano (PT)'),'DESCRIPTION:'+escapeIcs('Inaugurazione ufficiale della nuova sede YUME. Dalle 17:00 fino a tarda serata.'),'URL:https://maps.app.goo.gl/ppCQRp2AqVdsQ7ei8?g_st=ic','END:VEVENT','END:VCALENDAR'];
+      const blob=new Blob([lines.join('\r\n')],{type:'text/calendar;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='YUME_Opening_Party_26-09-2026.ics';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+    }
+    document.getElementById('downloadIcsBtn').addEventListener('click',downloadICS);
+    document.getElementById('resultIcsBtn').addEventListener('click',downloadICS);
+
+    // ============================================================
+    // FLOW DINAMICO
+    // ============================================================
+    const form=document.getElementById('openingForm');
+    const submitBtn=document.getElementById('submitBtn');
+    const eventCard=document.getElementById('flowEventCard');
+    const voucherCard=document.getElementById('flowVoucherCard');
+    const partySize=document.getElementById('partySize');
+    const eventOnlyBlocks=[document.getElementById('partySizeField'),document.getElementById('dietaryField'),document.getElementById('accessibilityField')];
+    let currentType=null;
+
+    function setRegistrationType(type){
+      currentType=type;
+      const isEvent=type==='event';
+      eventCard.classList.toggle('active',isEvent);
+      voucherCard.classList.toggle('active',!isEvent);
+      eventOnlyBlocks.forEach(el=>el.classList.toggle('show',isEvent));
+      partySize.required=isEvent;
+      if(!isEvent){partySize.value='';document.getElementById('dietaryRestrictions').value='';document.getElementById('accessibilityNotes').value=''}
+      submitBtn.disabled=false;
+      submitBtn.innerHTML=isEvent
+        ? '<i class="fa-solid fa-champagne-glasses"></i> Conferma presenza e genera WELCOME 100'
+        : '<i class="fa-solid fa-ticket"></i> Genera il mio WELCOME 100';
+    }
+    document.getElementById('registrationEvent').addEventListener('change',()=>setRegistrationType('event'));
+    document.getElementById('registrationVoucher').addEventListener('change',()=>setRegistrationType('voucher'));
+
+    // ============================================================
+    // INVIO SICURO TRAMITE PROXY YUME
+    // ============================================================
+    const statusBox=document.getElementById('formStatus');
+    const promoResult=document.getElementById('promoResult');
+    const promoCodeEl=document.getElementById('promoCode');
+    const resultTitle=document.getElementById('resultTitle');
+    const resultMessage=document.getElementById('resultMessage');
+    const resultValidity=document.getElementById('resultValidity');
+    const downloadPdfBtn=document.getElementById('downloadPdfBtn');
+    const resultIcsBtn=document.getElementById('resultIcsBtn');
+    const resultMapsBtn=document.getElementById('resultMapsBtn');
+    let lastRegistration=null;
+
+    function showStatus(type,message){statusBox.className='form-status show '+type;statusBox.textContent=message}
+    function clearStatus(){statusBox.className='form-status';statusBox.textContent='';promoResult.classList.remove('show');lastRegistration=null}
+
+    async function callEventGoProxy(payload){
+      const response=await fetch(FORM_ENDPOINT,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(payload)
+      });
+
+      let body=null;
+      try{body=await response.json()}catch(_){body=null}
+
+      if(!response.ok){
+        throw new Error(body?.error||body?.message||`Errore HTTP ${response.status}`);
+      }
+      if(!body?.ok){
+        throw new Error(body?.error||body?.message||'Registrazione non completata.');
+      }
+      return body;
+    }
+
+    function formatDateIt(value){
+      if(!value)return '';
+      const [y,m,d]=String(value).split('-');return `${d}/${m}/${y}`;
+    }
+
+    function renderSuccess(data, input){
+      const actualEvent=Boolean(data.event_attendance);
+      const booking=formatDateIt(data.booking_deadline)||'31/12/2026';
+      const travel=formatDateIt(data.travel_deadline)||'31/12/2027';
+      promoCodeEl.textContent=data.promo_code;
+      if(actualEvent){
+        resultTitle.textContent='Ci vediamo nella nuova casa YUME!';
+        resultMessage.textContent=`La tua partecipazione è registrata per sabato 26 settembre dalle 17:00. Abbiamo memorizzato anche le indicazioni utili per l’accoglienza. Il tuo WELCOME 100 è già attivo.`;
+        resultIcsBtn.style.display='inline-flex';resultMapsBtn.style.display='inline-flex';
+      }else{
+        resultTitle.textContent='Congratulazioni: il tuo WELCOME 100 è attivo.';
+        resultMessage.textContent='Hai scelto di ricevere soltanto il codice promozionale. Non risulti tra i partecipanti all’Opening Party, ma il tuo benefit personale è stato correttamente registrato.';
+        resultIcsBtn.style.display='none';resultMapsBtn.style.display='none';
+      }
+      resultValidity.textContent=`Valore €100 su pratica ammessa di almeno €1.500. Prenotazione da perfezionare entro ${booking}; partenza o servizio entro ${travel}.`;
+      promoResult.classList.add('show');
+      lastRegistration={...input,...data,event_attendance:actualEvent,bookingDeadline:booking,travelDeadline:travel};
+      promoResult.scrollIntoView({behavior:'smooth',block:'center'});
+    }
+
+    form.addEventListener('submit',async(event)=>{
+      event.preventDefault();clearStatus();
+      if(document.getElementById('website').value)return;
+      if(!currentType){showStatus('error','Scegli se partecipare all’Opening Party oppure richiedere soltanto WELCOME 100.');return}
+      if(!form.reportValidity()){showStatus('error','Controlla i campi obbligatori e completa le scelte richieste.');return}
+      const commercialValue=form.querySelector('input[name="commercialConsent"]:checked')?.value;
+      if(!['yes','no'].includes(commercialValue)){showStatus('error','Indica Sì oppure No per le finalità commerciali.');return}
+
+      const input={
+        firstName:document.getElementById('firstName').value.trim(),lastName:document.getElementById('lastName').value.trim(),email:document.getElementById('email').value.trim().toLowerCase(),phone:document.getElementById('phone').value.trim(),partySize:currentType==='event'?partySize.value:null,dietaryRestrictions:currentType==='event'?document.getElementById('dietaryRestrictions').value.trim():'',accessibilityNotes:currentType==='event'?document.getElementById('accessibilityNotes').value.trim():'',registrationType:currentType
+      };
+      const payload={
+        tipoRichiesta:'eventgo_opening_2026',
+        source:'opening-party-2026',
+        page:'opening-party-2026',
+        registration_type:currentType,
+        first_name:input.firstName,
+        last_name:input.lastName,
+        email:input.email,
+        phone:input.phone,
+        party_size:currentType==='event'?input.partySize:null,
+        dietary_restrictions:currentType==='event'?(input.dietaryRestrictions||null):null,
+        accessibility_notes:currentType==='event'?(input.accessibilityNotes||null):null,
+        privacy_acknowledged:document.getElementById('privacyAcknowledged').checked,
+        promo_terms_accepted:document.getElementById('promoTermsAccepted').checked,
+        commercial_consent:commercialValue==='yes',
+        website:document.getElementById('website').value,
+        referrer:document.referrer||null,
+        lang:document.documentElement.lang||'it',
+        userAgent:navigator.userAgent
+      };
+
+      const original=submitBtn.innerHTML;submitBtn.disabled=true;submitBtn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Registrazione in corso…';
+      try{
+        const result=await callEventGoProxy(payload);
+        if(!result?.promo_code)throw new Error('Il sistema non ha restituito il codice promozionale.');
+        showStatus('ok',result.status==='created'?'Registrazione completata e codice creato.':'Dati aggiornati. Il tuo codice personale è rimasto invariato.');
+        renderSuccess(result,input);
+      }catch(error){showStatus('error',error?.message||'Si è verificato un errore durante la registrazione.');}
+      finally{submitBtn.disabled=false;submitBtn.innerHTML=original}
+    });
+
+    // ============================================================
+    // PDF PERSONALIZZATI - 2 DOCUMENTI DIVERSI
+    // A) partecipazione evento + codice
+    // B) solo codice promozionale
+    // ============================================================
+    function pdfBase(doc, title, subtitle){
+      doc.setFillColor(244,240,226);doc.rect(0,0,210,297,'F');
+      doc.setFillColor(139,44,43);doc.rect(0,0,210,38,'F');
+      doc.setTextColor(255,255,255);doc.setFont('times','bold');doc.setFontSize(27);doc.text('YUME',18,22);
+      doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.text('TRAVEL TECH',18,30);
+      doc.setTextColor(139,44,43);doc.setFont('times','bold');doc.setFontSize(23);doc.text(title,18,57);
+      doc.setTextColor(80,69,65);doc.setFont('helvetica','normal');doc.setFontSize(10);doc.text(subtitle,18,66);
+      doc.setDrawColor(201,168,106);doc.setLineWidth(.5);doc.line(18,73,192,73);
+    }
+    function pdfCodeBox(doc, code, y){
+      doc.setFillColor(255,248,244);doc.setDrawColor(201,168,106);doc.roundedRect(18,y,174,36,4,4,'FD');
+      doc.setTextColor(100,87,82);doc.setFont('helvetica','bold');doc.setFontSize(9);doc.text('IL TUO CODICE PERSONALE',105,y+10,{align:'center'});
+      doc.setTextColor(139,44,43);doc.setFont('courier','bold');doc.setFontSize(20);doc.text(code,105,y+25,{align:'center'});
+    }
+    function pdfFooter(doc){
+      doc.setDrawColor(201,168,106);doc.line(18,272,192,272);doc.setTextColor(105,92,88);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.text('YUME Travel Tech · Via G. Matteotti 845 A/B · Larciano (PT)',105,280,{align:'center'});doc.text('+39 370 3081341 · yume.traveltech@gmail.com',105,286,{align:'center'});
+    }
+    function writeWrapped(doc,text,x,y,maxWidth,lineHeight=5){const lines=doc.splitTextToSize(text,maxWidth);doc.text(lines,x,y);return y+(lines.length*lineHeight)}
+
+    function downloadPersonalizedPdf(){
+      if(!lastRegistration)return;
+      if(!window.jspdf?.jsPDF){showStatus('error','Libreria PDF non disponibile. Ricarica la pagina e riprova.');return}
+      const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:'mm',format:'a4'});const d=lastRegistration;
+      if(d.event_attendance){
+        pdfBase(doc,'OPENING PARTY 2026','Conferma di partecipazione + YUME WELCOME 100');
+        doc.setTextColor(28,28,28);doc.setFont('helvetica','bold');doc.setFontSize(13);doc.text(`Ciao ${d.firstName}, la tua presenza è confermata.`,18,88);
+        doc.setFont('helvetica','normal');doc.setFontSize(10.5);let y=99;
+        y=writeWrapped(doc,'Siamo felici di accoglierti nella nuova casa YUME. Conserva questo PDF come riepilogo della tua registrazione e del benefit promozionale personale.',18,y,174,5.4)+5;
+        doc.setFont('helvetica','bold');doc.setTextColor(139,44,43);doc.text('SABATO 26 SETTEMBRE 2026',18,y);y+=7;
+        doc.setFont('helvetica','normal');doc.setTextColor(28,28,28);doc.text('Dalle 17:00 fino a tarda serata',18,y);y+=6;doc.text('YUME Travel Tech · Via G. Matteotti 845 A/B · Larciano (PT)',18,y);y+=6;doc.text('Google Maps: maps.app.goo.gl/ppCQRp2AqVdsQ7ei8',18,y);y+=8;
+        doc.setFont('helvetica','bold');doc.text(`Partecipanti registrati: ${d.partySize||'-'}`,18,y);y+=10;
+        pdfCodeBox(doc,d.promo_code,y);y+=47;
+        doc.setTextColor(80,69,65);doc.setFont('helvetica','normal');doc.setFontSize(9.5);
+        y=writeWrapped(doc,`WELCOME 100 vale EUR 100 su una pratica YUME ammessa di almeno EUR 1.500. La prenotazione deve essere perfezionata entro ${d.bookingDeadline}; il viaggio o servizio deve avere partenza/erogazione entro ${d.travelDeadline}.`,18,y,174,5)+4;
+        y=writeWrapped(doc,'Il codice è personale, utilizzabile una sola volta secondo il regolamento dell’iniziativa. Comunicalo a YUME prima della conferma definitiva della pratica.',18,y,174,5);
+        pdfFooter(doc);doc.save(`YUME_OpeningParty_${d.lastName}_${d.promo_code}.pdf`);
+      }else{
+        pdfBase(doc,'YUME WELCOME 100','Codice promozionale personale · Inaugurazione 2026');
+        doc.setTextColor(139,44,43);doc.setFont('times','bold');doc.setFontSize(19);doc.text(`Congratulazioni, ${d.firstName}!`,18,90);
+        doc.setTextColor(28,28,28);doc.setFont('helvetica','normal');doc.setFontSize(10.5);let y=102;
+        y=writeWrapped(doc,'Il tuo benefit WELCOME 100 è stato attivato correttamente. Hai scelto di ricevere soltanto il codice promozionale e non risulti registrato come partecipante all’Opening Party.',18,y,174,5.4)+9;
+        pdfCodeBox(doc,d.promo_code,y);y+=49;
+        doc.setTextColor(139,44,43);doc.setFont('helvetica','bold');doc.setFontSize(11);doc.text('FINO A QUANDO È VALIDO?',18,y);y+=8;
+        doc.setTextColor(28,28,28);doc.setFont('helvetica','normal');doc.setFontSize(10);
+        doc.text(`Prenotazione da perfezionare entro: ${d.bookingDeadline}`,18,y);y+=7;doc.text(`Partenza / erogazione del viaggio entro: ${d.travelDeadline}`,18,y);y+=10;
+        y=writeWrapped(doc,'Valore: EUR 100 di riduzione su una pratica YUME ammessa di importo complessivo pari o superiore a EUR 1.500. Il codice è personale, non frazionabile, non convertibile in denaro e utilizzabile una sola volta.',18,y,174,5.2)+5;
+        y=writeWrapped(doc,'Per utilizzarlo, comunicalo a YUME prima della conferma definitiva della pratica. Restano applicabili tutte le condizioni del regolamento YUME WELCOME 100 - Inaugurazione 2026.',18,y,174,5.2);
+        pdfFooter(doc);doc.save(`YUME_WELCOME100_${d.lastName}_${d.promo_code}.pdf`);
+      }
+    }
+    downloadPdfBtn.addEventListener('click',downloadPersonalizedPdf);
+  </script>
+</body>
+</html>
