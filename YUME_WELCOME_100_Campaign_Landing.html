@@ -1393,6 +1393,7 @@
       try{
         console.info('[WELCOME100] Invio richiesta al proxy YUME', {
           source: payload.source,
+          campaign_source: payload.campaign_source,
           registration_type: payload.registration_type
         });
 
@@ -1501,8 +1502,12 @@
       const payload = {
         // NON cambiare senza aggiornare anche il backend YUME.
         tipoRichiesta:'eventgo_opening_2026',
-        source:'welcome-100-cold-campaign',
-        page:'welcome-100-campaign',
+        // Marker tecnici compatibili con il flusso Opening già in produzione.
+        // La provenienza marketing reale resta separata in campaign_source/campaign_page.
+        source:'opening-party-2026',
+        page:'opening-party-2026',
+        campaign_source:'welcome-100-cold-campaign',
+        campaign_page:'welcome-100-campaign',
         registration_type:'voucher',
         first_name:input.firstName,
         last_name:input.lastName,
@@ -1846,6 +1851,7 @@
   </script>
 </body>
 </html>
+
 
 
 
