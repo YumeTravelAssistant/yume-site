@@ -503,7 +503,18 @@
       min-height:70px;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.72);
       border:1px solid rgba(139,44,43,.08);
     }
-    .trust-item i{width:36px;height:36px;display:grid;place-items:center;border-radius:12px;background:var(--blush);color:var(--red);flex:0 0 auto}
+    .trust-item i{
+      width:36px;
+      height:36px;
+      display:grid;
+      place-items:center;
+      border-radius:12px;
+      background:var(--blush);
+      color:var(--red);
+      flex:0 0 auto;
+      font-size:1rem;
+      line-height:1;
+    }
     .trust-item strong{display:block;color:var(--red);font-family:'Quicksand',sans-serif;font-size:.8rem;line-height:1.2}
     .trust-item span{display:block;color:#7A6E69;font-size:.73rem;line-height:1.35;margin-top:2px}
 
@@ -552,11 +563,13 @@
       height:47px;
       display:grid;
       place-items:center;
-      margin-bottom:17px;
+      margin:0 auto 17px;
       border-radius:15px;
       background:var(--blush);
       color:var(--red);
       border:1px solid rgba(139,44,43,.08);
+      font-size:1.05rem;
+      line-height:1;
     }
     .benefit-card h3{margin:0 0 9px;color:var(--red);font-family:'Playfair Display',serif;font-size:1.26rem}
     .benefit-card p{margin:0;color:var(--muted);font-size:.86rem;line-height:1.62}
@@ -677,25 +690,40 @@
       display:none;
       position:fixed;
       z-index:50;
-      left:10px;
-      right:10px;
-      bottom:10px;
-      min-height:52px;
+      left:12px;
+      right:12px;
+      bottom:calc(12px + env(safe-area-inset-bottom, 0px));
+      width:auto;
+      max-width:680px;
+      min-height:54px;
+      margin:0 auto;
       align-items:center;
       justify-content:center;
-      gap:8px;
-      padding:12px 15px;
+      gap:9px;
+      padding:12px 18px;
       border:1px solid rgba(255,255,255,.22);
-      border-radius:15px;
+      border-radius:17px;
       background:linear-gradient(135deg,var(--red),var(--red-deep));
       color:#fff;
       box-shadow:0 14px 38px rgba(0,0,0,.28);
       font-family:'Quicksand',sans-serif;
       font-size:.84rem;
       font-weight:800;
+      line-height:1.2;
+      text-align:center;
       text-decoration:none;
+      opacity:1;
+      visibility:visible;
+      transform:translateY(0);
+      transition:opacity .2s ease, transform .2s ease, visibility .2s ease;
+      will-change:transform,opacity;
     }
-    .mobile-cta.hidden{display:none!important}
+    .mobile-cta.hidden{
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+      transform:translateY(12px);
+    }
 
     footer{
       padding:30px 18px 38px;
@@ -777,10 +805,12 @@
       .field.full{grid-column:auto}
       .trust-strip{width:min(100% - 20px,1060px);margin:-8px auto 0}
       .trust-shell{grid-template-columns:1fr;gap:8px;padding:10px}
-      .page{width:min(100% - 20px,1060px);padding:48px 0 88px}
+      .trust-item{align-items:center;text-align:left;padding:14px 15px}
+      .page{width:min(100% - 20px,1060px);padding:48px 0 104px}
       .why-block{margin-bottom:34px}
-      .benefit-grid{grid-template-columns:1fr;gap:10px}
-      .benefit-card{min-height:auto;padding:20px}
+      .benefit-grid{grid-template-columns:1fr;gap:12px}
+      .benefit-card{min-height:auto;padding:24px 20px;text-align:center}
+      .benefit-icon{margin:0 auto 16px}
       .terms{padding:19px 15px}
       .terms-head{align-items:flex-start;flex-direction:column;gap:7px}
       .terms-head h2{font-size:1.65rem}
@@ -790,8 +820,19 @@
       .result-actions{flex-direction:column}
       .result-btn{width:100%}
       .mobile-cta{display:flex}
-      body{padding-bottom:68px}
+      body{padding-bottom:calc(92px + env(safe-area-inset-bottom, 0px))}
       body.is-success{padding-bottom:0}
+    }
+
+    @media(max-width:390px){
+      .hero-shell{width:min(100% - 16px,1180px)}
+      .hero-copy h1{font-size:clamp(2.75rem,16vw,4rem)}
+      .form-pad{padding:21px 14px 18px}
+      .form-title{font-size:1.55rem}
+      .amount-chip{min-width:62px;min-height:62px}
+      .mobile-cta{left:9px;right:9px;font-size:.8rem;padding:11px 13px}
+      .trust-item{padding:13px}
+      .benefit-card{padding:22px 17px}
     }
 
     @media(prefers-reduced-motion:reduce){
@@ -929,7 +970,7 @@
     <section class="trust-strip" aria-label="Elementi di fiducia">
       <div class="trust-shell reveal-up">
         <div class="trust-item"><i class="fa-solid fa-ticket"></i><div><strong>Codice personale</strong><span>Un solo codice per persona, collegato alla registrazione.</span></div></div>
-        <div class="trust-item"><i class="fa-solid fa-sparkles"></i><div><strong>Esperienza semplice</strong><span>Niente passaggi superflui: promessa chiara e call to action diretta.</span></div></div>
+        <div class="trust-item"><i class="fa-solid fa-circle-check"></i><div><strong>Esperienza semplice</strong><span>Niente passaggi superflui: promessa chiara e call to action diretta.</span></div></div>
         <div class="trust-item"><i class="fa-regular fa-file-pdf"></i><div><strong>PDF scaricabile</strong><span>Ricevi subito un promemoria elegante con codice e condizioni.</span></div></div>
         <div class="trust-item"><i class="fa-solid fa-arrow-up-right-from-square"></i><div><strong>Prosegui su YUME</strong><span>Una volta ottenuto il codice puoi continuare il percorso sul sito.</span></div></div>
       </div>
@@ -998,7 +1039,7 @@
     </section>
   </main>
 
-  <a class="mobile-cta" id="mobileCta" href="#claim"><i class="fa-solid fa-ticket"></i> Ottieni €100 di sconto</a>
+  <a class="mobile-cta" id="mobileCta" href="#claim" aria-label="Vai al form e ottieni il codice WELCOME 100"><i class="fa-solid fa-ticket" aria-hidden="true"></i> Ottieni €100 di sconto</a>
 
   <footer>
     <strong>YUME Travel Tech</strong> · Via G. Matteotti 845 A/B · Larciano (PT)<br>
@@ -1362,17 +1403,50 @@
 
     downloadPdfBtn.addEventListener('click', downloadPersonalizedPdf);
 
-    // Nasconde il CTA mobile quando il form è già visibile, evitando duplicazioni.
-    if('IntersectionObserver' in window){
-      const formObserver = new IntersectionObserver((entries) => {
-        const visible = entries.some(entry => entry.isIntersecting);
-        if(!document.body.classList.contains('is-success')){
-          mobileCta.classList.toggle('hidden', visible);
-        }
-      }, {threshold:.18});
-      formObserver.observe(document.getElementById('claim'));
+    // CTA mobile: resta utile fuori dal form, ma si ferma prima delle condizioni
+    // per non coprire titoli, regolamento o footer su Safari/iPhone.
+    const claimSection = document.getElementById('claim');
+    const conditionsSection = document.getElementById('conditions');
+    let claimIsVisible = false;
+
+    function updateMobileCta(){
+      if(!mobileCta) return;
+
+      const isMobile = window.matchMedia('(max-width: 620px)').matches;
+      const isSuccess = document.body.classList.contains('is-success');
+      const conditionsTop = conditionsSection
+        ? conditionsSection.getBoundingClientRect().top
+        : Number.POSITIVE_INFINITY;
+      const ctaHeight = mobileCta.offsetHeight || 54;
+      const stopBeforeConditions = conditionsTop <= (window.innerHeight - ctaHeight - 28);
+
+      const shouldHide = !isMobile || isSuccess || claimIsVisible || stopBeforeConditions;
+      mobileCta.classList.toggle('hidden', shouldHide);
     }
+
+    if('IntersectionObserver' in window && claimSection){
+      const formObserver = new IntersectionObserver((entries) => {
+        claimIsVisible = entries.some(entry => entry.isIntersecting);
+        updateMobileCta();
+      }, {threshold:.12});
+      formObserver.observe(claimSection);
+    }
+
+    let mobileCtaRaf = 0;
+    function scheduleMobileCtaUpdate(){
+      if(mobileCtaRaf) return;
+      mobileCtaRaf = requestAnimationFrame(() => {
+        mobileCtaRaf = 0;
+        updateMobileCta();
+      });
+    }
+
+    window.addEventListener('scroll', scheduleMobileCtaUpdate, {passive:true});
+    window.addEventListener('resize', scheduleMobileCtaUpdate, {passive:true});
+    window.addEventListener('orientationchange', scheduleMobileCtaUpdate, {passive:true});
+    updateMobileCta();
   </script>
 </body>
 </html>
+
 
