@@ -931,7 +931,7 @@
                 </div>
               </div>
 
-              <input class="hp" type="text" name="website" id="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+              <textarea class="hp" name="contact_check_field" id="antiBotField" tabindex="-1" autocomplete="off" aria-hidden="true" data-lpignore="true" data-1p-ignore="true" data-form-type="other"></textarea>
 
               <div class="legal-box">
                 <div class="check-row">
@@ -1113,22 +1113,52 @@
     });
 
     async function callEventGoProxy(payload){
-      const response = await fetch(FORM_ENDPOINT, {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify(payload)
-      });
+      const controller = new AbortController();
+      const timeoutId = window.setTimeout(() => controller.abort(), 20000);
 
-      let body = null;
-      try{ body = await response.json(); }catch(_){ body = null; }
+      try{
+        console.info('[WELCOME100] Invio richiesta al proxy YUME', {
+          source: payload.source,
+          registration_type: payload.registration_type
+        });
 
-      if(!response.ok){
-        throw new Error(body?.error || body?.message || `Errore HTTP ${response.status}`);
+        const response = await fetch(FORM_ENDPOINT, {
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json',
+            'Accept':'application/json'
+          },
+          body:JSON.stringify(payload),
+          signal:controller.signal
+        });
+
+        let body = null;
+        const raw = await response.text();
+        if(raw){
+          try{ body = JSON.parse(raw); }catch(_){ body = null; }
+        }
+
+        console.info('[WELCOME100] Risposta proxy YUME', {
+          status: response.status,
+          ok: response.ok,
+          backend_ok: body?.ok === true
+        });
+
+        if(!response.ok){
+          throw new Error(body?.error || body?.message || `Errore HTTP ${response.status}`);
+        }
+        if(!body?.ok){
+          throw new Error(body?.error || body?.message || 'Registrazione non completata.');
+        }
+        return body;
+      }catch(error){
+        if(error?.name === 'AbortError'){
+          throw new Error('La richiesta sta impiegando troppo tempo. Controlla la connessione e riprova.');
+        }
+        throw error;
+      }finally{
+        window.clearTimeout(timeoutId);
       }
-      if(!body?.ok){
-        throw new Error(body?.error || body?.message || 'Registrazione non completata.');
-      }
-      return body;
     }
 
     function formatDateIt(value){
@@ -1166,7 +1196,22 @@
       event.preventDefault();
       clearStatus();
 
-      if(document.getElementById('website').value) return;
+      const antiBotField = document.getElementById('antiBotField');
+      const antiBotValue = String(antiBotField?.value || '').trim();
+
+      // Il vecchio honeypot si chiamava "website": browser e password manager
+      // potevano autocompilarlo e il submit terminava in silenzio prima del fetch.
+      // Se un submit REALE dell'utente trova accidentalmente il campo valorizzato,
+      // lo puliamo e proseguiamo. Un submit sintetico/bot viene invece ignorato.
+      if(antiBotValue){
+        if(antiBotField) antiBotField.value = '';
+        if(!event.isTrusted){
+          console.warn('[WELCOME100] Submit bloccato dal controllo antispam.');
+          return;
+        }
+        console.warn('[WELCOME100] Honeypot valorizzato da autofill: pulito automaticamente.');
+      }
+
       if(!form.reportValidity()){
         showStatus('error','Controlla i campi obbligatori e completa le accettazioni richieste.');
         return;
@@ -1204,7 +1249,9 @@
         fbclid:urlParams.get('fbclid') || null,
         gclid:urlParams.get('gclid') || null,
         ttclid:urlParams.get('ttclid') || null,
-        website:document.getElementById('website').value,
+        // Manteniamo la chiave "website" attesa dal backend, ma il valore
+        // proviene dal nuovo honeypot non riconoscibile dall'autofill.
+        website:String(document.getElementById('antiBotField')?.value || '').trim(),
         referrer:document.referrer || null,
         lang:document.documentElement.lang || 'it',
         userAgent:navigator.userAgent
@@ -1213,6 +1260,7 @@
       const original = submitBtn.innerHTML;
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sto generando il tuo codice…';
+      showStatus('ok','Richiesta ricevuta. Sto generando il tuo codice personale…');
 
       try{
         const result = await callEventGoProxy(payload);
@@ -1448,5 +1496,7 @@
   </script>
 </body>
 </html>
+
+
 
 
