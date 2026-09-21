@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="assets/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<style id="ym-modern-v3">
+<style id="ym-modern-v6">
 :root{
   --ym-red:#8B2C2B; --ym-red-dark:#6F201F; --ym-gold:#C9A86A;
   --ym-cream:#F4F0E2; --ym-cream2:#FBF8F1; --ym-ink:#251F1C; --ym-muted:#716963;
@@ -91,7 +91,7 @@ body.ym-modern-page input:focus,body.ym-modern-page select:focus,body.ym-modern-
 @media (prefers-reduced-motion:reduce){.ym-smartnav,.ym-btn{transition:none!important}}
 </style>
 
-<style id="ym-cons-v3">
+<style id="ym-cons-v6">
 #come-funziona .step-boxes{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:16px!important}
 #come-funziona .step-box{margin:0!important;border-radius:18px!important;background:#fff!important;border:1px solid var(--ym-line)!important;box-shadow:0 9px 28px rgba(50,34,26,.07)!important;padding:24px!important}
 .ym-cons-choice{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:860px;margin:0 auto}
@@ -99,12 +99,14 @@ body.ym-modern-page input:focus,body.ym-modern-page select:focus,body.ym-modern-
 .ym-cons-choice i{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#f6ede2;color:var(--ym-red)}.ym-cons-choice strong{display:block}.ym-cons-choice span{display:block;font-size:.82rem;color:var(--ym-muted);margin-top:3px}
 #sartoriaConsulenze .sartoria-slider-container{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:16px!important;overflow:visible!important}
 #sartoriaConsulenze .sartoria-box{width:100%!important;min-height:260px!important;margin:0!important;border-radius:18px!important;overflow:hidden!important;padding:22px!important}
+#sartoriaConsulenze .sartoria-box h3{font-size:1.45rem!important;line-height:1.15!important;margin:0 0 9px!important;text-align:left!important}
+#sartoriaConsulenze .sartoria-box p{font-size:.94rem!important;line-height:1.45!important;text-align:left!important;max-width:34ch!important}
 #consulenze-viaggi .pacchetti-slider-wrapper{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:18px!important;overflow:visible!important}
 #consulenze-viaggi .pacchetti-box{width:100%!important;max-width:none!important;margin:0!important;border-radius:18px!important;overflow:hidden!important;background:#fff!important;box-shadow:0 9px 28px rgba(50,34,26,.07)!important}
 #atelier-servizi{max-width:1120px!important;margin-left:auto!important;margin-right:auto!important}.sartoria-servizi-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important}.servizio-box{margin:0!important;border-radius:16px!important;background:#fff!important;border:1px solid var(--ym-line)!important;box-shadow:0 6px 20px rgba(50,34,26,.05)!important}
 #faq-consulenze{max-width:1000px;margin-left:auto;margin-right:auto}
 @media(max-width:1000px){#come-funziona .step-boxes,#sartoriaConsulenze .sartoria-slider-container,#consulenze-viaggi .pacchetti-slider-wrapper,.sartoria-servizi-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
-@media(max-width:640px){.ym-cons-choice{grid-template-columns:1fr}#come-funziona .step-boxes{grid-template-columns:1fr!important}#sartoriaConsulenze .sartoria-slider-container{display:flex!important;overflow-x:auto!important;gap:10px!important;scroll-snap-type:x proximity!important}#sartoriaConsulenze .sartoria-box{flex:0 0 82%!important;scroll-snap-align:start!important}#consulenze-viaggi .pacchetti-slider-wrapper,.sartoria-servizi-grid{grid-template-columns:1fr!important}}
+@media(max-width:640px){.ym-cons-choice{grid-template-columns:1fr}#come-funziona .step-boxes{grid-template-columns:1fr!important}#sartoriaConsulenze .sartoria-slider-container{display:grid!important;grid-template-columns:1fr!important;gap:18px!important;overflow:visible!important;padding-left:14px!important;padding-right:14px!important}#sartoriaConsulenze .sartoria-box{width:min(100%,360px)!important;max-width:360px!important;margin:0 auto!important;min-height:260px!important}#consulenze-viaggi .pacchetti-slider-wrapper,.sartoria-servizi-grid{grid-template-columns:1fr!important}}
 </style>
 
 </head>
@@ -803,7 +805,7 @@ logoutBtn.onclick = () => {
 </div>
 
 <script id="ym-cons-v3-js"></script>
-<script id="ym-modern-v3-js">
+<script id="ym-modern-v6-js">
 (function(){
   'use strict';
   const nav=document.getElementById('ymSmartNav');
@@ -830,5 +832,6 @@ logoutBtn.onclick = () => {
 
 </body>
 </html>
+
 
 
