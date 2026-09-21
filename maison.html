@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yume Maison - Sartoria di Viaggio</title>
+  <title>Yume Maison | Viaggi in Giappone su misura</title>
   <link rel="icon" type="image/png" href="favicon.ico">
 
   <!-- Font Yume: Playfair, Raleway, Quicksand -->
@@ -185,11 +185,12 @@
     font-weight: 300;
     color: #000000;
     text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+}
 
   </style>
 
 
-<style id="ym-modern-v3">
+<style id="ym-modern-v6">
 :root{
   --ym-red:#8B2C2B; --ym-red-dark:#6F201F; --ym-gold:#C9A86A;
   --ym-cream:#F4F0E2; --ym-cream2:#FBF8F1; --ym-ink:#251F1C; --ym-muted:#716963;
@@ -267,24 +268,100 @@ body.ym-modern-page input:focus,body.ym-modern-page select:focus,body.ym-modern-
 @media (prefers-reduced-motion:reduce){.ym-smartnav,.ym-btn{transition:none!important}}
 </style>
 
-<style id="ym-maison-v3">
-#metodo .sartoria-slider-container{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:16px!important;overflow:visible!important}
-#metodo .sartoria-box{width:100%!important;min-height:235px!important;margin:0!important;border-radius:18px!important;overflow:hidden!important;display:flex!important;flex-direction:column;justify-content:flex-end;padding:22px!important;box-shadow:0 10px 30px rgba(50,34,26,.09)!important}
-#ideeMaison{max-width:1160px!important;margin:0 auto 62px!important;padding:0 20px!important}
-#ideeMaison .sartoria-slider-container{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:16px!important;overflow:visible!important;padding:0!important}
-#ideeMaison .sartoria-box{width:100%!important;min-width:0!important;min-height:250px!important;margin:0!important;border-radius:18px!important;overflow:hidden!important;display:flex!important;flex-direction:column;justify-content:flex-end;padding:22px!important;cursor:pointer;box-shadow:0 10px 30px rgba(50,34,26,.09)!important;transition:transform .18s ease,box-shadow .18s ease!important}
-#ideeMaison .sartoria-box:hover{transform:translateY(-3px);box-shadow:0 16px 38px rgba(50,34,26,.13)!important}
-#ideeMaison .sartoria-box h3,#ideeMaison .sartoria-box p,#metodo .sartoria-box h3,#metodo .sartoria-box p{position:relative;z-index:2;text-shadow:0 1px 8px rgba(0,0,0,.45)}
-#timelineMaison{max-width:980px;margin:0 auto 62px;padding:0 20px}
-.ym-timeline-more{display:none;margin:0 auto 26px;border:1px solid var(--ym-line);background:#fff;color:var(--ym-red);padding:10px 18px;border-radius:999px;font-weight:700}
-.foto-slider-section{max-width:1160px!important;margin:0 auto 62px!important;padding:0 20px!important}
-#richiedi-maison{max-width:860px!important;margin:0 auto 72px!important;background:#fff!important;border:1px solid var(--ym-line)!important;border-radius:22px!important;box-shadow:0 12px 38px rgba(50,34,26,.08)!important;padding:clamp(22px,4vw,44px)!important}
-@media(max-width:1000px){#metodo .sartoria-slider-container,#ideeMaison .sartoria-slider-container{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
-@media(max-width:640px){
- #metodo .sartoria-slider-container{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}#metodo .sartoria-box{min-height:175px!important;padding:14px!important}
- #ideeMaison{padding:0 12px!important}#ideeMaison .sartoria-slider-container{display:flex!important;overflow-x:auto!important;gap:10px!important;scroll-snap-type:x proximity!important;padding-bottom:4px!important}#ideeMaison .sartoria-box{flex:0 0 78%!important;min-height:225px!important;scroll-snap-align:start!important}
- #timelineMaison .timeline-step.ym-mobile-hidden{display:none!important}.ym-timeline-more{display:block}
- #richiedi-maison{width:calc(100% - 24px)!important;padding:20px 15px!important}
+<style id="ym-maison-v6">
+/* Maison V6 — modernizzazione isolata; breakpoint originali preservati */
+#metodo,#ideeMaison,#timelineMaison,.foto-slider-section,#richiedi-maison{
+  width:min(1160px,calc(100% - 40px));
+  margin-left:auto!important;margin-right:auto!important;
+}
+
+/* Metodo / Idee: 4 desktop, 2 tablet, 1 mobile — come logica originale */
+#metodo{padding:0 20px 10px!important;margin-bottom:62px!important}
+#ideeMaison{max-width:1160px!important;padding:0 20px!important;margin-bottom:62px!important}
+#metodo .sartoria-slider-wrapper{overflow:visible!important}
+#metodo .sartoria-slider-container,#ideeMaison .sartoria-slider-container{
+  display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:16px!important;width:100%!important;max-width:none!important;
+  padding:10px 0!important;margin:0!important;overflow:visible!important;
+}
+#metodo .sartoria-box,#ideeMaison .sartoria-box{
+  width:100%!important;min-width:0!important;margin:0!important;
+  border-radius:18px!important;overflow:hidden!important;
+  display:flex!important;flex-direction:column!important;justify-content:flex-end!important;
+  background-size:cover!important;background-position:center!important;
+  box-shadow:0 10px 30px rgba(50,34,26,.09)!important;position:relative!important;
+}
+#metodo .sartoria-box{min-height:300px!important;padding:22px!important}
+#ideeMaison .sartoria-box{min-height:270px!important;padding:22px!important;cursor:pointer}
+#ideeMaison .sartoria-box h3,#ideeMaison .sartoria-box p,#metodo .sartoria-box h3,#metodo .sartoria-box p{
+  position:relative;z-index:2;max-width:none!important;text-shadow:0 1px 8px rgba(0,0,0,.48)!important;
+}
+#ideeMaison .sartoria-box h3,#metodo .sartoria-box h3{
+  font-family:'Playfair Display',serif!important;font-size:1.35rem!important;line-height:1.15!important;
+  margin:0 0 9px!important;text-align:left!important;color:#C9A86A!important;
+}
+#ideeMaison .sartoria-box p,#metodo .sartoria-box p{
+  font-family:'Raleway',sans-serif!important;font-size:.92rem!important;line-height:1.45!important;
+  margin:0!important;text-align:left!important;color:#fff!important;
+}
+
+/* Timeline: NON si altera il comportamento originale. Sempre completa con linea + plane-down.svg. */
+#timelineMaison{max-width:980px!important;padding:0 20px!important;margin-bottom:62px!important}
+#timelineMaison .sartoria-servizi-intro{max-width:760px!important;margin-left:auto!important;margin-right:auto!important}
+
+/* Galleria: conserva slider originale, aggiunge solo respiro laterale */
+.foto-slider-section{max-width:1160px!important;padding:0 20px!important;margin-bottom:62px!important}
+
+/* Form: markup/invio invariati; solo contenimento responsive */
+#richiedi-maison{
+  max-width:860px!important;margin-top:0!important;margin-bottom:72px!important;
+  padding:clamp(22px,4vw,44px)!important;background:#fff!important;
+  border:1px solid rgba(139,44,43,.14)!important;border-radius:22px!important;
+  box-shadow:0 12px 38px rgba(50,34,26,.08)!important;
+}
+#richiedi-maison form{width:100%!important;max-width:640px!important;margin:0 auto!important}
+#richiedi-maison input:not([type="checkbox"]),#richiedi-maison select,#richiedi-maison textarea{
+  width:100%!important;max-width:100%!important;box-sizing:border-box!important;
+}
+#richiedi-maison .checkbox-gdpr{
+  display:grid!important;grid-template-columns:22px minmax(0,1fr)!important;
+  align-items:start!important;gap:10px!important;width:100%!important;margin:14px 0 20px!important;
+}
+#richiedi-maison .checkbox-gdpr input[type="checkbox"]{width:18px!important;height:18px!important;margin:2px 0 0!important;padding:0!important}
+#richiedi-maison .checkbox-gdpr label{min-width:0!important;width:auto!important;margin:0!important;padding:0!important;font-size:.88rem!important;line-height:1.45!important;overflow-wrap:anywhere!important}
+#richiedi-maison button[type="submit"]{max-width:100%!important}
+
+@media (max-width:1000px){
+  #metodo .sartoria-slider-container,#ideeMaison .sartoria-slider-container{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #metodo .sartoria-box{min-height:280px!important} #ideeMaison .sartoria-box{min-height:245px!important}
+}
+
+@media (max-width:640px){
+  #metodo,#ideeMaison,#timelineMaison,.foto-slider-section,#richiedi-maison{width:calc(100% - 28px)!important}
+  #metodo,#ideeMaison{padding:0!important;margin-bottom:48px!important}
+  #metodo .sartoria-slider-container,#ideeMaison .sartoria-slider-container{
+    display:grid!important;grid-template-columns:1fr!important;gap:18px!important;
+    overflow:visible!important;padding:4px 0 10px!important;margin:0!important;
+  }
+  #metodo .sartoria-box,#ideeMaison .sartoria-box{
+    width:min(100%,360px)!important;max-width:360px!important;min-width:0!important;
+    margin:0 auto!important;min-height:300px!important;padding:20px!important;
+  }
+  #ideeMaison .sartoria-box{min-height:270px!important}
+  #metodo .sartoria-box h3,#ideeMaison .sartoria-box h3{font-size:1.3rem!important;line-height:1.18!important}
+  #metodo .sartoria-box p,#ideeMaison .sartoria-box p{font-size:.92rem!important;line-height:1.46!important}
+
+  /* Timeline originale: solo margine esterno, nessun collapse/override interno */
+  #timelineMaison{padding:0!important}
+  #timelineMaison .sartoria-servizi-intro{padding:0 8px!important;font-size:.95rem!important;line-height:1.55!important}
+
+  .foto-slider-section{padding:0!important}
+  .foto-slider-section .foto-slider-title{padding:0 6px!important}
+  .foto-slider-container{gap:14px!important;padding-left:2px!important;padding-right:2px!important}
+
+  #richiedi-maison{padding:24px 16px!important;margin-bottom:56px!important}
+  #richiedi-maison h2{font-size:2rem!important;line-height:1.08!important}
+  #richiedi-maison .intro-text{font-size:.97rem!important;line-height:1.55!important;padding:0!important}
 }
 </style>
 
@@ -969,16 +1046,15 @@ logoutBtn.onclick = () => {
 </div>
 
 
-<script id="ym-maison-v3-js">
+<script id="ym-maison-v6-js">
 (function(){
  const cards=Array.from(document.querySelectorAll('#ideeMaison .sartoria-box'));
  const map=['Coppia romantica','Famiglia','Avventura e natura','Altro'];
  cards.forEach((card,i)=>{card.setAttribute('role','button');card.setAttribute('tabindex','0');const go=()=>{const sel=document.getElementById('viaggio');if(sel&&map[i]){sel.value=map[i];sel.dispatchEvent(new Event('change',{bubbles:true}))}document.getElementById('richiedi-maison')?.scrollIntoView({behavior:'smooth',block:'start'})};card.addEventListener('click',go);card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}})});
- const timeline=document.getElementById('timelineMaison'); if(timeline){const steps=Array.from(timeline.querySelectorAll('.timeline-step'));steps.forEach((el,i)=>{if(i>=4)el.classList.add('ym-mobile-hidden')});const b=document.createElement('button');b.type='button';b.className='ym-timeline-more';b.textContent='Mostra tutti i passaggi';b.addEventListener('click',()=>{const hidden=steps.some(x=>x.classList.contains('ym-mobile-hidden'));steps.forEach(x=>x.classList.toggle('ym-mobile-hidden',!hidden));b.textContent=hidden?'Riduci timeline':'Mostra tutti i passaggi'});timeline.appendChild(b)}
 })();
 </script>
 
-<script id="ym-modern-v3-js">
+<script id="ym-modern-v6-js">
 (function(){
   'use strict';
   const nav=document.getElementById('ymSmartNav');
