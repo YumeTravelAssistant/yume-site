@@ -21,7 +21,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.css" />
 
 
-<style id="ym-modern-v6">
+<style id="ym-modern-v7">
 :root{
   --ym-red:#8B2C2B; --ym-red-dark:#6F201F; --ym-gold:#C9A86A;
   --ym-cream:#F4F0E2; --ym-cream2:#FBF8F1; --ym-ink:#251F1C; --ym-muted:#716963;
@@ -126,6 +126,80 @@ body.ym-modern-page input:focus,body.ym-modern-page select:focus,body.ym-modern-
 .sartoria-section .sartoria-box h3{font-size:clamp(1.2rem,1.55vw,1.55rem)!important;line-height:1.15!important;margin-bottom:8px!important}
 .sartoria-section .sartoria-box p{font-size:.94rem!important;line-height:1.45!important}
 @media(max-width:640px){.sartoria-section .sartoria-box h3{font-size:1.28rem!important}.sartoria-section .sartoria-box p{font-size:.9rem!important}}
+</style>
+<style id="ym-anchor-fix-v7">#ymFinder,#pacchetti-main,#preferenze-avanzate,.form-pacchetto-wrapper{scroll-margin-top:calc(var(--ym-nav-top) + 74px)}</style>
+
+<style id="ym-pacchetti-form-fix-v71">
+/* Scoped fix: il bottone globale .modern-btn nel CSS legacy è absolute.
+   Nel form Pacchetti deve seguire il normale flusso per non invadere GDPR. */
+#formPacchetto > button[type="submit"].modern-btn{
+  position:static!important;
+  inset:auto!important;
+  right:auto!important;
+  bottom:auto!important;
+  align-self:flex-end!important;
+  margin:10px 0 0!important;
+  width:auto!important;
+  max-width:100%!important;
+  min-height:48px;
+  padding:12px 24px!important;
+  box-sizing:border-box!important;
+}
+#formPacchetto .checkbox-gdpr{
+  display:grid!important;
+  grid-template-columns:24px minmax(0,1fr)!important;
+  align-items:start!important;
+  column-gap:10px!important;
+  row-gap:0!important;
+  width:100%!important;
+  max-width:100%!important;
+  margin:18px 0 0!important;
+  padding:0!important;
+  box-sizing:border-box!important;
+}
+#formPacchetto .checkbox-gdpr input[type="checkbox"]{
+  position:static!important;
+  width:20px!important;
+  height:20px!important;
+  min-width:20px!important;
+  margin:3px 0 0!important;
+  padding:0!important;
+  align-self:start!important;
+}
+#formPacchetto .checkbox-gdpr label{
+  min-width:0!important;
+  width:auto!important;
+  margin:0!important;
+  padding:0!important;
+  line-height:1.45!important;
+  overflow-wrap:anywhere;
+}
+#formPacchetto .checkbox-gdpr label small{
+  display:block;
+  margin-top:6px;
+  line-height:1.35;
+}
+#formPacchetto .form-feedback-msg{
+  position:static!important;
+  width:100%;
+  margin:8px 0 0!important;
+}
+@media(max-width:768px){
+  #formPacchetto > button[type="submit"].modern-btn{
+    align-self:stretch!important;
+    width:100%!important;
+    margin-top:14px!important;
+    text-align:center;
+  }
+  #formPacchetto .checkbox-gdpr{
+    grid-template-columns:22px minmax(0,1fr)!important;
+    column-gap:10px!important;
+  }
+  #formPacchetto .checkbox-gdpr input[type="checkbox"]{
+    width:20px!important;
+    height:20px!important;
+  }
+}
 </style>
 </head>
 <body class="ym-modern-page">
@@ -962,7 +1036,7 @@ come funziona la personalizzazione (notti, città, hotel) e quale mi consigliate
 })();
 </script>
 
-<script id="ym-modern-v6-js">
+<script id="ym-modern-v7-js">
 (function(){
   'use strict';
   const nav=document.getElementById('ymSmartNav');
@@ -989,5 +1063,6 @@ come funziona la personalizzazione (notti, città, hotel) e quale mi consigliate
 
 </body>
 </html>
+
 
 
