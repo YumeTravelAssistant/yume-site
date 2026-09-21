@@ -2442,7 +2442,7 @@ logoutBtn.onclick = () => {
 
 
 <script>
-/* ===== YUME ACCESS · comportamento locale alla sola home ===== */
+/* ===== YUME ACCESS · comportamento locale alla sola home · V4.1 hard-close fix ===== */
 (function(){
   'use strict';
   const root=document.getElementById('yhAccess');if(!root)return;
@@ -2450,7 +2450,13 @@ logoutBtn.onclick = () => {
   const closeBtn=document.getElementById('yhAccessClose'),openBtn=document.getElementById('yhAccessOpen'),guideBtn=document.getElementById('yhAccessGuide'),backBtn=document.getElementById('yhAccessBack');
   const step1=document.getElementById('yhAccessStep1'),step2=document.getElementById('yhAccessStep2'),result=document.getElementById('yhAccessResult'),progress2=document.getElementById('yhAccessProgress2');
   const KEY='yh_access_intent_v2',DISMISS='yh_access_dismissed_v2',SEEN='yh_access_seen_v2',DAY=24*60*60*1000;
-  let scores={group:0,flex:0,maison:0},stage=1,autoTimer=null;
+  let scores={group:0,flex:0,maison:0},stage=1,autoTimer=null,autoScrollHandler=null,cookieWaitTimer=null;
+  const HARD_CLOSED='yh_access_hard_closed_session_v1';
+  const clearAutomaticTriggers=()=>{
+    if(autoTimer){clearTimeout(autoTimer);autoTimer=null;}
+    if(autoScrollHandler){removeEventListener('scroll',autoScrollHandler);autoScrollHandler=null;}
+    if(cookieWaitTimer){clearInterval(cookieWaitTimer);cookieWaitTimer=null;}
+  };
   const emit=(name,params={})=>{window.dataLayer=window.dataLayer||[];window.dataLayer.push({event:name,...params});};
   const cookieOpen=()=>{const c=document.getElementById('cookie-banner');if(!c)return false;const x=getComputedStyle(c);return x.display!=='none'&&x.visibility!=='hidden';};
   const validStored=(key)=>{try{const x=JSON.parse(localStorage.getItem(key)||'null');if(!x||!x.ts||Date.now()-x.ts>30*DAY){localStorage.removeItem(key);return null;}return x;}catch(_){return null;}};
@@ -2458,7 +2464,7 @@ logoutBtn.onclick = () => {
   const campaignRaw=()=>{const p=new URLSearchParams(location.search);return((p.get('focus')||'')+' '+(p.get('utm_campaign')||'')+' '+(p.get('utm_content')||'')+' '+(p.get('utm_term')||'')).toLowerCase();};
   const explicitCampaignIntent=()=>{const r=campaignRaw();return !!r.trim()&&/(maison|su[_ -]?misura|sumisura|nozze|honeymoon|pacchett|flessibil|hajimete|kodai|hagane|grupp|hanami|kawazu|ume|haru|natsu|akikaze|koyo|yugen|tabi|primavera|estate|autun|inverno)/.test(r);};
   const readSaved=()=>{const x=validStored(KEY);return x&&['group','flex','maison'].includes(x.intent)?x.intent:null;};
-  const saveIntent=(intent,source)=>{try{localStorage.setItem(KEY,JSON.stringify({intent,ts:Date.now()}));localStorage.removeItem(DISMISS);}catch(_){}emit('yume_intent_selected',{intent,source});};
+  const saveIntent=(intent,source)=>{clearAutomaticTriggers();try{sessionStorage.setItem(HARD_CLOSED,'1');localStorage.setItem(KEY,JSON.stringify({intent,ts:Date.now()}));localStorage.removeItem(DISMISS);}catch(_){}emit('yume_intent_selected',{intent,source});};
   const saveDismiss=()=>{try{localStorage.setItem(DISMISS,JSON.stringify({ts:Date.now()}));}catch(_){}};
   const competingUiOpen=()=>{
     const cart=document.getElementById('carrelloContainer'),wa=document.getElementById('waMiniChat'),yuki=document.getElementById('yuki-chatbox');
@@ -2468,13 +2474,34 @@ logoutBtn.onclick = () => {
   const resetQuiz=()=>{scores={group:0,flex:0,maison:0};stage=1;step1.hidden=false;step2.hidden=true;result.hidden=true;progress2.classList.remove('active');};
   const showMain=()=>{quiz.hidden=true;main.hidden=false;resetQuiz();const t=document.getElementById('yhAccessTitle');if(t)setTimeout(()=>t.focus({preventScroll:true}),30);};
   const openAccess=(source='manual')=>{
-    if(source!=='manual'&&source!=='router_guide'&&competingUiOpen())return;
-    if(cookieOpen()){let tries=0;const wait=setInterval(()=>{tries++;if(!cookieOpen()||tries>30){clearInterval(wait);if(!cookieOpen())openAccess(source);}},350);return;}
+    const isManual=source==='manual'||source==='router_guide';
+    if(!isManual&&(sessionStorage.getItem(HARD_CLOSED)==='1'||dismissed()||readSaved())){clearAutomaticTriggers();return;}
+    if(!isManual&&competingUiOpen())return;
+    if(cookieOpen()){
+      if(cookieWaitTimer)return;
+      let tries=0;
+      cookieWaitTimer=setInterval(()=>{
+        tries++;
+        if(sessionStorage.getItem(HARD_CLOSED)==='1'||dismissed()||readSaved()){clearAutomaticTriggers();return;}
+        if(!cookieOpen()||tries>30){
+          clearInterval(cookieWaitTimer);cookieWaitTimer=null;
+          if(!cookieOpen())openAccess(source);
+        }
+      },350);
+      return;
+    }
+    clearAutomaticTriggers();
     sessionStorage.setItem(SEEN,'1');sessionStorage.setItem('yh_access_suppress_spotlight','1');
     const spot=document.getElementById('yhSpotlight');if(spot)spot.classList.remove('show');
     showMain();setOverlayState(true);root.classList.add('show');emit('yume_access_view',{source});
   };
-  const closeAccess=(source='close',persist=true)=>{root.classList.remove('show');setOverlayState(false);sessionStorage.setItem(SEEN,'1');sessionStorage.setItem('yh_access_suppress_spotlight','1');if(persist)saveDismiss();emit('yume_access_close',{source,persisted:persist});};
+  const closeAccess=(source='close',persist=true)=>{
+    clearAutomaticTriggers();
+    root.classList.remove('show');setOverlayState(false);
+    sessionStorage.setItem(SEEN,'1');sessionStorage.setItem(HARD_CLOSED,'1');sessionStorage.setItem('yh_access_suppress_spotlight','1');
+    if(persist)saveDismiss();
+    emit('yume_access_close',{source,persisted:persist});
+  };
   const route={group:{title:'Viaggio di gruppo',text:'La scelta più coerente se vuoi date e programma definiti, organizzazione YUME e accompagnamento.',href:'gruppo.html'},flex:{title:'Pacchetto flessibile',text:'La via intermedia: una base già progettata, con libertà di adattare durata, tappe ed esperienze.',href:'pacchetti.html'},maison:{title:'Maison · Su misura',text:'La scelta più coerente se vuoi partire dal tuo periodo, ritmo e priorità e costruire il progetto intorno a te.',href:'maison.html'}};
   const showResult=()=>{const max=Math.max(scores.group,scores.flex,scores.maison),winner=['group','flex','maison'].find(k=>scores[k]===max)||'flex',r=route[winner];step1.hidden=true;step2.hidden=true;progress2.classList.add('active');result.hidden=false;result.innerHTML='<small>La formula più vicina alle tue risposte</small><h3>'+r.title+'</h3><p>'+r.text+'</p><div class="yh-access-result-actions"><a class="yh-access-result-cta" href="'+r.href+'" data-yh-result="'+winner+'">Vai a '+r.title+' →</a><button type="button" class="yh-access-back" data-yh-restart>Rifai le domande</button></div>';const c=result.querySelector('[data-yh-result]');if(c)c.addEventListener('click',()=>saveIntent(winner,'guided_result'));const restart=result.querySelector('[data-yh-restart]');if(restart)restart.addEventListener('click',resetQuiz);emit('yume_access_result',{intent:winner,scores:JSON.stringify(scores)});};
 
@@ -2489,12 +2516,15 @@ logoutBtn.onclick = () => {
 
   const saved=readSaved();
   if(saved){const labels={group:'Gruppi',flex:'Pacchetti flessibili',maison:'Maison'};if(openBtn)openBtn.innerHTML='<i class="fa fa-compass" aria-hidden="true"></i> Preferenza: '+labels[saved]+' · cambia';}
-  const eligible=!explicitCampaignIntent()&&!saved&&!dismissed()&&sessionStorage.getItem(SEEN)!=='1';
+  const eligible=!explicitCampaignIntent()&&!saved&&!dismissed()&&sessionStorage.getItem(SEEN)!=='1'&&sessionStorage.getItem(HARD_CLOSED)!=='1';
   if(eligible){
     sessionStorage.setItem('yh_access_suppress_spotlight','1');
     autoTimer=setTimeout(()=>openAccess('time'),7000);
-    const onScroll=()=>{const doc=document.documentElement,max=Math.max(1,doc.scrollHeight-innerHeight);if(scrollY/max>=0.28){if(autoTimer)clearTimeout(autoTimer);openAccess('scroll');removeEventListener('scroll',onScroll);}};
-    addEventListener('scroll',onScroll,{passive:true});
+    autoScrollHandler=()=>{
+      const doc=document.documentElement,max=Math.max(1,doc.scrollHeight-innerHeight);
+      if(scrollY/max>=0.28)openAccess('scroll');
+    };
+    addEventListener('scroll',autoScrollHandler,{passive:true});
   }
 })();
 </script>
@@ -2538,7 +2568,6 @@ logoutBtn.onclick = () => {
 
 </body>
 </html>
-
 
 
 
