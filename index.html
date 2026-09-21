@@ -223,11 +223,7 @@ body.yh-home .yh-spotlight strong{display:block;color:var(--yh-red);font:700 1.1
 body.yh-home .yh-spotlight p{margin:0 0 10px;font-size:.83rem;line-height:1.45;color:#5d5350}
 body.yh-home .yh-spotlight a{font-weight:700;color:var(--yh-red);text-decoration:none}
 body.yh-home .yh-spotlight-close{position:absolute;top:8px;right:10px;width:30px;height:30px;min-width:0;padding:0!important;margin:0!important;border-radius:50%!important;background:transparent!important;color:#6b5e5a!important;font-size:18px!important}
-@media(max-width:600px){body.yh-home .yh-spotlight{left:12px;bottom:12px;max-width:calc(100vw - 24px)}}
-
-/* mobile sticky conversion bar */
-body.yh-home .yh-mobile-actions{display:none}
-@media(max-width:700px){body.yh-home{padding-bottom:72px}body.yh-home .yh-mobile-actions{position:fixed;display:grid;grid-template-columns:1fr 1fr;gap:8px;left:10px;right:10px;bottom:8px;z-index:99990;padding:8px;border-radius:18px;background:rgba(255,248,244,.95);border:1px solid rgba(139,44,43,.12);box-shadow:0 12px 40px rgba(29,18,17,.18);backdrop-filter:blur(10px)}body.yh-home .yh-mobile-actions a{display:flex;align-items:center;justify-content:center;min-height:43px;border-radius:13px;text-decoration:none;font:700 .82rem 'Quicksand',sans-serif}body.yh-home .yh-mobile-actions a:first-child{background:var(--yh-red);color:#fff}body.yh-home .yh-mobile-actions a:last-child{background:#fff;color:var(--yh-red);border:1px solid rgba(139,44,43,.18)}}
+@media(max-width:760px){body.yh-home .yh-spotlight{display:none!important}}
 
 
 body.yh-home .yh-flex-cta-wrap{display:flex;justify-content:center;margin:28px 0 0}
@@ -235,9 +231,6 @@ body.yh-home .yh-flex-cta-wrap .yh-btn{background:var(--yh-red);color:#fff;borde
 @media(max-width:700px){
   body.yh-home .yh-hero-actions{grid-template-columns:1fr!important;gap:9px}
   body.yh-home .yh-hero-actions .yh-btn{grid-column:auto!important;width:100%;min-height:45px}
-  body.yh-home .yh-mobile-actions{grid-template-columns:repeat(3,1fr)!important;gap:6px!important}
-  body.yh-home .yh-mobile-actions a{font-size:.72rem!important;padding:0 4px;min-height:42px!important;background:#fff;color:var(--yh-red);border:1px solid rgba(139,44,43,.16)}
-  body.yh-home .yh-mobile-actions a:first-child{background:var(--yh-red);color:#fff;border-color:var(--yh-red)}
 }
 
 /* accessibility */
@@ -305,7 +298,7 @@ body.yh-home .yh-access-result p{margin:0 0 14px;color:#665a56;font-size:.88rem;
 body.yh-home .yh-access-result-cta{background:var(--yh-red);color:#fff;border-color:var(--yh-red)}
 body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
 @media(max-width:760px){
-  body.yh-home .yh-access{bottom:calc(82px + var(--cookie-gap,0px));width:calc(100vw - 20px);max-height:calc(100vh - 105px);border-radius:23px}
+  body.yh-home .yh-access{bottom:calc(12px + var(--cookie-gap,0px));width:calc(100vw - 20px);max-height:calc(100vh - 34px - var(--cookie-gap,0px));border-radius:23px}
   body.yh-home .yh-access-inner{padding:19px 16px 16px}
   body.yh-home .yh-access-grid{grid-template-columns:1fr;gap:8px}
   body.yh-home .yh-access-choice{min-height:0;padding:15px 42px 15px 15px}
@@ -319,6 +312,45 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
   body.yh-home .yh-access-sub{font-size:.84rem}
 }
 @media(prefers-reduced-motion:reduce){body.yh-home .yh-access,body.yh-home .yh-access-choice{transition:none!important}}
+
+
+/* ===== CALENDARIO COMPATTO V4 · stagione + mese + archivio on demand ===== */
+body.yh-home .yh-filter-stack{display:grid;gap:11px;margin:0 auto 15px;max-width:100%}
+body.yh-home .yh-season-filter{margin:0;scrollbar-width:none}
+body.yh-home .yh-season-filter::-webkit-scrollbar,body.yh-home .yh-month-filter::-webkit-scrollbar{display:none}
+body.yh-home .yh-season-btn--archive{border-style:dashed}
+body.yh-home .yh-month-filter{display:flex;align-items:center;justify-content:center;gap:7px;overflow-x:auto;padding:2px 2px 5px;scrollbar-width:none}
+body.yh-home .yh-month-btn{flex:0 0 auto;appearance:none;border:1px solid rgba(139,44,43,.13);background:rgba(255,255,255,.7);color:#6e5d58;border-radius:999px;padding:8px 12px;margin:0;font:700 .75rem 'Quicksand',sans-serif;cursor:pointer;white-space:nowrap;transition:.18s ease}
+body.yh-home .yh-month-btn:hover,body.yh-home .yh-month-btn.active{background:#2f2927;color:#fff;border-color:#2f2927}
+body.yh-home .yh-archive-label{text-align:center;margin:4px 0 18px;color:#7a6863;font:700 .82rem 'Quicksand',sans-serif;text-transform:uppercase;letter-spacing:.08em}
+body.yh-home #viaggi-passati-section{margin:0;padding:0;background:transparent;box-shadow:none;max-width:none;border-radius:0}
+body.yh-home #viaggiPassatiContainer{align-items:stretch}
+body.yh-home #viaggiPassatiContainer .pacchetti-box{background:#fff;border:1px solid rgba(139,44,43,.08);border-radius:22px;overflow:hidden;box-shadow:0 10px 30px rgba(53,35,31,.07);transition:transform .25s ease,box-shadow .25s ease;min-width:0}
+body.yh-home #viaggiPassatiContainer .pacchetti-box img{height:205px;object-fit:cover;border-radius:0;margin:0;filter:saturate(.82)}
+body.yh-home #viaggiPassatiContainer .card-content{padding:21px 20px 74px}
+body.yh-home #viaggiPassatiContainer .modern-btn{left:20px;right:auto;bottom:18px;border-radius:999px;padding:10px 16px;color:#fff;border-color:var(--yh-red);background:var(--yh-red);font-size:.84rem}
+body.yh-home .yh-load-more-wrap{display:flex;justify-content:center;margin:24px 0 3px}
+body.yh-home .yh-load-more-wrap[hidden]{display:none!important}
+body.yh-home .yh-load-more{min-height:44px;padding:0 18px;margin:0;border-radius:999px;border:1px solid rgba(139,44,43,.18);background:#fff;color:var(--yh-red);font:800 .8rem 'Quicksand',sans-serif;cursor:pointer}
+body.yh-home .yh-load-more:hover{background:var(--yh-red);color:#fff;border-color:var(--yh-red)}
+/* Quando YUME Access è aperto, nessun altro floating element compete con il pannello. */
+body.yh-home.yh-access-active #toggleCarrelloBtn,
+body.yh-home.yh-access-active #wa-chat-avatar,
+body.yh-home.yh-access-active #contattaci-avatar,
+body.yh-home.yh-access-active #yuki-chat-avatar{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+body.yh-home.yh-access-active #carrelloContainer,
+body.yh-home.yh-access-active #waMiniChat,
+body.yh-home.yh-access-active #yuki-chatbox{display:none!important}
+@media(max-width:760px){
+  body.yh-home .yh-season-filter,body.yh-home .yh-month-filter{justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;padding:2px 1px 7px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
+  body.yh-home .yh-season-btn,body.yh-home .yh-month-btn{flex:0 0 auto;scroll-snap-align:start}
+  body.yh-home .yh-season-meta{margin:0 0 17px;text-align:left;padding:0 3px}
+  body.yh-home #viaggiPassatiContainer{display:grid;grid-template-columns:1fr;gap:18px}
+  body.yh-home #viaggiPassatiContainer .pacchetti-box{width:100%;max-width:460px}
+  body.yh-home #viaggiPassatiContainer .pacchetti-box img{height:190px}
+  body.yh-home .yh-load-more-wrap{margin-top:18px}
+}
+@media(min-width:1400px){body.yh-home #viaggiPassatiContainer{grid-template-columns:repeat(3,minmax(0,1fr))}}
 
 </style>
 
@@ -502,13 +534,17 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
 <section class="pacchetti-flex-section" id="viaggi-prossimi-section">
   <p class="yh-section-eyebrow">Calendario YUME</p>
   <h2 class="slide-in">Scegli quando vivere il Giappone</h2>
-  <p class="yh-season-intro">Filtra le partenze per stagione oppure guarda tutto il calendario. Le date concluse vengono escluse automaticamente.</p>
-  <div class="yh-season-filter" role="group" aria-label="Filtra le partenze per stagione">
-    <button type="button" class="yh-season-btn active" data-season="all">Tutte</button>
-    <button type="button" class="yh-season-btn" data-season="spring">🌸 Primavera</button>
-    <button type="button" class="yh-season-btn" data-season="summer">☀️ Estate</button>
-    <button type="button" class="yh-season-btn" data-season="autumn">🍁 Autunno</button>
-    <button type="button" class="yh-season-btn" data-season="winter">❄️ Inverno</button>
+  <p class="yh-season-intro">Parti dalla stagione, restringi per mese e apri l’archivio solo quando ti serve.</p>
+  <div class="yh-filter-stack">
+    <div class="yh-season-filter" role="group" aria-label="Filtra le partenze per stagione">
+      <button type="button" class="yh-season-btn active" data-season="all">Prossime</button>
+      <button type="button" class="yh-season-btn" data-season="spring">🌸 Primavera</button>
+      <button type="button" class="yh-season-btn" data-season="summer">☀️ Estate</button>
+      <button type="button" class="yh-season-btn" data-season="autumn">🍁 Autunno</button>
+      <button type="button" class="yh-season-btn" data-season="winter">❄️ Inverno</button>
+      <button type="button" class="yh-season-btn yh-season-btn--archive" data-season="past"><i class="fa fa-history" aria-hidden="true"></i> Passati</button>
+    </div>
+    <div class="yh-month-filter" id="yhMonthFilter" role="group" aria-label="Filtra le partenze per mese"></div>
   </div>
   <div class="yh-season-meta" id="yhSeasonMeta" aria-live="polite"></div>
 
@@ -516,7 +552,7 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
     <div class="pacchetti-slider-container" id="viaggiProssimiContainer">
 
       <!-- === PRIMAVERA: KAWAZU === -->
-      <a href="kawazu.html" class="pacchetti-box slide-in card-link" data-end="2026-03-24" aria-label="Apri scheda: Kawazu – Viaggio di primavera">
+      <a href="kawazu.html" class="pacchetti-box slide-in card-link" data-start="2026-03-10" data-end="2026-03-24" aria-label="Apri scheda: Kawazu – Viaggio di primavera">
         <div class="ribbon">SOLD OUT</div>
         <img src="assets/kawazu.jpg" alt="Kawazu – Viaggio di primavera">
         <div class="card-content">
@@ -535,7 +571,7 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
       </a>
 
       <!-- === HANAMI === -->
-      <a href="hanami.html" class="pacchetti-box slide-in card-link" data-end="2026-04-09" aria-label="Apri scheda: Hanami – Ciliegi in fiore">
+      <a href="hanami.html" class="pacchetti-box slide-in card-link" data-start="2026-03-26" data-end="2026-04-09" aria-label="Apri scheda: Hanami – Ciliegi in fiore">
         <div class="ribbon">SOLD OUT</div>
         <img src="assets/hanami.jpg" alt="Hanami – Ciliegi in fiore">
         <div class="card-content">
@@ -554,7 +590,7 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
       </a>
 
       <!-- === HARU === -->
-      <a href="haru.html" class="pacchetti-box slide-in card-link" data-end="2026-04-27" aria-label="Apri scheda: Haru – Viaggio di aprile">
+      <a href="haru.html" class="pacchetti-box slide-in card-link" data-start="2026-04-12" data-end="2026-04-27" aria-label="Apri scheda: Haru – Viaggio di aprile">
         <div class="ribbon">SOLD OUT</div>
         <img src="assets/haru.jpg" alt="Haru – Viaggio di aprile">
         <div class="card-content">
@@ -573,7 +609,7 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
       </a>
 
       <!-- === FUJI === -->
-      <a href="fuji.html" class="pacchetti-box slide-in card-link" data-end="2026-05-12" aria-label="Apri scheda: Fuji – Glicini & Monte sacro">
+      <a href="fuji.html" class="pacchetti-box slide-in card-link" data-start="2026-04-28" data-end="2026-05-12" aria-label="Apri scheda: Fuji – Glicini & Monte sacro">
         <div class="ribbon">SOLD OUT</div>
         <img src="assets/fuji.jpg" alt="Fuji – Glicini & Monte sacro">
         <div class="card-content">
@@ -592,7 +628,7 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
       </a>
 
       <!-- === KYUSHU === -->
-      <a href="https://yume-travel.com/kyushu.html" class="pacchetti-box slide-in card-link" data-end="2026-05-27" aria-label="Apri scheda: Kyushu – Viaggio di gruppo">
+      <a href="https://yume-travel.com/kyushu.html" class="pacchetti-box slide-in card-link" data-start="2026-05-13" data-end="2026-05-27" aria-label="Apri scheda: Kyushu – Viaggio di gruppo">
         <div class="ribbon">ULTIMI POSTI</div>
         <img src="kyushu/kyushu_desk.jpg" alt="Kyushu – Viaggio di gruppo">
         <div class="card-content">
@@ -611,7 +647,7 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
       </a>
 
       <!-- === TSUYU === -->
-      <a href="https://yume-travel.com/tsuyu.html" class="pacchetti-box slide-in card-link" data-end="2026-06-28" aria-label="Apri scheda: Tsuyu – Viaggio di gruppo">
+      <a href="https://yume-travel.com/tsuyu.html" class="pacchetti-box slide-in card-link" data-start="2026-06-14" data-end="2026-06-28" aria-label="Apri scheda: Tsuyu – Viaggio di gruppo">
         <div class="ribbon">ULTIMI POSTI</div>
         <img src="tsuyu/tsuyu_desk.jpg" alt="Tsuyu – Viaggio di gruppo">
         <div class="card-content">
@@ -630,7 +666,7 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
       </a>
 
       <!-- === FUMIZUKI === -->
-      <a href="https://yume-travel.com/fumizuki.html" class="pacchetti-box slide-in card-link" data-end="2026-08-12" aria-label="Apri scheda: Fumizuki – Viaggio di gruppo">
+      <a href="https://yume-travel.com/fumizuki.html" class="pacchetti-box slide-in card-link" data-start="2026-07-29" data-end="2026-08-12" aria-label="Apri scheda: Fumizuki – Viaggio di gruppo">
         <div class="ribbon">ULTIMI POSTI</div>
         <img src="fumizuki/fumizuki_desk.jpg" alt="Fumizuki – Viaggio di gruppo">
         <div class="card-content">
@@ -649,7 +685,7 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
       </a>
 
       <!-- === NATSU === -->
-      <a href="https://yume-travel.com/natsu.html" class="pacchetti-box slide-in card-link" data-end="2026-09-01" aria-label="Apri scheda: Natsu – Viaggio di gruppo">
+      <a href="https://yume-travel.com/natsu.html" class="pacchetti-box slide-in card-link" data-start="2026-08-18" data-end="2026-09-01" aria-label="Apri scheda: Natsu – Viaggio di gruppo">
         <div class="ribbon">ULTIMI POSTI</div>
         <img src="natsu/natsu_desk.jpg" alt="Natsu – Viaggio di gruppo">
         <div class="card-content">
@@ -668,7 +704,7 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
       </a>
 
       <!-- === HIKARI – VIAGGIO FOTOGRAFICO === -->
-      <a href="hikari.html" class="pacchetti-box slide-in card-link" data-end="2026-10-25" aria-label="Apri scheda: Hikari – Viaggio Fotografico">
+      <a href="hikari.html" class="pacchetti-box slide-in card-link" data-start="2026-10-13" data-end="2026-10-25" aria-label="Apri scheda: Hikari – Viaggio Fotografico">
         <div class="ribbon" style="background:#8B2C2B;">FOTOGRAFIA</div>
         <img src="fuji/hikari_desk.jpg" alt="Hikari – Viaggio Fotografico">
         <div class="card-content">
@@ -689,7 +725,7 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
       </a>
 
       <!-- === AKIKAZE === -->
-      <a href="https://yume-travel.com/akikaze.html" class="pacchetti-box slide-in card-link" data-end="2026-10-24" aria-label="Apri scheda: Akikaze – Viaggio di gruppo">
+      <a href="https://yume-travel.com/akikaze.html" class="pacchetti-box slide-in card-link" data-start="2026-10-13" data-end="2026-10-24" aria-label="Apri scheda: Akikaze – Viaggio di gruppo">
         <div class="ribbon" style="background:#3D8B5A;">NOVITÀ</div>
         <img src="kokai/akikaze_desk.jpg" alt="Akikaze – Viaggio di gruppo">
         <div class="card-content">
@@ -709,7 +745,7 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
       </a>
 
       <!-- === KOYO === -->
-      <a href="https://yume-travel.com/koyo.html" class="pacchetti-box slide-in card-link" data-end="2026-11-08" aria-label="Apri scheda: Koyo – Viaggio di gruppo">
+      <a href="https://yume-travel.com/koyo.html" class="pacchetti-box slide-in card-link" data-start="2026-10-25" data-end="2026-11-08" aria-label="Apri scheda: Koyo – Viaggio di gruppo">
         <div class="ribbon" style="background:#3D8B5A;">NOVITÀ</div>
         <img src="kokai/koyo_desk.jpg" alt="Koyo – Viaggio di gruppo">
         <div class="card-content">
@@ -729,7 +765,7 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
       </a>
 
       <!-- === YUGEN === -->
-      <a href="https://yume-travel.com/yugen.html" class="pacchetti-box slide-in card-link" data-end="2026-11-22" aria-label="Apri scheda: Yugen – Viaggio di gruppo">
+      <a href="https://yume-travel.com/yugen.html" class="pacchetti-box slide-in card-link" data-start="2026-11-08" data-end="2026-11-22" aria-label="Apri scheda: Yugen – Viaggio di gruppo">
         <div class="ribbon" style="background:#3D8B5A;">NOVITÀ</div>
         <img src="kokai/yugen_desk.jpg" alt="Yugen – Viaggio di gruppo">
         <div class="card-content">
@@ -749,7 +785,7 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
       </a>
 
       <!-- === TABI === -->
-      <a href="https://yume-travel.com/tabi.html" class="pacchetti-box slide-in card-link" data-end="2026-12-06" aria-label="Apri scheda: Tabi – Viaggio di gruppo">
+      <a href="https://yume-travel.com/tabi.html" class="pacchetti-box slide-in card-link" data-start="2026-11-22" data-end="2026-12-06" aria-label="Apri scheda: Tabi – Viaggio di gruppo">
         <div class="ribbon" style="background:#3D8B5A;">NOVITÀ</div>
         <img src="kokai/tabi_desk.jpg" alt="Tabi – Viaggio di gruppo">
         <div class="card-content">
@@ -769,7 +805,7 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
       </a>
 
       <!-- === YAYOI 2027 === -->
-      <a href="https://yume-travel.com/yayoi-2027.html" class="pacchetti-box slide-in card-link" data-end="2027-03-13" aria-label="Apri scheda: YAYOI 2027 – Viaggio di gruppo">
+      <a href="https://yume-travel.com/yayoi-2027.html" class="pacchetti-box slide-in card-link" data-start="2027-03-01" data-end="2027-03-13" aria-label="Apri scheda: YAYOI 2027 – Viaggio di gruppo">
         <div class="ribbon" style="background:#3D8B5A;">PRIMAVERA 2027</div>
         <img src="yayoi-2027/yayoi-2027_desk.jpg" alt="YAYOI 2027 – Viaggio di gruppo">
         <div class="card-content">
@@ -789,7 +825,7 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
       </a>
 
       <!-- === UME 2027 === -->
-      <a href="https://yume-travel.com/ume-2027.html" class="pacchetti-box slide-in card-link" data-end="2027-03-24" aria-label="Apri scheda: UME 2027 – Viaggio di gruppo">
+      <a href="https://yume-travel.com/ume-2027.html" class="pacchetti-box slide-in card-link" data-start="2027-03-12" data-end="2027-03-24" aria-label="Apri scheda: UME 2027 – Viaggio di gruppo">
         <div class="ribbon" style="background:#3D8B5A;">PRIMAVERA 2027</div>
         <img src="ume-2027/ume-2027_desk.jpg" alt="UME 2027 – Viaggio di gruppo">
         <div class="card-content">
@@ -809,7 +845,7 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
       </a>
 
       <!-- === HANAMI 2027 === -->
-      <a href="https://yume-travel.com/hanami-2027.html" class="pacchetti-box slide-in card-link" data-end="2027-04-05" aria-label="Apri scheda: HANAMI 2027 – Viaggio di gruppo">
+      <a href="https://yume-travel.com/hanami-2027.html" class="pacchetti-box slide-in card-link" data-start="2027-03-23" data-end="2027-04-05" aria-label="Apri scheda: HANAMI 2027 – Viaggio di gruppo">
         <div class="ribbon" style="background:#3D8B5A;">PRIMAVERA 2027</div>
         <img src="hanami-2027/hanami-2027_desk.jpg" alt="HANAMI 2027 – Viaggio di gruppo">
         <div class="card-content">
@@ -829,7 +865,7 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
       </a>
 
       <!-- === HARUKAZE 2027 === -->
-      <a href="https://yume-travel.com/harukaze-2027.html" class="pacchetti-box slide-in card-link" data-end="2027-04-21" aria-label="Apri scheda: HARUKAZE 2027 – Viaggio di gruppo">
+      <a href="https://yume-travel.com/harukaze-2027.html" class="pacchetti-box slide-in card-link" data-start="2027-04-07" data-end="2027-04-21" aria-label="Apri scheda: HARUKAZE 2027 – Viaggio di gruppo">
         <div class="ribbon" style="background:#3D8B5A;">PRIMAVERA 2027</div>
         <img src="harukaze-2027/harukaze-2027_desk.jpg" alt="HARUKAZE 2027 – Viaggio di gruppo">
         <div class="card-content">
@@ -849,7 +885,7 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
       </a>
 
       <!-- === HARU 2027 === -->
-      <a href="https://yume-travel.com/haru-2027.html" class="pacchetti-box slide-in card-link" data-end="2027-04-22" aria-label="Apri scheda: HARU 2027 – Viaggio di gruppo">
+      <a href="https://yume-travel.com/haru-2027.html" class="pacchetti-box slide-in card-link" data-start="2027-04-08" data-end="2027-04-22" aria-label="Apri scheda: HARU 2027 – Viaggio di gruppo">
         <div class="ribbon" style="background:#3D8B5A;">PRIMAVERA 2027</div>
         <img src="haru-2027/haru-2027_desk.jpg" alt="HARU 2027 – Viaggio di gruppo">
         <div class="card-content">
@@ -869,7 +905,7 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
       </a>
 
       <!-- === UZUKI 2027 === -->
-      <a href="https://yume-travel.com/uzuki-2027.html" class="pacchetti-box slide-in card-link" data-end="2027-04-29" aria-label="Apri scheda: UZUKI 2027 – Viaggio di gruppo">
+      <a href="https://yume-travel.com/uzuki-2027.html" class="pacchetti-box slide-in card-link" data-start="2027-04-15" data-end="2027-04-29" aria-label="Apri scheda: UZUKI 2027 – Viaggio di gruppo">
         <div class="ribbon" style="background:#3D8B5A;">PRIMAVERA 2027</div>
         <img src="uzuki-2027/uzuki-2027_desk.jpg" alt="UZUKI 2027 – Viaggio di gruppo">
         <div class="card-content">
@@ -889,7 +925,7 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
       </a>
 
       <!-- === SATSU 2027 === -->
-      <a href="https://yume-travel.com/satsu-2027.html" class="pacchetti-box slide-in card-link" data-end="2027-05-05" aria-label="Apri scheda: SATSU 2027 – Viaggio di gruppo">
+      <a href="https://yume-travel.com/satsu-2027.html" class="pacchetti-box slide-in card-link" data-start="2027-04-21" data-end="2027-05-05" aria-label="Apri scheda: SATSU 2027 – Viaggio di gruppo">
         <div class="ribbon" style="background:#3D8B5A;">PRIMAVERA 2027</div>
         <img src="satsu-2027/satsu-2027_desk.jpg" alt="SATSU 2027 – Viaggio di gruppo">
         <div class="card-content">
@@ -909,7 +945,7 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
       </a>
 
       <!-- === KUNPU 2027 === -->
-      <a href="https://yume-travel.com/kunpu-2027.html" class="pacchetti-box slide-in card-link" data-end="2027-05-06" aria-label="Apri scheda: KUNPU 2027 – Viaggio di gruppo">
+      <a href="https://yume-travel.com/kunpu-2027.html" class="pacchetti-box slide-in card-link" data-start="2027-04-22" data-end="2027-05-06" aria-label="Apri scheda: KUNPU 2027 – Viaggio di gruppo">
         <div class="ribbon" style="background:#3D8B5A;">PRIMAVERA 2027</div>
         <img src="kunpu-2027/kunpu-2027_desk.jpg" alt="KUNPU 2027 – Viaggio di gruppo">
         <div class="card-content">
@@ -929,7 +965,7 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
       </a>
 
       <!-- === WAKABA 2027 === -->
-      <a href="https://yume-travel.com/wakaba-2027.html" class="pacchetti-box slide-in card-link" data-end="2027-05-13" aria-label="Apri scheda: WAKABA 2027 – Viaggio di gruppo">
+      <a href="https://yume-travel.com/wakaba-2027.html" class="pacchetti-box slide-in card-link" data-start="2027-04-29" data-end="2027-05-13" aria-label="Apri scheda: WAKABA 2027 – Viaggio di gruppo">
         <div class="ribbon" style="background:#3D8B5A;">PRIMAVERA 2027</div>
         <img src="wakaba-2027/wakaba-2027_desk.jpg" alt="WAKABA 2027 – Viaggio di gruppo">
         <div class="card-content">
@@ -949,7 +985,7 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
       </a>
 
       <!-- === MIDORI 2027 === -->
-      <a href="https://yume-travel.com/midori-2027.html" class="pacchetti-box slide-in card-link" data-end="2027-05-20" aria-label="Apri scheda: MIDORI 2027 – Viaggio di gruppo">
+      <a href="https://yume-travel.com/midori-2027.html" class="pacchetti-box slide-in card-link" data-start="2027-05-06" data-end="2027-05-20" aria-label="Apri scheda: MIDORI 2027 – Viaggio di gruppo">
         <div class="ribbon" style="background:#3D8B5A;">PRIMAVERA 2027</div>
         <img src="midori-2027/midori-2027_desk.jpg" alt="MIDORI 2027 – Viaggio di gruppo">
         <div class="card-content">
@@ -969,7 +1005,7 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
       </a>
 
       <!-- === HIKARI 2027 === -->
-      <a href="https://yume-travel.com/hikari-2027.html" class="pacchetti-box slide-in card-link" data-end="2027-05-27" aria-label="Apri scheda: HIKARI 2027 – Viaggio di gruppo">
+      <a href="https://yume-travel.com/hikari-2027.html" class="pacchetti-box slide-in card-link" data-start="2027-05-13" data-end="2027-05-27" aria-label="Apri scheda: HIKARI 2027 – Viaggio di gruppo">
         <div class="ribbon" style="background:#3D8B5A;">PRIMAVERA 2027</div>
         <img src="hikari-2027/hikari-2027_desk.jpg" alt="HIKARI 2027 – Viaggio di gruppo">
         <div class="card-content">
@@ -990,6 +1026,9 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
 
     </div>
   </div>
+  <div class="yh-load-more-wrap" id="yhLoadMoreWrap" hidden>
+    <button type="button" class="yh-load-more" id="yhLoadMore">Mostra altre partenze</button>
+  </div>
   <div class="yh-empty-season" id="yhEmptySeason">
     <strong>Nessuna partenza aperta in questa stagione.</strong>
     <span>Possiamo comunque costruire il tuo viaggio su misura oppure avvisarti quando aprono nuove date.</span><br>
@@ -998,13 +1037,12 @@ body.yh-home .yh-access-result-actions{display:flex;flex-wrap:wrap;gap:8px}
 
 </section>
 
-<section class="pacchetti-flex-section" id="viaggi-passati-section" style="display:none;">
-  <h2 class="slide-in">Viaggi passati</h2>
+<div id="viaggi-passati-section" style="display:none;" aria-hidden="true">
+  <p class="yh-archive-label"><i class="fa fa-history" aria-hidden="true"></i> Archivio partenze YUME</p>
   <div class="pacchetti-slider-wrapper">
-    <div class="pacchetti-slider-container" id="viaggiPassatiContainer">
-    </div>
+    <div class="pacchetti-slider-container" id="viaggiPassatiContainer"></div>
   </div>
-</section>
+</div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -1012,31 +1050,30 @@ document.addEventListener("DOMContentLoaded", function () {
   const passatiContainer = document.getElementById("viaggiPassatiContainer");
   const passatiSection = document.getElementById("viaggi-passati-section");
   const prossimiSection = document.getElementById("viaggi-prossimi-section");
-
   if (!prossimiContainer || !passatiContainer) return;
 
   const oggi = new Date();
   oggi.setHours(0, 0, 0, 0);
-
   const cards = Array.from(prossimiContainer.querySelectorAll(".pacchetti-box[data-end]"));
 
   cards.forEach(function (card) {
     const endValue = card.getAttribute("data-end");
     if (!endValue) return;
-
     const fineViaggio = new Date(endValue + "T23:59:59");
-
     if (fineViaggio < oggi) {
+      card.dataset.status = "past";
       passatiContainer.appendChild(card);
+    } else {
+      card.dataset.status = "future";
     }
   });
 
-  if (passatiContainer.children.length > 0) {
-    passatiSection.style.display = "";
-  }
-
-  if (prossimiContainer.children.length === 0 && prossimiSection) {
-    prossimiSection.style.display = "none";
+  /* L'archivio resta nello stesso blocco calendario ma nascosto finché l'utente non seleziona Passati. */
+  if (passatiSection && prossimiSection) {
+    const empty = document.getElementById("yhEmptySeason");
+    prossimiSection.insertBefore(passatiSection, empty || null);
+    passatiSection.style.display = "none";
+    passatiSection.setAttribute("aria-hidden", "true");
   }
 });
 </script>
@@ -2201,11 +2238,6 @@ logoutBtn.onclick = () => {
 <script src="assets/script_prodotti.js"></script>
 
 
-<div class="yh-mobile-actions" aria-label="Azioni rapide">
-  <a href="gruppo.html">Gruppi</a>
-  <a href="pacchetti.html">Flessibili</a>
-  <a href="maison.html">Maison</a>
-</div>
 
 
 <!-- YUME ACCESS · selector di intento della home -->
@@ -2295,130 +2327,116 @@ logoutBtn.onclick = () => {
   'use strict';
   const qs=(s,c=document)=>c.querySelector(s), qsa=(s,c=document)=>Array.from(c.querySelectorAll(s));
   const emit=(name,params={})=>{ try{ window.dataLayer=window.dataLayer||[]; window.dataLayer.push({event:name,...params}); }catch(e){} };
+  const DAY=24*60*60*1000;
+  const SPOT_DISMISS='yh_spotlight_dismissed_v2';
+  const months=['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
+  let activeSeason='all';
+  let activeMonth='all';
+  let visibleLimit=0;
 
+  const baseLimit=()=>window.matchMedia('(max-width: 768px)').matches?3:6;
+  const validUntil=(key,days=30)=>{
+    try{const t=Number(localStorage.getItem(key)||0);return t>0 && Date.now()-t<days*DAY;}catch(e){return false;}
+  };
+  const dismissFor30=(key)=>{try{localStorage.setItem(key,String(Date.now()));}catch(e){}};
+
+  function startKey(card){ return card.dataset.start || card.dataset.end || '9999-12-31'; }
   function classifySeason(card){
-    const href=(card.getAttribute('href')||'').toLowerCase();
-    const end=card.getAttribute('data-end');
-    if(!end) return 'all';
-    const month=Number(end.slice(5,7));
-    if(href.includes('tabi')) return 'autumn';
-    if(month===12 || month<=2) return 'winter';
-    if(month>=3 && month<=5) return 'spring';
-    if(month>=6 && month<=9) return 'summer';
+    const m=Number(startKey(card).slice(5,7));
+    if(m===12 || m<=2) return 'winter';
+    if(m>=3 && m<=5) return 'spring';
+    if(m>=6 && m<=8) return 'summer';
     return 'autumn';
   }
-
-  function getFutureCards(){
-    const now=new Date(); now.setHours(0,0,0,0);
-    return qsa('#viaggiProssimiContainer .pacchetti-box[data-end]').filter(card=>{
-      const d=new Date(card.getAttribute('data-end')+'T23:59:59');
-      return d>=now && card.closest('#viaggiProssimiContainer');
-    });
+  function futureCards(){ return qsa('#viaggiProssimiContainer .pacchetti-box[data-end]'); }
+  function pastCards(){ return qsa('#viaggiPassatiContainer .pacchetti-box[data-end]'); }
+  function sortInto(container,cards,past=false){
+    cards.sort((a,b)=>past?startKey(b).localeCompare(startKey(a)):startKey(a).localeCompare(startKey(b))).forEach(c=>container.appendChild(c));
   }
-
   function enhanceCards(){
-    getFutureCards().forEach(card=>{
-      card.dataset.season=classifySeason(card);
-      const btn=qs('.modern-btn',card);
-      if(btn) btn.innerHTML='Scopri date e quota <i class="fa fa-arrow-right"></i>';
-    });
+    futureCards().forEach(card=>{card.dataset.season=classifySeason(card);const btn=qs('.modern-btn',card);if(btn)btn.innerHTML='Scopri date e quota <i class="fa fa-arrow-right"></i>';});
+    pastCards().forEach(card=>{card.dataset.season=classifySeason(card);const btn=qs('.modern-btn',card);if(btn)btn.innerHTML='Rivedi il viaggio <i class="fa fa-arrow-right"></i>';});
+    const f=qs('#viaggiProssimiContainer'),p=qs('#viaggiPassatiContainer');
+    if(f)sortInto(f,futureCards(),false); if(p)sortInto(p,pastCards(),true);
   }
+  function scopedCards(){
+    const source=activeSeason==='past'?pastCards():futureCards();
+    return source.filter(card=>activeSeason==='past'||activeSeason==='all'||card.dataset.season===activeSeason);
+  }
+  function monthKey(card){return startKey(card).slice(0,7);}
+  function renderMonthFilter(){
+    const host=qs('#yhMonthFilter'); if(!host)return;
+    const values=[...new Set(scopedCards().map(monthKey))].sort((a,b)=>activeSeason==='past'?b.localeCompare(a):a.localeCompare(b));
+    host.innerHTML='';
+    if(values.length<=1){host.hidden=true;activeMonth='all';return;}
+    host.hidden=false;
+    const all=document.createElement('button');all.type='button';all.className='yh-month-btn'+(activeMonth==='all'?' active':'');all.dataset.month='all';all.textContent='Tutti i mesi';host.appendChild(all);
+    values.forEach(v=>{const [y,m]=v.split('-');const b=document.createElement('button');b.type='button';b.className='yh-month-btn'+(activeMonth===v?' active':'');b.dataset.month=v;b.textContent=`${months[Number(m)-1]} ${y}`;host.appendChild(b);});
+    qsa('.yh-month-btn',host).forEach(b=>b.addEventListener('click',()=>{activeMonth=b.dataset.month;visibleLimit=baseLimit();applyFilters();emit('yume_month_filter',{month:activeMonth,season:activeSeason});}));
+  }
+  function applyFilters(){
+    const isPast=activeSeason==='past';
+    const future=qs('#viaggiProssimiContainer'),archive=qs('#viaggi-passati-section');
+    if(future)future.style.display=isPast?'none':'';
+    if(archive){archive.style.display=isPast?'block':'none';archive.setAttribute('aria-hidden',isPast?'false':'true');}
 
-  function updateSeason(filter){
-    const cards=getFutureCards();
-    let shown=0;
-    cards.forEach(card=>{
-      const ok=filter==='all' || card.dataset.season===filter;
-      card.style.display=ok?'':'none';
-      if(ok) shown++;
-    });
-    qsa('.yh-season-btn').forEach(b=>b.classList.toggle('active',b.dataset.season===filter));
-    const labels={all:'tutte le stagioni',spring:'la primavera',summer:'l’estate',autumn:'l’autunno',winter:'l’inverno'};
+    const allFuture=futureCards(),allPast=pastCards();
+    [...allFuture,...allPast].forEach(c=>c.style.display='none');
+    let filtered=scopedCards();
+    if(activeMonth!=='all')filtered=filtered.filter(c=>monthKey(c)===activeMonth);
+    const total=filtered.length;
+    filtered.slice(0,visibleLimit).forEach(c=>c.style.display='');
+
+    qsa('.yh-season-btn').forEach(b=>b.classList.toggle('active',b.dataset.season===activeSeason));
+    qsa('.yh-month-btn').forEach(b=>b.classList.toggle('active',b.dataset.month===activeMonth));
+    const labels={all:'le prossime partenze',spring:'la primavera',summer:'l’estate',autumn:'l’autunno',winter:'l’inverno',past:'l’archivio'};
     const meta=qs('#yhSeasonMeta');
-    if(meta) meta.textContent=shown ? `${shown} ${shown===1?'partenza disponibile':'partenze disponibili'} per ${labels[filter]}.` : '';
-    const empty=qs('#yhEmptySeason'); if(empty) empty.style.display=shown?'none':'block';
-    emit('yume_season_filter',{season:filter,results:shown});
+    if(meta)meta.textContent=total?`${total} ${total===1?'partenza':'partenze'} in ${labels[activeSeason]}${activeMonth!=='all'?' · '+qs('.yh-month-btn.active')?.textContent:''}.`:'';
+    const empty=qs('#yhEmptySeason');if(empty)empty.style.display=total?'none':'block';
+    const wrap=qs('#yhLoadMoreWrap'),btn=qs('#yhLoadMore');
+    const remaining=Math.max(0,total-visibleLimit);
+    if(wrap)wrap.hidden=remaining===0;
+    if(btn)btn.textContent=remaining?`Mostra altre ${Math.min(remaining,baseLimit())} ${remaining===1?'partenza':'partenze'}`:'Mostra altre partenze';
   }
-
-  function initSeasonFilters(){
-    enhanceCards();
-    qsa('.yh-season-btn').forEach(btn=>btn.addEventListener('click',()=>updateSeason(btn.dataset.season)));
-    updateSeason('all');
+  function setSeason(filter,source='click'){
+    activeSeason=filter; activeMonth='all'; visibleLimit=baseLimit(); renderMonthFilter(); applyFilters();
+    emit('yume_season_filter',{season:filter,results:scopedCards().length,source});
   }
-
-  function nearestDeparture(){
-    return getFutureCards().sort((a,b)=>a.dataset.end.localeCompare(b.dataset.end))[0]||null;
+  function initFilters(){
+    enhanceCards(); visibleLimit=baseLimit();
+    qsa('.yh-season-btn').forEach(btn=>btn.addEventListener('click',()=>setSeason(btn.dataset.season)));
+    const more=qs('#yhLoadMore');if(more)more.addEventListener('click',()=>{visibleLimit+=baseLimit();applyFilters();emit('yume_departures_load_more',{season:activeSeason,month:activeMonth,limit:visibleLimit});});
+    setSeason('all','init');
   }
-
+  function nearestDeparture(){return futureCards().sort((a,b)=>startKey(a).localeCompare(startKey(b)))[0]||null;}
   function initSignalAndSpotlight(){
-    const card=nearestDeparture();
-    if(!card) return;
+    const card=nearestDeparture();if(!card)return;
     const title=(qs('h3',card)?.textContent||'Prossima partenza YUME').trim();
     const date=(qsa('.icon-list li',card).find(li=>li.querySelector('.fa-calendar'))?.textContent||'').trim();
     const href=card.getAttribute('href')||'#viaggi-prossimi-section';
-    const signalText=qs('#yhSignalText');
-    const signalLink=qs('#yhSignalLink');
-    if(signalText) signalText.textContent=`Prossima partenza: ${title}`;
-    if(signalLink) signalLink.href=href;
-
-    const spot=qs('#yhSpotlight');
-    const sTitle=qs('#yhSpotlightTitle'), sText=qs('#yhSpotlightText'), sLink=qs('#yhSpotlightLink');
-    if(sTitle) sTitle.textContent=title;
-    if(sText) sText.textContent=date || 'Scopri itinerario, quota e disponibilità.';
-    if(sLink) sLink.href=href;
-
+    const signalText=qs('#yhSignalText'),signalLink=qs('#yhSignalLink');if(signalText)signalText.textContent=`Prossima partenza: ${title}`;if(signalLink)signalLink.href=href;
+    const spot=qs('#yhSpotlight'),sTitle=qs('#yhSpotlightTitle'),sText=qs('#yhSpotlightText'),sLink=qs('#yhSpotlightLink');
+    if(sTitle)sTitle.textContent=title;if(sText)sText.textContent=date||'Scopri itinerario, quota e disponibilità.';if(sLink)sLink.href=href;
     const show=()=>{
-      if(!spot || sessionStorage.getItem('yh_spotlight_seen')==='1' || sessionStorage.getItem('yh_access_suppress_spotlight')==='1') return;
-      const cb=qs('#cookie-banner');
-      if(cb && getComputedStyle(cb).display!=='none'){ setTimeout(show,2500); return; }
-      spot.classList.add('show');
-      sessionStorage.setItem('yh_spotlight_seen','1');
-      emit('yume_spotlight_view',{product:title});
+      if(matchMedia('(max-width:760px)').matches) return;
+      if(!spot||sessionStorage.getItem('yh_spotlight_seen')==='1'||sessionStorage.getItem('yh_access_suppress_spotlight')==='1'||validUntil(SPOT_DISMISS))return;
+      const cb=qs('#cookie-banner');if(cb&&getComputedStyle(cb).display!=='none'){setTimeout(show,2500);return;}
+      spot.classList.add('show');sessionStorage.setItem('yh_spotlight_seen','1');emit('yume_spotlight_view',{product:title});
     };
     setTimeout(show,8000);
-    const close=qs('#yhSpotlightClose'); if(close) close.addEventListener('click',()=>spot.classList.remove('show'));
-    if(sLink) sLink.addEventListener('click',()=>emit('yume_spotlight_click',{product:title}));
+    const close=qs('#yhSpotlightClose');if(close)close.addEventListener('click',()=>{spot.classList.remove('show');dismissFor30(SPOT_DISMISS);emit('yume_spotlight_close',{product:title});});
+    if(sLink)sLink.addEventListener('click',()=>emit('yume_spotlight_click',{product:title}));
   }
-
   function focusFromCampaign(){
-    const p=new URLSearchParams(location.search);
-    const raw=((p.get('focus')||'')+' '+(p.get('utm_campaign')||'')+' '+(p.get('utm_content')||'')).toLowerCase();
-    if(!raw.trim()) return;
-    if(raw.includes('maison')||raw.includes('su_misura')||raw.includes('sumisura')||raw.includes('nozze')||raw.includes('honeymoon')){
-      const title=qs('#yhHeroTitle'), sub=qs('.yh-hero-sub');
-      if(title) title.textContent='Il Giappone, costruito intorno a te.';
-      if(sub) sub.textContent='Maison trasforma periodo, ritmo e interessi in un viaggio su misura. Lune di miele e occasioni speciali rientrano nello stesso progetto Maison.';
-      emit('yume_home_personalized',{focus:'maison'});
-    } else if(raw.includes('pacchett')||raw.includes('flessibil')||raw.includes('hajimete')||raw.includes('kodai')||raw.includes('hagane')){
-      const title=qs('#yhHeroTitle'), sub=qs('.yh-hero-sub');
-      if(title) title.textContent='Una base pronta. Il viaggio resta tuo.';
-      if(sub) sub.textContent='I pacchetti flessibili YUME partono da itinerari già progettati e ti permettono di adattare durata, tappe ed esperienze senza costruire tutto da zero.';
-      emit('yume_home_personalized',{focus:'flex'});
-    } else if(raw.includes('autun')||raw.includes('koyo')||raw.includes('yugen')||raw.includes('tabi')||raw.includes('akikaze')){
-      setTimeout(()=>updateSeason('autumn'),50);
-      emit('yume_home_personalized',{focus:'autumn'});
-    } else if(raw.includes('primavera')||raw.includes('hanami')||raw.includes('ume')||raw.includes('haru')){
-      setTimeout(()=>updateSeason('spring'),50);
-      emit('yume_home_personalized',{focus:'spring'});
-    } else if(raw.includes('estate')||raw.includes('natsu')){
-      setTimeout(()=>updateSeason('summer'),50);
-      emit('yume_home_personalized',{focus:'summer'});
-    }
+    const p=new URLSearchParams(location.search);const raw=((p.get('focus')||'')+' '+(p.get('utm_campaign')||'')+' '+(p.get('utm_content')||'')).toLowerCase();if(!raw.trim())return;
+    if(raw.includes('maison')||raw.includes('su_misura')||raw.includes('sumisura')||raw.includes('nozze')||raw.includes('honeymoon')){const title=qs('#yhHeroTitle'),sub=qs('.yh-hero-sub');if(title)title.textContent='Il Giappone, costruito intorno a te.';if(sub)sub.textContent='Maison trasforma periodo, ritmo e interessi in un viaggio su misura. Lune di miele e occasioni speciali rientrano nello stesso progetto Maison.';emit('yume_home_personalized',{focus:'maison'});}
+    else if(raw.includes('pacchett')||raw.includes('flessibil')||raw.includes('hajimete')||raw.includes('kodai')||raw.includes('hagane')){const title=qs('#yhHeroTitle'),sub=qs('.yh-hero-sub');if(title)title.textContent='Una base pronta. Il viaggio resta tuo.';if(sub)sub.textContent='I pacchetti flessibili YUME partono da itinerari già progettati e ti permettono di adattare durata, tappe ed esperienze senza costruire tutto da zero.';emit('yume_home_personalized',{focus:'flex'});}
+    else if(raw.includes('autun')||raw.includes('koyo')||raw.includes('yugen')||raw.includes('tabi')||raw.includes('akikaze')){setTimeout(()=>setSeason('autumn','campaign'),50);emit('yume_home_personalized',{focus:'autumn'});}
+    else if(raw.includes('primavera')||raw.includes('hanami')||raw.includes('ume')||raw.includes('haru')){setTimeout(()=>setSeason('spring','campaign'),50);emit('yume_home_personalized',{focus:'spring'});}
+    else if(raw.includes('estate')||raw.includes('natsu')){setTimeout(()=>setSeason('summer','campaign'),50);emit('yume_home_personalized',{focus:'summer'});}
   }
-
-  function trackKeyClicks(){
-    qsa('.yh-router a,.yh-hero-actions a,.yh-maison-bridge a').forEach(a=>a.addEventListener('click',()=>emit('yume_home_cta',{label:(a.textContent||'').trim(),href:a.getAttribute('href')})));
-  }
-
-  document.addEventListener('DOMContentLoaded',function(){
-    /* eseguito dopo il mover dei viaggi passati già presente nell'index */
-    setTimeout(()=>{
-      initSeasonFilters();
-      initSignalAndSpotlight();
-      focusFromCampaign();
-      trackKeyClicks();
-    },0);
-  });
+  function trackKeyClicks(){qsa('.yh-router a,.yh-hero-actions a,.yh-maison-bridge a').forEach(a=>a.addEventListener('click',()=>emit('yume_home_cta',{label:(a.textContent||'').trim(),href:a.getAttribute('href')})));}
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{initFilters();initSignalAndSpotlight();focusFromCampaign();trackKeyClicks();},0));
 })();
 </script>
 
@@ -2427,128 +2445,55 @@ logoutBtn.onclick = () => {
 /* ===== YUME ACCESS · comportamento locale alla sola home ===== */
 (function(){
   'use strict';
-  const root=document.getElementById('yhAccess');
-  if(!root) return;
-  const main=document.getElementById('yhAccessMain');
-  const quiz=document.getElementById('yhAccessQuiz');
-  const closeBtn=document.getElementById('yhAccessClose');
-  const openBtn=document.getElementById('yhAccessOpen');
-  const guideBtn=document.getElementById('yhAccessGuide');
-  const backBtn=document.getElementById('yhAccessBack');
-  const step1=document.getElementById('yhAccessStep1');
-  const step2=document.getElementById('yhAccessStep2');
-  const result=document.getElementById('yhAccessResult');
-  const progress2=document.getElementById('yhAccessProgress2');
-  const KEY='yh_access_intent_v1';
-  const SEEN='yh_access_seen_v1';
-  let scores={group:0,flex:0,maison:0};
-  let stage=1;
-  let autoTimer=null;
-
-  const emit=(name,params={})=>{
-    window.dataLayer=window.dataLayer||[];
-    window.dataLayer.push({event:name,...params});
+  const root=document.getElementById('yhAccess');if(!root)return;
+  const main=document.getElementById('yhAccessMain'),quiz=document.getElementById('yhAccessQuiz');
+  const closeBtn=document.getElementById('yhAccessClose'),openBtn=document.getElementById('yhAccessOpen'),guideBtn=document.getElementById('yhAccessGuide'),backBtn=document.getElementById('yhAccessBack');
+  const step1=document.getElementById('yhAccessStep1'),step2=document.getElementById('yhAccessStep2'),result=document.getElementById('yhAccessResult'),progress2=document.getElementById('yhAccessProgress2');
+  const KEY='yh_access_intent_v2',DISMISS='yh_access_dismissed_v2',SEEN='yh_access_seen_v2',DAY=24*60*60*1000;
+  let scores={group:0,flex:0,maison:0},stage=1,autoTimer=null;
+  const emit=(name,params={})=>{window.dataLayer=window.dataLayer||[];window.dataLayer.push({event:name,...params});};
+  const cookieOpen=()=>{const c=document.getElementById('cookie-banner');if(!c)return false;const x=getComputedStyle(c);return x.display!=='none'&&x.visibility!=='hidden';};
+  const validStored=(key)=>{try{const x=JSON.parse(localStorage.getItem(key)||'null');if(!x||!x.ts||Date.now()-x.ts>30*DAY){localStorage.removeItem(key);return null;}return x;}catch(_){return null;}};
+  const dismissed=()=>!!validStored(DISMISS);
+  const campaignRaw=()=>{const p=new URLSearchParams(location.search);return((p.get('focus')||'')+' '+(p.get('utm_campaign')||'')+' '+(p.get('utm_content')||'')+' '+(p.get('utm_term')||'')).toLowerCase();};
+  const explicitCampaignIntent=()=>{const r=campaignRaw();return !!r.trim()&&/(maison|su[_ -]?misura|sumisura|nozze|honeymoon|pacchett|flessibil|hajimete|kodai|hagane|grupp|hanami|kawazu|ume|haru|natsu|akikaze|koyo|yugen|tabi|primavera|estate|autun|inverno)/.test(r);};
+  const readSaved=()=>{const x=validStored(KEY);return x&&['group','flex','maison'].includes(x.intent)?x.intent:null;};
+  const saveIntent=(intent,source)=>{try{localStorage.setItem(KEY,JSON.stringify({intent,ts:Date.now()}));localStorage.removeItem(DISMISS);}catch(_){}emit('yume_intent_selected',{intent,source});};
+  const saveDismiss=()=>{try{localStorage.setItem(DISMISS,JSON.stringify({ts:Date.now()}));}catch(_){}};
+  const competingUiOpen=()=>{
+    const cart=document.getElementById('carrelloContainer'),wa=document.getElementById('waMiniChat'),yuki=document.getElementById('yuki-chatbox');
+    return !!((cart&&!cart.classList.contains('hidden'))||(wa&&!wa.classList.contains('hidden'))||(yuki&&!yuki.classList.contains('hidden')));
   };
-  const cookieOpen=()=>{
-    const c=document.getElementById('cookie-banner');
-    if(!c) return false;
-    const s=getComputedStyle(c);
-    return s.display!=='none' && s.visibility!=='hidden';
-  };
-  const campaignRaw=()=>{
-    const p=new URLSearchParams(location.search);
-    return ((p.get('focus')||'')+' '+(p.get('utm_campaign')||'')+' '+(p.get('utm_content')||'')+' '+(p.get('utm_term')||'')).toLowerCase();
-  };
-  const explicitCampaignIntent=()=>{
-    const r=campaignRaw();
-    if(!r.trim()) return false;
-    return /(maison|su[_ -]?misura|sumisura|nozze|honeymoon|pacchett|flessibil|hajimete|kodai|hagane|grupp|hanami|kawazu|ume|haru|natsu|akikaze|koyo|yugen|tabi|primavera|estate|autun|inverno)/.test(r);
-  };
-  const readSaved=()=>{
-    try{
-      const x=JSON.parse(localStorage.getItem(KEY)||'null');
-      if(!x || !['group','flex','maison'].includes(x.intent) || !x.ts) return null;
-      if(Date.now()-x.ts>30*24*60*60*1000){localStorage.removeItem(KEY);return null;}
-      return x.intent;
-    }catch(_){return null;}
-  };
-  const saveIntent=(intent,source)=>{
-    try{localStorage.setItem(KEY,JSON.stringify({intent,ts:Date.now()}));}catch(_){}
-    emit('yume_intent_selected',{intent,source});
-  };
-  const resetQuiz=()=>{
-    scores={group:0,flex:0,maison:0};stage=1;
-    step1.hidden=false;step2.hidden=true;result.hidden=true;progress2.classList.remove('active');
-  };
-  const showMain=()=>{
-    quiz.hidden=true;main.hidden=false;resetQuiz();
-    const t=document.getElementById('yhAccessTitle');
-    if(t) setTimeout(()=>t.focus({preventScroll:true}),30);
-  };
+  const setOverlayState=(on)=>document.body.classList.toggle('yh-access-active',on);
+  const resetQuiz=()=>{scores={group:0,flex:0,maison:0};stage=1;step1.hidden=false;step2.hidden=true;result.hidden=true;progress2.classList.remove('active');};
+  const showMain=()=>{quiz.hidden=true;main.hidden=false;resetQuiz();const t=document.getElementById('yhAccessTitle');if(t)setTimeout(()=>t.focus({preventScroll:true}),30);};
   const openAccess=(source='manual')=>{
-    if(cookieOpen()){
-      let tries=0;
-      const wait=setInterval(()=>{tries++;if(!cookieOpen()||tries>30){clearInterval(wait);if(!cookieOpen())openAccess(source);}},350);
-      return;
-    }
-    sessionStorage.setItem(SEEN,'1');
-    sessionStorage.setItem('yh_access_suppress_spotlight','1');
+    if(source!=='manual'&&source!=='router_guide'&&competingUiOpen())return;
+    if(cookieOpen()){let tries=0;const wait=setInterval(()=>{tries++;if(!cookieOpen()||tries>30){clearInterval(wait);if(!cookieOpen())openAccess(source);}},350);return;}
+    sessionStorage.setItem(SEEN,'1');sessionStorage.setItem('yh_access_suppress_spotlight','1');
     const spot=document.getElementById('yhSpotlight');if(spot)spot.classList.remove('show');
-    showMain();root.classList.add('show');
-    emit('yume_access_view',{source});
+    showMain();setOverlayState(true);root.classList.add('show');emit('yume_access_view',{source});
   };
-  const closeAccess=(source='close')=>{
-    root.classList.remove('show');
-    sessionStorage.setItem(SEEN,'1');
-    emit('yume_access_close',{source});
-  };
-  const route={
-    group:{title:'Viaggio di gruppo',text:'La scelta più coerente se vuoi date e programma definiti, organizzazione YUME e accompagnamento.',href:'gruppo.html'},
-    flex:{title:'Pacchetto flessibile',text:'La via intermedia: una base già progettata, con libertà di adattare durata, tappe ed esperienze.',href:'pacchetti.html'},
-    maison:{title:'Maison · Su misura',text:'La scelta più coerente se vuoi partire dal tuo periodo, ritmo e priorità e costruire il progetto intorno a te.',href:'maison.html'}
-  };
-  const showResult=()=>{
-    const max=Math.max(scores.group,scores.flex,scores.maison);
-    const ordered=['group','flex','maison'];
-    const winner=ordered.find(k=>scores[k]===max)||'flex';
-    const r=route[winner];
-    step1.hidden=true;step2.hidden=true;progress2.classList.add('active');result.hidden=false;
-    result.innerHTML='<small>La formula più vicina alle tue risposte</small><h3>'+r.title+'</h3><p>'+r.text+'</p><div class="yh-access-result-actions"><a class="yh-access-result-cta" href="'+r.href+'" data-yh-result="'+winner+'">Vai a '+r.title+' →</a><button type="button" class="yh-access-back" data-yh-restart>Rifai le domande</button></div>';
-    const c=result.querySelector('[data-yh-result]');
-    if(c)c.addEventListener('click',()=>saveIntent(winner,'guided_result'));
-    const restart=result.querySelector('[data-yh-restart]');
-    if(restart)restart.addEventListener('click',resetQuiz);
-    emit('yume_access_result',{intent:winner,scores:JSON.stringify(scores)});
-  };
+  const closeAccess=(source='close',persist=true)=>{root.classList.remove('show');setOverlayState(false);sessionStorage.setItem(SEEN,'1');sessionStorage.setItem('yh_access_suppress_spotlight','1');if(persist)saveDismiss();emit('yume_access_close',{source,persisted:persist});};
+  const route={group:{title:'Viaggio di gruppo',text:'La scelta più coerente se vuoi date e programma definiti, organizzazione YUME e accompagnamento.',href:'gruppo.html'},flex:{title:'Pacchetto flessibile',text:'La via intermedia: una base già progettata, con libertà di adattare durata, tappe ed esperienze.',href:'pacchetti.html'},maison:{title:'Maison · Su misura',text:'La scelta più coerente se vuoi partire dal tuo periodo, ritmo e priorità e costruire il progetto intorno a te.',href:'maison.html'}};
+  const showResult=()=>{const max=Math.max(scores.group,scores.flex,scores.maison),winner=['group','flex','maison'].find(k=>scores[k]===max)||'flex',r=route[winner];step1.hidden=true;step2.hidden=true;progress2.classList.add('active');result.hidden=false;result.innerHTML='<small>La formula più vicina alle tue risposte</small><h3>'+r.title+'</h3><p>'+r.text+'</p><div class="yh-access-result-actions"><a class="yh-access-result-cta" href="'+r.href+'" data-yh-result="'+winner+'">Vai a '+r.title+' →</a><button type="button" class="yh-access-back" data-yh-restart>Rifai le domande</button></div>';const c=result.querySelector('[data-yh-result]');if(c)c.addEventListener('click',()=>saveIntent(winner,'guided_result'));const restart=result.querySelector('[data-yh-restart]');if(restart)restart.addEventListener('click',resetQuiz);emit('yume_access_result',{intent:winner,scores:JSON.stringify(scores)});};
 
   root.querySelectorAll('[data-yh-intent]').forEach(a=>a.addEventListener('click',()=>saveIntent(a.dataset.yhIntent,'direct')));
-  root.querySelectorAll('[data-yh-access-close]').forEach(b=>b.addEventListener('click',()=>closeAccess('quiz_close')));
-  if(closeBtn)closeBtn.addEventListener('click',()=>closeAccess('main_close'));
+  root.querySelectorAll('[data-yh-access-close]').forEach(b=>b.addEventListener('click',()=>closeAccess('quiz_close',true)));
+  if(closeBtn)closeBtn.addEventListener('click',()=>closeAccess('main_close',true));
   if(openBtn)openBtn.addEventListener('click',()=>openAccess('router_guide'));
   if(guideBtn)guideBtn.addEventListener('click',()=>{main.hidden=true;quiz.hidden=false;resetQuiz();const t=quiz.querySelector('.yh-access-title');if(t)setTimeout(()=>t.focus({preventScroll:true}),30);emit('yume_access_guided_start');});
   if(backBtn)backBtn.addEventListener('click',showMain);
-  root.querySelectorAll('.yh-access-answer').forEach(btn=>btn.addEventListener('click',()=>{
-    const k=btn.dataset.score;if(scores[k]!==undefined)scores[k]+=2;
-    if(stage===1){stage=2;step1.hidden=true;step2.hidden=false;progress2.classList.add('active');emit('yume_access_guided_step',{step:1,answer:k});}
-    else{emit('yume_access_guided_step',{step:2,answer:k});showResult();}
-  }));
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&root.classList.contains('show'))closeAccess('escape');});
+  root.querySelectorAll('.yh-access-answer').forEach(btn=>btn.addEventListener('click',()=>{const k=btn.dataset.score;if(scores[k]!==undefined)scores[k]+=2;if(stage===1){stage=2;step1.hidden=true;step2.hidden=false;progress2.classList.add('active');emit('yume_access_guided_step',{step:1,answer:k});}else{emit('yume_access_guided_step',{step:2,answer:k});showResult();}}));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&root.classList.contains('show'))closeAccess('escape',true);});
 
   const saved=readSaved();
-  if(saved){
-    const labels={group:'Gruppi',flex:'Pacchetti flessibili',maison:'Maison'};
-    if(openBtn)openBtn.innerHTML='<i class="fa fa-compass" aria-hidden="true"></i> Preferenza: '+labels[saved]+' · cambia';
-  }
-
-  const eligible=!explicitCampaignIntent() && !saved && sessionStorage.getItem(SEEN)!=='1';
+  if(saved){const labels={group:'Gruppi',flex:'Pacchetti flessibili',maison:'Maison'};if(openBtn)openBtn.innerHTML='<i class="fa fa-compass" aria-hidden="true"></i> Preferenza: '+labels[saved]+' · cambia';}
+  const eligible=!explicitCampaignIntent()&&!saved&&!dismissed()&&sessionStorage.getItem(SEEN)!=='1';
   if(eligible){
     sessionStorage.setItem('yh_access_suppress_spotlight','1');
     autoTimer=setTimeout(()=>openAccess('time'),7000);
-    const onScroll=()=>{
-      const doc=document.documentElement;
-      const max=Math.max(1,doc.scrollHeight-innerHeight);
-      if(scrollY/max>=0.28){if(autoTimer)clearTimeout(autoTimer);openAccess('scroll');removeEventListener('scroll',onScroll);}
-    };
+    const onScroll=()=>{const doc=document.documentElement,max=Math.max(1,doc.scrollHeight-innerHeight);if(scrollY/max>=0.28){if(autoTimer)clearTimeout(autoTimer);openAccess('scroll');removeEventListener('scroll',onScroll);}};
     addEventListener('scroll',onScroll,{passive:true});
   }
 })();
