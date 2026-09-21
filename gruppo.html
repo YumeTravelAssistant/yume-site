@@ -21,7 +21,7 @@
 </style>
 
 
-<style id="ym-modern-v3">
+<style id="ym-modern-v6">
 :root{
   --ym-red:#8B2C2B; --ym-red-dark:#6F201F; --ym-gold:#C9A86A;
   --ym-cream:#F4F0E2; --ym-cream2:#FBF8F1; --ym-ink:#251F1C; --ym-muted:#716963;
@@ -99,9 +99,11 @@ body.ym-modern-page input:focus,body.ym-modern-page select:focus,body.ym-modern-
 @media (prefers-reduced-motion:reduce){.ym-smartnav,.ym-btn{transition:none!important}}
 </style>
 
-<style id="ym-group-v3">
-#perche-yume .sartoria-slider-container{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:14px!important;overflow:visible!important}
-#perche-yume .sartoria-box{width:100%!important;min-height:230px!important;margin:0!important;border-radius:18px!important;overflow:hidden!important;padding:20px!important;display:flex!important;flex-direction:column;justify-content:flex-end}
+<style id="ym-group-v6">
+#perche-yume .sartoria-slider-container{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:16px!important;overflow:visible!important}
+#perche-yume .sartoria-box{width:100%!important;min-width:0!important;min-height:300px!important;margin:0!important;border-radius:20px!important;overflow:hidden!important;padding:22px!important;display:flex!important;flex-direction:column!important;justify-content:flex-end!important;align-items:flex-start!important;text-align:left!important;background-position:center!important;background-size:cover!important;box-sizing:border-box!important}
+#perche-yume .sartoria-box h3{margin:0 0 10px!important;font-family:'Playfair Display',serif!important;font-size:clamp(1.35rem,1.55vw,1.8rem)!important;line-height:1.08!important;color:#D8B978!important;text-align:left!important;text-shadow:0 2px 12px rgba(0,0,0,.55)!important}
+#perche-yume .sartoria-box p{margin:0!important;max-width:28ch!important;font-family:'Raleway',sans-serif!important;font-size:.96rem!important;line-height:1.48!important;font-weight:500!important;color:#fff!important;text-align:left!important;text-shadow:0 2px 10px rgba(0,0,0,.72)!important}
 .ym-group-filter{width:min(1160px,calc(100% - 40px));margin:0 auto 28px;padding:18px;background:#fff;border:1px solid var(--ym-line);border-radius:18px;box-shadow:0 8px 24px rgba(50,34,26,.06)}
 .ym-group-filter-top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px}.ym-group-filter-top strong{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--ym-red)}
 .ym-season-row{display:flex;gap:7px;flex-wrap:wrap;align-items:center}.ym-season-btn,.ym-archive-btn{border:1px solid #e3d9cf;background:#fbf8f3;color:#5b504a;min-height:40px;padding:8px 13px;border-radius:999px;font-weight:700;cursor:pointer}.ym-season-btn.is-active,.ym-archive-btn.is-active{background:var(--ym-red);border-color:var(--ym-red);color:#fff}
@@ -111,9 +113,16 @@ body.ym-modern-page input:focus,body.ym-modern-page select:focus,body.ym-modern-
 #viaggiProssimiContainer .pacchetti-box img,#viaggiPassatiContainer .pacchetti-box img{width:100%!important;aspect-ratio:16/10;object-fit:cover}
 .ym-load-more{display:block;margin:22px auto 0;border:1px solid var(--ym-line);background:#fff;color:var(--ym-red);padding:11px 18px;border-radius:999px;font-weight:700;cursor:pointer}
 #viaggi-passati-section{display:none!important}.ym-archive-mode #viaggi-prossimi-section{display:none!important}.ym-archive-mode #viaggi-passati-section{display:block!important}
-@media(max-width:1000px){#perche-yume .sartoria-slider-container{grid-template-columns:repeat(2,minmax(0,1fr))!important}#viaggiProssimiContainer,#viaggiPassatiContainer{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
-@media(max-width:640px){#perche-yume .sartoria-slider-container{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}#perche-yume .sartoria-box{min-height:180px!important;padding:14px!important}.ym-group-filter{width:calc(100% - 24px);padding:14px 12px}.ym-group-filter-top{align-items:flex-start;flex-direction:column}.ym-season-row{flex-wrap:nowrap;overflow-x:auto;width:100%;padding-bottom:2px}.ym-season-btn,.ym-archive-btn{flex:0 0 auto}.ym-group-filter-bottom{align-items:flex-start;flex-direction:column}.ym-month-select{width:100%!important}#viaggiProssimiContainer,#viaggiPassatiContainer{grid-template-columns:1fr!important}}
-</style>
+@media(max-width:1100px){#perche-yume .sartoria-slider-container{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px!important}#perche-yume .sartoria-box{min-height:255px!important;padding:20px!important}#perche-yume .sartoria-box h3{font-size:1.45rem!important}#perche-yume .sartoria-box p{font-size:.93rem!important;line-height:1.44!important;max-width:34ch!important}#viaggiProssimiContainer,#viaggiPassatiContainer{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:640px){
+ #perche-yume .sartoria-slider-wrapper{overflow:visible!important}
+ #perche-yume .sartoria-slider-container{display:grid!important;grid-template-columns:1fr!important;gap:18px!important;overflow:visible!important;padding:4px 14px 10px!important;margin:0!important}
+ #perche-yume .sartoria-box{width:min(100%,360px)!important;max-width:360px!important;min-height:270px!important;margin:0 auto!important;padding:20px!important}
+ #perche-yume .sartoria-box h3{font-size:1.4rem!important;margin-bottom:8px!important}
+ #perche-yume .sartoria-box p{font-size:.91rem!important;line-height:1.44!important;max-width:31ch!important}
+ .ym-group-filter{width:calc(100% - 24px);padding:14px 12px}.ym-group-filter-top{align-items:flex-start;flex-direction:column}.ym-season-row{flex-wrap:nowrap;overflow-x:auto;width:100%;padding-bottom:2px}.ym-season-btn,.ym-archive-btn{flex:0 0 auto}.ym-group-filter-bottom{align-items:flex-start;flex-direction:column}.ym-month-select{width:100%!important}
+ #viaggiProssimiContainer,#viaggiPassatiContainer{grid-template-columns:1fr!important}
+}</style>
 
 </head>
 <body class="ym-modern-page">
@@ -188,14 +197,8 @@ body.ym-modern-page input:focus,body.ym-modern-page select:focus,body.ym-modern-
 <section class="sartoria-section" id="perche-yume">
 
 <style>
-    .sartoria-section {
-      max-width: 1400px;
-
-    .sartoria-box {
-      margin-left: auto;
-      margin-right: auto;
-    }
-
+    .sartoria-section { max-width: 1400px; }
+    .sartoria-box { margin-left: auto; margin-right: auto; }
 </style>
 
   <h2 class="slide-in">Cosa rende speciali i nostri viaggi di gruppo?</h2>
@@ -1201,7 +1204,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 </script>
 
-<script id="ym-modern-v3-js">
+<script id="ym-modern-v6-js">
 (function(){
   'use strict';
   const nav=document.getElementById('ymSmartNav');
@@ -1228,6 +1231,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 </body>
 </html>
+
 
 
 
