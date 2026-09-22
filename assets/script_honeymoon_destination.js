@@ -74,19 +74,21 @@ const DATA = {
     label:'Giappone + Polinesia',
     eyebrow:'Hero combination · Japan × Polynesia',
     title:'Prima il mondo. <em>Poi il silenzio.</em>',
-    lead:'Il contrasto è il progetto: Giappone per intensità, cultura e scoperta; Polinesia per togliere progressivamente rumore, orari e decisioni.',
+    lead:'Un viaggio circolare: ingresso dal Kansai, attraversamento del Giappone fino a Tokyo, diretto Pacifico quando l’operativo lo consente, Polinesia e rientro su Narita per una soft landing prima dell’Italia.',
     summary:'Esempio di combinazione',
-    duration:'20–24 giorni',
-    rhythm:'Explore → slow',
+    duration:'23–27 giorni',
+    rhythm:'West Japan → Pacific → soft landing',
     style:'Signature Journeys',
     introTitle:'Due mondi che hanno senso <em>solo se dialogano.</em>',
-    intro:'Non sommiamo due destinazioni. Costruiamo una curva: il Giappone cresce per intensità e contenuto; la parte oceanica riduce progressivamente il ritmo. Il passaggio tra le due è progettato come parte del viaggio.',
+    intro:'Non sommiamo due destinazioni. Usiamo il Giappone anche come gateway naturale del Pacifico: si entra dall’ovest, si attraversa il Paese fino a Tokyo, si apre la Polinesia e si torna ancora in Giappone prima del lungo rientro verso l’Italia.',
     stops:[
-      ['01','Tokyo','4 notti','Quartieri, food e contemporaneo: ingresso pieno di energia, con una giornata volutamente aperta.'],
-      ['02','Kyoto','4 notti','Templi, artigianato, tè e una notte speciale. Qui il viaggio diventa più intimo.'],
-      ['03','Giappone finale','2–3 notti','Una base scelta in funzione del volo e del vostro interesse: Osaka, ryokan, natura o una tappa lenta.'],
-      ['04','Tahiti / transizione','1 notte','Il cambio di continente viene assorbito senza chiedervi subito di fare qualcosa.'],
-      ['05','Isole','7–9 notti','Una o due isole, non una collezione. Mare, acqua, silenzio e strutture scelte in base a ciò che volete vivere.']
+      ['01','Osaka / Kansai','2–3 notti','Ingresso dal Giappone occidentale: food, recupero dal volo e un primo impatto senza chiedervi subito una giornata piena.'],
+      ['02','Kyoto','4 notti','Templi, artigianato, tè e tempo di coppia. La parte più rituale e intima del viaggio.'],
+      ['03','Kanazawa / Kaga Onsen','2 notti','Una pausa materica e termale mentre il viaggio si muove naturalmente verso est.'],
+      ['04','Tokyo','4 notti','Il crescendo urbano: design, food, quartieri e contemporaneo. Tokyo diventa anche la porta verso il Pacifico.'],
+      ['05','Narita → Papeete','volo diretto quando operativo','Il cambio di mondo è parte del progetto. Il calendario del non-stop viene verificato sulle date reali della coppia.'],
+      ['06','Tahiti + isole','7–9 notti','Una o due isole selezionate bene: permanenza, acqua, silenzio e meno decisioni.'],
+      ['07','Papeete → Narita / Tokyo','1–2 notti','Rientro diretto sul Giappone quando operativo e soft landing prima del lungo volo verso l’Italia.']
     ],
     values:[
       ['Contrasto','È il vero valore','La Polinesia pesa di più emotivamente perché arriva dopo un viaggio ricco e dinamico.'],
@@ -94,7 +96,7 @@ const DATA = {
       ['YUME factor','Un unico progetto','Tempi, stanchezza, bagagli, trasferimenti e margini vengono letti come un unico viaggio, non due pratiche separate.']
     ],
     quote:'La parte più romantica non è il bungalow. È il momento in cui vi accorgete che <em>non dovete più correre.</em>',
-    momentMain:'La combinazione funziona quando il Giappone non viene compresso e la Polinesia non viene trasformata in una seconda checklist.',
+    momentMain:'La combinazione funziona perché la logistica diventa racconto: Kansai apre il viaggio, Tokyo apre il Pacifico e il Giappone torna alla fine come cuscinetto prima dell’Italia.',
     moments:[
       ['In Giappone','Un’esperienza privata','Una cena, un laboratorio o un ryokan che segna il viaggio prima del cambio di ritmo.'],
       ['Transizione','Una giornata vuota','Serve a cambiare fuso, paesaggio e aspettativa senza stress.'],
@@ -171,8 +173,43 @@ const DATA = {
   }
 };
 
+const EXTRA = {
+  giappone:{
+    mapLead:'Da Tokyo al Kansai passando per natura e città più intime: la mappa rende visibile l’alternanza tra energia e pausa.',
+    coords:[[35.6762,139.6503,'Tokyo'],[35.2324,139.1070,'Hakone / Fuji'],[36.5613,136.6562,'Kanazawa'],[35.0116,135.7681,'Kyoto'],[34.6937,135.5023,'Osaka']],
+    gallery:[['/assets/home.jpg','City pulse'],['/assets/fuji.jpg','Natura e pausa'],['/maison/4.jpg','Dettaglio e materia'],['/assets/cultura.jpg','Rituale e cultura']],
+    rhythm:['Energia','Pausa','Materia','Rituale','Food & libertà']
+  },
+  thailandia:{
+    mapLead:'Bangkok accende, il nord riequilibra, il mare chiude: la sequenza vale più del numero di tappe.',
+    coords:[[13.7563,100.5018,'Bangkok'],[18.7883,98.9853,'Chiang Mai'],[13.0,100.9,'Transizione'],[9.5120,100.0136,'Mare / isole']],
+    gallery:[['/assets/cultura.jpg','Città e cultura'],['/assets/natura.jpg','Verde e movimento'],['/assets/coppia.jpg','Tempo di coppia'],['/assets/deco_1.jpg','Decompressione']],
+    rhythm:['City pulse','Nord lento','Transizione','Mare']
+  },
+  'giappone-polinesia':{
+    mapLead:'Entrata dal Kansai, attraversamento del Giappone fino a Tokyo, apertura del Pacifico e ritorno ancora su Narita: una rotta pensata per evitare di trattare la Polinesia come appendice.',
+    coords:[[34.6937,135.5023,'Osaka / Kansai'],[35.0116,135.7681,'Kyoto'],[36.5613,136.6562,'Kanazawa / Kaga'],[35.6762,139.6503,'Tokyo / Narita'],[-17.5516,-149.5585,'Papeete'],[-17.5388,-149.8295,'Moorea'],[-16.5004,-151.7415,'Bora Bora'],[35.6762,139.6503,'Tokyo soft landing']],
+    gallery:[['/kataware/kataware_desk.jpg','Giappone intimo'],['/assets/cultura.jpg','Rituale'],['/assets/natura.jpg','Apertura verso il Pacifico'],['/assets/coppia.jpg','Decompressione']],
+    rhythm:['Kansai soft start','Kyoto intimo','Onsen / materia','Tokyo crescendo','Pacific gateway','Ocean slow','Soft landing'],
+    logistics:'Il collegamento diretto Narita–Papeete non è quotidiano: il progetto viene costruito sulle date operative reali. Il ritorno su Tokyo evita, quando possibile, di concatenare immediatamente Polinesia e lungo rientro verso l’Italia.'
+  },
+  'giappone-corea':{
+    mapLead:'Il Giappone costruisce profondità e rituale; Seoul e la seconda tappa coreana riaccendono energia, design e contemporaneo.',
+    coords:[[35.6762,139.6503,'Tokyo'],[35.0116,135.7681,'Kyoto'],[34.6937,135.5023,'Osaka'],[37.5665,126.9780,'Seoul'],[35.1796,129.0756,'Busan']],
+    gallery:[['/assets/home.jpg','Tokyo'],['/assets/cultura.jpg','Kyoto'],['/assets/tecnologia.jpg','Contemporaneo'],['/assets/deco_2.jpg','Design & detail']],
+    rhythm:['Tokyo pulse','Kyoto rituale','Kansai food','Seoul energy','Korea finale']
+  },
+  world:{
+    mapLead:'World non parte da una rotta prestabilita: la mappa è un canvas. Prima il brief, poi restringiamo il mondo.',
+    coords:[[43.8392,10.8883,'YUME Atelier'],[35.6762,139.6503,'Asia'],[-20.0,57.5,'Oceano Indiano'],[-13.2,-72.5,'Sud America'],[-30.0,25.0,'Africa']],
+    gallery:[['/assets/team-yume.jpg','Brief'],['/assets/natura.jpg','Natura'],['/assets/cultura.jpg','Cultura'],['/assets/deco_2.jpg','Direzione aperta']],
+    rhythm:['Brief','2–3 direzioni','Scelta','Design','Partenza']
+  }
+};
+
 const slug = location.pathname.replace(/\/+$/,'').split('/').pop() || 'giappone';
 const data = DATA[slug] || DATA.giappone;
+const extraData = EXTRA[slug] || EXTRA.giappone;
 document.body.classList.add('yhd-theme-' + data.theme);
 
 const setHTML = (name,value) => {
@@ -189,7 +226,48 @@ if(visual && data.image){
   visual.prepend(img);
 }
 const route=document.getElementById('yhd-route');
-if(route) route.innerHTML=data.stops.map(s=>`<article class="yhd-stop"><div class="yhd-stop__n">${s[0]}</div><div><small>${s[2]}</small><h3>${s[1]}</h3></div><p>${s[3]}</p></article>`).join('');
+if(route) route.innerHTML=data.stops.map((s,i)=>`<article class="yhd-stop" data-map-stop="${i}" tabindex="0"><div class="yhd-stop__n">${s[0]}</div><div><small>${s[2]}</small><h3>${s[1]}</h3></div><p>${s[3]}</p></article>`).join('');
+const mapLead=document.querySelector('[data-yhd="mapLead"]');
+if(mapLead) mapLead.textContent=extraData.mapLead || '';
+
+const gallery=document.getElementById('yhd-gallery');
+if(gallery) gallery.innerHTML=(extraData.gallery||[]).map((g,i)=>`<figure class="yhd-gallery__item ${i===0?'is-wide':''}"><img src="${g[0]}" alt="" loading="lazy"><figcaption>${g[1]}</figcaption></figure>`).join('');
+
+const rhythm=document.getElementById('yhd-rhythm');
+if(rhythm) {
+  rhythm.innerHTML='<span class="yhd-rhythm__label">Journey Rhythm</span>'+(extraData.rhythm||[]).map((r,i)=>`<span class="yhd-rhythm__step"><i style="--level:${25+((i*17)%65)}%"></i><b>${r}</b></span>`).join('');
+  if(extraData.logistics) rhythm.insertAdjacentHTML('afterend',`<p class="yhd-logistics-note"><strong>Logistica YUME:</strong> ${extraData.logistics}</p>`);
+}
+
+let map=null,markers=[];
+if(window.L && document.getElementById('yhd-map') && extraData.coords?.length){
+  map=L.map('yhd-map',{scrollWheelZoom:false,attributionControl:false,zoomControl:true});
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18}).addTo(map);
+  const latlngs=[];
+  extraData.coords.forEach((p,i)=>{
+    const ll=[p[0],p[1]];latlngs.push(ll);
+    const icon=L.divIcon({className:'yhd-map-marker',html:`<span>${String(i+1).padStart(2,'0')}</span>`,iconSize:[36,36],iconAnchor:[18,18]});
+    const m=L.marker(ll,{icon}).addTo(map);
+    markers.push(m);
+    const detail=()=> {
+      const stop=data.stops[Math.min(i,data.stops.length-1)];
+      const box=document.getElementById('yhd-map-detail');
+      if(box&&stop) box.innerHTML=`<span>${stop[0]} · ${stop[2]}</span><strong>${p[2]}</strong><p>${stop[3]}</p>`;
+      m.openPopup();
+    };
+    m.bindPopup('<strong>'+p[2]+'</strong>');
+    m.on('click',detail);
+  });
+  if(latlngs.length>1) L.polyline(latlngs,{color:'#6D2340',weight:3,opacity:.8,dashArray:'8 9'}).addTo(map);
+  map.fitBounds(L.latLngBounds(latlngs),{padding:[35,35],maxZoom:5});
+  document.querySelectorAll('[data-map-stop]').forEach(el=>{
+    const i=Number(el.dataset.mapStop);
+    const focus=()=>{if(markers[i]){map.flyTo(markers[i].getLatLng(),Math.max(map.getZoom(),5),{duration:.8});markers[i].fire('click');}};
+    el.addEventListener('click',focus);
+    el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();focus();}});
+  });
+}
+
 const values=document.getElementById('yhd-values');
 if(values) values.innerHTML=data.values.map(v=>`<article class="yhd-card"><span>${v[0]}</span><h3>${v[1]}</h3><p>${v[2]}</p></article>`).join('');
 const moments=document.getElementById('yhd-moment-stack');
