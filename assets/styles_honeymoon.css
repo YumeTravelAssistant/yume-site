@@ -715,3 +715,41 @@ img{max-width:100%;display:block}
     padding-bottom:calc(64px + env(safe-area-inset-bottom));
   }
 }
+
+
+/* ==========================================================================
+   DESTINATION NAV FINAL OVERRIDE · 2026-09-22
+   Keep hero navigation readable over dark imagery; invert only after scroll.
+   ========================================================================== */
+@media (min-width:821px){
+  .yhd-page .yh-nav-wrap:not(.is-scrolled) .yh-nav{
+    background:rgba(29,7,16,.92)!important;
+    border-color:rgba(255,255,255,.18)!important;
+  }
+  .yhd-page .yh-nav-wrap:not(.is-scrolled) .yh-brand-master,
+  .yhd-page .yh-nav-wrap:not(.is-scrolled) .yh-brand-line,
+  .yhd-page .yh-nav-wrap:not(.is-scrolled) .yh-desktop-nav a{
+    color:#FAF6EF!important;
+  }
+  .yhd-page .yh-nav-wrap:not(.is-scrolled) .yh-desktop-nav a:hover,
+  .yhd-page .yh-nav-wrap:not(.is-scrolled) .yh-desktop-nav a:focus-visible{
+    color:#E7D5AE!important;
+  }
+  .yhd-page .yh-nav-wrap:not(.is-scrolled) .yh-desktop-nav a::after{
+    background:#D8BD87!important;
+  }
+
+  .yhd-page .yh-nav-wrap.is-scrolled .yh-nav{
+    background:rgba(250,246,239,.97)!important;
+    border-color:rgba(43,13,22,.10)!important;
+  }
+  .yhd-page .yh-nav-wrap.is-scrolled .yh-brand-master,
+  .yhd-page .yh-nav-wrap.is-scrolled .yh-brand-line,
+  .yhd-page .yh-nav-wrap.is-scrolled .yh-desktop-nav a{
+    color:#2B0D16!important;
+  }
+  .yhd-page .yh-nav-wrap.is-scrolled .yh-desktop-nav a:hover,
+  .yhd-page .yh-nav-wrap.is-scrolled .yh-desktop-nav a:focus-visible{
+    color:#88324F!important;
+  }
+}
