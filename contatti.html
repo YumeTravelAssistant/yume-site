@@ -43,6 +43,128 @@
     .box{margin:12px 0;border:1px solid #eee;padding:12px;border-radius:10px}
     .muted{opacity:.85}
 
+  /* ===== Preventivo pubblico · UX/UI YUME (solo frontend) ===== */
+  #box-preventivo.yh-quote-box{
+    margin:18px 0 22px;
+    padding:0;
+    border:0;
+    background:transparent;
+  }
+  #box-preventivo .yh-quote-intro{
+    margin-bottom:14px;
+    padding:18px 20px;
+    border-radius:18px;
+    background:linear-gradient(135deg,rgba(139,44,43,.08),rgba(201,168,106,.12));
+    border:1px solid rgba(139,44,43,.12);
+  }
+  #box-preventivo .yh-quote-intro strong{
+    display:block;
+    margin-bottom:5px;
+    color:#8B2C2B;
+    font:700 1.15rem 'Playfair Display',serif;
+  }
+  #box-preventivo .yh-quote-intro p{
+    margin:0;
+    color:#625754;
+    font-size:.9rem;
+    line-height:1.5;
+  }
+  #box-preventivo .yh-quote-section{
+    margin-top:12px;
+    padding:18px;
+    border:1px solid rgba(139,44,43,.10);
+    border-radius:18px;
+    background:#fff;
+    box-shadow:0 8px 24px rgba(55,35,31,.045);
+  }
+  #box-preventivo .yh-quote-section-head{
+    display:flex;
+    align-items:flex-start;
+    gap:11px;
+    margin-bottom:16px;
+  }
+  #box-preventivo .yh-quote-step{
+    flex:0 0 30px;
+    width:30px;
+    height:30px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:#8B2C2B;
+    color:#fff;
+    font:700 .72rem 'Quicksand',sans-serif;
+  }
+  #box-preventivo .yh-quote-section-head strong{
+    display:block;
+    color:#332a28;
+    font:700 1rem 'Quicksand',sans-serif;
+  }
+  #box-preventivo .yh-quote-section-head span{
+    display:block;
+    margin-top:2px;
+    color:#756965;
+    font-size:.79rem;
+    line-height:1.35;
+  }
+  #box-preventivo .yh-quote-grid-2,
+  #box-preventivo .yh-quote-grid-3{
+    display:grid;
+    gap:12px;
+  }
+  #box-preventivo .yh-quote-grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #box-preventivo .yh-quote-grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  #box-preventivo .yh-quote-field{min-width:0}
+  #box-preventivo .yh-quote-field + .yh-quote-field--full{margin-top:12px}
+  #box-preventivo .yh-quote-field label,
+  #box-preventivo > .yh-quote-section label{
+    display:block;
+    margin:0 0 6px;
+    color:#433936;
+    font-weight:650;
+  }
+  #box-preventivo .yh-quote-field input,
+  #box-preventivo .yh-quote-field select,
+  #box-preventivo .yh-quote-field textarea,
+  #box-preventivo .yh-quote-field--full input,
+  #box-preventivo .yh-quote-field--full textarea{
+    width:100%;
+    box-sizing:border-box;
+  }
+  #box-preventivo .yh-quote-help{
+    margin:6px 0 0;
+    color:#776a66;
+    font-size:.78rem;
+    line-height:1.4;
+  }
+  #box-preventivo .yh-quote-spacer{margin-top:12px}
+  #box-preventivo .chip-grid{grid-template-columns:repeat(auto-fill,minmax(145px,1fr))}
+  #box-preventivo .chip{justify-content:center;min-height:42px;box-sizing:border-box;text-align:center}
+  #box-preventivo .choices{margin-top:0}
+  #msg.yh-quote-summary{
+    min-height:300px;
+    line-height:1.55;
+    background:#fbfaf8;
+    border-color:rgba(139,44,43,.18);
+  }
+  #msg.yh-quote-summary[readonly]{
+    color:#3f3734;
+    cursor:default;
+  }
+  .yh-message-help{
+    margin:-2px 0 8px;
+    color:#756965;
+    font-size:.8rem;
+    line-height:1.4;
+  }
+  @media(max-width:720px){
+    #box-preventivo .yh-quote-grid-2,
+    #box-preventivo .yh-quote-grid-3{grid-template-columns:1fr}
+    #box-preventivo .yh-quote-section{padding:15px}
+    #box-preventivo .yh-quote-intro{padding:16px}
+  }
+
+
     /* === STILI Choices identici a pacchetti === */
     .choices{margin-top:6px}
     .choices__inner{border-radius:12px;border-color:#e6e6e6}
@@ -249,162 +371,209 @@
     </div>
 
     <!-- ====== BOX PREVENTIVO ====== -->
-    <div id="box-preventivo" class="box hidden">
-      <div class="two-col">
-        <div>
-          <label for="data_partenza">Data di partenza</label>
-          <input type="date" id="data_partenza">
-        </div>
-        <div>
-          <label for="data_ritorno">Data di ritorno</label>
-          <input type="date" id="data_ritorno">
-        </div>
+    <div id="box-preventivo" class="box hidden yh-quote-box">
+      <div class="yh-quote-intro">
+        <strong>Raccontaci il viaggio che hai in mente</strong>
+        <p>Compila ciò che sai già. Se qualcosa è ancora da definire, lascialo pure aperto: useremo queste informazioni per capire meglio la proposta più adatta.</p>
       </div>
 
-      <div class="three-col">
-        <div>
-          <label for="n_adulti">Adulti</label>
-          <input type="number" id="n_adulti" min="1" value="2">
+      <div class="yh-quote-section">
+        <div class="yh-quote-section-head">
+          <span class="yh-quote-step">01</span>
+          <div><strong>Periodo, viaggiatori e budget</strong><span>Le informazioni di base per dimensionare correttamente il viaggio.</span></div>
         </div>
-        <div>
-          <label for="n_bambini">Bambini</label>
-          <input type="number" id="n_bambini" min="0" value="0">
+
+        <div class="yh-quote-grid-2">
+          <div class="yh-quote-field">
+            <label for="data_partenza">Data di partenza</label>
+            <input type="date" id="data_partenza">
+          </div>
+          <div class="yh-quote-field">
+            <label for="data_ritorno">Data di ritorno</label>
+            <input type="date" id="data_ritorno">
+          </div>
         </div>
-        <div>
-          <label for="budget">Fascia budget</label>
-          <select id="budget">
-            <option value="">Seleziona…</option>
-            <option value="bassa">Bassa</option>
-            <option value="media">Media</option>
-            <option value="alta">Alta</option>
+
+        <div class="yh-quote-grid-3 yh-quote-spacer">
+          <div class="yh-quote-field">
+            <label for="n_adulti">Adulti</label>
+            <input type="number" id="n_adulti" min="1" value="2">
+          </div>
+          <div class="yh-quote-field">
+            <label for="n_bambini">Bambini</label>
+            <input type="number" id="n_bambini" min="0" value="0">
+          </div>
+          <div class="yh-quote-field">
+            <label for="budget">Fascia budget indicativa</label>
+            <select id="budget">
+              <option value="">Da definire</option>
+              <option value="bassa">Bassa · priorità al contenimento costi</option>
+              <option value="media">Media · equilibrio qualità/prezzo</option>
+              <option value="alta">Alta · maggiore comfort e flessibilità</option>
+            </select>
+          </div>
+        </div>
+        <p class="yh-quote-help">Il budget è indicativo: serve a evitare proposte lontane dalle tue aspettative.</p>
+      </div>
+
+      <div class="yh-quote-section">
+        <div class="yh-quote-section-head">
+          <span class="yh-quote-step">02</span>
+          <div><strong>Itinerario e alloggi</strong><span>Le città che vorresti vivere e il tipo di sistemazione che immagini.</span></div>
+        </div>
+
+        <div class="yh-quote-field">
+          <label for="citta_alloggio">Città che vorresti includere</label>
+          <select id="citta_alloggio" multiple>
+            <option>Tokyo</option>
+            <option>Kyoto</option>
+            <option>Osaka</option>
+            <option>Nara</option>
+            <option>Kanazawa</option>
+            <option>Hiroshima</option>
+            <option>Fukuoka</option>
+            <option>Sapporo</option>
+            <option>Nikko</option>
+            <option>Hakone</option>
+            <option>Yokohama</option>
+            <option>Takayama</option>
           </select>
+          <p class="yh-quote-help">Puoi selezionare più città. Non è necessario avere già un itinerario definitivo.</p>
+        </div>
+
+        <div class="yh-quote-grid-2 yh-quote-spacer">
+          <div class="yh-quote-field">
+            <label for="citta_altre">Altre città o zone</label>
+            <input id="citta_altre" placeholder="Es. Koyasan, Kawaguchiko, Beppu…">
+          </div>
+          <div class="yh-quote-field">
+            <label for="dettagli_struttura">Preferenze per gli alloggi</label>
+            <textarea id="dettagli_struttura" rows="3" placeholder="Es. hotel 3/4 stelle, una notte in ryokan, onsen, camere separate…"></textarea>
+          </div>
         </div>
       </div>
 
-      <label for="dettagli_struttura">Dettagli struttura</label>
-      <textarea id="dettagli_struttura" rows="2" placeholder="Es. 3 stelle, 2 notti in ryokan, 1 notte in onsen-hotel…"></textarea>
-
-      <div class="two-col">
-        <div>
-          <label for="trasporti">Pass trasporti</label>
-          <select id="trasporti">
-            <option value="">Seleziona…</option>
-            <option value="JRP">Japan Rail Pass</option>
-            <option value="regionali">Pass Regionali</option>
-            <option value="bus">Bus notturno</option>
-            <option value="nessuno">Nessun pass</option>
-          </select>
+      <div class="yh-quote-section">
+        <div class="yh-quote-section-head">
+          <span class="yh-quote-step">03</span>
+          <div><strong>Voli e spostamenti</strong><span>Preferenze di partenza e livello di comodità desiderato negli spostamenti.</span></div>
         </div>
-        <div>
-          <label for="transfer">Transfer</label>
-          <select id="transfer">
-            <option value="">Seleziona…</option>
-            <option value="arrivo">Solo arrivo</option>
-            <option value="partenza">Solo partenza</option>
-            <option value="entrambi">Arrivo + partenza</option>
-            <option value="no">Nessun transfer</option>
-          </select>
+
+        <div class="yh-quote-grid-2">
+          <div class="yh-quote-field">
+            <label for="aeroporto">Aeroporto di partenza preferito</label>
+            <input id="aeroporto" list="aeroportiIT" placeholder="Es. ROMA – Fiumicino (FCO)">
+            <datalist id="aeroportiIT">
+              <option value="ROMA – Fiumicino (FCO)"></option>
+              <option value="ROMA – Ciampino (CIA)"></option>
+              <option value="MILANO – Malpensa (MXP)"></option>
+              <option value="MILANO – Linate (LIN)"></option>
+              <option value="BERGAMO – Orio al Serio (BGY)"></option>
+              <option value="TORINO – Caselle (TRN)"></option>
+              <option value="VERONA – Villafranca (VRN)"></option>
+              <option value="VENEZIA – Marco Polo (VCE)"></option>
+              <option value="TREVISO – Canova (TSF)"></option>
+              <option value="BOLOGNA – Marconi (BLQ)"></option>
+              <option value="FIRENZE – Peretola (FLR)"></option>
+              <option value="PISA – Galileo Galilei (PSA)"></option>
+              <option value="GENOVA – Cristoforo Colombo (GOA)"></option>
+              <option value="PARMA – Giuseppe Verdi (PMF)"></option>
+              <option value="RIMINI – Fellini (RMI)"></option>
+              <option value="ANCONA – Falconara (AOI)"></option>
+              <option value="PERUGIA – S. Francesco (PEG)"></option>
+              <option value="PESCARA – Abruzzo (PSR)"></option>
+              <option value="NAPOLI – Capodichino (NAP)"></option>
+              <option value="BARI – Palese (BRI)"></option>
+              <option value="BRINDISI – Casale (BDS)"></option>
+              <option value="REGGIO CALABRIA – Tito Minniti (REG)"></option>
+              <option value="LAMEZIA TERME – (SUF)"></option>
+              <option value="PALERMO – Punta Raisi (PMO)"></option>
+              <option value="TRAPANI – Birgi (TPS)"></option>
+              <option value="PANTELLERIA – (PNL)"></option>
+              <option value="LAMPEDUSA – (LMP)"></option>
+              <option value="CATANIA – Fontanarossa (CTA)"></option>
+              <option value="COMISO – (CIY)"></option>
+              <option value="CAGLIARI – Elmas (CAG)"></option>
+              <option value="OLBIA – Costa Smeralda (OLB)"></option>
+              <option value="ALGHERO – Fertilia (AHO)"></option>
+              <option value="BOLZANO – (BZO)"></option>
+              <option value="CUNEO – Levaldigi (CUF)"></option>
+              <option value="TRIESTE – Ronchi (TRS)"></option>
+            </datalist>
+          </div>
+          <div class="yh-quote-field">
+            <label for="aeroporto_altro">Alternativa o aeroporto extra-Italia</label>
+            <input id="aeroporto_altro" placeholder="Es. Zurigo (ZRH), Parigi (CDG)…">
+          </div>
+        </div>
+
+        <div class="yh-quote-grid-3 yh-quote-spacer">
+          <div class="yh-quote-field">
+            <label for="scali">Preferenza sui voli</label>
+            <select id="scali">
+              <option value="">Indifferente / valutiamo insieme</option>
+              <option value="0">Diretto, quando disponibile</option>
+              <option value="1">Massimo 1 scalo</option>
+              <option value="2">Massimo 2 scali</option>
+            </select>
+          </div>
+          <div class="yh-quote-field">
+            <label for="trasporti">Pass / soluzione trasporti</label>
+            <select id="trasporti">
+              <option value="">Da definire con YUME</option>
+              <option value="JRP">Japan Rail Pass</option>
+              <option value="regionali">Pass Regionali</option>
+              <option value="bus">Bus notturno</option>
+              <option value="nessuno">Nessun pass</option>
+            </select>
+          </div>
+          <div class="yh-quote-field">
+            <label for="transfer">Transfer aeroportuali</label>
+            <select id="transfer">
+              <option value="">Da definire con YUME</option>
+              <option value="arrivo">Solo arrivo</option>
+              <option value="partenza">Solo partenza</option>
+              <option value="entrambi">Arrivo + partenza</option>
+              <option value="no">Nessun transfer</option>
+            </select>
+          </div>
+        </div>
+        <p class="yh-quote-help">Se non sai quale pass o soluzione convenga, lascia “Da definire”: valuteremo noi l’opzione più sensata in base all’itinerario.</p>
+      </div>
+
+      <div class="yh-quote-section">
+        <div class="yh-quote-section-head">
+          <span class="yh-quote-step">04</span>
+          <div><strong>Esperienze e priorità</strong><span>Ci aiuta a capire cosa rendere centrale nel viaggio e quali esigenze rispettare.</span></div>
+        </div>
+
+        <label>Esperienze che ti interessano</label>
+        <div class="chip-grid" id="esperienze-grid">
+          <label class="chip chip--exp"><input type="checkbox" value="Cerimonia del tè">Cerimonia del tè</label>
+          <label class="chip chip--exp"><input type="checkbox" value="Workshop ceramica">Workshop ceramica</label>
+          <label class="chip chip--exp"><input type="checkbox" value="Lezione di cucina">Lezione di cucina</label>
+          <label class="chip chip--exp"><input type="checkbox" value="Onsen privato">Onsen privato</label>
+          <label class="chip chip--exp"><input type="checkbox" value="Incontri con artigiani">Incontri con artigiani</label>
+          <label class="chip chip--exp"><input type="checkbox" value="Tour anime/manga">Tour anime/manga</label>
+          <label class="chip chip--exp"><input type="checkbox" value="Samurai & ninja">Samurai & ninja</label>
+          <label class="chip chip--exp"><input type="checkbox" value="Fotografia">Fotografia</label>
+        </div>
+
+        <div class="yh-quote-grid-2 yh-quote-spacer">
+          <div class="yh-quote-field">
+            <label for="esperienze_altro">Altre esperienze</label>
+            <input id="esperienze_altro" placeholder="Es. calligrafia, ikebana, sake tasting…">
+          </div>
+          <div class="yh-quote-field">
+            <label for="note_preventivo">Dettagli aggiuntivi</label>
+            <textarea id="note_preventivo" rows="4" placeholder="Esigenze particolari, occasione speciale, ritmo desiderato, interessi, cose da evitare…"></textarea>
+          </div>
         </div>
       </div>
-
-      <label>Esperienze richieste</label>
-      <div class="chip-grid" id="esperienze-grid">
-        <label class="chip chip--exp"><input type="checkbox" value="Cerimonia del tè">Cerimonia del tè</label>
-        <label class="chip chip--exp"><input type="checkbox" value="Workshop ceramica">Workshop ceramica</label>
-        <label class="chip chip--exp"><input type="checkbox" value="Lezione di cucina">Lezione di cucina</label>
-        <label class="chip chip--exp"><input type="checkbox" value="Onsen privato">Onsen privato</label>
-        <label class="chip chip--exp"><input type="checkbox" value="Incontri con artigiani">Incontri con artigiani</label>
-        <label class="chip chip--exp"><input type="checkbox" value="Tour anime/manga">Tour anime/manga</label>
-        <label class="chip chip--exp"><input type="checkbox" value="Samurai & ninja">Samurai & ninja</label>
-        <label class="chip chip--exp"><input type="checkbox" value="Fotografia">Fotografia</label>
-      </div>
-      <div style="margin-top:6px;">
-        <label for="esperienze_altro">Altro (opzionale)</label>
-        <input id="esperienze_altro" placeholder="Es. calligrafia, ikebana, sake tasting…">
-      </div>
-
-      <label for="citta_alloggio">Città per alloggi</label>
-      <select id="citta_alloggio" multiple>
-        <option>Tokyo</option>
-        <option>Kyoto</option>
-        <option>Osaka</option>
-        <option>Nara</option>
-        <option>Kanazawa</option>
-        <option>Hiroshima</option>
-        <option>Fukuoka</option>
-        <option>Sapporo</option>
-        <option>Nikko</option>
-        <option>Hakone</option>
-        <option>Yokohama</option>
-        <option>Takayama</option>
-      </select>
-      <p class="field-note">Puoi selezionare più città. Se non presenti:
-        <input id="citta_altre" placeholder="Altre città…" style="margin-left:6px"></p>
-
-      <label for="aeroporto">Aeroporto di partenza (Italia)</label>
-      <input id="aeroporto" list="aeroportiIT" placeholder="Es. ROMA Fiumicino (FCO)">
-      <datalist id="aeroportiIT">
-        <option value="ROMA – Fiumicino (FCO)"></option>
-        <option value="ROMA – Ciampino (CIA)"></option>
-        <option value="MILANO – Malpensa (MXP)"></option>
-        <option value="MILANO – Linate (LIN)"></option>
-        <option value="BERGAMO – Orio al Serio (BGY)"></option>
-        <option value="TORINO – Caselle (TRN)"></option>
-        <option value="VERONA – Villafranca (VRN)"></option>
-        <option value="VENEZIA – Marco Polo (VCE)"></option>
-        <option value="TREVISO – Canova (TSF)"></option>
-        <option value="BOLOGNA – Marconi (BLQ)"></option>
-        <option value="FIRENZE – Peretola (FLR)"></option>
-        <option value="PISA – Galileo Galilei (PSA)"></option>
-        <option value="GENOVA – Cristoforo Colombo (GOA)"></option>
-        <option value="PARMA – Giuseppe Verdi (PMF)"></option>
-        <option value="RIMINI – Fellini (RMI)"></option>
-        <option value="ANCONA – Falconara (AOI)"></option>
-        <option value="PERUGIA – S. Francesco (PEG)"></option>
-        <option value="PESCARA – Abruzzo (PSR)"></option>
-        <option value="NAPOLI – Capodichino (NAP)"></option>
-        <option value="BARI – Palese (BRI)"></option>
-        <option value="BRINDISI – Casale (BDS)"></option>
-        <option value="REGGIO CALABRIA – Tito Minniti (REG)"></option>
-        <option value="LAMEZIA TERME – (SUF)"></option>
-        <option value="PALERMO – Punta Raisi (PMO)"></option>
-        <option value="TRAPANI – Birgi (TPS)"></option>
-        <option value="PANTELLERIA – (PNL)"></option>
-        <option value="LAMPEDUSA – (LMP)"></option>
-        <option value="CATANIA – Fontanarossa (CTA)"></option>
-        <option value="COMISO – (CIY)"></option>
-        <option value="CAGLIARI – Elmas (CAG)"></option>
-        <option value="OLBIA – Costa Smeralda (OLB)"></option>
-        <option value="ALGHERO – Fertilia (AHO)"></option>
-        <option value="BOLZANO – (BZO)"></option>
-        <option value="CUNEO – Levaldigi (CUF)"></option>
-        <option value="TRIESTE – Ronchi (TRS)"></option>
-      </datalist>
-      <div style="margin-top:6px;">
-        <label for="aeroporto_altro">Altro (se non in elenco o extra‑Italia)</label>
-        <input id="aeroporto_altro" placeholder="Es. Zurigo (ZRH), Parigi CDG, Doha (DOH)…">
-      </div>
-
-      <div class="two-col">
-        <div>
-          <label for="scali">Numero di scali</label>
-          <select id="scali">
-            <option value="">Indifferente</option>
-            <option value="0">Diretto (quando disponibile)</option>
-            <option value="1">Max 1 scalo</option>
-            <option value="2">Max 2 scali</option>
-          </select>
-        </div>
-        <div class="muted" style="display:flex;align-items:flex-end;">
-          <p class="field-note">Per aeroporti non principali potrebbero essere necessari più scali.</p>
-        </div>
-      </div>
-
-      <label for="note_preventivo">Dettagli aggiuntivi</label>
-      <textarea id="note_preventivo" rows="3" placeholder="Esigenze particolari, occasioni speciali, ritmi di viaggio…"></textarea>
     </div>
 
-    <label for="msg">Messaggio</label>
+    <label id="msg-label" for="msg">Messaggio</label>
+    <p id="msg-help" class="yh-message-help">Scrivi qui la tua richiesta.</p>
     <textarea id="msg" name="messaggio" rows="4" required></textarea>
 
     <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0;pointer-events:none">
@@ -890,42 +1059,169 @@ const ENDPOINT = "https://yume-sito-form.azurewebsites.net/api/invia-form";
 
   // —— Preventivo helpers
   function getMultiSelectValues(sel){ return Array.from(sel.selectedOptions).map(o=>o.value); }
+
+  function formatDateIT(value){
+    if (!value) return 'da definire';
+    const p = value.split('-').map(Number);
+    if (p.length !== 3 || p.some(Number.isNaN)) return value;
+    return new Intl.DateTimeFormat('it-IT', {
+      day:'numeric', month:'long', year:'numeric'
+    }).format(new Date(p[0], p[1] - 1, p[2]));
+  }
+
+  function diffNotti(start, end){
+    if (!start || !end) return null;
+    const a = start.split('-').map(Number);
+    const b = end.split('-').map(Number);
+    if (a.length !== 3 || b.length !== 3 || [...a,...b].some(Number.isNaN)) return null;
+    const diff = Math.round((Date.UTC(b[0],b[1]-1,b[2]) - Date.UTC(a[0],a[1]-1,a[2])) / 86400000);
+    return diff > 0 ? diff : null;
+  }
+
+  const budgetLabels = {
+    bassa: 'Bassa · priorità al contenimento costi',
+    media: 'Media · equilibrio qualità/prezzo',
+    alta: 'Alta · maggiore comfort e flessibilità'
+  };
+  const trasportiLabels = {
+    JRP: 'Japan Rail Pass',
+    regionali: 'Pass regionali',
+    bus: 'Bus notturno',
+    nessuno: 'Nessun pass'
+  };
+  const transferLabels = {
+    arrivo: 'Solo arrivo',
+    partenza: 'Solo partenza',
+    entrambi: 'Arrivo + partenza',
+    no: 'Nessun transfer'
+  };
+  const scaliLabels = {
+    '': 'Indifferente / da valutare',
+    '0': 'Volo diretto, quando disponibile',
+    '1': 'Massimo 1 scalo',
+    '2': 'Massimo 2 scali'
+  };
+
+  function configureMessageField(val){
+    const msgLabel = document.getElementById('msg-label');
+    const msgHelp = document.getElementById('msg-help');
+    if (!msgEl) return;
+
+    if (val === 'Preventivo'){
+      msgEl.readOnly = true;
+      msgEl.rows = 16;
+      msgEl.classList.add('yh-quote-summary');
+      if (msgLabel) msgLabel.textContent = 'Riepilogo della tua richiesta';
+      if (msgHelp) msgHelp.textContent = 'Si aggiorna automaticamente con le tue scelte. Per aggiungere informazioni usa “Dettagli aggiuntivi”.';
+    } else {
+      msgEl.readOnly = false;
+      msgEl.rows = 4;
+      msgEl.classList.remove('yh-quote-summary');
+      if (msgLabel) msgLabel.textContent = 'Messaggio';
+      if (msgHelp) msgHelp.textContent = val === 'Consulenza'
+        ? 'Puoi integrare liberamente il messaggio precompilato.'
+        : 'Scrivi qui la tua richiesta.';
+    }
+  }
+
   function prefillMessage(){
     const val = interessiBoxes.find(b=>b.checked)?.value || '';
     if (!msgEl) return;
+    configureMessageField(val);
+
     if (val === 'Consulenza'){
       const lbl = mapLabel[selTipo?.value] || 'Consulenza';
       const pref = composePreferenze();
       msgEl.value = `Ciao Yume, vorrei informazioni su: ${lbl}.\n` + (pref ? `Preferenze: ${pref}\n` : '') + `Grazie!`;
-    } else if (val === 'Preventivo'){
-      const part = document.getElementById('data_partenza')?.value || '—';
-      const ritor = document.getElementById('data_ritorno')?.value || '—';
-      const adulti = document.getElementById('n_adulti')?.value || '—';
-      const bimbi = document.getElementById('n_bambini')?.value || '0';
-      const budget = document.getElementById('budget')?.value || '—';
+      return;
+    }
+
+    if (val === 'Preventivo'){
+      const partRaw = document.getElementById('data_partenza')?.value || '';
+      const ritorRaw = document.getElementById('data_ritorno')?.value || '';
+      const notti = diffNotti(partRaw, ritorRaw);
+
+      const adulti = Math.max(0, Number(document.getElementById('n_adulti')?.value || 0));
+      const bambini = Math.max(0, Number(document.getElementById('n_bambini')?.value || 0));
+      const totale = adulti + bambini;
+
+      const budget = document.getElementById('budget')?.value || '';
+      const struttura = (document.getElementById('dettagli_struttura')?.value || '').trim();
+      const trasporti = document.getElementById('trasporti')?.value || '';
+      const transfer = document.getElementById('transfer')?.value || '';
+
       const cittaSel = getMultiSelectValues(document.getElementById('citta_alloggio') || {selectedOptions:[]});
       const cittaAltre = (document.getElementById('citta_altre')?.value || '').trim();
-      const aero = document.getElementById('aeroporto')?.value || '';
+      const citta = [...cittaSel, cittaAltre].filter(Boolean);
+
+      const aero = (document.getElementById('aeroporto')?.value || '').trim();
       const aeroAltro = (document.getElementById('aeroporto_altro')?.value || '').trim();
-      const scali = document.getElementById('scali')?.value || 'Indifferente';
+      const aeroporto = aeroAltro || aero;
+      const scali = document.getElementById('scali')?.value ?? '';
+
       const expChips = Array.from(document.querySelectorAll('#esperienze-grid input:checked')).map(i=>i.value);
       const expAltro = (document.getElementById('esperienze_altro')?.value || '').trim();
+      const esperienze = [...expChips, expAltro].filter(Boolean);
+      const note = (document.getElementById('note_preventivo')?.value || '').trim();
 
-      const partAero = aeroAltro ? `Aeroporto: ${aeroAltro} (altro)` : `Aeroporto: ${aero || '—'}`;
       const righe = [
-        `Richiesta preventivo`,
-        `Date: ${part} → ${ritor}`,
-        `Persone: ${adulti} adulti, ${bimbi} bambini`,
-        `Budget: ${budget}`,
-        `Alloggi: ${[...cittaSel, cittaAltre].filter(Boolean).join(', ') || 'da definire'}`,
-        `${partAero} | Scali: ${scali}`,
+        'Ciao YUME,',
+        '',
+        'vorrei ricevere una proposta per un viaggio in Giappone con le seguenti preferenze.',
+        '',
+        'PERIODO',
+        `• Partenza: ${formatDateIT(partRaw)}`,
+        `• Rientro: ${formatDateIT(ritorRaw)}`
       ];
-      const exps = [...expChips, expAltro].filter(Boolean).join(', ');
-      if (exps) righe.push(`Esperienze: ${exps}`);
-      msgEl.value = `Ciao Yume, ${righe.join(' | ')}.`;
-    } else {
-      msgEl.value = '';
+
+      if (notti) righe.push(`• Durata: ${notti} ${notti === 1 ? 'notte' : 'notti'}`);
+
+      righe.push(
+        '',
+        'VIAGGIATORI',
+        `• ${adulti} ${adulti === 1 ? 'adulto' : 'adulti'}`,
+        `• ${bambini} ${bambini === 1 ? 'bambino' : 'bambini'}`,
+        `• Totale: ${totale} ${totale === 1 ? 'persona' : 'persone'}`,
+        '',
+        'BUDGET',
+        `• Fascia indicata: ${budgetLabels[budget] || 'Da definire'}`,
+        '',
+        'ITINERARIO E ALLOGGI',
+        `• Città di interesse: ${citta.length ? citta.join(', ') : 'da definire'}`
+      );
+
+      if (struttura) righe.push(`• Preferenze alloggi: ${struttura}`);
+
+      righe.push(
+        '',
+        'VOLI',
+        `• Aeroporto di partenza preferito: ${aeroporto || 'da definire'}`,
+        `• Preferenza voli: ${scaliLabels[scali] || 'Indifferente / da valutare'}`,
+        '',
+        'TRASPORTI E TRANSFER',
+        `• Pass / soluzione trasporti: ${trasportiLabels[trasporti] || 'Da definire con YUME'}`,
+        `• Transfer aeroportuali: ${transferLabels[transfer] || 'Da definire con YUME'}`
+      );
+
+      if (esperienze.length){
+        righe.push('', 'ESPERIENZE DI INTERESSE');
+        esperienze.forEach(exp => righe.push(`• ${exp}`));
+      }
+
+      if (note){
+        righe.push('', 'ALTRE INDICAZIONI', `• ${note}`);
+      }
+
+      righe.push(
+        '',
+        'Grazie. Attendo di essere ricontattato/a per valutare insieme la soluzione più adatta.'
+      );
+
+      msgEl.value = righe.join('\n');
+      return;
     }
+
+    msgEl.value = '';
   }
 
   // Chip ON/OFF accessibile (esperienze & interessi)
@@ -935,9 +1231,16 @@ const ENDPOINT = "https://yume-sito-form.azurewebsites.net/api/invia-form";
   syncAllChips();
 
   selTipo?.addEventListener('change', prefillMessage);
-  ['data_partenza','data_ritorno','n_adulti','n_bambini','budget','aeroporto','aeroporto_altro','scali','esperienze_altro','citta_altre']
-    .forEach(id => document.getElementById(id)?.addEventListener('input', prefillMessage));
-  document.getElementById('citta_alloggio')?.addEventListener('change', prefillMessage);
+  ['data_partenza','data_ritorno','n_adulti','n_bambini','budget','dettagli_struttura','trasporti','transfer','aeroporto','aeroporto_altro','scali','esperienze_altro','citta_altre','note_preventivo']
+    .forEach(id => {
+      const el = document.getElementById(id);
+      el?.addEventListener('input', prefillMessage);
+      el?.addEventListener('change', prefillMessage);
+    });
+  const cittaAlloggioEl = document.getElementById('citta_alloggio');
+  cittaAlloggioEl?.addEventListener('change', prefillMessage);
+  cittaAlloggioEl?.addEventListener('addItem', prefillMessage);
+  cittaAlloggioEl?.addEventListener('removeItem', prefillMessage);
 
   // Prefill da query ?consulenza=...
   const qs = new URLSearchParams(location.search);
