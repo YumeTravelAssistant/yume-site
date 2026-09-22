@@ -252,8 +252,8 @@
   };
 
   function calculateMatch(ans) {
-    let line = 'Signature';
-    let destination = 'Giappone Signature';
+    let line = 'Signature Journeys';
+    let destination = 'Giappone';
     let why = 'Un progetto sartoriale, costruito su ritmo, esperienze e momenti di pausa.';
     let code = 'japan_signature';
 
@@ -266,25 +266,35 @@
       ans.care === 'independent' ? 2 : 0
     ].reduce((a,b)=>a+b,0);
 
-    if (nextScore >= 4) {
-      line = 'Honeymoon NEXT';
-      destination = ans.mood === 'culture' ? 'Japan NEXT' : (ans.mood === 'sea' ? 'Thailand NEXT' : 'Asia Experience');
-      code = ans.mood === 'culture' ? 'japan_next' : (ans.mood === 'sea' ? 'thailand_next' : 'asia_next');
-      why = 'Più esperienze e movimento, con budget allocato dove genera davvero ricordo. Regia YUME, libertà di viverlo.';
-    } else if ((ans.mood === 'sea' || ans.mood === 'mix') && ['long','extended'].includes(ans.duration) && ['signature','open'].includes(ans.budget)) {
+    if ((ans.mood === 'sea' || ans.mood === 'mix') && ['long','extended'].includes(ans.duration) && ['signature','open'].includes(ans.budget)) {
       line = 'Signature Journeys';
-      destination = 'Giappone × Polinesia';
+      destination = 'Giappone + Polinesia';
       code = 'japan_polynesia';
       why = 'Prima intensità culturale, poi decompressione: due mondi costruiti come un unico viaggio.';
+    } else if (
+      ['culture','mix'].includes(ans.mood) &&
+      ['move','balance'].includes(ans.pace) &&
+      ['medium','long','extended'].includes(ans.duration) &&
+      ['balanced','signature','open'].includes(ans.budget)
+    ) {
+      line = ans.pace === 'move' ? 'Honeymoon NEXT' : 'Signature Journeys';
+      destination = 'Giappone + Corea';
+      code = 'japan_korea';
+      why = 'Due culture vicine ma con energie diverse: tradizione, città, food e contemporaneo dentro un’unica regia.';
     } else if (ans.mood === 'sea' && ['balanced','signature'].includes(ans.budget)) {
       line = ans.budget === 'balanced' ? 'Honeymoon NEXT' : 'Signature Journeys';
       destination = 'Thailandia';
       code = ans.budget === 'balanced' ? 'thailand_next' : 'thailand_signature';
       why = 'Un buon equilibrio tra cultura, food, natura e mare, con grande flessibilità di budget e ritmo.';
+    } else if (nextScore >= 4) {
+      line = 'Honeymoon NEXT';
+      destination = ans.mood === 'sea' ? 'Thailandia' : 'Giappone';
+      code = ans.mood === 'sea' ? 'thailand_next' : 'japan_next';
+      why = 'Più esperienze e movimento, con budget allocato dove genera davvero ricordo. Regia YUME, libertà di viverlo.';
     } else if (ans.mood === 'nature' && ans.pace !== 'slow') {
       line = 'Honeymoon NEXT';
-      destination = 'Japan Wild / Asia Experience';
-      code = 'japan_wild_next';
+      destination = 'Giappone';
+      code = 'japan_next';
       why = 'Il viaggio come esperienza condivisa: treni, natura, piccole strutture, attività e momenti non standardizzati.';
     }
 
