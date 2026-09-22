@@ -612,6 +612,71 @@
     }
   }
 
+  function initClickCards() {
+    qsa('[data-card-href]').forEach(card => {
+      const href = card.getAttribute('data-card-href');
+      if (!href) return;
+      const go = target => {
+        if (target && target.closest('a,button,input,select,textarea,label')) return;
+        location.href = href;
+      };
+      card.addEventListener('click', e => go(e.target));
+      card.addEventListener('keydown', e => {
+        if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('a,button,input,select,textarea,label')) {
+          e.preventDefault();
+          location.href = href;
+        }
+      });
+    });
+  }
+
+  function honeymoonPageContext() {
+    const path = location.pathname.toLowerCase();
+    const map = [
+      ['/honeymoon/giappone-polinesia','Giappone + Polinesia'],
+      ['/honeymoon/giappone-corea','Giappone + Corea'],
+      ['/honeymoon/thailandia','Thailandia'],
+      ['/honeymoon/giappone','Giappone'],
+      ['/honeymoon/world','World / altra destinazione'],
+      ['/honeymoon/next','Honeymoon NEXT'],
+      ['/honeymoon/signature','Signature Journeys'],
+      ['/honeymoon/wedding-journey','Wedding Journey Page'],
+      ['/honeymoon/atelier','Honeymoon Atelier'],
+      ['/honeymoon/metodo','Metodo YUME Honeymoon']
+    ];
+    return (map.find(([needle]) => path.includes(needle)) || [null,'YUME Honeymoon'])[1];
+  }
+
+  function initContactDock() {
+    if (!location.pathname.toLowerCase().includes('/honeymoon')) return;
+    if (qs('.yh-contact-dock')) return;
+    document.body.classList.add('yh-has-contact-dock');
+    const context = honeymoonPageContext();
+    const message = encodeURIComponent(
+      'Ciao YUME, sto valutando il nostro viaggio di nozze e sto guardando la sezione "' +
+      context +
+      '". Vorrei parlarne con voi e capire come potrebbe diventare il nostro progetto.'
+    );
+    const dock = document.createElement('aside');
+    dock.className = 'yh-contact-dock';
+    dock.setAttribute('aria-label','Contatta YUME Honeymoon');
+    dock.innerHTML = `
+      <span class="yh-contact-dock__label">Parliamone insieme</span>
+      <a class="yh-contact-dock__item yh-contact-dock__item--wa" href="https://wa.me/393703081341?text=${message}" target="_blank" rel="noopener" data-track="honeymoon_whatsapp">
+        <span class="yh-contact-dock__icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" role="img"><path d="M16 4.2A11.7 11.7 0 0 0 6 22l-1.4 5.2 5.3-1.4A11.7 11.7 0 1 0 16 4.2Zm0 2.1a9.6 9.6 0 0 1 0 19.2 9.5 9.5 0 0 1-4.9-1.3l-.7-.4-3.1.8.8-3-.4-.7A9.6 9.6 0 0 1 16 6.3Zm-4.1 4.4c-.3 0-.6.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2.1 3.3 5.2 4.5 2.6 1 3.1.8 3.7.8.6-.1 1.9-.8 2.1-1.5.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.7-.4l-2.1-1c-.3-.1-.6-.2-.8.2-.2.3-.8 1-1 1.2-.2.2-.4.3-.8.1-.3-.2-1.5-.6-2.8-1.7-1-.9-1.7-2-1.9-2.4-.2-.3 0-.5.1-.7l.5-.6.3-.6c.1-.2 0-.5 0-.7l-1-2.2c-.2-.5-.5-.5-.8-.5h-.6Z"/></svg>
+        </span>
+        <span><strong>WhatsApp</strong><small>Messaggio già pronto</small></span>
+      </a>
+      <a class="yh-contact-dock__item" href="tel:+393703081341" data-track="honeymoon_call">
+        <span class="yh-contact-dock__icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32"><path d="M9.3 5.5 6.8 7.4c-.8.6-1.1 1.6-.8 2.5 2.2 7.2 7.9 12.9 15.1 15.1.9.3 1.9 0 2.5-.8l1.9-2.5c.6-.8.5-1.9-.2-2.5l-3.7-3c-.7-.5-1.6-.5-2.2.1l-1.8 1.8a17 17 0 0 1-3.7-3.7l1.8-1.8c.6-.6.6-1.5.1-2.2l-3-3.7c-.6-.7-1.7-.8-2.5-.2Z"/></svg>
+        </span>
+        <span><strong>Chiamaci</strong><small>+39 370 308 1341</small></span>
+      </a>`;
+    document.body.appendChild(dock);
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     initCookie();
     initNav();
@@ -624,6 +689,8 @@
     initPartnerContext();
     initQueryPrefill();
     initMatchTeaser();
+    initClickCards();
+    initContactDock();
     emit('honeymoon_page_view',{title:document.title});
   });
 })();

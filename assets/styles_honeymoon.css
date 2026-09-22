@@ -508,3 +508,41 @@ img{max-width:100%;display:block}
 @media (min-width:561px) and (max-width:820px){
   .yh-destination:nth-child(5){grid-column:span 12}
 }
+
+
+/* ---------- Fully clickable cards ---------- */
+.yh-click-card{cursor:pointer;transition:transform .28s var(--yh-ease),box-shadow .28s var(--yh-ease)}
+.yh-click-card:hover,.yh-click-card:focus-visible{transform:translateY(-4px);box-shadow:0 28px 68px rgba(29,7,16,.16)}
+.yh-click-card:focus-visible{outline:2px solid var(--yh-gold-400);outline-offset:5px}
+.yh-click-card:hover .yh-line-card__media img{transform:scale(1.025)}
+.yh-click-card .yh-inline-link span{transition:transform .2s ease}
+.yh-click-card:hover .yh-inline-link span{transform:translateX(4px)}
+
+/* ---------- Honeymoon contact dock ---------- */
+.yh-contact-dock{
+  position:fixed;right:18px;bottom:18px;z-index:880;width:250px;padding:10px;border:1px solid rgba(201,165,108,.28);
+  border-radius:18px;background:rgba(29,7,16,.94);box-shadow:0 22px 62px rgba(29,7,16,.32);
+  -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)
+}
+.yh-contact-dock__label{display:block;padding:2px 7px 8px;color:var(--yh-gold-300);font-size:9px;letter-spacing:.16em;text-transform:uppercase;font-weight:800}
+.yh-contact-dock__item{display:grid;grid-template-columns:38px 1fr;gap:10px;align-items:center;padding:10px;border-radius:12px;color:#fff;text-decoration:none;transition:background .2s ease,transform .2s ease}
+.yh-contact-dock__item:hover{background:rgba(255,255,255,.08);transform:translateY(-1px)}
+.yh-contact-dock__item--wa{background:rgba(201,165,108,.09)}
+.yh-contact-dock__icon{width:36px;height:36px;display:grid;place-items:center;border:1px solid rgba(201,165,108,.28);border-radius:50%;color:var(--yh-gold-300)}
+.yh-contact-dock__icon svg{width:19px;height:19px;fill:currentColor}
+.yh-contact-dock__item strong{display:block;font-size:12px}
+.yh-contact-dock__item small{display:block;margin-top:2px;color:rgba(255,255,255,.54);font-size:9px}
+@media(max-width:560px){
+  .yh-contact-dock{left:12px;right:12px;bottom:12px;width:auto;display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:7px}
+  .yh-contact-dock__label{display:none}
+  .yh-contact-dock__item{grid-template-columns:30px 1fr;padding:8px}
+  .yh-contact-dock__icon{width:30px;height:30px}
+  .yh-contact-dock__item small{display:none}
+  .yh-mobile-cta{bottom:78px}
+  body{padding-bottom:80px}
+}
+
+@media(max-width:560px){
+  .yh-has-contact-dock .yh-mobile-cta{display:none!important}
+  .yh-has-contact-dock .yh-match-teaser{bottom:86px}
+}

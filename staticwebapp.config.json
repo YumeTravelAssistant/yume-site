@@ -25,6 +25,38 @@
       }
     },
     {
+      "route": "/honeymoon/atelier",
+      "rewrite": "/honeymoon-section.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, follow, noarchive"
+      }
+    },
+    {
+      "route": "/honeymoon/destinazioni",
+      "rewrite": "/honeymoon-section.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, follow, noarchive"
+      }
+    },
+    {
+      "route": "/honeymoon/signature",
+      "rewrite": "/honeymoon-section.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, follow, noarchive"
+      }
+    },
+    {
+      "route": "/honeymoon/metodo",
+      "rewrite": "/honeymoon-section.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, follow, noarchive"
+      }
+    },
+    {
       "route": "/honeymoon/world",
       "rewrite": "/honeymoon-destination.html",
       "headers": {
@@ -87,6 +119,13 @@
     },
     {
       "route": "/honeymoon-destination.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, follow, noarchive"
+      }
+    },
+    {
+      "route": "/honeymoon-section.html",
       "headers": {
         "Cache-Control": "no-store",
         "X-Robots-Tag": "noindex, follow, noarchive"
