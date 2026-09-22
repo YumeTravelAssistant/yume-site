@@ -631,3 +631,76 @@ img{max-width:100%;display:block}
 .yh-contact-dock.is-muted{
   opacity:.62;
 }
+
+
+/* ==========================================================================
+   Navigation contrast states · audit fix
+   ========================================================================== */
+.yh-nav{
+  background:rgba(29,7,16,.90);
+  border-color:rgba(255,255,255,.18);
+}
+.yh-brand-master,
+.yh-brand-line{
+  color:#FAF6EF;
+}
+.yh-desktop-nav a{
+  color:rgba(250,246,239,.90);
+}
+.yh-desktop-nav a:hover,
+.yh-desktop-nav a:focus-visible{
+  color:#E7D5AE;
+}
+.yh-desktop-nav a::after{
+  background:#D8BD87;
+}
+.yh-menu-btn{
+  color:#FAF6EF;
+  border-color:rgba(250,246,239,.24);
+  background:rgba(255,255,255,.07);
+}
+.yh-nav-wrap.is-scrolled .yh-nav{
+  background:rgba(250,246,239,.96);
+  border-color:rgba(43,13,22,.10);
+}
+.yh-nav-wrap.is-scrolled .yh-brand-master,
+.yh-nav-wrap.is-scrolled .yh-brand-line{
+  color:#2B0D16;
+}
+.yh-nav-wrap.is-scrolled .yh-desktop-nav a{
+  color:#44373B;
+}
+.yh-nav-wrap.is-scrolled .yh-desktop-nav a:hover,
+.yh-nav-wrap.is-scrolled .yh-desktop-nav a:focus-visible{
+  color:#2B0D16;
+}
+.yh-nav-wrap.is-scrolled .yh-desktop-nav a::after{
+  background:#88324F;
+}
+.yh-nav-wrap.is-scrolled .yh-menu-btn{
+  color:#2B0D16;
+  border-color:rgba(43,13,22,.12);
+  background:#fff;
+}
+.yh-desktop-nav a:focus-visible,
+.yh-nav-cta:focus-visible,
+.yh-menu-btn:focus-visible{
+  outline:2px solid #D8BD87;
+  outline-offset:4px;
+}
+
+@media(max-width:820px){
+  .yh-nav{
+    background:rgba(250,246,239,.96);
+    border-color:rgba(43,13,22,.10);
+  }
+  .yh-brand-master,
+  .yh-brand-line,
+  .yh-menu-btn{
+    color:#2B0D16;
+  }
+  .yh-menu-btn{
+    background:#fff;
+    border-color:rgba(43,13,22,.12);
+  }
+}
