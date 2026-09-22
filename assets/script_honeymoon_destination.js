@@ -179,32 +179,95 @@ const DATA = {
 const EXTRA = {
   giappone:{
     mapLead:'Da Tokyo al Kansai passando per natura e città più intime: la mappa rende visibile l’alternanza tra energia e pausa.',
-    coords:[[35.6762,139.6503,'Tokyo'],[35.2324,139.1070,'Hakone / Fuji'],[36.5613,136.6562,'Kanazawa'],[35.0116,135.7681,'Kyoto'],[34.6937,135.5023,'Osaka']],
+    coords:[
+      [35.6762,139.6503,'Tokyo'],
+      [35.2324,139.1070,'Hakone / Fuji'],
+      [36.5613,136.6562,'Kanazawa'],
+      [35.0116,135.7681,'Kyoto'],
+      [34.6937,135.5023,'Osaka']
+    ],
+    stopMap:[0,1,2,3,4],
+    connect:true,
+    maxZoom:5,
+    focusZoom:7,
     gallery:[['/assets/home.jpg','City pulse'],['/assets/fuji.jpg','Natura e pausa'],['/maison/4.jpg','Dettaglio e materia'],['/assets/cultura.jpg','Rituale e cultura']],
     rhythm:['Energia','Pausa','Materia','Rituale','Food & libertà']
   },
   thailandia:{
-    mapLead:'Bangkok accende, il nord riequilibra, il mare chiude: la sequenza vale più del numero di tappe.',
-    coords:[[13.7563,100.5018,'Bangkok'],[18.7883,98.9853,'Chiang Mai'],[13.0,100.9,'Transizione'],[9.5120,100.0136,'Mare / isole']],
+    mapLead:'Bangkok accende, il nord riequilibra, il mare chiude: la mappa mostra le tre aree principali del modello, mentre l’ultima notte di rientro resta opzionale.',
+    coords:[
+      [13.7563,100.5018,'Bangkok'],
+      [18.7883,98.9853,'Chiang Mai / Nord'],
+      [13.6900,100.7501,'Bangkok · transizione'],
+      [9.5120,100.0136,'Mare · Koh Samui (esempio)']
+    ],
+    stopMap:[0,1,2,3,null],
+    connect:true,
+    maxZoom:5,
+    focusZoom:7,
     gallery:[['/assets/honeymoon/thailand-hero.webp','Koh Samui · mare e luce'],['/assets/honeymoon/thailand-island.webp','Krabi · isole e decompressione']],
     rhythm:['City pulse','Nord lento','Transizione','Mare']
   },
   'giappone-polinesia':{
-    mapLead:'Entrata dal Kansai, attraversamento del Giappone fino a Tokyo, apertura del Pacifico e ritorno ancora su Narita: una rotta pensata per evitare di trattare la Polinesia come appendice.',
-    coords:[[34.6937,135.5023,'Osaka / Kansai'],[35.0116,135.7681,'Kyoto'],[36.5613,136.6562,'Kanazawa / Kaga'],[35.6762,139.6503,'Tokyo / Narita'],[-17.5516,210.4415,'Papeete'],[-17.5388,210.1705,'Moorea'],[-16.5004,208.2585,'Bora Bora'],[35.6762,139.6503,'Tokyo soft landing']],
+    mapLead:'Entrata dal Kansai, attraversamento del Giappone fino a Tokyo, apertura del Pacifico e rientro su Narita: ogni tappa della mappa corrisponde ora al relativo passaggio del modello.',
+    coords:[
+      [34.6937,135.5023,'Osaka / Kansai'],
+      [35.0116,135.7681,'Kyoto'],
+      [36.5613,136.6562,'Kanazawa / Kaga'],
+      [35.6762,139.6503,'Tokyo'],
+      [-17.5516,210.4415,'Papeete · arrivo in Polinesia'],
+      [-16.5004,208.2585,'Isole · Bora Bora (esempio)'],
+      [35.7720,140.3929,'Narita / Tokyo · soft landing']
+    ],
+    stopMap:[0,1,2,3,4,5,6],
+    connect:true,
+    maxZoom:4,
+    focusZoom:6,
     gallery:[['/kataware/kataware_desk.jpg','Giappone intimo'],['/assets/cultura.jpg','Rituale'],['/assets/honeymoon/polynesia-hero.webp','Pacific gateway'],['/assets/honeymoon/polynesia-sunset.webp','Ocean slow']],
     rhythm:['Kansai soft start','Kyoto intimo','Onsen / materia','Tokyo crescendo','Pacific gateway','Ocean slow','Soft landing'],
     logistics:'Il collegamento diretto Narita–Papeete non è quotidiano: il progetto viene costruito sulle date operative reali. Il ritorno su Tokyo evita, quando possibile, di concatenare immediatamente Polinesia e lungo rientro verso l’Italia.'
   },
   'giappone-corea':{
     mapLead:'Il Giappone costruisce profondità e rituale; Seoul e la seconda tappa coreana riaccendono energia, design e contemporaneo.',
-    coords:[[35.6762,139.6503,'Tokyo'],[35.0116,135.7681,'Kyoto'],[34.6937,135.5023,'Osaka'],[37.5665,126.9780,'Seoul'],[35.1796,129.0756,'Busan']],
+    coords:[
+      [35.6762,139.6503,'Tokyo'],
+      [35.0116,135.7681,'Kyoto'],
+      [34.6937,135.5023,'Osaka'],
+      [37.5665,126.9780,'Seoul'],
+      [35.1796,129.0756,'Busan']
+    ],
+    stopMap:[0,1,2,3,4],
+    connect:true,
+    maxZoom:5,
+    focusZoom:7,
     gallery:[['/assets/home.jpg','Tokyo'],['/assets/cultura.jpg','Kyoto'],['/assets/honeymoon/korea-hero.webp','Seoul contemporanea'],['/assets/honeymoon/korea-palace.webp','Heritage coreano']],
     rhythm:['Tokyo pulse','Kyoto rituale','Kansai food','Seoul energy','Korea finale']
   },
   world:{
-    mapLead:'World parte da YUME e si apre verso più regioni del mondo: la mappa non indica un itinerario standard, ma visualizza il tipo di routing che possiamo costruire intorno alla coppia.',
-    coords:[[43.8392,10.8883,'YUME · progetto'],[25.2048,55.2708,'Gateway / stopover'],[13.7563,100.5018,'Asia'],[-20.3484,57.5522,'Oceano Indiano'],[-33.9249,18.4241,'Africa'],[-17.7134,178.0650,'Pacifico']],
+    mapLead:'World non rappresenta un itinerario prestabilito. La mappa mostra aree e gateway che possono entrare in un progetto worldwide, senza collegarli artificialmente in una rotta unica.',
+    coords:[
+      [43.8392,10.8883,'YUME · progetto'],
+      [25.2048,55.2708,'Middle East · gateway'],
+      [13.7563,100.5018,'Asia'],
+      [-20.3484,57.5522,'Oceano Indiano'],
+      [-33.9249,18.4241,'Africa australe'],
+      [-17.5516,-149.5585,'Pacifico'],
+      [40.7128,-74.0060,'Americhe · gateway']
+    ],
+    stopMap:null,
+    connect:false,
+    fitWorld:true,
+    maxZoom:2,
+    focusZoom:4,
+    mapDetails:[
+      ['YUME · progetto','Il punto di partenza è il brief: periodo, durata, budget, priorità e desideri.'],
+      ['Middle East · gateway','Un long stopover può diventare parte del viaggio quando aggiunge valore alla rotta.'],
+      ['Asia','Città, cultura, mare e combinazioni regionali possono essere costruite in funzione della stagione.'],
+      ['Oceano Indiano','Resort, natura e decompressione entrano nel progetto quando sono coerenti con il ritmo complessivo.'],
+      ['Africa australe','Safari, città, natura e mare possono essere combinati senza trasformare il viaggio in una corsa.'],
+      ['Pacifico','Isole e destinazioni remote richiedono routing, tempi e margini progettati con attenzione.'],
+      ['Americhe · gateway','Nord e Sud America possono funzionare come destinazione, combinazione o stopover di lungo raggio.']
+    ],
     gallery:[],
     rhythm:['Brief','Scenari','Routing','Esperienze','Scelta','Regia YUME'],
     logistics:'World non è una destinazione singola: voli, stopover, stagionalità, trasferimenti e combinazioni vengono verificati sul progetto reale prima di proporre la soluzione finale.'
@@ -248,12 +311,16 @@ if(visual && data.image){
   visual.prepend(img);
 }
 const route=document.getElementById('yhd-route');
-if(route) route.innerHTML=data.stops.map((s,i)=>`<article class="yhd-stop" data-map-stop="${i}" tabindex="0"><div class="yhd-stop__n">${s[0]}</div><div><small>${s[2]}</small><h3>${s[1]}</h3></div><p>${s[3]}</p></article>`).join('');
+if(route) route.innerHTML=data.stops.map((s,i)=>{
+  const markerIndex=Array.isArray(extraData.stopMap) ? extraData.stopMap[i] : null;
+  const interactive=Number.isInteger(markerIndex);
+  return `<article class="yhd-stop"${interactive?` data-map-stop="${i}" tabindex="0" role="button" aria-label="Mostra ${s[1]} sulla mappa"`:''}><div class="yhd-stop__n">${s[0]}</div><div><small>${s[2]}</small><h3>${s[1]}</h3></div><p>${s[3]}</p></article>`;
+}).join('');
 const mapLead=document.querySelector('[data-yhd="mapLead"]');
 if(mapLead) mapLead.textContent=extraData.mapLead || '';
 
 const gallery=document.getElementById('yhd-gallery');
-if(gallery) gallery.innerHTML=(extraData.gallery||[]).map((g,i)=>`<figure class="yhd-gallery__item ${i===0?'is-wide':''}"><img src="${g[0]}" alt="" loading="lazy"><figcaption>${g[1]}</figcaption></figure>`).join('');
+if(gallery) gallery.innerHTML=(extraData.gallery||[]).map((g,i)=>`<figure class="yhd-gallery__item ${i===0?'is-wide':''}"><img src="${g[0]}" alt="${g[1]}" loading="lazy"><figcaption>${g[1]}</figcaption></figure>`).join('');
 
 const rhythm=document.getElementById('yhd-rhythm');
 if(rhythm) {
@@ -263,31 +330,114 @@ if(rhythm) {
 
 let map=null,markers=[];
 if(window.L && document.getElementById('yhd-map') && extraData.coords?.length){
-  map=L.map('yhd-map',{scrollWheelZoom:false,attributionControl:false,zoomControl:true});
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18}).addTo(map);
-  const latlngs=[];
+  map=L.map('yhd-map',{
+    scrollWheelZoom:false,
+    attributionControl:true,
+    zoomControl:true,
+    worldCopyJump:true
+  });
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    maxZoom:18,
+    attribution:'&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  const markerLatLngs=[];
+  const routeLatLngs=(extraData.lineCoords || extraData.coords).map(p=>[p[0],p[1]]);
+
+  const renderMapDetail=(pointIndex,stopIndex=null)=>{
+    const point=extraData.coords[pointIndex];
+    const box=document.getElementById('yhd-map-detail');
+    if(!box||!point) return;
+
+    if(Number.isInteger(stopIndex) && data.stops[stopIndex]){
+      const stop=data.stops[stopIndex];
+      box.innerHTML=`<span>${stop[0]} · ${stop[2]}</span><strong>${point[2]}</strong><p>${stop[3]}</p>`;
+      return;
+    }
+
+    const detail=extraData.mapDetails?.[pointIndex];
+    if(detail){
+      box.innerHTML=`<span>Worldwide routing</span><strong>${detail[0]}</strong><p>${detail[1]}</p>`;
+    } else {
+      box.innerHTML=`<span>Mappa del viaggio</span><strong>${point[2]}</strong><p>${extraData.mapLead || ''}</p>`;
+    }
+  };
+
   extraData.coords.forEach((p,i)=>{
-    const ll=[p[0],p[1]];latlngs.push(ll);
-    const icon=L.divIcon({className:'yhd-map-marker',html:`<span>${String(i+1).padStart(2,'0')}</span>`,iconSize:[36,36],iconAnchor:[18,18]});
+    const ll=[p[0],p[1]];
+    markerLatLngs.push(ll);
+    const icon=L.divIcon({
+      className:'yhd-map-marker',
+      html:`<span>${String(i+1).padStart(2,'0')}</span>`,
+      iconSize:[36,36],
+      iconAnchor:[18,18]
+    });
     const m=L.marker(ll,{icon}).addTo(map);
     markers.push(m);
-    const detail=()=> {
-      const stop=data.stops[Math.min(i,data.stops.length-1)];
-      const box=document.getElementById('yhd-map-detail');
-      if(box&&stop) box.innerHTML=`<span>${stop[0]} · ${stop[2]}</span><strong>${p[2]}</strong><p>${stop[3]}</p>`;
-      m.openPopup();
-    };
+
+    let mappedStop=null;
+    if(Array.isArray(extraData.stopMap)){
+      const found=extraData.stopMap.findIndex(x=>x===i);
+      if(found>=0) mappedStop=found;
+    }
+
     m.bindPopup('<strong>'+p[2]+'</strong>');
-    m.on('click',detail);
+    m.on('click',()=>{
+      renderMapDetail(i,mappedStop);
+      map.panTo(m.getLatLng(),{animate:true,duration:.35});
+    });
   });
-  if(latlngs.length>1) L.polyline(latlngs,{color:'#6D2340',weight:3,opacity:.8,dashArray:'8 9'}).addTo(map);
-  map.fitBounds(L.latLngBounds(latlngs),{padding:[35,35],maxZoom:5});
+
+  if(extraData.connect!==false && routeLatLngs.length>1){
+    L.polyline(routeLatLngs,{color:'#6D2340',weight:3,opacity:.8,dashArray:'8 9'}).addTo(map);
+  }
+
+  const fitMap=(animate=false)=>{
+    const mobile=window.innerWidth<=560;
+    const tablet=window.innerWidth<=900;
+    const padding=mobile?[22,22]:tablet?[30,30]:[42,42];
+
+    if(extraData.fitWorld){
+      map.fitWorld({padding,animate});
+    } else {
+      map.fitBounds(L.latLngBounds(markerLatLngs),{
+        padding,
+        maxZoom:extraData.maxZoom || 5,
+        animate
+      });
+    }
+  };
+
+  fitMap(false);
+  renderMapDetail(0,Array.isArray(extraData.stopMap) ? extraData.stopMap.findIndex(x=>x===0) : null);
+
   document.querySelectorAll('[data-map-stop]').forEach(el=>{
-    const i=Number(el.dataset.mapStop);
-    const focus=()=>{if(markers[i]){map.flyTo(markers[i].getLatLng(),Math.max(map.getZoom(),5),{duration:.8});markers[i].fire('click');}};
+    const stopIndex=Number(el.dataset.mapStop);
+    const markerIndex=extraData.stopMap?.[stopIndex];
+    const focus=()=>{
+      if(!Number.isInteger(markerIndex)||!markers[markerIndex]) return;
+      const target=markers[markerIndex];
+      map.flyTo(target.getLatLng(),extraData.focusZoom || 6,{duration:.7});
+      renderMapDetail(markerIndex,stopIndex);
+      target.openPopup();
+    };
     el.addEventListener('click',focus);
-    el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();focus();}});
+    el.addEventListener('keydown',e=>{
+      if(e.key==='Enter'||e.key===' '){
+        e.preventDefault();
+        focus();
+      }
+    });
   });
+
+  let resizeTimer;
+  window.addEventListener('resize',()=>{
+    clearTimeout(resizeTimer);
+    resizeTimer=setTimeout(()=>{
+      map.invalidateSize({pan:false});
+      fitMap(false);
+    },140);
+  },{passive:true});
 }
 
 const values=document.getElementById('yhd-values');
