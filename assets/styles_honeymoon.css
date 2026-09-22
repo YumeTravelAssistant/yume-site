@@ -498,3 +498,13 @@ img{max-width:100%;display:block}
 @media(max-width:560px){
   .yh-match-teaser{right:12px;left:12px;bottom:78px;width:auto}
 }
+
+/* Five curated Honeymoon doors: 2 hero cards + 3 balanced cards */
+@media (min-width:821px){
+  .yh-destination:nth-child(3),
+  .yh-destination:nth-child(4),
+  .yh-destination:nth-child(5){grid-column:span 4}
+}
+@media (min-width:561px) and (max-width:820px){
+  .yh-destination:nth-child(5){grid-column:span 12}
+}
