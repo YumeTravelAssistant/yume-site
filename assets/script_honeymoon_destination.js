@@ -46,6 +46,7 @@ const DATA = {
     duration:'14–17 giorni',
     rhythm:'City + north + sea',
     style:'Signature / NEXT',
+    image:'/assets/honeymoon/thailand-hero.webp',
     introTitle:'Tre ritmi. <em>Una sola storia.</em>',
     intro:'La Thailandia funziona bene quando il viaggio cambia registro senza spezzarsi. Prima l’energia urbana, poi un nord più lento e culturale, infine il mare scelto in base alla stagione e al vostro modo di viverlo.',
     stops:[
@@ -79,6 +80,7 @@ const DATA = {
     duration:'23–27 giorni',
     rhythm:'West Japan → Pacific → soft landing',
     style:'Signature Journeys',
+    image:'/assets/honeymoon/polynesia-hero.webp',
     introTitle:'Due mondi che hanno senso <em>solo se dialogano.</em>',
     intro:'Non sommiamo due destinazioni. Usiamo il Giappone anche come gateway naturale del Pacifico: si entra dall’ovest, si attraversa il Paese fino a Tokyo, si apre la Polinesia e si torna ancora in Giappone prima del lungo rientro verso l’Italia.',
     stops:[
@@ -114,6 +116,7 @@ const DATA = {
     duration:'17–20 giorni',
     rhythm:'Culture + city pulse',
     style:'Signature / NEXT',
+    image:'/assets/honeymoon/korea-hero.webp',
     introTitle:'Continuità geografica. <em>Contrasto culturale.</em>',
     intro:'Il progetto usa il Giappone come prima immersione e la Corea come secondo linguaggio: più dinamica, contemporanea e notturna. Tra le due lasciamo spazio per percepire il cambio, non solo per spostarsi.',
     stops:[
@@ -183,20 +186,20 @@ const EXTRA = {
   thailandia:{
     mapLead:'Bangkok accende, il nord riequilibra, il mare chiude: la sequenza vale più del numero di tappe.',
     coords:[[13.7563,100.5018,'Bangkok'],[18.7883,98.9853,'Chiang Mai'],[13.0,100.9,'Transizione'],[9.5120,100.0136,'Mare / isole']],
-    gallery:[['/assets/cultura.jpg','Città e cultura'],['/assets/natura.jpg','Verde e movimento'],['/assets/coppia.jpg','Tempo di coppia'],['/assets/deco_1.jpg','Decompressione']],
+    gallery:[['/assets/honeymoon/thailand-hero.webp','Mare e luce'],['/assets/cultura.jpg','Città e cultura'],['/assets/natura.jpg','Verde e movimento'],['/assets/honeymoon/thailand-island.webp','Decompressione']],
     rhythm:['City pulse','Nord lento','Transizione','Mare']
   },
   'giappone-polinesia':{
     mapLead:'Entrata dal Kansai, attraversamento del Giappone fino a Tokyo, apertura del Pacifico e ritorno ancora su Narita: una rotta pensata per evitare di trattare la Polinesia come appendice.',
     coords:[[34.6937,135.5023,'Osaka / Kansai'],[35.0116,135.7681,'Kyoto'],[36.5613,136.6562,'Kanazawa / Kaga'],[35.6762,139.6503,'Tokyo / Narita'],[-17.5516,210.4415,'Papeete'],[-17.5388,210.1705,'Moorea'],[-16.5004,208.2585,'Bora Bora'],[35.6762,139.6503,'Tokyo soft landing']],
-    gallery:[['/kataware/kataware_desk.jpg','Giappone intimo'],['/assets/cultura.jpg','Rituale'],['/assets/natura.jpg','Apertura verso il Pacifico'],['/assets/coppia.jpg','Decompressione']],
+    gallery:[['/kataware/kataware_desk.jpg','Giappone intimo'],['/assets/cultura.jpg','Rituale'],['/assets/honeymoon/polynesia-hero.webp','Pacific gateway'],['/assets/honeymoon/polynesia-sunset.webp','Ocean slow']],
     rhythm:['Kansai soft start','Kyoto intimo','Onsen / materia','Tokyo crescendo','Pacific gateway','Ocean slow','Soft landing'],
     logistics:'Il collegamento diretto Narita–Papeete non è quotidiano: il progetto viene costruito sulle date operative reali. Il ritorno su Tokyo evita, quando possibile, di concatenare immediatamente Polinesia e lungo rientro verso l’Italia.'
   },
   'giappone-corea':{
     mapLead:'Il Giappone costruisce profondità e rituale; Seoul e la seconda tappa coreana riaccendono energia, design e contemporaneo.',
     coords:[[35.6762,139.6503,'Tokyo'],[35.0116,135.7681,'Kyoto'],[34.6937,135.5023,'Osaka'],[37.5665,126.9780,'Seoul'],[35.1796,129.0756,'Busan']],
-    gallery:[['/assets/home.jpg','Tokyo'],['/assets/cultura.jpg','Kyoto'],['/assets/tecnologia.jpg','Contemporaneo'],['/assets/deco_2.jpg','Design & detail']],
+    gallery:[['/assets/home.jpg','Tokyo'],['/assets/cultura.jpg','Kyoto'],['/assets/honeymoon/korea-hero.webp','Seoul contemporanea'],['/assets/honeymoon/korea-palace.webp','Heritage coreano']],
     rhythm:['Tokyo pulse','Kyoto rituale','Kansai food','Seoul energy','Korea finale']
   },
   world:{
