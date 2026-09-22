@@ -138,7 +138,10 @@
     const panel = qs('.yh-mobile-panel');
     if (!wrap) return;
 
-    const onScroll = () => wrap.classList.toggle('is-scrolled', window.scrollY > 28);
+    const onScroll = () => {
+      wrap.classList.toggle('is-scrolled', window.scrollY > 28);
+      wrap.classList.toggle('is-compact', window.scrollY > 140);
+    };
     onScroll();
     window.addEventListener('scroll', onScroll, {passive:true});
 
@@ -675,6 +678,21 @@
         <span><strong>Chiamaci</strong><small>+39 370 308 1341</small></span>
       </a>`;
     document.body.appendChild(dock);
+
+    const updateDock = () => {
+      const shouldShow = window.scrollY > Math.min(window.innerHeight * .18, 180);
+      dock.classList.toggle('is-visible', shouldShow);
+    };
+    updateDock();
+    window.addEventListener('scroll', updateDock, {passive:true});
+
+    const form = qs('#inizia');
+    if (form && 'IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => dock.classList.toggle('is-muted', entry.isIntersecting));
+      }, {threshold:.18});
+      observer.observe(form);
+    }
   }
 
   document.addEventListener('DOMContentLoaded', () => {
