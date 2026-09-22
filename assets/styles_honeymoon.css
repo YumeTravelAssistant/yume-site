@@ -704,3 +704,14 @@ img{max-width:100%;display:block}
     border-color:rgba(43,13,22,.12);
   }
 }
+
+
+/* iPhone / mobile browser safe areas */
+@media(max-width:560px){
+  .yh-contact-dock{
+    bottom:max(8px,env(safe-area-inset-bottom));
+  }
+  body.yh-has-contact-dock{
+    padding-bottom:calc(64px + env(safe-area-inset-bottom));
+  }
+}
