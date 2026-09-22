@@ -13,7 +13,7 @@ document.title=(slug==='destinazioni'?'Destinazioni':slug[0].toUpperCase()+slug.
 const metaDesc=document.querySelector('meta[name="description"]');
 if(metaDesc) metaDesc.content=(d.lead || 'YUME Honeymoon: travel design, consulenza e progettazione di viaggi di nozze su misura.').replace(/<[^>]+>/g,'');
 const media=document.querySelector('[data-yhs-media]');if(media)media.style.backgroundImage=`url("${d.image}")`;
-const cards=document.getElementById('yhs-cards');if(cards)cards.innerHTML=d.cards.map((c,i)=>{const img=c[3],href=c[4];return `<article class="yhs-card ${img?'has-image':''}" ${img?`style="--card-image:url('${img}')"`:''}><small>${c[0]}</small><h3>${c[1]}</h3><p>${c[2]}</p>${href?`<a href="${href}">Esplora →</a>`:''}</article>`}).join('');
+const cards=document.getElementById('yhs-cards');if(cards)cards.innerHTML=d.cards.map((c,i)=>{const img=c[3],href=c[4];const body=`<small>${c[0]}</small><h3>${c[1]}</h3><p>${c[2]}</p>${href?`<span class="yhs-card__link">Esplora →</span>`:''}`;return href?`<a class="yhs-card yhs-card--link ${img?'has-image':''}" href="${href}" aria-label="${c[1]} · Esplora" ${img?`style="--card-image:url('${img}')"`:''}>${body}</a>`:`<article class="yhs-card ${img?'has-image':''}" ${img?`style="--card-image:url('${img}')"`:''}>${body}</article>`}).join('');
 const pts=document.getElementById('yhs-points');if(pts)pts.innerHTML=d.points.map(p=>`<article class="yhs-point"><strong>${p[0]}</strong><p>${p[1]}</p></article>`).join('');
 document.querySelector('[data-yhs-primary]').textContent=d.primary+' →';
 const canon=document.getElementById('yhs-canonical');if(canon)canon.href='https://yume-travel.com/honeymoon/'+slug+'/';
