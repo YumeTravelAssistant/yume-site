@@ -452,6 +452,7 @@ document.getElementById("formPacchetto").addEventListener("submit", function (e)
       .then(response => response.json())
       .then(data => {
         if (data.status === "success") {
+          if (typeof tracciaConversioneLeadGoogleAds === "function") tracciaConversioneLeadGoogleAds();
           alert("Richiesta inviata con successo!");
           document.getElementById("formPacchetto").reset();
           document.getElementById("counterCitta").textContent = "";
@@ -563,4 +564,5 @@ function validaForm() {
 
   return true;
 }
+
 
