@@ -59,6 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const success = data ? (data.ok === true || data.status === "success") : false;
 
       if (response.ok && success) {
+        if (typeof tracciaConversioneLeadGoogleAds === "function") tracciaConversioneLeadGoogleAds();
         stato.textContent = "Richiesta inviata! Ti risponderemo a breve.";
         form.reset();
       } else {
@@ -73,4 +74,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
 
