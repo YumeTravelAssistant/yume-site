@@ -476,6 +476,33 @@ body.yh-home.yh-access-active #yuki-chatbox{display:none!important}
 
 </style>
 
+<style id="yh-honeymoon-launch-v1">
+body.yh-home .yh-honeymoon-bridge{
+  max-width:1320px;margin:0 auto 72px;display:grid;grid-template-columns:.92fr 1.08fr;
+  border-radius:30px;overflow:hidden;background:#2B0D16;color:#fff;box-shadow:var(--yh-shadow)
+}
+body.yh-home .yh-honeymoon-bridge__visual{position:relative;min-height:430px;overflow:hidden}
+body.yh-home .yh-honeymoon-bridge__visual::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(29,7,16,.72),rgba(29,7,16,.08) 62%)}
+body.yh-home .yh-honeymoon-bridge__visual img{width:100%;height:100%;object-fit:cover;display:block}
+body.yh-home .yh-honeymoon-bridge__visual span{position:absolute;z-index:2;left:28px;bottom:25px;font:500 clamp(2rem,3.7vw,3.9rem)/1 'Playfair Display',serif;color:#fff}
+body.yh-home .yh-honeymoon-bridge__copy{padding:clamp(34px,5vw,72px)}
+body.yh-home .yh-honeymoon-bridge .yh-section-eyebrow{text-align:left;color:#E7D5AE}
+body.yh-home .yh-honeymoon-bridge h2{margin:8px 0 18px;color:#fff;font-size:clamp(2.4rem,4.8vw,4.5rem);line-height:1.02}
+body.yh-home .yh-honeymoon-bridge__copy>p:not(.yh-section-eyebrow){margin:0;color:rgba(255,255,255,.78);line-height:1.7;max-width:690px}
+body.yh-home .yh-honeymoon-bridge__points{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;margin:28px 0}
+body.yh-home .yh-honeymoon-bridge__points span{font:600 .84rem/1.4 'Quicksand',sans-serif;color:#F4EDE2}
+body.yh-home .yh-honeymoon-bridge__points span::before{content:"✓";margin-right:8px;color:#D8BD87}
+body.yh-home .yh-honeymoon-bridge__actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+body.yh-home .yh-honeymoon-text-link{color:#E7D5AE;font-weight:700;text-decoration:none}
+body.yh-home .yh-honeymoon-text-link:hover{text-decoration:underline;text-underline-offset:4px}
+@media(max-width:800px){
+  body.yh-home .yh-honeymoon-bridge{grid-template-columns:1fr;margin:0 14px 56px;border-radius:22px}
+  body.yh-home .yh-honeymoon-bridge__visual{min-height:300px}
+  body.yh-home .yh-honeymoon-bridge__copy{padding:30px 22px 34px}
+  body.yh-home .yh-honeymoon-bridge__points{grid-template-columns:1fr}
+}
+</style>
+
 </head>
 <body class="yh-home">
 <nav class="navbar">
@@ -490,6 +517,7 @@ body.yh-home.yh-access-active #yuki-chatbox{display:none!important}
     <a href="gruppo.html">Gruppi</a>
     <a href="pacchetti.html">Pacchetti flessibili</a>
     <a href="maison.html">Maison</a>
+    <a href="/honeymoon/">Honeymoon</a>
     <a href="/blog/">Journal</a>
     <a href="#contatti-form" class="yh-nav-cta">Parla con YUME</a>
   </div>
@@ -513,6 +541,7 @@ body.yh-home.yh-access-active #yuki-chatbox{display:none!important}
   <a href="pacchetti.html">Pacchetti flessibili</a>
   <a href="gruppo.html">Viaggi di gruppo</a>
   <a href="maison.html">Viaggi su misura</a>
+  <a href="/honeymoon/">YUME Honeymoon · Viaggi di nozze</a>
   <a href="consulenze.html">Consulenze</a>
   <a href="prodotti.html">Prodotti</a>
   <a href="faq.html">FAQ</a>
@@ -1292,6 +1321,27 @@ document.addEventListener("DOMContentLoaded", function () {
   </div>
 </section>
 
+<section class="yh-honeymoon-bridge" aria-labelledby="yhHoneymoonTitle">
+  <div class="yh-honeymoon-bridge__visual" aria-hidden="true">
+    <img src="/assets/honeymoon/polynesia-hero.webp" alt="">
+    <span>YUME Honeymoon</span>
+  </div>
+  <div class="yh-honeymoon-bridge__copy">
+    <p class="yh-section-eyebrow">Nuovo dipartimento YUME · Viaggi di nozze</p>
+    <h2 id="yhHoneymoonTitle">È online YUME Honeymoon.</h2>
+    <p>Un dipartimento specializzato per progettare lune di miele in Giappone e nel mondo: Signature Journeys, Honeymoon NEXT, combinazioni multi-destinazione, Wedding Journey Page e consulenza dedicata.</p>
+    <div class="yh-honeymoon-bridge__points">
+      <span>Travel Design dedicato alla coppia</span>
+      <span>Giappone, Asia, Pacifico e Worldwide</span>
+      <span>Wedding Journey Page e lista viaggio digitale</span>
+      <span>Consulenti e assistenza YUME</span>
+    </div>
+    <div class="yh-honeymoon-bridge__actions">
+      <a href="/honeymoon/" class="yh-btn yh-btn-light">Scopri YUME Honeymoon <i class="fa fa-arrow-right"></i></a>
+      <a href="/honeymoon/destinazioni/" class="yh-honeymoon-text-link">Esplora le destinazioni →</a>
+    </div>
+  </div>
+</section>
 
 <div class="parti-bg-wrapper">
   <section class="parti-con-noi-section">
@@ -1350,9 +1400,9 @@ document.addEventListener("DOMContentLoaded", function () {
       <p>Pacchetti ed esperienze di gruppo pensate per chi non sa con chi partire o per chi vuol condividere l’esperienza con chi non conosce. Un viaggio come questo genera amicizie, legami e un posto speciale nel cuore</p>
     </a>
 
-    <a href="maison.html" class="box slide-in" style="text-decoration:none;color:inherit;">
-      <img src="assets/offerta_3.jpg" alt="">
-      <h3>Viaggi di nozze</h3>
+    <a href="/honeymoon/" class="box slide-in" style="text-decoration:none;color:inherit;">
+      <img src="assets/offerta_3.jpg" alt="YUME Honeymoon">
+      <h3>Viaggi di nozze · YUME Honeymoon</h3>
       <p>Iniziare la vita insieme in un viaggio da sogno. Offriamo viaggi di nozze su misura per rendere la vostra luna di miele unica ed indimenticabile. Il limite è solo la vostra fantasia, a tutto il resto pensiamo noi</p>
     </a>
 
