@@ -1,6 +1,75 @@
 {
   "routes": [
     {
+      "route": "/honeymoon",
+      "rewrite": "/honeymoon.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, follow, noarchive"
+      }
+    },
+    {
+      "route": "/honeymoon/",
+      "rewrite": "/honeymoon.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, follow, noarchive"
+      }
+    },
+    {
+      "route": "/honeymoon/next",
+      "rewrite": "/honeymoon-next.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, follow, noarchive"
+      }
+    },
+    {
+      "route": "/honeymoon/next/",
+      "rewrite": "/honeymoon-next.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, follow, noarchive"
+      }
+    },
+    {
+      "route": "/honeymoon/wedding-journey",
+      "rewrite": "/honeymoon-wedding-page.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, follow, noarchive"
+      }
+    },
+    {
+      "route": "/honeymoon/wedding-journey/",
+      "rewrite": "/honeymoon-wedding-page.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, follow, noarchive"
+      }
+    },
+    {
+      "route": "/honeymoon.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, follow, noarchive"
+      }
+    },
+    {
+      "route": "/honeymoon-next.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, follow, noarchive"
+      }
+    },
+    {
+      "route": "/honeymoon-wedding-page.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, follow, noarchive"
+      }
+    },
+    {
       "route": "/blog/index.html",
       "headers": {
         "Cache-Control": "no-store"
