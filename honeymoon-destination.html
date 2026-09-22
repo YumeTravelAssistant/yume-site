@@ -14,25 +14,45 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/styles_honeymoon.css">
 <link rel="stylesheet" href="/assets/styles_honeymoon_destination.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script defer src="/assets/script_honeymoon.js"></script>
+<script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script defer src="/assets/script_honeymoon_destination.js"></script>
 </head>
 <body class="yhd-page">
 <header class="yh-nav-wrap" aria-label="Navigazione YUME Honeymoon">
 <nav class="yh-nav">
 <a class="yh-brand" href="/honeymoon/" aria-label="YUME Honeymoon"><span class="yh-brand-mark"><img src="/assets/logo-yume.jpg" alt="" width="44" height="44"></span><span class="yh-brand-copy"><span class="yh-brand-master">YUME</span><span class="yh-brand-line">Honeymoon</span></span></a>
-<div class="yh-desktop-nav"><a href="/honeymoon/#metodo">Il metodo</a><a href="/honeymoon/#destinazioni">Destinazioni</a><a href="/honeymoon/wedding-journey/">Wedding Page</a></div>
+<div class="yh-desktop-nav"><a href="/honeymoon/metodo/">Il metodo</a><a href="/honeymoon/signature/">Signature</a><a href="/honeymoon/next/">Honeymoon NEXT</a><a href="/honeymoon/destinazioni/">Destinazioni</a><a href="/honeymoon/wedding-journey/">Wedding Page</a><a href="/honeymoon/atelier/">Atelier</a></div>
 <a id="yhd-nav-cta" class="yh-nav-cta" href="/honeymoon/#inizia">Parliamone <span aria-hidden="true">↗</span></a>
 <button class="yh-menu-btn" type="button" aria-expanded="false" aria-controls="yh-mobile-panel" aria-label="Apri menu"><span></span></button>
 </nav>
 </header>
-<div id="yh-mobile-panel" class="yh-mobile-panel" aria-hidden="true"><nav class="yh-mobile-nav"><span class="yh-mobile-kicker">YUME Honeymoon</span><a href="/honeymoon/">Honeymoon</a><a href="/honeymoon/#destinazioni">Destinazioni</a><a href="/honeymoon/wedding-journey/">Wedding Journey</a><a id="yhd-mobile-cta" href="/honeymoon/#inizia">Inizia il progetto</a></nav></div>
+<div id="yh-mobile-panel" class="yh-mobile-panel" aria-hidden="true"><nav class="yh-mobile-nav"><span class="yh-mobile-kicker">YUME Honeymoon</span><a href="/honeymoon/metodo/">Il metodo</a><a href="/honeymoon/signature/">Signature</a><a href="/honeymoon/next/">Honeymoon NEXT</a><a href="/honeymoon/destinazioni/">Destinazioni</a><a href="/honeymoon/wedding-journey/">Wedding Journey</a><a href="/honeymoon/atelier/">Atelier</a><a id="yhd-mobile-cta" href="/honeymoon/#inizia">Inizia il progetto</a></nav></div>
 <main>
 <section class="yhd-hero">
 <div class="yhd-hero__copy"><p class="yhd-kicker" data-yhd="eyebrow"></p><h1 data-yhd="title"></h1><p class="yhd-hero__lead" data-yhd="lead"></p><div class="yhd-hero__actions"><a id="yhd-primary-cta" class="yhd-btn yhd-btn--gold" href="/honeymoon/#inizia">Usa questa idea come punto di partenza →</a><a class="yhd-btn yhd-btn--ghost" href="#modello">Guarda il modello</a></div></div>
 <div class="yhd-hero__visual" data-yhd-visual><div class="yhd-hero__stamp"><div><strong data-yhd="summary"></strong><small>Non è un pacchetto preconfezionato</small></div></div></div>
 </section>
 <div class="yhd-summary" aria-label="Sintesi modello"><div><small>Durata</small><strong data-yhd="duration"></strong></div><div><small>Ritmo</small><strong data-yhd="rhythm"></strong></div><div><small>Approccio</small><strong data-yhd="style"></strong></div><div><small>Formula</small><strong>100% personalizzabile</strong></div></div>
+
+<section class="yhd-section yhd-section--map">
+  <div class="yhd-wrap">
+    <header class="yhd-head"><div><p class="yhd-kicker">La rotta</p><h2>Il viaggio prende forma <em>sulla mappa.</em></h2></div><p data-yhd="mapLead">Le tappe non sono punti isolati: la loro sequenza è parte del progetto.</p></header>
+    <div class="yhd-map-shell">
+      <div id="yhd-map" class="yhd-map" aria-label="Mappa interattiva del viaggio"></div>
+      <aside id="yhd-map-detail" class="yhd-map-detail"><span>Selezionate una tappa</span><strong>La mappa racconta il ritmo</strong><p>Cliccate sui marker per vedere perché ogni tappa è in quella posizione.</p></aside>
+    </div>
+  </div>
+</section>
+
+<section class="yhd-section yhd-section--gallery">
+  <div class="yhd-wrap">
+    <header class="yhd-head"><div><p class="yhd-kicker">Atmosfera</p><h2>Prima delle tappe, <em>le sensazioni.</em></h2></div><p>Una selezione visuale per far capire il linguaggio del viaggio: densità, silenzio, natura, dettagli, luce.</p></header>
+    <div id="yhd-gallery" class="yhd-gallery"></div>
+    <div id="yhd-rhythm" class="yhd-rhythm" aria-label="Ritmo del viaggio"></div>
+  </div>
+</section>
 
 <section id="modello" class="yhd-section"><div class="yhd-wrap"><header class="yhd-head"><div><p class="yhd-kicker">01 · Il modello</p><h2 data-yhd="introTitle"></h2></div><p data-yhd="intro"></p></header><div id="yhd-route" class="yhd-route"></div><p class="yhd-note"><strong>Importante:</strong> questa sequenza serve a mostrare il metodo YUME. Notti, città, strutture, esperienze e trasporti cambiano in base a periodo, budget, voli disponibili e interessi della coppia.</p></div></section>
 
