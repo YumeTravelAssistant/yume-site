@@ -1691,3 +1691,4 @@ document.addEventListener("DOMContentLoaded", () => {
   const faqLink = links.find((link) => /faq/i.test(link.textContent || ""));
   sidebar.insertBefore(journalLink, faqLink || null);
 });
+
