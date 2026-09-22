@@ -1544,19 +1544,72 @@ function rifiutaCookie() {
 }
 
 function caricaAnalytics() {
-  const script = document.createElement('script');
-  script.src = "https://www.googletagmanager.com/gtag/js?id=G-EPQHLVQ1RH"; // <-- Sostituisci con il tuo ID GA4
-  script.async = true;
+  let scelta = null;
 
-  script.onload = function () {
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    window.gtag = gtag;
-    gtag('js', new Date());
-    gtag('config', 'G-EPQHLVQ1RH'); // <-- Sostituisci anche qui
+  try {
+    scelta = JSON.parse(localStorage.getItem('cookieConsent') || 'null');
+  } catch (e) {
+    scelta = null;
+  }
+
+  const analyticsConsent = scelta?.analytics === true;
+  const marketingConsent = scelta?.marketing === true;
+
+  // Non caricare tag Google senza consenso Analytics o Marketing.
+  if (!analyticsConsent && !marketingConsent) return;
+
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function () {
+    window.dataLayer.push(arguments);
   };
 
-  document.head.appendChild(script);
+  // Carica gtag.js una sola volta. Lo stesso Google tag gestisce GA4 e Google Ads.
+  if (!window.__yumeGoogleTagLoaded) {
+    const script = document.createElement('script');
+    const googleTagId = marketingConsent ? 'AW-18466507810' : 'G-EPQHLVQ1RH';
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${googleTagId}`;
+    script.async = true;
+    document.head.appendChild(script);
+
+    window.gtag('js', new Date());
+    window.__yumeGoogleTagLoaded = true;
+  }
+
+  // Google Analytics 4: attivo solo con consenso Analytics.
+  if (analyticsConsent && !window.__yumeGA4Configured) {
+    window.gtag('config', 'G-EPQHLVQ1RH');
+    window.__yumeGA4Configured = true;
+  }
+
+  // Google Ads: attivo solo con consenso Marketing.
+  if (marketingConsent && !window.__yumeGoogleAdsConfigured) {
+    window.gtag('config', 'AW-18466507810');
+    window.__yumeGoogleAdsConfigured = true;
+  }
+}
+
+function tracciaConversioneLeadGoogleAds() {
+  let scelta = null;
+
+  try {
+    scelta = JSON.parse(localStorage.getItem('cookieConsent') || 'null');
+  } catch (e) {
+    scelta = null;
+  }
+
+  // La conversione Ads viene inviata solo se l'utente ha accettato i cookie Marketing.
+  if (scelta?.marketing !== true) return;
+
+  // Se necessario inizializza prima il Google tag.
+  if (typeof window.gtag !== 'function') {
+    caricaAnalytics();
+  }
+
+  if (typeof window.gtag !== 'function') return;
+
+  window.gtag('event', 'conversion', {
+    'send_to': 'AW-18466507810/niaGCLvtroAdEKKYwuVE'
+  });
 }
 
 function inviaConsensoCookie({ analytics, marketing }) {
@@ -1579,7 +1632,7 @@ function inviaConsensoCookie({ analytics, marketing }) {
 window.addEventListener("DOMContentLoaded", () => {
   try {
     const scelta = JSON.parse(localStorage.getItem('cookieConsent') || 'null');
-    if (scelta?.analytics === true) {
+    if (scelta?.analytics === true || scelta?.marketing === true) {
       caricaAnalytics();
     } else if (!scelta) {
       apriBannerCookie();
@@ -1599,7 +1652,7 @@ window.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem('cookieConsent', JSON.stringify(scelta));
       document.getElementById('cookie-preferenze').style.display = 'none';
 
-      if (analytics) caricaAnalytics();
+      if (analytics || marketing) caricaAnalytics();
       inviaConsensoCookie(scelta);
     });
   }
