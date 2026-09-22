@@ -86,6 +86,13 @@
       }
     },
     {
+      "route": "/honeymoon-destination.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, follow, noarchive"
+      }
+    },
+    {
       "route": "/blog/index.html",
       "headers": {
         "Cache-Control": "no-store"
