@@ -4,96 +4,96 @@
       "route": "/honeymoon",
       "rewrite": "/honeymoon.html",
       "headers": {
-        "Cache-Control": "no-store",
-        "X-Robots-Tag": "noindex, follow, noarchive"
+        "Cache-Control": "public, max-age=300",
+        "X-Robots-Tag": "index, follow, max-image-preview:large"
       }
     },
     {
       "route": "/honeymoon/next",
       "rewrite": "/honeymoon-next.html",
       "headers": {
-        "Cache-Control": "no-store",
-        "X-Robots-Tag": "noindex, follow, noarchive"
+        "Cache-Control": "public, max-age=300",
+        "X-Robots-Tag": "index, follow, max-image-preview:large"
       }
     },
     {
       "route": "/honeymoon/wedding-journey",
       "rewrite": "/honeymoon-wedding-page.html",
       "headers": {
-        "Cache-Control": "no-store",
-        "X-Robots-Tag": "noindex, follow, noarchive"
+        "Cache-Control": "public, max-age=300",
+        "X-Robots-Tag": "index, follow, max-image-preview:large"
       }
     },
     {
       "route": "/honeymoon/atelier",
       "rewrite": "/honeymoon-section.html",
       "headers": {
-        "Cache-Control": "no-store",
-        "X-Robots-Tag": "noindex, follow, noarchive"
+        "Cache-Control": "public, max-age=300",
+        "X-Robots-Tag": "index, follow, max-image-preview:large"
       }
     },
     {
       "route": "/honeymoon/destinazioni",
       "rewrite": "/honeymoon-section.html",
       "headers": {
-        "Cache-Control": "no-store",
-        "X-Robots-Tag": "noindex, follow, noarchive"
+        "Cache-Control": "public, max-age=300",
+        "X-Robots-Tag": "index, follow, max-image-preview:large"
       }
     },
     {
       "route": "/honeymoon/signature",
       "rewrite": "/honeymoon-section.html",
       "headers": {
-        "Cache-Control": "no-store",
-        "X-Robots-Tag": "noindex, follow, noarchive"
+        "Cache-Control": "public, max-age=300",
+        "X-Robots-Tag": "index, follow, max-image-preview:large"
       }
     },
     {
       "route": "/honeymoon/metodo",
       "rewrite": "/honeymoon-section.html",
       "headers": {
-        "Cache-Control": "no-store",
-        "X-Robots-Tag": "noindex, follow, noarchive"
+        "Cache-Control": "public, max-age=300",
+        "X-Robots-Tag": "index, follow, max-image-preview:large"
       }
     },
     {
       "route": "/honeymoon/world",
       "rewrite": "/honeymoon-destination.html",
       "headers": {
-        "Cache-Control": "no-store",
-        "X-Robots-Tag": "noindex, follow, noarchive"
+        "Cache-Control": "public, max-age=300",
+        "X-Robots-Tag": "index, follow, max-image-preview:large"
       }
     },
     {
       "route": "/honeymoon/giappone-corea",
       "rewrite": "/honeymoon-destination.html",
       "headers": {
-        "Cache-Control": "no-store",
-        "X-Robots-Tag": "noindex, follow, noarchive"
+        "Cache-Control": "public, max-age=300",
+        "X-Robots-Tag": "index, follow, max-image-preview:large"
       }
     },
     {
       "route": "/honeymoon/giappone-polinesia",
       "rewrite": "/honeymoon-destination.html",
       "headers": {
-        "Cache-Control": "no-store",
-        "X-Robots-Tag": "noindex, follow, noarchive"
+        "Cache-Control": "public, max-age=300",
+        "X-Robots-Tag": "index, follow, max-image-preview:large"
       }
     },
     {
       "route": "/honeymoon/thailandia",
       "rewrite": "/honeymoon-destination.html",
       "headers": {
-        "Cache-Control": "no-store",
-        "X-Robots-Tag": "noindex, follow, noarchive"
+        "Cache-Control": "public, max-age=300",
+        "X-Robots-Tag": "index, follow, max-image-preview:large"
       }
     },
     {
       "route": "/honeymoon/giappone",
       "rewrite": "/honeymoon-destination.html",
       "headers": {
-        "Cache-Control": "no-store",
-        "X-Robots-Tag": "noindex, follow, noarchive"
+        "Cache-Control": "public, max-age=300",
+        "X-Robots-Tag": "index, follow, max-image-preview:large"
       }
     },
     {
