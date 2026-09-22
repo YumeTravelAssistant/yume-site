@@ -1,0 +1,93 @@
+name: Fetch Honeymoon image assets
+
+on:
+  push:
+    branches:
+      - feature/honeymoon-v3-images-mobile
+    paths:
+      - .github/honeymoon-assets.request
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-assets:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/honeymoon-v3-images-mobile
+
+      - name: Prepare Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Download and optimize images
+        run: |
+          python -m pip install --quiet pillow requests
+          python - <<'PY'
+          from pathlib import Path
+          from io import BytesIO
+          import requests
+          from PIL import Image, ImageOps
+
+          OUT = Path("assets/honeymoon")
+          OUT.mkdir(parents=True, exist_ok=True)
+
+          assets = [
+              ("polynesia-hero.webp", "https://images.unsplash.com/photo-1738762932365-a43e3796a86f?auto=format&fit=crop&fm=jpg&q=76&w=2200", 1800, 72),
+              ("polynesia-sunset.webp", "https://images.unsplash.com/photo-1754745442968-b746b74340dd?auto=format&fit=crop&fm=jpg&q=74&w=1800", 1500, 70),
+              ("korea-hero.webp", "https://images.unsplash.com/photo-1770236597850-6078b6808ac3?auto=format&fit=crop&fm=jpg&q=76&w=2200", 1800, 72),
+              ("korea-palace.webp", "https://images.unsplash.com/photo-1761528953320-7c003e3e651c?auto=format&fit=crop&fm=jpg&q=74&w=1800", 1500, 70),
+              ("thailand-hero.webp", "https://images.unsplash.com/photo-1753008517455-4deaf8b51877?auto=format&fit=crop&fm=jpg&q=76&w=2200", 1800, 72),
+              ("thailand-island.webp", "https://images.unsplash.com/photo-1770198303499-67daec5d0871?auto=format&fit=crop&fm=jpg&q=74&w=1800", 1500, 70),
+          ]
+
+          headers = {"User-Agent": "Mozilla/5.0 YUME-Honeymoon-Asset-Fetch/1.0"}
+
+          for name, url, max_w, quality in assets:
+              r = requests.get(url, headers=headers, timeout=45)
+              r.raise_for_status()
+              im = Image.open(BytesIO(r.content))
+              im = ImageOps.exif_transpose(im).convert("RGB")
+              if im.width > max_w:
+                  new_h = round(im.height * max_w / im.width)
+                  im = im.resize((max_w, new_h), Image.Resampling.LANCZOS)
+              out = OUT / name
+              im.save(out, "WEBP", quality=quality, method=6)
+              print(name, im.size, out.stat().st_size)
+          PY
+
+      - name: Add source notes
+        run: |
+          cat > assets/honeymoon/SOURCES.md <<'EOF'
+          # YUME Honeymoon — test image sources
+
+          Temporary editorial/reference images for Honeymoon V3 evaluation.
+          Each source page is marked by Unsplash as free to use under the Unsplash License.
+
+          - polynesia-hero.webp — Roméo A. — Bora Bora, French Polynesia
+            https://unsplash.com/photos/a-wooden-pier-with-thatched-huts-over-water-rKirsg6a-2o
+          - polynesia-sunset.webp — Santiago Franco — Bora Bora, French Polynesia
+            https://unsplash.com/photos/wooden-walkway-to-overwater-bungalows-at-sunset-z9A1a7NjDsw
+          - korea-hero.webp — Jean Carlo Emer — Seoul, South Korea
+            https://unsplash.com/photos/traditional-korean-buildings-with-modern-city-skyline-behind-p0NCqbipqmI
+          - korea-palace.webp — yeojin yun — Seoul, South Korea
+            https://unsplash.com/photos/traditional-korean-architecture-with-modern-city-skyline-ZjhEvlxZSDE
+          - thailand-hero.webp — Marius Kriz — Koh Samui, Thailand
+            https://unsplash.com/photos/beautiful-tropical-beach-with-palm-trees-and-sea-bC6L_jXxD8o
+          - thailand-island.webp — Margo Evardson — Krabi, Thailand
+            https://unsplash.com/photos/tropical-island-with-lush-green-trees-and-rocky-cliffs-4h1n0StLF5Q
+          EOF
+
+      - name: Commit optimized assets
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/honeymoon
+          git diff --cached --quiet && exit 0
+          git commit -m "Add optimized Honeymoon destination image assets"
+          git push origin HEAD:feature/honeymoon-v3-images-mobile
