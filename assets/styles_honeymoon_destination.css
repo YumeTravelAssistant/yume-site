@@ -317,3 +317,24 @@ body.yhd-page{margin:0;background:var(--yhd-paper);color:var(--yhd-ink);font-fam
     grid-template-columns:96px repeat(var(--rhythm-count,7),88px);
   }
 }
+
+
+/* ---------- Clickable Wedding Journey preview ---------- */
+.yhd-device--link{
+  display:block;
+  color:inherit;
+  text-decoration:none;
+  cursor:pointer;
+  transition:transform .24s ease,box-shadow .24s ease;
+}
+.yhd-device--link:hover{
+  transform:rotate(1.4deg) translateY(-4px);
+  box-shadow:0 34px 90px rgba(43,13,22,.16);
+}
+.yhd-device--link:focus-visible{
+  outline:2px solid var(--yhd-gold);
+  outline-offset:5px;
+}
+@media(max-width:560px){
+  .yhd-device--link:hover{transform:translateY(-2px)}
+}
