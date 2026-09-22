@@ -188,7 +188,7 @@ const EXTRA = {
   },
   'giappone-polinesia':{
     mapLead:'Entrata dal Kansai, attraversamento del Giappone fino a Tokyo, apertura del Pacifico e ritorno ancora su Narita: una rotta pensata per evitare di trattare la Polinesia come appendice.',
-    coords:[[34.6937,135.5023,'Osaka / Kansai'],[35.0116,135.7681,'Kyoto'],[36.5613,136.6562,'Kanazawa / Kaga'],[35.6762,139.6503,'Tokyo / Narita'],[-17.5516,-149.5585,'Papeete'],[-17.5388,-149.8295,'Moorea'],[-16.5004,-151.7415,'Bora Bora'],[35.6762,139.6503,'Tokyo soft landing']],
+    coords:[[34.6937,135.5023,'Osaka / Kansai'],[35.0116,135.7681,'Kyoto'],[36.5613,136.6562,'Kanazawa / Kaga'],[35.6762,139.6503,'Tokyo / Narita'],[-17.5516,210.4415,'Papeete'],[-17.5388,210.1705,'Moorea'],[-16.5004,208.2585,'Bora Bora'],[35.6762,139.6503,'Tokyo soft landing']],
     gallery:[['/kataware/kataware_desk.jpg','Giappone intimo'],['/assets/cultura.jpg','Rituale'],['/assets/natura.jpg','Apertura verso il Pacifico'],['/assets/coppia.jpg','Decompressione']],
     rhythm:['Kansai soft start','Kyoto intimo','Onsen / materia','Tokyo crescendo','Pacific gateway','Ocean slow','Soft landing'],
     logistics:'Il collegamento diretto Narita–Papeete non è quotidiano: il progetto viene costruito sulle date operative reali. Il ritorno su Tokyo evita, quando possibile, di concatenare immediatamente Polinesia e lungo rientro verso l’Italia.'
