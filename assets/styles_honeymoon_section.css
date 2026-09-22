@@ -117,3 +117,33 @@ body.yhs-page{margin:0;background:var(--yhs-paper);color:var(--yhs-ink);font-fam
     padding:78px 0;
   }
 }
+
+
+/* ---------- Full-card navigation ---------- */
+.yhs-card--link{
+  color:inherit;
+  text-decoration:none;
+  cursor:pointer;
+  transition:transform .24s ease,box-shadow .24s ease,border-color .24s ease;
+}
+.yhs-card--link:hover{
+  transform:translateY(-3px);
+  box-shadow:0 18px 46px rgba(43,13,22,.12);
+  border-color:rgba(201,165,108,.48);
+}
+.yhs-card--link:focus-visible{
+  outline:2px solid #C9A56C;
+  outline-offset:4px;
+}
+.yhs-card__link{
+  margin-top:18px;
+  display:inline-flex;
+  align-items:center;
+  font-size:11px;
+  font-weight:800;
+  color:var(--yhs-gold);
+  transition:transform .2s ease;
+}
+.yhs-card--link:hover .yhs-card__link{
+  transform:translateX(4px);
+}
