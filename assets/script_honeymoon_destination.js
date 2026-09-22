@@ -324,7 +324,9 @@ if(gallery) gallery.innerHTML=(extraData.gallery||[]).map((g,i)=>`<figure class=
 
 const rhythm=document.getElementById('yhd-rhythm');
 if(rhythm) {
-  rhythm.innerHTML='<span class="yhd-rhythm__label">Journey Rhythm</span>'+(extraData.rhythm||[]).map((r,i)=>`<span class="yhd-rhythm__step"><i style="--level:${25+((i*17)%65)}%"></i><b>${r}</b></span>`).join('');
+  const rhythmItems=extraData.rhythm||[];
+  rhythm.style.setProperty('--rhythm-count',String(Math.max(rhythmItems.length,1)));
+  rhythm.innerHTML='<span class="yhd-rhythm__label">Journey Rhythm</span>'+rhythmItems.map((r,i)=>`<span class="yhd-rhythm__step"><i style="--level:${25+((i*17)%65)}%"></i><b>${r}</b></span>`).join('');
   if(extraData.logistics) rhythm.insertAdjacentHTML('afterend',`<p class="yhd-logistics-note"><strong>Logistica YUME:</strong> ${extraData.logistics}</p>`);
 }
 
