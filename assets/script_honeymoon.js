@@ -650,6 +650,7 @@
   function initContactDock() {
     if (!location.pathname.toLowerCase().includes('/honeymoon')) return;
     if (qs('.yh-contact-dock')) return;
+    document.body.classList.add('yh-has-contact-dock');
     const context = honeymoonPageContext();
     const message = encodeURIComponent(
       'Ciao YUME, sto valutando il nostro viaggio di nozze e sto guardando la sezione "' +
