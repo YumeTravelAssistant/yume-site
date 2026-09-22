@@ -597,3 +597,37 @@ img{max-width:100%;display:block}
   .yh-has-contact-dock .yh-match-teaser{bottom:72px}
   body{padding-bottom:64px}
 }
+
+
+/* ---------- Contrast refinement: destination cards + contact dock ---------- */
+.yh-destination h3{
+  color:#FAF6EF;
+  text-shadow:0 2px 18px rgba(17,5,10,.34);
+}
+.yh-destination::after{
+  background:linear-gradient(0deg,rgba(17,5,10,.90) 0%,rgba(17,5,10,.50) 48%,rgba(17,5,10,.10) 78%);
+}
+.yh-destination__eyebrow,
+.yh-destination__link{
+  text-shadow:0 1px 12px rgba(17,5,10,.28);
+}
+
+.yh-contact-dock{
+  border-color:rgba(216,189,135,.44);
+  background:rgba(29,7,16,.97);
+}
+.yh-contact-dock__item,
+.yh-contact-dock__item:visited,
+.yh-contact-dock__item strong{
+  color:#FAF6EF !important;
+}
+.yh-contact-dock__item small{
+  color:#E7D5AE !important;
+}
+.yh-contact-dock__icon{
+  color:#D8BD87;
+  border-color:rgba(216,189,135,.48);
+}
+.yh-contact-dock.is-muted{
+  opacity:.62;
+}
