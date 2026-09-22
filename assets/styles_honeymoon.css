@@ -546,3 +546,54 @@ img{max-width:100%;display:block}
   .yh-has-contact-dock .yh-mobile-cta{display:none!important}
   .yh-has-contact-dock .yh-match-teaser{bottom:86px}
 }
+
+
+/* ---------- Mobile V3 refinement: compact nav + lighter contact dock ---------- */
+@media(max-width:820px){
+  .yh-nav-wrap{
+    padding:10px 12px;
+    transition:padding .3s var(--yh-ease);
+  }
+  .yh-nav{
+    min-height:72px;
+    border-radius:20px;
+    transition:min-height .3s var(--yh-ease),padding .3s var(--yh-ease),border-radius .3s var(--yh-ease),background .3s var(--yh-ease),box-shadow .3s var(--yh-ease);
+  }
+  .yh-brand{min-width:0;transition:gap .3s var(--yh-ease)}
+  .yh-brand-mark,.yh-menu-btn,.yh-brand-line,.yh-brand-master{transition:all .3s var(--yh-ease)}
+  .yh-nav-wrap.is-compact{padding:6px 10px}
+  .yh-nav-wrap.is-compact .yh-nav{min-height:58px;padding:5px 7px 5px 10px;border-radius:16px}
+  .yh-nav-wrap.is-compact .yh-brand{gap:8px}
+  .yh-nav-wrap.is-compact .yh-brand-mark{width:34px;height:34px}
+  .yh-nav-wrap.is-compact .yh-brand-master{font-size:9px;letter-spacing:.14em}
+  .yh-nav-wrap.is-compact .yh-brand-line{font-size:15px;margin-top:4px}
+  .yh-nav-wrap.is-compact .yh-menu-btn{width:38px;height:38px;border-radius:12px}
+  .yh-nav-wrap.is-compact .yh-menu-btn span,
+  .yh-nav-wrap.is-compact .yh-menu-btn::before,
+  .yh-nav-wrap.is-compact .yh-menu-btn::after{width:17px}
+}
+
+.yh-contact-dock{
+  opacity:0;
+  transform:translateY(12px);
+  pointer-events:none;
+  transition:opacity .28s var(--yh-ease),transform .28s var(--yh-ease),filter .2s ease;
+}
+.yh-contact-dock.is-visible{opacity:1;transform:none;pointer-events:auto}
+.yh-contact-dock.is-muted{opacity:.22;pointer-events:none;filter:saturate(.6)}
+
+@media(max-width:560px){
+  .yh-contact-dock{
+    left:10px;right:10px;bottom:8px;
+    padding:4px;gap:4px;border-radius:14px;
+  }
+  .yh-contact-dock__item{
+    grid-template-columns:26px 1fr;gap:7px;
+    min-height:48px;padding:6px 9px;border-radius:10px;
+  }
+  .yh-contact-dock__icon{width:26px;height:26px}
+  .yh-contact-dock__icon svg{width:15px;height:15px}
+  .yh-contact-dock__item strong{font-size:11px}
+  .yh-has-contact-dock .yh-match-teaser{bottom:72px}
+  body{padding-bottom:64px}
+}
