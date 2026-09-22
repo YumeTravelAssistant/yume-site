@@ -186,7 +186,7 @@ const EXTRA = {
   thailandia:{
     mapLead:'Bangkok accende, il nord riequilibra, il mare chiude: la sequenza vale più del numero di tappe.',
     coords:[[13.7563,100.5018,'Bangkok'],[18.7883,98.9853,'Chiang Mai'],[13.0,100.9,'Transizione'],[9.5120,100.0136,'Mare / isole']],
-    gallery:[['/assets/honeymoon/thailand-hero.webp','Mare e luce'],['/assets/cultura.jpg','Città e cultura'],['/assets/natura.jpg','Verde e movimento'],['/assets/honeymoon/thailand-island.webp','Decompressione']],
+    gallery:[['/assets/honeymoon/thailand-hero.webp','Koh Samui · mare e luce'],['/assets/honeymoon/thailand-island.webp','Krabi · isole e decompressione']],
     rhythm:['City pulse','Nord lento','Transizione','Mare']
   },
   'giappone-polinesia':{
