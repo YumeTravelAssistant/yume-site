@@ -9,6 +9,8 @@ const slug=location.pathname.replace(/\/+$/,'').split('/').pop()||'metodo';const
 const set=(k,v)=>{const el=document.querySelector('[data-yhs="'+k+'"]');if(el)el.innerHTML=v||''};
 ['kicker','title','lead','sectionKicker','sectionTitle','sectionLead','quote','finalTitle','finalLead'].forEach(k=>set(k,d[k]));
 document.title=(slug==='destinazioni'?'Destinazioni':slug[0].toUpperCase()+slug.slice(1))+' | YUME Honeymoon';
+const metaDesc=document.querySelector('meta[name="description"]');
+if(metaDesc) metaDesc.content=(d.lead || 'YUME Honeymoon: travel design, consulenza e progettazione di viaggi di nozze su misura.').replace(/<[^>]+>/g,'');
 const media=document.querySelector('[data-yhs-media]');if(media)media.style.backgroundImage=`url("${d.image}")`;
 const cards=document.getElementById('yhs-cards');if(cards)cards.innerHTML=d.cards.map((c,i)=>{const img=c[3],href=c[4];return `<article class="yhs-card ${img?'has-image':''}" ${img?`style="--card-image:url('${img}')"`:''}><small>${c[0]}</small><h3>${c[1]}</h3><p>${c[2]}</p>${href?`<a href="${href}">Esplora →</a>`:''}</article>`}).join('');
 const pts=document.getElementById('yhs-points');if(pts)pts.innerHTML=d.points.map(p=>`<article class="yhs-point"><strong>${p[0]}</strong><p>${p[1]}</p></article>`).join('');

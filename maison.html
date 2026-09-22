@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Yume Maison | Viaggi in Giappone su misura</title>
+  <meta name="description" content="YUME Maison progetta viaggi in Giappone completamente su misura. Per lune di miele e viaggi di nozze scopri anche il nuovo dipartimento specializzato YUME Honeymoon.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://yume-travel.com/maison.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="YUME Maison | Viaggi in Giappone su misura">
+  <meta property="og:description" content="Travel design sartoriale in Giappone e accesso al nuovo dipartimento YUME Honeymoon per i viaggi di nozze.">
+  <meta property="og:url" content="https://yume-travel.com/maison.html">
+  <meta property="og:image" content="https://yume-travel.com/assets/maison_desk.jpg">
   <link rel="icon" type="image/png" href="favicon.ico">
 
   <!-- Font Yume: Playfair, Raleway, Quicksand -->
@@ -365,6 +373,32 @@ body.ym-modern-page input:focus,body.ym-modern-page select:focus,body.ym-modern-
 }
 </style>
 
+<style id="ym-honeymoon-launch-v1">
+.ym-honeymoon-idea{position:relative;color:#fff!important}
+.ym-honeymoon-idea__badge{position:absolute;top:16px;left:16px;padding:6px 9px;border-radius:999px;background:#2B0D16;color:#E7D5AE;font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.ym-honeymoon-launch{
+  width:min(1160px,calc(100% - 40px));margin:0 auto 64px;padding:clamp(30px,5vw,64px);
+  display:grid;grid-template-columns:1.25fr .75fr;gap:44px;align-items:center;
+  border-radius:28px;background:linear-gradient(135deg,#2B0D16,#53182D);color:#fff;
+  box-shadow:0 22px 60px rgba(43,13,22,.18)
+}
+.ym-honeymoon-launch h2{margin:8px 0 16px!important;color:#fff!important;font-size:clamp(2.3rem,4.6vw,4rem)!important;line-height:1.03}
+.ym-honeymoon-launch__copy>p{margin:0;color:rgba(255,255,255,.78);line-height:1.7}
+.ym-honeymoon-launch .ym-eyebrow{color:#E7D5AE}
+.ym-honeymoon-launch__features{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;margin:26px 0}
+.ym-honeymoon-launch__features span{font-size:.82rem;font-weight:700;color:#F4EDE2}
+.ym-honeymoon-launch__features span::before{content:"✓";color:#D8BD87;margin-right:8px}
+.ym-honeymoon-launch__actions{display:flex;gap:10px;flex-wrap:wrap}
+.ym-honeymoon-launch__side{padding:28px;border:1px solid rgba(231,213,174,.2);border-radius:22px;background:rgba(255,255,255,.06)}
+.ym-honeymoon-launch__side>span{font-size:.72rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#D8BD87}
+.ym-honeymoon-launch__side strong{display:block;margin:22px 0 14px;font:500 clamp(2rem,3.5vw,3.3rem)/1.03 'Playfair Display',serif;color:#fff}
+.ym-honeymoon-launch__side p{margin:0;color:rgba(255,255,255,.68);line-height:1.6}
+@media(max-width:760px){
+  .ym-honeymoon-launch{grid-template-columns:1fr;width:calc(100% - 24px);padding:28px 20px;border-radius:22px}
+  .ym-honeymoon-launch__features{grid-template-columns:1fr}
+}
+</style>
+
 </head>
 <body class="ym-modern-page">
 <nav class="ym-smartnav" id="ymSmartNav" aria-label="Navigazione rapida della pagina"><div class="ym-smartnav-track"><a href="#metodo">Metodo</a><a href="#ideeMaison">Idee</a><a href="#timelineMaison">Timeline</a><a href="#galleria-maison">Galleria</a><a href="#richiedi-maison">Richiedi</a></div><button type="button" class="ym-smartnav-close" aria-label="Chiudi navigazione rapida">×</button></nav>
@@ -396,6 +430,7 @@ body.ym-modern-page input:focus,body.ym-modern-page select:focus,body.ym-modern-
   <a href="pacchetti.html">Pacchetti flessibili</a>
   <a href="gruppo.html">Viaggi di gruppo</a>
   <a href="maison.html">Viaggi su misura</a>
+  <a href="/honeymoon/">YUME Honeymoon · Viaggi di nozze</a>
   <a href="consulenze.html">Consulenze</a>
   <a href="prodotti.html">Prodotti</a>
   <a href="faq.html">FAQ</a>
@@ -475,10 +510,11 @@ body.ym-modern-page input:focus,body.ym-modern-page select:focus,body.ym-modern-
      
     <h2 class="slide-in">Idee personalizzate</h2>
     <div class="sartoria-slider-container">
-      <div class="sartoria-box slide-in" style="background-image: url('assets/offerta_3.jpg');">
-        <h3>Romantici & Nozze</h3>
-        <p>Proposte di matrimonio e lune di miele pensate solo per voi.</p>
-      </div>
+      <a class="sartoria-box slide-in ym-honeymoon-idea" href="/honeymoon/" style="background-image:url('assets/offerta_3.jpg');text-decoration:none;">
+        <span class="ym-honeymoon-idea__badge">Nuovo dipartimento</span>
+        <h3>YUME Honeymoon</h3>
+        <p>Viaggi di nozze in Giappone e nel mondo, con Travel Design dedicato, Signature, NEXT e Wedding Journey Page.</p>
+      </a>
       <div class="sartoria-box slide-in" style="background-image: url('assets/famiglia.jpg');">
         <h3>Famiglia e bambini</h3>
         <p>Attività divertenti e alloggi comodi per ogni età.</p>
@@ -493,6 +529,29 @@ body.ym-modern-page input:focus,body.ym-modern-page select:focus,body.ym-modern-
       </div>
     </div>
   </section>
+
+<section class="ym-honeymoon-launch" aria-labelledby="ymHoneymoonLaunchTitle">
+  <div class="ym-honeymoon-launch__copy">
+    <span class="ym-eyebrow">È online · Nuovo dipartimento specializzato</span>
+    <h2 id="ymHoneymoonLaunchTitle">Maison incontra YUME Honeymoon.</h2>
+    <p>Maison resta la sartoria YUME dedicata ai viaggi su misura in Giappone. Per le coppie che stanno progettando il viaggio di nozze abbiamo creato un dipartimento dedicato, con un ecosistema costruito intorno agli honeymooners.</p>
+    <div class="ym-honeymoon-launch__features">
+      <span>Signature Journeys e Honeymoon NEXT</span>
+      <span>Giappone, Asia, Pacifico e Worldwide</span>
+      <span>Long stopover e combinazioni multi-country</span>
+      <span>Wedding Journey Page e partecipazione degli invitati</span>
+    </div>
+    <div class="ym-honeymoon-launch__actions">
+      <a class="ym-btn ym-btn--red" href="/honeymoon/">Scopri YUME Honeymoon <i class="fa fa-arrow-right"></i></a>
+      <a class="ym-btn ym-btn--soft" href="/honeymoon/world/">Scopri World</a>
+    </div>
+  </div>
+  <aside class="ym-honeymoon-launch__side">
+    <span>YUME Honeymoon</span>
+    <strong>Tech based.<br>Human cared.</strong>
+    <p>Un viaggio di nozze non parte dal catalogo. Parte dalla coppia.</p>
+  </aside>
+</section>
 
 <section id="timelineMaison" class="sartoria-servizi-section slide-in">
   <h2 class="slide-in">Il tuo viaggio, passo dopo passo</h2>
