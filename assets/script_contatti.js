@@ -5,6 +5,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("contatti-form");
   if (!form) return;
 
+  // Alcune pagine (es. Home) hanno un handler contatti inline più ricco.
+  // In quel caso non registriamo un secondo submit, ma lasciamo attiva
+  // la sezione NEWSLETTER di questo stesso file.
+  if (form.dataset.submitManaged === "inline") return;
+
   const stato = document.getElementById("stato-form");
   const ENDPOINT = "https://yume-sito-form.azurewebsites.net/api/invia-form";
 
