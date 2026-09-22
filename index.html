@@ -1317,7 +1317,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <section class="contatti-section">
   <h2 class="slide-in">Siamo qui per te</h2>
-  <form id="contatti-form" novalidate>
+  <form id="contatti-form" novalidate data-submit-managed="inline">
 
     <label for="nome">Il tuo nome</label>
     <input type="text" id="nome" name="nome" required>
@@ -1967,6 +1967,17 @@ form?.addEventListener('submit', async (e) => {
     return; 
   }
 
+  // Anti doppio invio: blocco logico + blocco UI durante la richiesta.
+  if (form.dataset.submitting === '1') return;
+  form.dataset.submitting = '1';
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const submitBtnOriginalText = submitBtn?.textContent || '';
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.setAttribute('aria-busy', 'true');
+    submitBtn.textContent = 'Invio in corso…';
+  }
+
   const selezione = interessiBoxes.find(b=>b.checked)?.value || '';
   const dati = {
     tipoRichiesta: 'contatti',
@@ -2042,6 +2053,13 @@ form?.addEventListener('submit', async (e) => {
   } catch (err){
     console.error(err);
     stato.textContent = '❌ Errore di rete. Riprova.';
+  } finally {
+    delete form.dataset.submitting;
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.removeAttribute('aria-busy');
+      submitBtn.textContent = submitBtnOriginalText;
+    }
   }
 });
 
