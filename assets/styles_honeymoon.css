@@ -541,3 +541,8 @@ img{max-width:100%;display:block}
   .yh-mobile-cta{bottom:78px}
   body{padding-bottom:80px}
 }
+
+@media(max-width:560px){
+  .yh-has-contact-dock .yh-mobile-cta{display:none!important}
+  .yh-has-contact-dock .yh-match-teaser{bottom:86px}
+}
