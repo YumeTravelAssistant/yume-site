@@ -2028,6 +2028,7 @@ form?.addEventListener('submit', async (e) => {
     const success = (res.ok && (data.ok === true || data.status === 'ok' || data.status === 'success'));
 
     if (success){
+      if (typeof tracciaConversioneLeadGoogleAds === "function") tracciaConversioneLeadGoogleAds();
       stato.textContent = '✅ Messaggio inviato con successo!';
       form.reset();
       if (cittaChoices) cittaChoices.removeActiveItems(); // reset Choices
@@ -2568,6 +2569,9 @@ logoutBtn.onclick = () => {
 
 </body>
 </html>
+
+
+
 
 
 
