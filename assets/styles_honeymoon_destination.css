@@ -301,3 +301,19 @@ body.yhd-page{margin:0;background:var(--yhd-paper);color:var(--yhd-ink);font-fam
   .yhd-rhythm__step{min-width:80px;grid-template-rows:72px auto}
   .yhd-stop[data-map-stop]:hover{transform:none}
 }
+
+
+/* Dynamic Journey Rhythm columns */
+.yhd-rhythm{
+  grid-template-columns:160px repeat(var(--rhythm-count,7),minmax(92px,1fr));
+}
+@media(max-width:900px){
+  .yhd-rhythm{
+    grid-template-columns:130px repeat(var(--rhythm-count,7),110px);
+  }
+}
+@media(max-width:560px){
+  .yhd-rhythm{
+    grid-template-columns:96px repeat(var(--rhythm-count,7),88px);
+  }
+}
