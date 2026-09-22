@@ -164,3 +164,75 @@ body.yhd-page{margin:0;background:var(--yhd-paper);color:var(--yhd-ink);font-fam
  .yhd-gallery{grid-template-columns:1fr}.yhd-gallery__item,.yhd-gallery__item.is-wide,.yhd-gallery__item:nth-child(2){grid-column:auto;min-height:260px}
  .yhd-rhythm{grid-template-columns:110px repeat(7,95px);padding:18px}
 }
+
+
+/* ---------- World · Worldwide Concierge ---------- */
+.yhd-world-page .yhd-hero{
+  background:linear-gradient(145deg,#211014 0%,#2b0d16 48%,#3b2d24 100%);
+}
+.yhd-world-page .yhd-hero__visual{
+  background:
+    radial-gradient(circle at 28% 24%,rgba(231,213,174,.22),transparent 30%),
+    radial-gradient(circle at 75% 66%,rgba(201,165,108,.12),transparent 34%),
+    linear-gradient(145deg,#34231f,#171214);
+}
+.yhd-world-page .yhd-hero__visual::before{
+  content:"WORLD";
+  position:absolute;
+  inset:auto 6% 10% auto;
+  font:500 clamp(78px,14vw,180px)/.8 'Playfair Display',serif;
+  letter-spacing:-.08em;
+  color:rgba(250,246,239,.055);
+  z-index:1;
+}
+.yhd-world-page .yhd-hero__stamp{background:rgba(29,7,16,.2)}
+.yhd-world-concierge{
+  padding:clamp(80px,9vw,130px) 24px;
+  background:#171214;
+  color:#fff;
+}
+.yhd-world-concierge[hidden]{display:none}
+.yhd-world-head{display:grid;grid-template-columns:.78fr 1.22fr;gap:52px;align-items:end;margin-bottom:54px}
+.yhd-world-head h2{margin:0;font:500 clamp(40px,5vw,68px)/1.02 'Playfair Display',serif}
+.yhd-world-head h2 em{color:var(--yhd-gold-soft)}
+.yhd-world-head>p:last-child{margin:0;color:rgba(255,255,255,.66);line-height:1.8;font-size:15px}
+.yhd-world-capabilities{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.yhd-world-capabilities article{
+  min-height:270px;padding:30px;border:1px solid rgba(231,213,174,.15);border-radius:22px;
+  background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+}
+.yhd-world-capabilities span{display:block;color:var(--yhd-gold);font:500 26px/1 'Playfair Display',serif}
+.yhd-world-capabilities h3{margin:42px 0 12px;font:500 29px/1.05 'Playfair Display',serif}
+.yhd-world-capabilities p{margin:0;color:rgba(255,255,255,.62);line-height:1.72;font-size:13px}
+.yhd-world-consulting{
+  display:grid;grid-template-columns:.85fr 1.15fr;gap:60px;margin-top:72px;padding-top:58px;
+  border-top:1px solid rgba(231,213,174,.16)
+}
+.yhd-world-consulting h3{margin:8px 0 0;max-width:560px;font:500 clamp(34px,4vw,55px)/1.06 'Playfair Display',serif}
+.yhd-world-consulting__copy{display:grid;gap:18px}
+.yhd-world-consulting__copy p{margin:0;color:rgba(255,255,255,.68);line-height:1.8;font-size:14px}
+.yhd-world-consulting__copy strong{color:#fff}
+.yhd-world-team-note{
+  padding:18px 20px;border-left:2px solid var(--yhd-gold);background:rgba(201,165,108,.08);
+  color:var(--yhd-gold-soft)!important;font-size:12px!important
+}
+.yhd-world-request-strip{display:flex;flex-wrap:wrap;gap:8px;margin-top:54px}
+.yhd-world-request-strip span{
+  padding:10px 13px;border:1px solid rgba(231,213,174,.2);border-radius:999px;
+  color:var(--yhd-gold-soft);font-size:10px;font-weight:800;letter-spacing:.06em
+}
+.yhd-world-page .yhd-section--map{background:#efe8dc}
+.yhd-world-page .yhd-map-detail{background:#211014}
+.yhd-world-page #modello{background:#fcfaf6}
+.yhd-world-page .yhd-note strong::after{content:" · Il risultato non è un catalogo, ma una proposta costruita sul vostro caso."}
+
+@media(max-width:900px){
+  .yhd-world-head,.yhd-world-consulting{grid-template-columns:1fr;gap:24px}
+  .yhd-world-capabilities{grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){
+  .yhd-world-concierge{padding-left:18px;padding-right:18px}
+  .yhd-world-capabilities{grid-template-columns:1fr}
+  .yhd-world-capabilities article{min-height:230px}
+  .yhd-world-consulting{margin-top:52px;padding-top:42px}
+}

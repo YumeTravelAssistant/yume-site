@@ -143,34 +143,34 @@ const DATA = {
   world:{
     theme:'world',
     label:'World / altra destinazione',
-    eyebrow:'Honeymoon Atelier · Your World',
-    title:'Prima di scegliere dove, <em>scegliamo cosa deve lasciarvi.</em>',
-    lead:'World non è un catalogo infinito. È il contrario: partiamo da stagione, durata, desideri e budget, poi restringiamo il mondo fino a trovare una geografia che abbia senso per voi.',
-    summary:'Metodo aperto',
-    duration:'Da definire insieme',
-    rhythm:'Su brief',
-    style:'Atelier / Signature / NEXT',
-    image:'/assets/deco_2.jpg',
-    introTitle:'Il mondo è grande. <em>Il brief deve essere preciso.</em>',
-    intro:'Quando la destinazione non è ancora chiara, non serve proporne venti. Serve capire quale contrasto cercate, quanta energia volete spendere, che rapporto avete con mare, natura, città e comfort.',
+    eyebrow:'Worldwide Concierge · YUME Honeymoon',
+    title:'Il mondo è aperto. <em>La regia resta YUME.</em>',
+    lead:'Per le coppie che non vogliono partire da un catalogo: consulenti e Travel Designer costruiscono destinazioni, combinazioni, long stopover ed esperienze intorno alla vostra richiesta.',
+    summary:'Worldwide by YUME',
+    duration:'Su misura',
+    rhythm:'Costruito sul brief',
+    style:'Concierge / Signature / NEXT',
+    image:'',
+    introTitle:'Non scegliamo solo una meta. <em>Costruiamo la soluzione.</em>',
+    intro:'World è il livello più aperto di YUME Honeymoon: può significare una destinazione fuori dalle nostre collezioni, un viaggio multi-country, un long stopover trasformato in esperienza o una richiesta molto specifica. Il lavoro dei consulenti è ridurre la complessità e trasformarla in poche alternative sensate.',
     stops:[
-      ['01','Brief','30–45 min','Periodo, giorni disponibili, budget, esperienze irrinunciabili e ciò che volete evitare.'],
-      ['02','Direzioni','2–3 ipotesi','Non preventivi generici: tre logiche di viaggio diverse, con pro e contro reali.'],
-      ['03','Scelta','1 geografia','La destinazione emerge dopo il confronto tra desiderio, stagione, logistica e sostenibilità economica.'],
-      ['04','Design','Itinerario','Basi, ritmo, trasporti, strutture ed esperienze vengono costruiti come un unico sistema.'],
-      ['05','Wedding Journey','Pagina di coppia','Quando desiderata, la progettazione diventa anche racconto: itinerario, lista viaggio e partecipazione degli invitati.']
+      ['01','Ascolto','Brief dedicato','Periodo, giorni disponibili, budget, priorità, stile di viaggio, esperienze desiderate e vincoli reali.'],
+      ['02','Scenario design','2–3 direzioni','Costruiamo poche ipotesi motivate, spiegando differenze reali di clima, logistica, ritmo e valore.'],
+      ['03','Routing','Voli + stopover','Disegniamo tratte, gateway e long stopover per evitare che la logistica consumi tempo ed energia.'],
+      ['04','Experience design','Su richiesta','Stay, esperienze private, food, natura, wellness e momenti speciali entrano solo quando aggiungono valore.'],
+      ['05','Regia YUME','Dalla scelta al rientro','Una volta scelta la direzione, il progetto viene coordinato come un unico viaggio con assistenza e materiali dedicati.']
     ],
     values:[
-      ['Metodo','Prima il perché','La domanda non è dove va di moda andare, ma quale esperienza volete ricordare insieme.'],
-      ['Scelta','Riduciamo il rumore','Poche opzioni ben motivate valgono più di un catalogo di destinazioni.'],
-      ['YUME factor','Atelier','Il viaggio viene trattato come progetto: briefing, comparazione, design e assistenza restano leggibili in ogni fase.']
+      ['Worldwide','Nessun catalogo chiuso','World serve proprio quando la richiesta esce dalle combinazioni già raccontate online.'],
+      ['Travel design','Complessità resa semplice','Rotte, stagioni, stopover e priorità vengono lette insieme per evitare itinerari belli sulla carta ma faticosi nella realtà.'],
+      ['Human care','Consulenti al servizio della coppia','La tecnologia organizza il progetto; il confronto umano serve a capire cosa vale davvero la pena costruire.']
     ],
-    quote:'Non sapere ancora la destinazione non è un problema. È spesso il momento migliore per <em>progettare davvero.</em>',
-    momentMain:'World serve proprio quando avete immagini, desideri o contrasti in testa ma non una destinazione definitiva.',
+    quote:'Quando tutto è possibile, il vero valore è <em>sapere cosa scegliere e cosa lasciare fuori.</em>',
+    momentMain:'World non promette “qualsiasi cosa a ogni costo”. Promette un lavoro di consulenza per capire quale combinazione può trasformare una richiesta complessa in un viaggio coerente.',
     moments:[
-      ['Domanda 1','Che cosa deve cambiare?','Volete riposare, scoprire, muovervi, mangiare, stare nella natura o sentirvi lontanissimi?'],
-      ['Domanda 2','Quanto volete decidere?','Alcune coppie amano una regia forte, altre preferiscono libertà con una struttura di sicurezza.'],
-      ['Domanda 3','Dove investire?','Il budget viene allocato sui momenti che per voi hanno valore, non distribuito uniformemente.']
+      ['Long stopover','Una sosta che diventa viaggio','Un gateway può aggiungere due o tre giorni di valore, invece di essere soltanto attesa tra due voli.'],
+      ['Multi-country','Più Paesi, una sola logica','Le combinazioni vengono progettate per continuità geografica, stagionale ed emotiva, non per accumulo.'],
+      ['Richieste speciali','Esperienze cercate per voi','Quando avete un desiderio preciso, il team lo valuta, ne verifica fattibilità e qualità e lo integra nel progetto quando è coerente.']
     ],
     focus:''
   }
@@ -203,10 +203,11 @@ const EXTRA = {
     rhythm:['Tokyo pulse','Kyoto rituale','Kansai food','Seoul energy','Korea finale']
   },
   world:{
-    mapLead:'World non parte da una rotta prestabilita: la mappa è un canvas. Prima il brief, poi restringiamo il mondo.',
-    coords:[[43.8392,10.8883,'YUME Atelier'],[35.6762,139.6503,'Asia'],[-20.0,57.5,'Oceano Indiano'],[-13.2,-72.5,'Sud America'],[-30.0,25.0,'Africa']],
-    gallery:[['/assets/team-yume.jpg','Brief'],['/assets/natura.jpg','Natura'],['/assets/cultura.jpg','Cultura'],['/assets/deco_2.jpg','Direzione aperta']],
-    rhythm:['Brief','2–3 direzioni','Scelta','Design','Partenza']
+    mapLead:'World parte da YUME e si apre verso più regioni del mondo: la mappa non indica un itinerario standard, ma visualizza il tipo di routing che possiamo costruire intorno alla coppia.',
+    coords:[[43.8392,10.8883,'YUME · progetto'],[25.2048,55.2708,'Gateway / stopover'],[13.7563,100.5018,'Asia'],[-20.3484,57.5522,'Oceano Indiano'],[-33.9249,18.4241,'Africa'],[-17.7134,178.0650,'Pacifico']],
+    gallery:[],
+    rhythm:['Brief','Scenari','Routing','Esperienze','Scelta','Regia YUME'],
+    logistics:'World non è una destinazione singola: voli, stopover, stagionalità, trasferimenti e combinazioni vengono verificati sul progetto reale prima di proporre la soluzione finale.'
   }
 };
 
@@ -214,6 +215,24 @@ const slug = location.pathname.replace(/\/+$/,'').split('/').pop() || 'giappone'
 const data = DATA[slug] || DATA.giappone;
 const extraData = EXTRA[slug] || EXTRA.giappone;
 document.body.classList.add('yhd-theme-' + data.theme);
+
+if (slug === 'world') {
+  document.body.classList.add('yhd-world-page');
+  const concierge = document.getElementById('yhd-world-concierge');
+  if (concierge) concierge.hidden = false;
+  const gallerySection = document.querySelector('.yhd-section--gallery');
+  if (gallerySection) gallerySection.hidden = true;
+  const modelKicker = document.querySelector('#modello .yhd-kicker');
+  if (modelKicker) modelKicker.textContent = '01 · Come lavoriamo';
+  const mapKicker = document.querySelector('.yhd-section--map .yhd-kicker');
+  if (mapKicker) mapKicker.textContent = 'Routing worldwide';
+  const mapTitle = document.querySelector('.yhd-section--map h2');
+  if (mapTitle) mapTitle.innerHTML = 'Dal mondo delle possibilità a <em>una rotta sensata.</em>';
+  const primary = document.getElementById('yhd-primary-cta');
+  if (primary) primary.textContent = 'Raccontateci la vostra richiesta →';
+  const ghost = document.querySelector('.yhd-hero__actions .yhd-btn--ghost');
+  if (ghost) { ghost.href = '#yhd-world-concierge'; ghost.textContent = 'Come funziona World'; }
+}
 
 const setHTML = (name,value) => {
   const el=document.querySelector('[data-yhd="'+name+'"]');
