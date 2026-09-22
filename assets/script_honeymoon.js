@@ -252,8 +252,8 @@
   };
 
   function calculateMatch(ans) {
-    let line = 'Signature';
-    let destination = 'Giappone Signature';
+    let line = 'Signature Journeys';
+    let destination = 'Giappone';
     let why = 'Un progetto sartoriale, costruito su ritmo, esperienze e momenti di pausa.';
     let code = 'japan_signature';
 
@@ -266,25 +266,35 @@
       ans.care === 'independent' ? 2 : 0
     ].reduce((a,b)=>a+b,0);
 
-    if (nextScore >= 4) {
-      line = 'Honeymoon NEXT';
-      destination = ans.mood === 'culture' ? 'Japan NEXT' : (ans.mood === 'sea' ? 'Thailand NEXT' : 'Asia Experience');
-      code = ans.mood === 'culture' ? 'japan_next' : (ans.mood === 'sea' ? 'thailand_next' : 'asia_next');
-      why = 'Più esperienze e movimento, con budget allocato dove genera davvero ricordo. Regia YUME, libertà di viverlo.';
-    } else if ((ans.mood === 'sea' || ans.mood === 'mix') && ['long','extended'].includes(ans.duration) && ['signature','open'].includes(ans.budget)) {
+    if ((ans.mood === 'sea' || ans.mood === 'mix') && ['long','extended'].includes(ans.duration) && ['signature','open'].includes(ans.budget)) {
       line = 'Signature Journeys';
-      destination = 'Giappone × Polinesia';
+      destination = 'Giappone + Polinesia';
       code = 'japan_polynesia';
       why = 'Prima intensità culturale, poi decompressione: due mondi costruiti come un unico viaggio.';
+    } else if (
+      ['culture','mix'].includes(ans.mood) &&
+      ['move','balance'].includes(ans.pace) &&
+      ['medium','long','extended'].includes(ans.duration) &&
+      ['balanced','signature','open'].includes(ans.budget)
+    ) {
+      line = ans.pace === 'move' ? 'Honeymoon NEXT' : 'Signature Journeys';
+      destination = 'Giappone + Corea';
+      code = 'japan_korea';
+      why = 'Due culture vicine ma con energie diverse: tradizione, città, food e contemporaneo dentro un’unica regia.';
     } else if (ans.mood === 'sea' && ['balanced','signature'].includes(ans.budget)) {
       line = ans.budget === 'balanced' ? 'Honeymoon NEXT' : 'Signature Journeys';
       destination = 'Thailandia';
       code = ans.budget === 'balanced' ? 'thailand_next' : 'thailand_signature';
       why = 'Un buon equilibrio tra cultura, food, natura e mare, con grande flessibilità di budget e ritmo.';
+    } else if (nextScore >= 4) {
+      line = 'Honeymoon NEXT';
+      destination = ans.mood === 'sea' ? 'Thailandia' : 'Giappone';
+      code = ans.mood === 'sea' ? 'thailand_next' : 'japan_next';
+      why = 'Più esperienze e movimento, con budget allocato dove genera davvero ricordo. Regia YUME, libertà di viverlo.';
     } else if (ans.mood === 'nature' && ans.pace !== 'slow') {
       line = 'Honeymoon NEXT';
-      destination = 'Japan Wild / Asia Experience';
-      code = 'japan_wild_next';
+      destination = 'Giappone';
+      code = 'japan_next';
       why = 'Il viaggio come esperienza condivisa: treni, natura, piccole strutture, attività e momenti non standardizzati.';
     }
 
@@ -300,11 +310,11 @@
     let index = 0;
     const answers = safeJSON(localStorage.getItem(STORAGE_KEY), {}) || {};
 
-    function showStep(i) {
+    function showStep(i, shouldScroll = true) {
       index = Math.max(0, Math.min(i, steps.length - 1));
       steps.forEach((step, n) => step.classList.toggle('is-active', n === index));
       if (progress) progress.style.width = `${((index + 1) / steps.length) * 100}%`;
-      root.scrollIntoView({behavior:'smooth', block:'center'});
+      if (shouldScroll) root.scrollIntoView({behavior:'smooth', block:'center'});
     }
 
     qsa('.yh-option', root).forEach(option => {
@@ -363,17 +373,95 @@
       const saved = safeJSON(sessionStorage.getItem('yumeHoneymoonMatchResult'), null);
       if (saved) {
         const dest = qs('[name="destinazione"]', form);
-        if (dest) dest.value = saved.destination;
         const budget = qs('[name="budget"]', form);
+        const duration = qs('[name="durata"]', form);
+        const line = qs('[name="linea"]', form);
+
+        if (dest) {
+          const code = String(saved.code || '').toLowerCase();
+          const label = String(saved.destination || '').toLowerCase();
+          if (code.includes('polynesia') || label.includes('polinesia')) dest.value = 'Giappone + Polinesia';
+          else if (code.includes('thailand') || label.includes('thailand')) dest.value = 'Thailandia';
+          else if (code.includes('korea') || label.includes('corea')) dest.value = 'Giappone + Corea';
+          else if (code.includes('japan') || label.includes('giapp')) dest.value = 'Giappone';
+          else dest.value = 'World / altra destinazione';
+          dest.dispatchEvent(new Event('change', {bubbles:true}));
+        }
         if (budget) {
           const mapping = {smart:'fino-7000',balanced:'7000-10000',signature:'10000-15000',open:'15000-plus'};
           budget.value = mapping[saved.answers?.budget] || '';
         }
+        if (duration) {
+          const durationMapping = {short:'10–13 giorni',medium:'14–17 giorni',long:'18–23 giorni',extended:'24+ giorni'};
+          duration.value = durationMapping[saved.answers?.duration] || '';
+        }
+        if (line) line.value = saved.line || '';
       }
       form.scrollIntoView({behavior:'smooth', block:'start'});
     });
 
-    showStep(0);
+    showStep(0, false);
+  }
+
+  function initDestinationField() {
+    const form = qs('#honeymoon-form');
+    if (!form) return;
+    const select = qs('[name="destinazione"]', form);
+    const customWrap = qs('#yh-destinazione-custom-field', form);
+    const custom = qs('[name="destinazione_custom"]', form);
+    if (!select || !customWrap || !custom) return;
+
+    const sync = () => {
+      const open = select.value === 'World / altra destinazione';
+      customWrap.hidden = !open;
+      custom.required = open;
+      if (!open) custom.value = '';
+    };
+    select.addEventListener('change', sync);
+    sync();
+  }
+
+  function getDestinationValue(form) {
+    const category = String(new FormData(form).get('destinazione') || '').trim();
+    const custom = String(new FormData(form).get('destinazione_custom') || '').trim();
+    if (category === 'World / altra destinazione' && custom) return `World / altra destinazione: ${custom}`;
+    return category;
+  }
+
+  function initMatchTeaser() {
+    const teaser = qs('#yh-match-teaser');
+    const hero = qs('.yh-hero');
+    if (!teaser || !hero) return;
+    if (sessionStorage.getItem('yumeHoneymoonMatchTeaserClosed') === '1') return;
+
+    let timeReady = false;
+    let scrollReady = false;
+    let shown = false;
+    const maybeShow = () => {
+      if (shown || !timeReady || !scrollReady) return;
+      shown = true;
+      teaser.classList.add('is-visible');
+      teaser.setAttribute('aria-hidden','false');
+      emit('honeymoon_match_teaser_view');
+    };
+    window.setTimeout(() => { timeReady = true; maybeShow(); }, 8000);
+    const onScroll = () => {
+      if (window.scrollY > Math.min(hero.offsetHeight * .28, 320)) {
+        scrollReady = true;
+        maybeShow();
+        window.removeEventListener('scroll', onScroll);
+      }
+    };
+    window.addEventListener('scroll', onScroll, {passive:true});
+    qs('[data-match-teaser-close]', teaser)?.addEventListener('click', () => {
+      teaser.classList.remove('is-visible');
+      teaser.setAttribute('aria-hidden','true');
+      sessionStorage.setItem('yumeHoneymoonMatchTeaserClosed','1');
+    });
+    qs('a[href="#match"]', teaser)?.addEventListener('click', () => {
+      teaser.classList.remove('is-visible');
+      sessionStorage.setItem('yumeHoneymoonMatchTeaserClosed','1');
+    });
   }
 
   function composeFormMessage(form) {
@@ -388,7 +476,7 @@
       `Durata: ${data.get('durata') || '-'}`,
       `Budget coppia: ${data.get('budget') || '-'}`,
       `Linea preferita: ${data.get('linea') || '-'}`,
-      `Destinazione/interesse: ${data.get('destinazione') || '-'}`,
+      `Destinazione/interesse: ${getDestinationValue(form) || '-'}`,
       `Wedding Journey Page: ${data.get('wedding_page') || '-'}`,
       `Appuntamento: ${data.get('modalita') || '-'}`,
       '',
@@ -430,7 +518,7 @@
         tipoRichiesta:'honeymoon',
         nome:String(formData.get('nome') || '').trim(),
         email:String(formData.get('email') || '').trim(),
-        viaggio:`YUME Honeymoon | ${String(formData.get('destinazione') || 'Da definire')}`,
+        viaggio:`YUME Honeymoon | ${getDestinationValue(form) || 'Da definire'}`,
         messaggio:composeFormMessage(form),
         website:'',
         consensoGDPR:true,
@@ -447,7 +535,7 @@
         durata:String(formData.get('durata') || ''),
         budget:String(formData.get('budget') || ''),
         honeymoon_line:String(formData.get('linea') || ''),
-        destinazione:String(formData.get('destinazione') || '').trim(),
+        destinazione:getDestinationValue(form),
         wedding_page:String(formData.get('wedding_page') || ''),
         modalita:String(formData.get('modalita') || ''),
         match_result:safeJSON(sessionStorage.getItem('yumeHoneymoonMatchResult'), null),
@@ -470,7 +558,7 @@
         emit('honeymoon_lead_submit', {
           line:payload.honeymoon_line,
           budget:payload.budget,
-          destination:String(formData.get('destinazione') || ''),
+          destination:getDestinationValue(form),
           mode:payload.modalita
         });
         if (status) status.textContent = 'Richiesta inviata. Il team YUME vi ricontatterà per costruire il prossimo passo.';
@@ -499,11 +587,29 @@
     if (!form) return;
     const p = new URLSearchParams(location.search);
     const focus = (p.get('focus') || '').toLowerCase();
+    const destination = String(p.get('destination') || '').trim();
     const line = qs('[name="linea"]', form);
     const wedding = qs('[name="wedding_page"]', form);
+    const dest = qs('[name="destinazione"]', form);
+    const custom = qs('[name="destinazione_custom"]', form);
+
     if (focus === 'next' && line) line.value = 'Honeymoon NEXT';
     if ((focus === 'signature' || focus === 'premium') && line) line.value = 'Signature Journeys';
     if ((focus === 'wedding-page' || focus === 'wedding_journey') && wedding) wedding.value = 'Sì, ci interessa';
+
+    if (destination && dest) {
+      const normalized = destination.toLowerCase().replace(/×/g,'+');
+      if (normalized.includes('polinesia')) dest.value = 'Giappone + Polinesia';
+      else if (normalized.includes('corea')) dest.value = 'Giappone + Corea';
+      else if (normalized.includes('thailand')) dest.value = 'Thailandia';
+      else if (normalized === 'giappone' || normalized.includes('japan')) dest.value = 'Giappone';
+      else {
+        dest.value = 'World / altra destinazione';
+        if (custom) custom.value = destination.replace(/^world\s*\/\s*altra destinazione\s*:?\s*/i,'');
+      }
+      dest.dispatchEvent(new Event('change', {bubbles:true}));
+      if (dest.value === 'World / altra destinazione' && custom && !custom.value) custom.value = destination;
+    }
   }
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -513,9 +619,11 @@
     initFaq();
     initAttribution();
     initMatch();
+    initDestinationField();
     initForm();
     initPartnerContext();
     initQueryPrefill();
+    initMatchTeaser();
     emit('honeymoon_page_view',{title:document.title});
   });
 })();
