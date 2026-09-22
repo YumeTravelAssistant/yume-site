@@ -1545,7 +1545,7 @@ function rifiutaCookie() {
 
 function caricaAnalytics() {
   const script = document.createElement('script');
-  script.src = "https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"; // <-- Sostituisci con il tuo ID GA4
+  script.src = "https://www.googletagmanager.com/gtag/js?id=G-EPQHLVQ1RH"; // <-- Sostituisci con il tuo ID GA4
   script.async = true;
 
   script.onload = function () {
@@ -1553,7 +1553,7 @@ function caricaAnalytics() {
     function gtag() { dataLayer.push(arguments); }
     window.gtag = gtag;
     gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX'); // <-- Sostituisci anche qui
+    gtag('config', 'G-EPQHLVQ1RH'); // <-- Sostituisci anche qui
   };
 
   document.head.appendChild(script);
