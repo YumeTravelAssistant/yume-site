@@ -753,3 +753,29 @@ img{max-width:100%;display:block}
     color:#88324F!important;
   }
 }
+
+
+/* ==========================================================================
+   HONEYMOON FLOATING UI · collision-safe stack · 2026-09-24
+   Keep contact dock anchored and place Match teaser safely above it.
+   ========================================================================== */
+@media (min-width:561px){
+  .yh-contact-dock,
+  .yh-has-contact-dock .yh-match-teaser{
+    right:18px;
+  }
+
+  .yh-has-contact-dock .yh-match-teaser{
+    bottom:calc(18px + var(--yh-contact-dock-height, 160px) + 14px);
+    width:min(360px,calc(100vw - 36px));
+  }
+}
+
+@media (max-width:560px){
+  .yh-has-contact-dock .yh-match-teaser{
+    left:10px;
+    right:10px;
+    bottom:calc(72px + env(safe-area-inset-bottom));
+    width:auto;
+  }
+}
