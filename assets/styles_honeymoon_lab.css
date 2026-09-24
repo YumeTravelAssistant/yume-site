@@ -49,3 +49,8 @@
 .lab-concept-exp-chip{min-height:74px;display:flex;flex-direction:column;justify-content:space-between}.lab-concept-exp-chip small{margin-top:8px}
 @media(max-width:980px){.lab-finish{align-items:flex-start}.lab-finish-actions{justify-content:flex-start}}
 @media(max-width:640px){.lab-nav-meta button{font-size:8px}.lab-intro-proof{gap:7px}.lab-intro-proof i{width:20px}.lab-couple-lens h4{font-size:23px}.lab-finish{padding-top:18px}.lab-finish-actions{display:grid;grid-template-columns:1fr;width:100%}.lab-finish-actions .lab-btn{width:100%;min-height:48px}.lab-share{margin-top:12px}.lab-concept-exp-chip{min-height:0}}
+
+/* Journey Lab v6.1 · responsive craft feedback */
+.lab-exp-fit{margin-top:10px;padding-top:9px;border-top:1px solid rgba(43,13,22,.08);color:#9a7440;font-size:8px;line-height:1.4;font-weight:700}
+.lab-progress-wrap span{min-width:74px}
+@media(max-width:640px){.lab-exp-fit{font-size:9px}.lab-progress-wrap span{min-width:90px}}
