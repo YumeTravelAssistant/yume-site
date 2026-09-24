@@ -107,3 +107,9 @@
 @media(prefers-reduced-motion:reduce){
   *,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+/* Journey Lab v8 · interpretation accuracy + conversion polish */
+.lab-route-title{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.lab-route-title>span{padding:4px 7px;border-radius:999px;background:#f2e8da;color:#8e6638;font-size:7px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.lab-share-helper{margin:12px 0 10px!important;color:var(--wine)!important;font-size:10px!important}.lab-share-grid label>small{font-size:7px;color:var(--muted);font-weight:500;margin-left:4px}
+.lab-layout.is-reveal .lab-stage{max-width:none;width:100%}
+@media(max-width:640px){.lab-route-title{align-items:flex-start}.lab-route-title>span{font-size:7px}.lab-share-helper{font-size:9px!important}.sigbook{grid-template-columns:1fr!important}.sigbook img{width:100%!important;height:180px!important}}
