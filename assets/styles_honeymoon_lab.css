@@ -36,3 +36,7 @@
 /* Journey Lab v5 · Couple Lens + Signature Moment */
 .lab-couple-lens{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line);background:#fff}.lab-couple-lens section{padding:24px}.lab-couple-lens section+section{border-left:1px solid var(--line)}.lab-couple-lens small{color:#9a7440;text-transform:uppercase;letter-spacing:.11em;font-size:8px}.lab-couple-lens h4{margin:8px 0 7px;font:600 25px/1.08 Playfair Display,serif;color:var(--wine)}.lab-couple-lens p{margin:0;color:var(--muted);font-size:10px;line-height:1.6}
 @media(max-width:640px){.lab-couple-lens{grid-template-columns:1fr}.lab-couple-lens section+section{border-left:0;border-top:1px solid var(--line)}}
+
+/* Journey Lab v5.1 · route composition controls */
+.lab-route-main{min-width:0}.lab-route-actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}.lab-route-actions button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 9px;font-size:7px;color:var(--wine);min-height:30px}.lab-route-actions button:disabled{opacity:.3;cursor:default}.lab-route-actions .is-remove{color:#7d4b57}.lab-route-actions button:hover:not(:disabled){border-color:#b8894d}
+@media(max-width:640px){.lab-route-actions{gap:4px}.lab-route-actions button{min-height:36px;padding:7px 10px;font-size:8px}.lab-route-row{align-items:start}}
