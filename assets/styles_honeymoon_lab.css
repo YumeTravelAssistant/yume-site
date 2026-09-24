@@ -113,3 +113,9 @@
 .lab-share-helper{margin:12px 0 10px!important;color:var(--wine)!important;font-size:10px!important}.lab-share-grid label>small{font-size:7px;color:var(--muted);font-weight:500;margin-left:4px}
 .lab-layout.is-reveal .lab-stage{max-width:none;width:100%}
 @media(max-width:640px){.lab-route-title{align-items:flex-start}.lab-route-title>span{font-size:7px}.lab-share-helper{font-size:9px!important}.sigbook{grid-template-columns:1fr!important}.sigbook img{width:100%!important;height:180px!important}}
+
+/* Journey Lab v9 · directional route language */
+.lab-route-title>span{position:relative;padding-left:15px}.lab-route-title>span:before{content:"";position:absolute;left:6px;top:50%;width:5px;height:5px;margin-top:-2.5px;border-radius:50%;background:#b8894d}
+.lab-route-row:first-child .lab-route-title>span:before{box-shadow:0 0 0 2px rgba(184,137,77,.22)}
+.lab-route-row:last-child .lab-route-title>span:before{background:#b8894d;box-shadow:0 0 0 3px rgba(184,137,77,.18)}
+@media(max-width:640px){.book-sketch-legend{gap:7px;font-size:8px}.book-sketch-note{font-size:8px}}
