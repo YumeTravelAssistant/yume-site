@@ -779,3 +779,100 @@ img{max-width:100%;display:block}
     width:auto;
   }
 }
+
+/* ==========================================================================
+   HONEYMOON HUMAN PROOF · team + authentic honeymoon reviews · 2026-09-24
+   ========================================================================== */
+.yh-people-section{background:#f7f1e8}
+.yh-founders{
+  display:grid;grid-template-columns:minmax(0,1.03fr) minmax(0,.97fr);
+  border:1px solid rgba(43,13,22,.10);border-radius:28px;overflow:hidden;
+  background:#fff;box-shadow:0 24px 70px rgba(43,13,22,.06);margin-top:34px;
+}
+.yh-founders__media{min-height:520px;overflow:hidden;background:#eadfce}
+.yh-founders__media img{width:100%;height:100%;object-fit:cover;object-position:center 38%;display:block}
+.yh-founders__content{padding:clamp(30px,5vw,68px);display:flex;flex-direction:column;justify-content:center}
+.yh-people-label{font:700 10px/1.2 Raleway,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#9c6a31}
+.yh-founders h3{font:600 clamp(34px,4.4vw,58px)/1.02 "Playfair Display",serif;color:#2b0d16;margin:14px 0 20px}
+.yh-founders h3 em{font-weight:500;color:#a8793e}
+.yh-founders__content>p{font-size:15px;line-height:1.75;color:#655a5e;margin:0;max-width:630px}
+.yh-founders__note{margin-top:28px;padding:18px 20px;border-left:2px solid #c9a56c;background:#faf6ef}
+.yh-founders__note strong{display:block;font:600 18px "Playfair Display",serif;color:#2b0d16;margin-bottom:6px}
+.yh-founders__note span{font-size:12px;line-height:1.65;color:#706469}
+.yh-people-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:18px}
+.yh-person{background:#fff;border:1px solid rgba(43,13,22,.10);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.yh-person__media{aspect-ratio:4/5;overflow:hidden;background:#eee4d7}
+.yh-person__media img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;transition:transform .6s var(--yh-ease)}
+.yh-person:hover .yh-person__media img{transform:scale(1.025)}
+.yh-person__body{padding:20px 18px 22px;display:flex;flex-direction:column;flex:1}
+.yh-person h3{font:600 28px/1 "Playfair Display",serif;color:#2b0d16;margin:9px 0 12px}
+.yh-person p{font-size:11.5px;line-height:1.65;color:#6c6165;margin:0}
+.yh-person__focus{display:flex;gap:5px;flex-wrap:wrap;margin-top:auto;padding-top:18px}
+.yh-person__focus span{font-size:8px;font-weight:700;letter-spacing:.05em;color:#6c4a25;border:1px solid rgba(156,106,49,.22);background:#faf5ed;border-radius:999px;padding:6px 8px}
+
+.yh-reviews-section{background:#fff}
+.yh-review-metrics{display:grid;grid-template-columns:1fr 1fr 1.12fr;border:1px solid rgba(43,13,22,.10);border-radius:20px;overflow:hidden;margin:32px 0 18px;background:#faf6ef}
+.yh-review-metrics>div{padding:24px 26px;min-height:126px;display:flex;flex-direction:column;justify-content:center}
+.yh-review-metrics>div+div{border-left:1px solid rgba(43,13,22,.09)}
+.yh-review-metrics strong{font:600 clamp(34px,4vw,52px)/1 "Playfair Display",serif;color:#2b0d16}
+.yh-review-metrics span{font-size:10px;line-height:1.5;color:#72676a;margin-top:7px}
+.yh-review-metrics__trust{background:#2b0d16;color:#fff}
+.yh-review-metrics__trust small{font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#d8bd87;margin-bottom:8px}
+.yh-review-metrics__trust strong{color:#fff;font-size:30px}
+.yh-review-metrics__trust span{color:#e7d5ae}
+.yh-review-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.yh-review-card{border:1px solid rgba(43,13,22,.10);border-radius:22px;padding:clamp(24px,3.5vw,40px);background:#fff;display:flex;flex-direction:column}
+.yh-review-card__top{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:22px}
+.yh-review-stars{color:#a8793e;letter-spacing:.12em;font-size:13px}
+.yh-review-source{font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#8a7d81}
+.yh-review-card h3{font:600 clamp(24px,2.6vw,34px)/1.12 "Playfair Display",serif;color:#2b0d16;margin:0 0 18px}
+.yh-review-card blockquote{font:500 clamp(15px,1.55vw,19px)/1.62 "Playfair Display",serif;color:#46383d;margin:0}
+.yh-review-card footer{margin-top:auto;padding-top:28px;display:flex;flex-direction:column;border-top:1px solid rgba(43,13,22,.08)}
+.yh-review-card footer strong{font-size:11px;color:#2b0d16}
+.yh-review-card footer span{font-size:8px;color:#8a7d81;margin-top:4px}
+.yh-reviews-cta{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:16px;padding:20px 22px;border-radius:18px;background:#f7f1e8}
+.yh-reviews-cta>div{display:flex;flex-direction:column;max-width:650px}
+.yh-reviews-cta strong{font:600 18px "Playfair Display",serif;color:#2b0d16}
+.yh-reviews-cta span{font-size:9px;line-height:1.55;color:#74696c;margin-top:4px}
+
+@media(max-width:1080px){
+  .yh-people-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:820px){
+  .yh-founders{grid-template-columns:1fr}
+  .yh-founders__media{min-height:0;aspect-ratio:4/3}
+  .yh-founders__content{padding:28px 22px 32px}
+  .yh-review-metrics{grid-template-columns:1fr 1fr}
+  .yh-review-metrics__trust{grid-column:1/-1}
+  .yh-review-metrics>div:nth-child(3){border-left:0;border-top:1px solid rgba(43,13,22,.09)}
+  .yh-review-grid{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .yh-people-grid{grid-template-columns:1fr 1fr;gap:9px}
+  .yh-person__body{padding:14px 12px 16px}
+  .yh-person h3{font-size:23px}
+  .yh-person p{font-size:10px;line-height:1.55}
+  .yh-people-label{font-size:7px;letter-spacing:.10em}
+  .yh-person__focus{display:none}
+  .yh-founders{border-radius:20px}
+  .yh-founders__media{aspect-ratio:1/1}
+  .yh-founders h3{font-size:36px}
+  .yh-founders__content>p{font-size:12px}
+  .yh-review-metrics{grid-template-columns:1fr 1fr;margin-top:24px}
+  .yh-review-metrics>div{min-height:100px;padding:18px 14px}
+  .yh-review-metrics strong{font-size:36px}
+  .yh-review-metrics span{font-size:8px}
+  .yh-review-metrics__trust{grid-column:1/-1;min-height:92px}
+  .yh-review-card{padding:22px 18px}
+  .yh-review-card__top{align-items:flex-start;flex-direction:column;gap:6px;margin-bottom:15px}
+  .yh-review-card blockquote{font-size:15px}
+  .yh-reviews-cta{align-items:stretch;flex-direction:column;padding:18px}
+  .yh-reviews-cta .yh-btn{width:100%;justify-content:center}
+}
+@media(max-width:390px){
+  .yh-people-grid{grid-template-columns:1fr}
+  .yh-person{display:grid;grid-template-columns:112px 1fr}
+  .yh-person__media{aspect-ratio:auto;min-height:178px}
+  .yh-person__body{padding:14px 12px}
+  .yh-person h3{font-size:22px}
+}
