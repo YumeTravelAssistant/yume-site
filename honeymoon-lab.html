@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Journey Lab | YUME Honeymoon</title>
+  <meta name="description" content="Journey Lab è l'atelier digitale YUME Honeymoon per immaginare il viaggio prima della consulenza.">
+  <meta name="theme-color" content="#2b0d16">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Quicksand:wght@500;600;700&family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/styles_honeymoon_lab.css?v=1">
+  <script defer src="/assets/script_honeymoon_lab.js?v=1"></script>
+</head>
+<body>
+<a class="lab-skip" href="#lab">Vai al laboratorio</a>
+<header class="lab-nav">
+  <a class="lab-brand" href="/honeymoon/" aria-label="YUME Honeymoon">
+    <img src="/assets/logo-yume.jpg" alt="" width="42" height="42">
+    <span><b>YUME</b><small>Honeymoon · Journey Lab</small></span>
+  </a>
+  <div class="lab-nav-meta"><span data-save-state>Bozza locale</span><a href="/honeymoon/">Esci dal Lab</a></div>
+</header>
+
+<main id="lab" class="lab-app">
+  <section class="lab-intro" data-screen="intro">
+    <div class="lab-intro-copy">
+      <p class="lab-kicker">YUME Journey Lab · test experience</p>
+      <h1>Prima di progettare il viaggio, <em>immaginatelo.</em></h1>
+      <p>Una scrivania digitale per giocare con sensazioni, priorità, luoghi ed esperienze. Non crea un preventivo e non sostituisce un Travel Designer: costruisce il vostro primo Journey Canvas.</p>
+      <div class="lab-intro-actions">
+        <button class="lab-btn lab-btn--gold" type="button" data-start>Entrate nel Lab <span>→</span></button>
+        <span>5–8 minuti · nessun dato personale richiesto</span>
+      </div>
+    </div>
+    <div class="lab-intro-art" aria-hidden="true">
+      <div class="lab-orbit lab-orbit--one"></div><div class="lab-orbit lab-orbit--two"></div>
+      <div class="lab-art-card"><small>YOUR JOURNEY</small><strong>Tokyo</strong><i></i><strong>Kyoto</strong><i></i><strong>Bora Bora</strong></div>
+      <span class="lab-art-note lab-art-note--a">food</span><span class="lab-art-note lab-art-note--b">slow</span><span class="lab-art-note lab-art-note--c">ryokan</span>
+    </div>
+  </section>
+
+  <section class="lab-workspace" data-screen="workspace" hidden>
+    <div class="lab-topline">
+      <div><p class="lab-kicker">Journey Lab</p><h2 data-step-title>La scintilla</h2></div>
+      <div class="lab-progress-wrap"><span data-step-count>01 / 06</span><div class="lab-progress"><i data-progress></i></div></div>
+    </div>
+
+    <div class="lab-layout">
+      <div class="lab-stage">
+        <section class="lab-step is-active" data-step="1">
+          <div class="lab-step-head"><p>Non pensate ancora alla geografia.</p><h3>Come volete <em>ricordarlo?</em></h3><small>Scegliete fino a tre immagini mentali.</small></div>
+          <div class="lab-sparks" data-sparks>
+            <button type="button" data-spark="city"><img src="/assets/home.jpg" alt=""><span><b>Perderci in una città</b><small>Quartieri, luci, incontri.</small></span></button>
+            <button type="button" data-spark="sea"><img src="/assets/honeymoon/polynesia-hero.webp" alt=""><span><b>Svegliarci davanti al mare</b><small>Spazio, acqua, silenzio.</small></span></button>
+            <button type="button" data-spark="food"><img src="/assets/deco_2.jpg" alt=""><span><b>Ricordare una cena per anni</b><small>Il viaggio passa anche dal gusto.</small></span></button>
+            <button type="button" data-spark="stay"><img src="/kataware/kataware_desk.jpg" alt=""><span><b>Dormire in un luogo speciale</b><small>La struttura diventa esperienza.</small></span></button>
+            <button type="button" data-spark="far"><img src="/kyushu/kyushu_desk.jpg" alt=""><span><b>Sentirci lontanissimi</b><small>Scoperta, natura, altrove.</small></span></button>
+            <button type="button" data-spark="slow"><img src="/assets/maison_desk.jpg" alt=""><span><b>Avere tempo per niente</b><small>Respirare senza rincorrere.</small></span></button>
+          </div>
+        </section>
+
+        <section class="lab-step" data-step="2">
+          <div class="lab-step-head"><p>Non esistono risposte giuste.</p><h3>Trovate il vostro <em>equilibrio.</em></h3><small>Spostate i cursori: il Travel DNA si aggiorna insieme a voi.</small></div>
+          <div class="lab-vas">
+            <label><span><b>Esplorare</b><output data-out="pace">55</output><b>Rallentare</b></span><input type="range" min="0" max="100" value="55" data-dna="pace"></label>
+            <label><span><b>Iconico</b><output data-out="novelty">58</output><b>Inaspettato</b></span><input type="range" min="0" max="100" value="58" data-dna="novelty"></label>
+            <label><span><b>Regia</b><output data-out="freedom">54</output><b>Libertà</b></span><input type="range" min="0" max="100" value="54" data-dna="freedom"></label>
+            <label><span><b>Semplicità</b><output data-out="comfort">60</output><b>Comfort</b></span><input type="range" min="0" max="100" value="60" data-dna="comfort"></label>
+          </div>
+          <div class="lab-insight" data-dna-insight>Un equilibrio aperto: abbastanza struttura per sentirvi tranquilli, abbastanza libertà per lasciare spazio alle sorprese.</div>
+        </section>
+
+        <section class="lab-step" data-step="3">
+          <div class="lab-step-head"><p>Tempo e denaro sono materiali di progetto.</p><h3>Date <em>spazio</em> al viaggio.</h3><small>Non stiamo calcolando un prezzo: stiamo capendo cosa deve contenere.</small></div>
+          <div class="lab-basics">
+            <label class="lab-field"><span>Durata immaginata</span><select data-duration><option value="12">10–13 giorni</option><option value="16">14–17 giorni</option><option value="20" selected>18–21 giorni</option><option value="24">22–25 giorni</option><option value="28">26+ giorni</option></select></label>
+            <label class="lab-field"><span>Periodo</span><select data-period><option>Da definire</option><option>Marzo – maggio</option><option>Giugno – agosto</option><option>Settembre – novembre</option><option>Dicembre – febbraio</option></select></label>
+          </div>
+          <fieldset class="lab-budget"><legend>Quanto volete investire complessivamente?</legend>
+            <div><button type="button" data-budget="5–7k">5–7k</button><button type="button" data-budget="7–10k">7–10k</button><button type="button" data-budget="10–15k">10–15k</button><button type="button" data-budget="15–20k">15–20k</button><button type="button" data-budget="20k+">20k+</button><button type="button" data-budget="Da capire insieme">Da capire insieme</button></div>
+          </fieldset>
+          <div class="lab-allocation">
+            <div class="lab-allocation-head"><div><b>Dove volete sentire il valore?</b><small>Distribuite 100 punti. Aumentare una voce riduce automaticamente le altre.</small></div><strong><span data-total>100</span>/100</strong></div>
+            <div data-allocation></div>
+          </div>
+        </section>
+
+        <section class="lab-step" data-step="4">
+          <div class="lab-step-head"><p>La vostra tavola delle esperienze.</p><h3>Che cosa deve <em>esserci?</em></h3><small>Scegliete liberamente. Una stella indica ciò che per voi è irrinunciabile.</small></div>
+          <div class="lab-experiences" data-experiences></div>
+        </section>
+
+        <section class="lab-step" data-step="5">
+          <div class="lab-step-head"><p>Non è ancora un itinerario.</p><h3>Disegnate una possibile <em>geografia.</em></h3><small>Portate nel viaggio i luoghi che vi chiamano. Il Lab vi segnala soltanto quando il ritmo comincia a contraddirvi.</small></div>
+          <div class="lab-map-shell">
+            <div class="lab-map" role="group" aria-label="Mappa concettuale delle destinazioni">
+              <svg viewBox="0 0 900 470" aria-hidden="true">
+                <path class="lab-land" d="M82 113c62-58 145-63 205-22 42 29 89 20 122 57 28 31 13 64-23 78-43 17-85-3-127 22-55 33-133 15-170-37-25-35-36-70-7-98Zm359-15c51-41 131-51 192-21 40 20 57 56 94 69 39 13 79 29 89 68 12 49-31 83-80 83-48 0-73-31-112-42-42-12-89 5-126-22-48-35-103-98-57-135Zm182 232c37-25 91-20 121 11 28 30 13 70-26 84-45 16-106-2-119-45-6-20 6-38 24-50Z"/>
+                <path class="lab-route" data-route-path d=""/>
+              </svg>
+              <div data-map-points></div>
+            </div>
+            <div class="lab-map-side"><p class="lab-kicker">Luoghi</p><div data-destinations></div><div class="lab-rhythm-note" data-rhythm-note>Scegliete i primi luoghi: la linea del viaggio apparirà sulla mappa.</div></div>
+          </div>
+          <div class="lab-timeline" data-timeline></div>
+        </section>
+
+        <section class="lab-step" data-step="6">
+          <div class="lab-step-head"><p>Il primo disegno è pronto.</p><h3>Il vostro viaggio, <em>per ora.</em></h3></div>
+          <article class="lab-canvas" data-canvas>
+            <header><div><small>YUME HONEYMOON · JOURNEY CANVAS</small><h3><span data-canvas-name>Il vostro</span> viaggio</h3></div><b data-journey-id>HY-——</b></header>
+            <div class="lab-canvas-route" data-canvas-route></div>
+            <div class="lab-canvas-grid">
+              <div><small>Travel DNA</small><div data-canvas-dna></div></div>
+              <div><small>Dove sentire il valore</small><div data-canvas-value></div></div>
+            </div>
+            <div class="lab-canvas-experience"><small>Non volete rinunciare a</small><p data-canvas-must></p></div>
+            <blockquote data-canvas-summary></blockquote>
+          </article>
+          <div class="lab-finish">
+            <div><h4>Questo non è ancora un itinerario.</h4><p>È il punto da cui un Travel Designer YUME può iniziare a costruire qualcosa che funzioni davvero.</p></div>
+            <div class="lab-finish-actions"><button type="button" class="lab-btn lab-btn--paper" data-print>Salva il Canvas in PDF</button><a class="lab-btn lab-btn--gold" data-consult href="/honeymoon/#inizia">Progettatelo con YUME →</a></div>
+          </div>
+          <details class="lab-share"><summary>Volete lasciare il Canvas a YUME?</summary><div><p>Facoltativo. Potete aggiungere i vostri nomi e un contatto: verranno salvati insieme al Canvas solo quando scegliete di condividerlo.</p><div class="lab-share-grid"><label>Nome 1<input data-name-a autocomplete="given-name"></label><label>Nome 2<input data-name-b></label><label>Email<input data-email type="email" autocomplete="email"></label><label>Telefono<input data-phone type="tel" autocomplete="tel"></label></div><label class="lab-consent"><input type="checkbox" data-consent> Autorizzo YUME a ricontattarmi in relazione a questo Journey Canvas. <a href="/privacy.html" target="_blank" rel="noopener">Privacy</a></label><button class="lab-btn lab-btn--wine" type="button" data-share>Condividi con YUME</button><p class="lab-share-status" data-share-status aria-live="polite"></p></div></details>
+        </section>
+
+        <div class="lab-controls"><button type="button" class="lab-back" data-back>← Indietro</button><button type="button" class="lab-next" data-next>Continua →</button></div>
+      </div>
+
+      <aside class="lab-drawer">
+        <div class="lab-drawer-head"><p class="lab-kicker">La vostra idea</p><span data-drawer-count>0 elementi</span></div>
+        <div class="lab-drawer-route" data-drawer-route><span>Il Canvas si comporrà qui.</span></div>
+        <div class="lab-drawer-section"><small>Travel DNA</small><div class="lab-mini-dna" data-mini-dna></div></div>
+        <div class="lab-drawer-section"><small>Priorità</small><div class="lab-chips" data-drawer-chips></div></div>
+        <p class="lab-drawer-note" data-drawer-note>Cominciate scegliendo ciò che vorreste ricordare.</p>
+      </aside>
+    </div>
+  </section>
+</main>
+<footer class="lab-footer"><span>YUME Travel Tech S.r.l. · Journey Lab / ambiente test</span><span>Tech based. Human cared.</span></footer>
+</body>
+</html>
