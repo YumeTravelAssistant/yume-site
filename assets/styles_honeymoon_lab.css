@@ -54,3 +54,56 @@
 .lab-exp-fit{margin-top:10px;padding-top:9px;border-top:1px solid rgba(43,13,22,.08);color:#9a7440;font-size:8px;line-height:1.4;font-weight:700}
 .lab-progress-wrap span{min-width:74px}
 @media(max-width:640px){.lab-exp-fit{font-size:9px}.lab-progress-wrap span{min-width:90px}}
+
+/* Journey Lab v7 · mobile-first storytelling and visual integrity */
+.lab-mobile-journey{display:none}
+.lab-exp-media{position:relative;background:linear-gradient(135deg,#efe4d6,#d9c5a9)}
+.lab-exp-media.is-fallback:after{content:"YUME · materia da immaginare";position:absolute;inset:0;display:grid;place-items:center;padding:20px;text-align:center;color:#6b4b38;font:500 16px/1.3 "Playfair Display",serif}
+.lab-exp-number{position:absolute;z-index:2;top:10px;left:10px;min-width:28px;height:28px;padding:0 8px;border-radius:999px;background:rgba(255,253,249,.9);display:grid;place-items:center;color:var(--wine);font:800 8px Raleway,sans-serif;letter-spacing:.08em;backdrop-filter:blur(8px)}
+.lab-signature-section{display:grid!important;grid-template-columns:150px 1fr;gap:18px;align-items:stretch}
+.lab-signature-visual{min-height:145px;border-radius:14px;background-size:cover;background-position:center;border:1px solid var(--line)}
+.lab-signature-visual.is-empty{background:linear-gradient(135deg,#f4eadc,#e6d6bf)}
+.lab-layout.is-reveal{grid-template-columns:minmax(0,1fr)}
+.lab-layout.is-reveal .lab-drawer{display:none}
+.lab-workspace.is-reveal .lab-mobile-journey{display:none!important}
+@media(max-width:640px){
+  .lab-nav{padding-top:env(safe-area-inset-top);height:calc(64px + env(safe-area-inset-top))}
+  .lab-workspace{padding-left:0;padding-right:0}
+  .lab-actbar,.lab-topline{margin-left:12px;margin-right:12px}
+  .lab-mobile-journey{position:sticky;top:calc(64px + env(safe-area-inset-top));z-index:80;margin:0 8px 10px;padding:10px 12px;border:1px solid rgba(184,137,77,.28);border-radius:14px;background:rgba(43,13,22,.96);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 10px 30px rgba(43,13,22,.14);backdrop-filter:blur(14px)}
+  .lab-mobile-journey small{display:block;color:var(--gold2);font-size:7px;font-weight:800;letter-spacing:.13em}
+  .lab-mobile-journey strong{display:block;max-width:72vw;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:600 14px/1.2 "Playfair Display",serif}
+  .lab-mobile-journey>span{flex:0 0 auto;font-size:7px;color:#d9c7cd}
+  .lab-stage{border-left:0;border-right:0;border-radius:0;padding:22px 12px}
+  .lab-step-head h3{font-size:36px}
+  .lab-exp-toolbar>div{display:flex;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none;padding-bottom:4px;overscroll-behavior-x:contain}
+  .lab-exp-toolbar>div::-webkit-scrollbar,.lab-experiences::-webkit-scrollbar{display:none}
+  .lab-exp-toolbar button{white-space:nowrap;min-height:40px;padding:9px 13px}
+  .lab-experiences{display:grid;grid-auto-flow:column;grid-auto-columns:min(86vw,360px);grid-template-columns:none;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding:12px;padding:2px 12px 10px;margin-left:-12px;margin-right:-12px;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+  .lab-exp{scroll-snap-align:center;scroll-snap-stop:always;min-height:520px}
+  .lab-exp-media{height:220px}
+  .lab-exp-body{padding:17px 15px}
+  .lab-exp h4{font-size:25px}
+  .lab-exp p{font-size:10px;line-height:1.55}
+  .lab-exp-actions{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+  .lab-exp-actions button:first-child{grid-column:auto}
+  .lab-exp-actions button,.lab-route-actions button,.lab-night-stepper button,.lab-region-tabs button{min-height:44px;touch-action:manipulation}
+  .lab-exp-actions button{padding:6px 5px;font-size:8px;line-height:1.15}
+  .lab-map-side{border-radius:16px}
+  .lab-leaflet-map{height:340px}
+  .leaflet-control-zoom a{width:44px!important;height:44px!important;line-height:44px!important;font-size:20px!important}
+  .lab-destination-search input,.lab-field select,.lab-share-grid input{font-size:16px}
+  .lab-controls{bottom:calc(6px + env(safe-area-inset-bottom));margin-left:4px;margin-right:4px}
+  .lab-signature-section{grid-template-columns:1fr!important}
+  .lab-signature-visual{min-height:210px}
+  .lab-intro{padding-top:34px}
+  .lab-dream-collage{min-height:340px}
+}
+@media(max-width:380px){
+  .lab-exp-actions{grid-template-columns:1fr}
+  .lab-exp{min-height:560px}
+  .lab-mobile-journey strong{max-width:68vw}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
