@@ -1,6 +1,14 @@
 {
   "routes": [
     {
+      "route": "/honeymoon/lab",
+      "rewrite": "/honeymoon-lab.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive"
+      }
+    },
+    {
       "route": "/honeymoon",
       "rewrite": "/honeymoon.html",
       "headers": {
@@ -154,6 +162,13 @@
       "rewrite": "/blog/article.html",
       "headers": {
         "Cache-Control": "no-store"
+      }
+    },
+    {
+      "route": "/honeymoon-lab.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive"
       }
     }
   ],
