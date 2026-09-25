@@ -119,3 +119,28 @@
 .lab-route-row:first-child .lab-route-title>span:before{box-shadow:0 0 0 2px rgba(184,137,77,.22)}
 .lab-route-row:last-child .lab-route-title>span:before{background:#b8894d;box-shadow:0 0 0 3px rgba(184,137,77,.18)}
 @media(max-width:640px){.book-sketch-legend{gap:7px;font-size:8px}.book-sketch-note{font-size:8px}}
+
+
+/* Journey Lab v10 · handoff readability */
+.lab-share{padding:22px 24px}
+.lab-share summary{font-size:14px;line-height:1.35}
+.lab-share>div>p{font-size:12px;line-height:1.6}
+.lab-share-helper{font-size:13px!important;line-height:1.55}
+.lab-share-grid{gap:14px 16px;margin-top:14px}
+.lab-share-grid label{font-size:11px;font-weight:600;color:var(--ink)}
+.lab-share-grid label>small{font-size:9px}
+.lab-share-grid input{height:52px;margin-top:7px;padding:10px 12px;font-size:14px}
+.lab-consent{margin:16px 0;font-size:11px;line-height:1.5}
+.lab-consent input{width:16px;height:16px;vertical-align:-3px;margin-right:6px}
+.lab-share .lab-btn--wine{min-height:54px;padding:0 24px;font-size:12px}
+.lab-share-status{font-size:11px!important}
+@media(max-width:640px){
+  .lab-share{padding:18px 16px}
+  .lab-share summary{font-size:15px}
+  .lab-share>div>p{font-size:13px}
+  .lab-share-helper{font-size:13px!important}
+  .lab-share-grid label{font-size:12px}
+  .lab-share-grid input{height:54px;font-size:16px}
+  .lab-consent{font-size:11px}
+  .lab-share .lab-btn--wine{width:100%;font-size:12px}
+}
