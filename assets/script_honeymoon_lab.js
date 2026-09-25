@@ -1,5 +1,5 @@
 (()=>{'use strict';
-const SUPABASE_URL='https://hlikhyemzophandqkjdy.supabase.co',SUPABASE_KEY='sb_publishable_Z5S66pZ85I3WlGuJDArJhA_QuXhKP51',STORAGE='yumeHoneymoonJourneyLabV2';
+const SUPABASE_URL='https://eniewpjsahqzrsxldymh.supabase.co',SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVuaWV3cGpzYWhxenJzeGxkeW1oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU1NDQ2NTAsImV4cCI6MjA3MTEyMDY1MH0.Yrrl6z4KM1wbEbHbA_Xigs7DurVXWpMM8-3ENNl-7ww',STORAGE='yumeHoneymoonJourneyLabV2';
 const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)],clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 const labels={city:'Città viva',sea:'Mare',food:'Food',stay:'Stay speciali',far:'Altrove',slow:'Tempo lento'};
 const dnaLabels={pace:'Ritmo',novelty:'Scoperta',freedom:'Libertà',comfort:'Comfort',depth:'Profondità'};
