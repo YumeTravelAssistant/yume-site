@@ -1,6 +1,22 @@
 {
   "routes": [
     {
+      "route": "/honeymoon/",
+      "rewrite": "/honeymoon.html",
+      "headers": {
+        "Cache-Control": "public, max-age=300",
+        "X-Robots-Tag": "index, follow, max-image-preview:large"
+      }
+    },
+    {
+      "route": "/honeymoon/lab/",
+      "rewrite": "/honeymoon-lab.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive"
+      }
+    },
+    {
       "route": "/honeymoon/lab",
       "rewrite": "/honeymoon-lab.html",
       "headers": {
