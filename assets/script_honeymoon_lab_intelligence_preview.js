@@ -125,7 +125,9 @@ function renderIntelligenceDebug(){
  if(!a){panel.innerHTML='<b>Journey Intelligence</b><small>'+esc(journeyIntelligenceLastError||'In attesa di analisi')+'</small>';return}
  const top=(a.destinationRanking||[]).slice(0,5).map(x=>x.destination.name+' '+x.affinity).join(' · ');
  const opt=a.routeOptimisation||{},legacy=legacyIntelligenceSnapshot();
- panel.innerHTML='<header><b>YUME INTELLIGENCE '+esc(a.engineVersion)+'</b><small>'+esc(journeyIntelligenceLastReason)+'</small></header><div><strong>'+esc(a.decisionStatus)+'</strong> · confidence '+a.analysisConfidence+' · stability '+((a.rankingSensitivity&&a.rankingSensitivity.stability)||'—')+'</div><p><b>Top:</b> '+esc(top)+'</p><p><b>Route:</b> coherence '+((a.route&&a.route.score)||0)+' · pressure '+((a.route&&a.route.pressure)||0)+' · sequence '+((a.route&&a.route.sequence)||100)+'</p><p><b>Optimiser:</b> '+esc((opt.original||[]).join(' → '))+' → '+esc((opt.recommended||[]).join(' → '))+'</p><p><b>Legacy pressure:</b> '+esc((legacy.pressure&&legacy.pressure[0])||'')+'</p>';
+ const originalRoute=(opt.original||[]),recommendedRoute=(opt.recommended||[]),sameOrder=originalRoute.length===recommendedRoute.length&&originalRoute.every((id,i)=>id===recommendedRoute[i]);
+ const optimiserText=sameOrder?'Ordine attuale confermato · '+recommendedRoute.join(' → '):(originalRoute.join(' → ')+' ⇒ '+recommendedRoute.join(' → '));
+ panel.innerHTML='<header><b>YUME INTELLIGENCE '+esc(a.engineVersion)+'</b><small>'+esc(journeyIntelligenceLastReason)+'</small></header><div><strong>'+esc(a.decisionStatus)+'</strong> · confidence '+a.analysisConfidence+' · stability '+((a.rankingSensitivity&&a.rankingSensitivity.stability)||'—')+'</div><p><b>Top:</b> '+esc(top)+'</p><p><b>Route:</b> coherence '+((a.route&&a.route.score)||0)+' · pressure '+((a.route&&a.route.pressure)||0)+' · sequence '+((a.route&&a.route.sequence)||100)+'</p><p><b>Optimiser:</b> '+esc(optimiserText)+'</p><p><b>Legacy pressure:</b> '+esc((legacy.pressure&&legacy.pressure[0])||'')+'</p>';
 }
 window.YumeJourneyLabDebug={version:'0.95.1-testready',getState:()=>clone(state),analyse:()=>recomputeJourneyIntelligence('debug-api'),getEngine:()=>journeyIntelligence,getLegacy:()=>legacyIntelligenceSnapshot(),getError:()=>journeyIntelligenceLastError,getPayload:(shared=false)=>buildPayload(shared)};
 function uuid(){return crypto?.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0,v=c==='x'?r:(r&3|8);return v.toString(16)})}function makeId(){const d=new Date(),stamp=String(d.getFullYear()).slice(-2)+String(d.getMonth()+1).padStart(2,'0');return'HY-'+stamp+'-'+Math.random().toString(36).slice(2,7).toUpperCase()}if(!state.journeyId)state.journeyId=makeId();if(!state.sessionToken)state.sessionToken=uuid();
@@ -183,22 +185,33 @@ function buildPayload(shared=false){return{journey_id:state.journeyId,source:'ho
 async function share(){const status=q('[data-share-status]');if(!q('[data-consent]').checked){status.textContent='Per condividere i contatti con YUME serve il consenso al ricontatto.';return}const email=q('[data-email]').value.trim(),phone=q('[data-phone]').value.trim();if(!email&&!phone){status.textContent='Inserite almeno email o telefono.';return}const btn=q('[data-share]');btn.disabled=true;status.textContent='Condivisione in corso…';try{const res=await fetch(SUPABASE_URL+'/rest/v1/honeymoon_journey_lab_canvases',{method:'POST',headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(buildPayload(true))});if(!res.ok)throw new Error(await res.text());status.textContent='Journey Concept '+state.journeyId+' condiviso con YUME.';btn.textContent='Condiviso ✓'}catch(e){console.error(e);status.textContent='Non siamo riusciti a condividere il Concept. La bozza locale è comunque salva.';btn.disabled=false}}
 function routeSketchSvg(sel){
   if(!sel.length)return'';
-  const w=640,h=232,padX=54,padY=48;
+  const w=640,h=250,padX=50,centerY=118;
   if(sel.length===1){
     const d=sel[0];
-    return '<div class="book-sketch-note">Schema narrativo · non in scala</div><svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="Rotta con una sola tappa"><circle cx="'+(w/2)+'" cy="'+(h/2)+'" r="13" fill="none" stroke="#b8894d" stroke-width="2"/><circle cx="'+(w/2)+'" cy="'+(h/2)+'" r="7" fill="#b8894d"/><text class="node-label" x="'+(w/2)+'" y="'+(h/2-22)+'" text-anchor="middle">'+esc(d.name)+'</text><text class="node-index" x="'+(w/2)+'" y="'+(h/2+3)+'" text-anchor="middle">01</text></svg>';
+    return '<div class="book-sketch-note">Schema narrativo · non in scala</div><svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="Rotta con una sola tappa"><circle cx="'+(w/2)+'" cy="'+centerY+'" r="13" fill="none" stroke="#b8894d" stroke-width="2"/><circle cx="'+(w/2)+'" cy="'+centerY+'" r="7" fill="#b8894d"/><text class="node-label" x="'+(w/2)+'" y="'+(centerY-24)+'" text-anchor="middle">'+esc(d.name)+'</text><text class="node-index" x="'+(w/2)+'" y="'+(centerY+3)+'" text-anchor="middle">01</text></svg>';
   }
-  const xs=sel.map(d=>d.lng),ys=sel.map(d=>d.lat),minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys),dx=Math.max(.1,maxX-minX),dy=Math.max(.1,maxY-minY);
-  const pts=sel.map((d,i)=>({x:padX+(d.lng-minX)/dx*(w-padX*2),y:h-padY-(d.lat-minY)/dy*(h-padY*2),name:d.name,role:routeRole(i,sel),i}));
+  const step=(w-padX*2)/(sel.length-1);
+  const yOffsets=[-26,18,-16,22,-10,16,-22,20];
+  const pts=sel.map((d,i)=>({
+    x:padX+i*step,
+    y:centerY+yOffsets[i%yOffsets.length],
+    name:d.name,
+    role:routeRole(i,sel),
+    i,
+    labelBelow:i%2===1
+  }));
   const segs=[];
   for(let i=1;i<pts.length;i++){
     const a=pts[i-1],b=pts[i],mx=(a.x+b.x)/2,my=(a.y+b.y)/2,ang=Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI;
     segs.push('<line x1="'+a.x+'" y1="'+a.y+'" x2="'+b.x+'" y2="'+b.y+'" stroke="#2b0d16" stroke-width="2.2" stroke-linecap="round"/><g class="route-chevron" transform="translate('+mx+' '+my+') rotate('+ang+')"><path d="M -8 -5 L 0 0 L -8 5" fill="none" stroke="#b8894d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></g>');
   }
   const nodes=pts.map((p,i)=>{
-    const start=i===0,end=i===pts.length-1,scene=p.role==='Cambio scena',fill=start||end?'#b8894d':'#2b0d16';
-    const ring=start?'<circle cx="'+p.x+'" cy="'+p.y+'" r="13" fill="none" stroke="#b8894d" stroke-width="2" opacity=".75"/>':end?'<circle cx="'+p.x+'" cy="'+p.y+'" r="14" fill="none" stroke="#b8894d" stroke-width="1.5" opacity=".6"/>':scene?'<rect x="'+(p.x-10)+'" y="'+(p.y-10)+'" width="20" height="20" rx="2" fill="none" stroke="#b8894d" stroke-width="2" transform="rotate(45 '+p.x+' '+p.y+')"/>':'';
-    return ring+'<circle cx="'+p.x+'" cy="'+p.y+'" r="'+(start||end?8:7)+'" fill="'+fill+'"/><text class="node-label" x="'+p.x+'" y="'+(p.y-16)+'" text-anchor="middle">'+esc(p.name)+'</text><text class="node-index" x="'+p.x+'" y="'+(p.y+3)+'" text-anchor="middle">'+String(i+1).padStart(2,'0')+'</text>';
+    const isStart=i===0,isEnd=i===pts.length-1,scene=p.role==='Cambio scena',fill=isStart||isEnd?'#b8894d':'#2b0d16';
+    const ring=isStart?'<circle cx="'+p.x+'" cy="'+p.y+'" r="13" fill="none" stroke="#b8894d" stroke-width="2" opacity=".75"/>':isEnd?'<circle cx="'+p.x+'" cy="'+p.y+'" r="14" fill="none" stroke="#b8894d" stroke-width="1.5" opacity=".6"/>':scene?'<rect x="'+(p.x-10)+'" y="'+(p.y-10)+'" width="20" height="20" rx="2" fill="none" stroke="#b8894d" stroke-width="2" transform="rotate(45 '+p.x+' '+p.y+')"/>':'';
+    const labelY=p.labelBelow?p.y+27:p.y-21;
+    const labelAnchor=p.labelBelow?'start':'middle';
+    const labelX=p.labelBelow?p.x-5:p.x;
+    return ring+'<circle cx="'+p.x+'" cy="'+p.y+'" r="'+(isStart||isEnd?8:7)+'" fill="'+fill+'"/><text class="node-label" x="'+labelX+'" y="'+labelY+'" text-anchor="'+labelAnchor+'">'+esc(p.name)+'</text><text class="node-index" x="'+p.x+'" y="'+(p.y+3)+'" text-anchor="middle">'+String(i+1).padStart(2,'0')+'</text>';
   }).join('');
   const legend='<div class="book-sketch-legend"><span><i class="start"></i>Ingresso</span><span><i class="scene"></i>Cambio scena</span><span><i class="end"></i>Finale</span><span>Le frecce indicano la sequenza</span></div>';
   return '<div class="book-sketch-note">Schema narrativo · non in scala</div><svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="Schema narrativo della rotta in ordine di viaggio">'+segs.join('')+nodes+'</svg>'+legend;
