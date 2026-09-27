@@ -9,6 +9,7 @@ const objectiveLabels={market_access:'Market access',intelligence:'Ecosystem int
 const createState=()=>({missionId:missionId(),sessionToken:uuid(),step:1,objective:'',outcome:'',sector:'',size:'',geo:'japan',destinations:[],activities:[],people:null,seniority:'',period:'',duration:'',support:{agenda:80,logistics:75,language:50,onsite:60,followup:65},budget:'',constraints:'',company:'',name:'',email:'',phone:''});
 const defaultState=createState();
 let state=load();
+let navDepth=0;
 function load(){try{const x=JSON.parse(localStorage.getItem(STORAGE)||'null');return x?{...defaultState,...x,support:{...defaultState.support,...(x.support||{})}}:{...defaultState}}catch{return{...defaultState}}}
 function save(){try{localStorage.setItem(STORAGE,JSON.stringify(state))}catch{}}
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
@@ -131,9 +132,10 @@ function showStep(n,options={}){
  renderCanvas();
 
  if(options.history==='push'){
-  history.pushState({ybLabStep:state.step},'',location.href);
+  navDepth+=1;
+  history.pushState({ybLabStep:state.step,ybLabDepth:navDepth},'',location.href);
  }else if(options.history==='replace'){
-  history.replaceState({ybLabStep:state.step},'',location.href);
+  history.replaceState({ybLabStep:state.step,ybLabDepth:navDepth},'',location.href);
  }
 
  requestAnimationFrame(()=>{
@@ -216,7 +218,11 @@ function bind(){
  q('[data-constraints]').oninput=e=>{state.constraints=e.target.value;save()};
 
  q('[data-next]').onclick=()=>{if(validateStep(state.step))showStep(state.step+1,{history:'push',scroll:'preserve'})};
- q('[data-back]').onclick=()=>showStep(state.step-1,{history:'push',scroll:'preserve'});
+ q('[data-back]').onclick=()=>{
+  if(state.step<=1)return;
+  if(navDepth>0)history.back();
+  else showStep(state.step-1,{history:'replace',scroll:'preserve'});
+ };
  qa('[data-act]').forEach(b=>b.onclick=()=>showStep(actStart(+b.dataset.act),{history:'push',scroll:'step'}));
  qa('[data-step-jump]').forEach(b=>b.onclick=()=>showStep(+b.dataset.stepJump,{history:'push',scroll:'step'}));
  q('[data-restart]')&&(q('[data-restart]').onclick=resetMission);
@@ -225,6 +231,7 @@ function bind(){
 
  window.addEventListener('popstate',e=>{
   const n=e.state&&Number(e.state.ybLabStep);
+  navDepth=e.state&&Number.isFinite(Number(e.state.ybLabDepth))?Number(e.state.ybLabDepth):0;
   if(n>=1&&n<=8)showStep(n,{history:'none',scroll:'preserve'});
  });
 }
@@ -232,6 +239,7 @@ function init(){
  renderActivities();
  hydrate();
  bind();
+ navDepth=history.state&&Number.isFinite(Number(history.state.ybLabDepth))?Number(history.state.ybLabDepth):0;
  const initial=(history.state&&Number(history.state.ybLabStep))||state.step||1;
  showStep(initial,{history:'replace',scroll:'none'});
  const pre=new URLSearchParams(location.search).get('activity');
