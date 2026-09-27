@@ -11,7 +11,12 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="/assets/styles_honeymoon_lab.css?v=10">
 <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script defer src="/assets/script_honeymoon_lab.js?v=10"></script>
+<script defer src="/assets/yume-intelligence-data.js?v=0951"></script>
+<script defer src="/assets/yume-destination-intelligence-overlay.js?v=0951"></script>
+<script defer src="/assets/yume-intelligence-core.js?v=0951"></script>
+<script defer src="/assets/yume-intelligence-rules.js?v=0951"></script>
+<script defer src="/assets/yume-intelligence-runtime.js?v=0951"></script>
+<script defer src="/assets/script_honeymoon_lab.js?v=0951"></script>
 </head>
 <body>
 <a class="lab-skip" href="#lab">Vai al laboratorio</a>
@@ -63,6 +68,18 @@
 <div class="lab-step-head"><p>Tempo e denaro sono materiali di progetto.</p><h3>Quanto spazio volete <em>regalarvi?</em></h3><small>Il budget non decide la qualità del viaggio: ci aiuta a capire dove proteggere il valore e dove evitare sprechi.</small></div>
 <div class="lab-basics"><label class="lab-field"><span>Quanto tempo?</span><select data-duration><option value="12">10–13 giorni</option><option value="16">14–17 giorni</option><option value="20" selected>18–21 giorni</option><option value="24">22–25 giorni</option><option value="28">26+ giorni</option></select></label><label class="lab-field"><span>Quando?</span><select data-period><option>Da definire</option><option>Marzo – maggio</option><option>Giugno – agosto</option><option>Settembre – novembre</option><option>Dicembre – febbraio</option></select></label></div>
 <fieldset class="lab-budget"><legend>Dentro quale spazio economico vogliamo progettare?</legend><div><button data-budget="5–7k">5–7k</button><button data-budget="7–10k">7–10k</button><button data-budget="10–15k">10–15k</button><button data-budget="15–20k">15–20k</button><button data-budget="20k+">20k+</button><button data-budget="Da capire insieme">Da capire insieme</button></div></fieldset>
+<div class="lab-intelligence-inputs" aria-label="Contesto economico del Journey">
+ <fieldset class="lab-budget lab-budget-context"><legend>Come dobbiamo leggere questo budget?</legend><div>
+  <button type="button" data-budget-mode="hard">È un tetto</button>
+  <button type="button" data-budget-mode="target">È la zona di comfort</button>
+  <button type="button" data-budget-mode="flexible">Possiamo superarlo se ne vale la pena</button>
+ </div></fieldset>
+ <fieldset class="lab-budget lab-budget-context"><legend>Il budget comprende i voli intercontinentali?</legend><div>
+  <button type="button" data-flights-included="yes">Sì</button>
+  <button type="button" data-flights-included="no">No</button>
+  <button type="button" data-flights-included="unknown">Da definire</button>
+ </div></fieldset>
+</div>
 <div class="lab-allocation"><div class="lab-allocation-head"><div><b>Avete 100 punti. Dove volete sentirli?</b><small>Non sono euro. Sono il peso che ogni elemento dovrebbe avere nelle vostre scelte. Il cursore che toccate resta fermo; il Lab riequilibra gli altri.</small></div><strong><span data-total>100</span>/100</strong></div><div data-allocation></div></div>
 </section>
 

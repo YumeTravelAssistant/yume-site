@@ -144,3 +144,14 @@
   .lab-consent{font-size:11px}
   .lab-share .lab-btn--wine{width:100%;font-size:12px}
 }
+
+/* Journey Intelligence v0.95.1 · shadow test */
+.lab-intelligence-inputs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0 18px}
+.lab-budget-context{margin:0;padding:15px;border:1px solid var(--line);border-radius:14px;background:#fffdf9}
+.lab-budget-context legend{padding:0 6px;color:var(--wine);font-size:9px;font-weight:800;letter-spacing:.06em}
+.lab-budget-context>div{display:flex;flex-wrap:wrap;gap:6px}
+.lab-budget-context button{min-height:40px}
+.lab-intelligence-debug{position:fixed;right:14px;bottom:14px;z-index:9999;width:min(440px,calc(100vw - 28px));max-height:52vh;overflow:auto;padding:14px;border:1px solid rgba(184,137,77,.55);border-radius:16px;background:rgba(43,13,22,.96);box-shadow:0 18px 50px rgba(43,13,22,.25);color:#fff;font:11px/1.5 Raleway,Arial,sans-serif;backdrop-filter:blur(14px)}
+.lab-intelligence-debug header{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:8px;margin-bottom:8px}
+.lab-intelligence-debug header b{color:#e5c18a}.lab-intelligence-debug small{color:#cdbfc3}.lab-intelligence-debug p{margin:6px 0;color:#eee}
+@media(max-width:640px){.lab-intelligence-inputs{grid-template-columns:1fr}.lab-intelligence-debug{right:8px;bottom:76px;width:calc(100vw - 16px);max-height:38vh}}
