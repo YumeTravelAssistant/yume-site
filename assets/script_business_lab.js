@@ -259,8 +259,7 @@ function openMissionBook(){
   const step=names.length===1?0:(w-pad*2)/(names.length-1);
   const pts=names.map((name,i)=>({name,x:names.length===1?w/2:pad+step*i,y:i%2===0?82:108}));
   const lines=pts.slice(1).map((p,i)=>'<line x1="'+pts[i].x+'" y1="'+pts[i].y+'" x2="'+p.x+'" y2="'+p.y+'" stroke="#B79A62" stroke-width="2" stroke-dasharray="5 5"/><path d="M '+(p.x-9)+' '+(p.y-5)+' L '+p.x+' '+p.y+' L '+(p.x-9)+' '+(p.y+5)+'" fill="none" stroke="#B79A62" stroke-width="2"/>').join('');
-  const nodes=pts.map((p,i)=>'<circle cx="'+p.x+'" cy="'+p.y+'" r="'+(i===0||i===pts.length-1?11:8)+'" fill="'+(i===0||i===pts.length-1?'#A9232F':'#111923')+'"/><text class="route-node-index" x="'+p.x+'" y="'+(p.y+3)+'" text-anchor="middle">'+String(i+1).padStart(2,'0')+'</text><text class="route-node-label" x="'+p.x+'" y="'+(p.y-22)+'" text-anchor="middle">'+esc(p.name)+'</text>';
-  }).join('');
+  const nodes=pts.map((p,i)=>'<circle cx="'+p.x+'" cy="'+p.y+'" r="'+(i===0||i===pts.length-1?11:8)+'" fill="'+(i===0||i===pts.length-1?'#A9232F':'#111923')+'"/><text class="route-node-index" x="'+p.x+'" y="'+(p.y+3)+'" text-anchor="middle">'+String(i+1).padStart(2,'0')+'</text><text class="route-node-label" x="'+p.x+'" y="'+(p.y-22)+'" text-anchor="middle">'+esc(p.name)+'</text>').join('');
   return '<div class="sketch-note">Schema di missione · sequenza concettuale, non itinerario operativo</div><svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="Sequenza geografica della missione">'+lines+nodes+'</svg>';
  })();
 
