@@ -12,9 +12,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/styles_business.css?v=20260927-v2">
+  <link rel="stylesheet" href="/assets/styles_business.css?v=20260927-v3">
   <script defer src="/assets/script_business.js?v=20260927-v6"></script>
-  <script defer src="/assets/script_business_lab.js?v=20260927-v3"></script>
+  <script defer src="/assets/script_business_lab.js?v=20260927-v7"></script>
 </head>
 <body class="yb-lab-shell">
 <header class="yb-nav-wrap" aria-label="Navigazione YUME Works">
@@ -41,12 +41,26 @@
 
   <div class="yb-lab-layout">
     <section class="yb-lab-stage">
-      <div class="yb-lab-actbar">
-        <button type="button" data-act="1" class="is-active"><span>01</span> Purpose</button>
-        <button type="button" data-act="2"><span>02</span> Architecture</button>
-        <button type="button" data-act="3"><span>03</span> Reality</button>
-        <button type="button" data-act="4"><span>04</span> Concept</button>
+      <div class="yb-lab-toolbar">
+        <div class="yb-lab-actbar" aria-label="Fasi del Mission Lab">
+          <button type="button" data-act="1" class="is-active"><span>01</span> Purpose</button>
+          <button type="button" data-act="2"><span>02</span> Architecture</button>
+          <button type="button" data-act="3"><span>03</span> Reality</button>
+          <button type="button" data-act="4"><span>04</span> Concept</button>
+        </div>
+        <button class="yb-lab-restart" type="button" data-restart title="Inizia una nuova missione">↻ Nuova missione</button>
       </div>
+
+      <nav class="yb-step-rail" aria-label="Passaggi del Mission Lab">
+        <button type="button" data-step-jump="1"><span>1</span><b>Obiettivo</b></button>
+        <button type="button" data-step-jump="2"><span>2</span><b>Outcome & settore</b></button>
+        <button type="button" data-step-jump="3"><span>3</span><b>Geografia</b></button>
+        <button type="button" data-step-jump="4"><span>4</span><b>Attività</b></button>
+        <button type="button" data-step-jump="5"><span>5</span><b>Delegazione</b></button>
+        <button type="button" data-step-jump="6"><span>6</span><b>Regia YUME</b></button>
+        <button type="button" data-step-jump="7"><span>7</span><b>Budget</b></button>
+        <button type="button" data-step-jump="8"><span>8</span><b>Concept</b></button>
+      </nav>
 
       <div class="yb-lab-step is-active" data-step="1">
         <small>Banco I · Purpose</small>
