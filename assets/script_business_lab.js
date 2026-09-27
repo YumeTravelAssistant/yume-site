@@ -154,9 +154,11 @@ function showStep(n,options={}){
   if(options.scroll==='step'){
    const active=q('.yb-lab-step.is-active');
    const nav=q('.yb-nav-wrap');
-   if(active){
-    const offset=(nav?nav.getBoundingClientRect().height:76)+14;
-    const top=Math.max(0,active.getBoundingClientRect().top+window.scrollY-offset);
+   const mobile=window.matchMedia&&window.matchMedia('(max-width:820px)').matches;
+   const target=mobile?(q('.yb-step-rail')||active):active;
+   if(target){
+    const offset=(nav?nav.getBoundingClientRect().height:76)+10;
+    const top=Math.max(0,target.getBoundingClientRect().top+window.scrollY-offset);
     window.scrollTo({top,behavior:options.smooth===false?'auto':'smooth'});
    }
   }else if(options.scroll!=='none'){
