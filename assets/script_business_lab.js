@@ -107,13 +107,25 @@ function validateStep(step){
  }
  return true;
 }
+function centerHorizontalControl(container,active){
+ if(!container||!active||container.scrollWidth<=container.clientWidth)return;
+ const left=Math.max(0,active.offsetLeft-(container.clientWidth-active.clientWidth)/2);
+ container.scrollTo({left,behavior:'smooth'});
+}
 function updateStepNavigation(){
+ let activeStepButton=null;
  qa('[data-step-jump]').forEach(b=>{
   const n=+b.dataset.stepJump;
-  b.classList.toggle('is-active',n===state.step);
+  const active=n===state.step;
+  b.classList.toggle('is-active',active);
   b.classList.toggle('is-complete',n<state.step);
-  b.setAttribute('aria-current',n===state.step?'step':'false');
+  b.setAttribute('aria-current',active?'step':'false');
+  if(active)activeStepButton=b;
  });
+ const rail=q('.yb-step-rail');
+ centerHorizontalControl(rail,activeStepButton);
+ const activeAct=q('[data-act].is-active');
+ centerHorizontalControl(activeAct&&activeAct.parentElement,activeAct);
 }
 function showStep(n,options={}){
  const target=Math.max(1,Math.min(8,n));
@@ -174,7 +186,7 @@ function renderActivities(){
  if(param){preferred.push(param);seen.add(param)}
  all.forEach(a=>{if(!seen.has(a[1])&&preferred.length<24){preferred.push(a[1]);seen.add(a[1])}});
  root.innerHTML=preferred.map(name=>'<button type="button" class="yb-chip'+(state.activities.includes(name)?' is-selected':'')+'" data-activity="'+esc(name)+'">'+esc(name)+'</button>').join('');
- qa('[data-activity]',root).forEach(b=>b.onclick=()=>{const v=b.dataset.activity,i=state.activities.indexOf(v);if(i>=0)state.activities.splice(i,1);else if(state.activities.length<8)state.activities.push(v);b.classList.toggle('is-selected',state.activities.includes(v));save();renderCanvas()});
+ qa('[data-activity]',root).forEach(b=>b.onclick=()=>{const v=b.dataset.activity,i=state.activities.indexOf(v);if(i>=0)state.activities.splice(i,1);else if(state.activities.length<8)state.activities.push(v);b.classList.toggle('is-selected',state.activities.includes(v));if(state.activities.length)clearStepError();save();renderCanvas()});
 }
 function attribution(){const p=new URLSearchParams(location.search),utm={};['utm_source','utm_medium','utm_campaign','utm_content','utm_term','ref'].forEach(k=>{if(p.get(k))utm[k]=p.get(k)});try{return{...JSON.parse(sessionStorage.getItem('yumeBusinessAttribution')||'{}'),...utm,referrer:document.referrer||null}}catch{return{...utm,referrer:document.referrer||null}}}
 function payload(shared=true){return{
