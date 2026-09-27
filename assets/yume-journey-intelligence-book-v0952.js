@@ -158,6 +158,7 @@ function surpriseCards(a){
   }).join('');
 }
 function destinationDNACard(d,a,state){
+  a=a||{};
   const r=(a.destinationRanking||[]).find(x=>x.id===d.id);
   const role=(a.routeRoles||[]).find(x=>x.id===d.id);
   const meta=DATA.dimensionMeta||{};
