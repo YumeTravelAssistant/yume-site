@@ -29,12 +29,12 @@ const ALLOCATION_LABELS={
   special:'Momenti speciali'
 };
 const ROLE_LABELS={
-  ANCHOR:'ANCHOR',
-  SUPPORT:'SUPPORT',
-  CONTRAST:'CONTRAST',
-  BRIDGE:'BRIDGE',
-  SIGNATURE:'SIGNATURE',
-  DECOMPRESSION:'DECOMPRESSION'
+  ANCHOR:'TAPPA PORTANTE',
+  SUPPORT:'TAPPA DI SUPPORTO',
+  CONTRAST:'CONTRASTO',
+  BRIDGE:'PASSAGGIO',
+  SIGNATURE:'MOMENTO FIRMA',
+  DECOMPRESSION:'RESPIRO'
 };
 
 const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -143,6 +143,16 @@ function clarityLabel(a){
   const c=Number(a&&a.analysisConfidence||0);
   return c>=78?'Lettura molto chiara':c>=62?'Lettura abbastanza chiara':'Da approfondire insieme';
 }
+function profileTitle(a){
+  const t=strongestReadableTraits(a).map(x=>x.key);
+  if(t.includes('food')&&t.includes('local'))return'Il gusto come modo di entrare nei luoghi';
+  if(t.includes('nature')&&t.includes('adventure'))return'Natura, scoperta e libertà di movimento';
+  if(t.includes('slow')&&t.includes('depth'))return'Meno tappe. Più tempo dentro i luoghi';
+  if(t.includes('urban')&&t.includes('discovery'))return'Città da vivere, non soltanto da vedere';
+  if(t.includes('craft')||t.includes('heritage'))return'Un viaggio fatto di cultura, gesti e dettagli';
+  if(t.includes('sea')&&t.includes('slow'))return'Un viaggio che alterna scoperta e respiro';
+  return'Un viaggio da costruire intorno al vostro modo di stare insieme';
+}
 function experienceLists(state){
   const profiles=DATA&&DATA.experienceProfiles?DATA.experienceProfiles:{};
   const out={must:[],want:[],reject:[]};
@@ -184,27 +194,27 @@ function renderDeclared(state){
   return '<div class="two-col"><div><h3>Come avete risposto</h3>'+left+'</div><div><h3>Dove volete sentire il valore</h3>'+right+'</div></div>';
 }
 function renderTravellerDNA(a){
-  if(!a)return '<p class="muted">Intelligence non disponibile.</p>';
+  if(!a)return '<p class="muted">La lettura non è ancora disponibile.</p>';
   const meta=DATA.dimensionMeta||{};
   return DIMENSION_GROUPS.map(g=>{
     const dims=DATA.dimensions.filter(d=>meta[d]&&meta[d].group===g.key);
     return '<div class="dna-group"><h3>'+esc(g.label)+'</h3>'+dims.map(d=>{
       const x=a.travellerDNA[d]||{value:50,confidence:.05,contradiction:0};
-      const conf=Math.round((x.confidence||0)*100),contr=Math.round((x.contradiction||0)*100);
-      const note='Confidence '+conf+'%'+(contr>=20?' · tensione '+contr+'%':'');
+      const contr=Math.round((x.contradiction||0)*100);
+      const note=confidenceLabel(x.confidence||0)+(contr>=30?' · da chiarire':'');
       return bar(meta[d].label||d,x.value,note,contr>=30?'tension':'');
     }).join('')+'</div>';
   }).join('');
 }
 function signalCards(a){
   return (a.topSignals||[]).slice(0,8).map(x=>{
-    const c=Math.round((x.confidence||0)*100),contr=Math.round((x.contradiction||0)*100);
-    return '<article class="signal-card"><small>'+esc(confidenceLabel(x.confidence||0))+'</small><h3>'+esc(x.label)+'</h3><div class="big-number">'+pct(x.value)+'</div><p>Confidence '+c+'%'+(contr? ' · Contraddizione '+contr+'%':'')+'</p></article>';
+    const contr=Math.round((x.contradiction||0)*100);
+    return '<article class="signal-card"><small>'+esc(confidenceLabel(x.confidence||0))+'</small><h3>'+esc(x.label)+'</h3><div class="big-number">'+pct(x.value)+'</div><p>'+(contr>=30?'Qui le vostre risposte raccontano due esigenze diverse.':'Questo tratto ricorre con una buona coerenza nelle vostre scelte.')+'</p></article>';
   }).join('');
 }
 function matchDrivers(r){
   const list=(r&&r.semantic&&r.semantic.breakdown?r.semantic.breakdown:[]).slice(0,4);
-  return list.length?list.map(x=>'<li><b>'+esc(x.label||x.dimension)+'</b><span>fit '+pct(x.fit)+' · voi '+pct(x.traveller)+' · luogo '+pct(x.destination)+'</span></li>').join(''):'<li><span>Driver non disponibili.</span></li>';
+  return list.length?list.map(x=>'<li><b>'+esc(x.label||x.dimension)+'</b><span>incontro '+pct(x.fit)+' · voi '+pct(x.traveller)+' · luogo '+pct(x.destination)+'</span></li>').join(''):'<li><span>Driver non disponibili.</span></li>';
 }
 function matchCards(a,state){
   if(!a)return '';
@@ -236,18 +246,18 @@ function destinationDNACard(d,a,state){
   const signature=Object.entries(d.dna||{}).map(([key,value])=>({key,value,label:meta[key]?meta[key].label:key})).sort((x,y)=>y.value-x.value).slice(0,5);
   const alignment=(r&&r.semantic&&r.semantic.breakdown?r.semantic.breakdown:[]).slice(0,3);
   const nights=state.nights&&state.nights[d.id]!=null?state.nights[d.id]:d.ideal;
-  return '<article class="dest-dna"><header><div><small>'+esc(role&&role.role||'SUPPORT')+' · '+esc(d.region||d.country)+'</small><h3>'+esc(d.name)+'</h3></div><div class="affinity">'+(r?pct(r.affinity):'—')+'<small>AFFINITY</small></div></header><div class="mini-metrics"><span>'+nights+' notti</span><span>Feasibility <b>'+(r?pct(r.feasibility&&r.feasibility.score):'—')+'</b></span><span>Robustness <b>'+(r?pct(r.robustness):'—')+'</b></span></div><h4>Destination DNA · firma del luogo</h4><div class="signature-bars">'+signature.map(x=>bar(x.label,x.value,'LUOGO')).join('')+'</div><h4>Perché incontra il vostro DNA</h4><ul class="driver-list">'+(alignment.length?alignment.map(x=>'<li><b>'+esc(x.label||x.dimension)+'</b><span>fit '+pct(x.fit)+' · voi '+pct(x.traveller)+' · luogo '+pct(x.destination)+'</span></li>').join(''):'<li><span>Segnale non abbastanza forte per una spiegazione specifica.</span></li>')+'</ul>'+(role?'<p class="role-why"><b>'+esc(role.role)+':</b> '+esc(role.why)+'</p>':'')+'</article>';
+  return '<article class="dest-dna"><header><div><small>'+esc(role&&role.role||'SUPPORT')+' · '+esc(d.region||d.country)+'</small><h3>'+esc(d.name)+'</h3></div><div class="affinity">'+(r?pct(r.affinity):'—')+'<small>AFFINITÀ</small></div></header><div class="mini-metrics"><span>'+nights+' notti</span><span>Fattibilità <b>'+(r?pct(r.feasibility&&r.feasibility.score):'—')+'</b></span><span>Solidità <b>'+(r?pct(r.robustness):'—')+'</b></span></div><h4>Destination DNA · il carattere del luogo</h4><div class="signature-bars">'+signature.map(x=>bar(x.label,x.value,'LUOGO')).join('')+'</div><h4>Perché può funzionare per voi</h4><ul class="driver-list">'+(alignment.length?alignment.map(x=>'<li><b>'+esc(x.label||x.dimension)+'</b><span>fit '+pct(x.fit)+' · voi '+pct(x.traveller)+' · luogo '+pct(x.destination)+'</span></li>').join(''):'<li><span>Segnale non abbastanza forte per una spiegazione specifica.</span></li>')+'</ul>'+(role?'<p class="role-why"><b>'+esc(role.role)+':</b> '+esc(role.why)+'</p>':'')+'</article>';
 }
 function routeMetrics(a){
   const r=a.route||{};
   return [
-    metric('COHERENCE',pct(r.score),'/100'),
-    metric('PRESSURE',pct(r.pressure),'/100 · più basso = più respiro'),
-    metric('COVERAGE',pct(r.coverage),'/100'),
-    metric('REDUNDANCY',pct(r.redundancy),'/100'),
-    metric('SEQUENCE',pct(r.sequence),'/100'),
-    metric('NIGHT FIT',pct(r.nightFit),'/100'),
-    metric('BUDGET FIT',pct(r.budgetFit),'/100'),
+    metric('COERENZA',pct(r.score),'/100'),
+    metric('RITMO',100-pct(r.pressure),'/100 · più alto = più respiro'),
+    metric('COPERTURA DEI DESIDERI',pct(r.coverage),'/100'),
+    metric('SOVRAPPOSIZIONE',pct(r.redundancy),'/100'),
+    metric('ORDINE DELLE TAPPE',pct(r.sequence),'/100'),
+    metric('EQUILIBRIO NOTTI',pct(r.nightFit),'/100'),
+    metric('TENUTA BUDGET',pct(r.budgetFit),'/100'),
     metric('DISTANZA',Number(r.distance||0).toLocaleString('it-IT')+' km','stima geometrica')
   ].join('');
 }
@@ -255,15 +265,15 @@ function optimiserBlock(a){
   const o=a.routeOptimisation||{},original=o.original||[],recommended=o.recommended||[];
   const same=original.length===recommended.length&&original.every((x,i)=>x===recommended[i]);
   const title=same?'Ordine attuale confermato':'Sequenza alternativa individuata';
-  return '<div class="optimizer"><small>ROUTE OPTIMISER · CONFIDENCE '+pct(o.confidence)+'</small><h3>'+esc(title)+'</h3><div class="route-string">'+esc(routeNames(original).join(' → '))+'</div>'+(same?'':'<div class="route-arrow">↓</div><div class="route-string recommended">'+esc(routeNames(recommended).join(' → '))+'</div>')+'<p>Δ friction '+signed(o.frictionDelta)+' · Δ distanza '+signed(o.distanceDelta)+' km</p></div>';
+  return '<div class="optimizer"><small>ORDINE DEL VIAGGIO · LETTURA '+pct(o.confidence)+'</small><h3>'+esc(title)+'</h3><div class="route-string">'+esc(routeNames(original).join(' → '))+'</div>'+(same?'':'<div class="route-arrow">↓</div><div class="route-string recommended">'+esc(routeNames(recommended).join(' → '))+'</div>')+'<p>variazione attrito '+signed(o.frictionDelta)+' · variazione distanza '+signed(o.distanceDelta)+' km</p></div>';
 }
 function nightBlock(a){
   const n=a.nightAllocation;
   if(!n)return '';
-  return '<div class="night-box"><small>NIGHT ALLOCATION</small><h3>'+(n.feasible?'Distribuzione consigliata':'Distribuzione sotto vincolo')+'</h3><div class="night-grid">'+(n.allocations||[]).map(x=>'<span><b>'+esc(x.name)+'</b>'+x.nights+' notti <small>min '+x.minimum+' · ideal '+x.ideal+'</small></span>').join('')+'</div>'+(n.shortfall?'<p class="warning">Shortfall: '+n.shortfall+' notte/i rispetto ai minimi.</p>':'')+'</div>';
+  return '<div class="night-box"><small>RITMO DELLE NOTTI</small><h3>'+(n.feasible?'Distribuzione consigliata':'Distribuzione sotto vincolo')+'</h3><div class="night-grid">'+(n.allocations||[]).map(x=>'<span><b>'+esc(x.name)+'</b>'+x.nights+' notti <small>min '+x.minimum+' · ideale '+x.ideal+'</small></span>').join('')+'</div>'+(n.shortfall?'<p class="warning">Shortfall: '+n.shortfall+' notte/i rispetto ai minimi.</p>':'')+'</div>';
 }
 function roleCards(a){
-  return (a.routeRoles||[]).map(r=>'<article class="role-card"><small>'+esc(ROLE_LABELS[r.role]||r.role)+'</small><h3>'+esc(r.name)+'</h3><p>'+esc(r.why)+'</p><div class="mini-metrics"><span>Structural <b>'+pct(r.structuralScore)+'</b></span><span>Confidence <b>'+pct(r.confidence)+'</b></span></div></article>').join('');
+  return (a.routeRoles||[]).map(r=>'<article class="role-card"><small>'+esc(ROLE_LABELS[r.role]||r.role)+'</small><h3>'+esc(r.name)+'</h3><p>'+esc(r.why)+'</p><div class="mini-metrics"><span>Peso nella rotta <b>'+pct(r.structuralScore)+'</b></span><span>Solidità <b>'+pct(r.confidence)+'</b></span></div></article>').join('');
 }
 function removalRows(a){
   const items=a.counterfactuals&&a.counterfactuals.removals||[];
@@ -276,7 +286,7 @@ function additionCards(a,state){
     const dims=(x.marginal&&x.marginal.newDimensions||[]).slice(0,3).map(d=>d.label);
     const pressure=pct(x.marginal&&x.marginal.pressureCost);
     const judgement=pressure>=30?'Interessante, ma costosa in termini di ritmo.':pressure>=20?'Può avere senso solo se sostituisce, non se si somma.':'Può essere esplorata senza snaturare troppo il viaggio.';
-    return '<article class="addition"><small>SE VOLessIMO CAMBIARE QUALCOSA</small><h3>'+esc(x.name)+'</h3><p>'+esc(judgement)+'</p><div class="mini-metrics"><span>Affinità <b>'+pct(x.affinity)+'</b></span><span>Fattibilità <b>'+pct(x.feasibility)+'</b></span><span>Valore aggiunto <b>'+pct(x.marginal&&x.marginal.score)+'</b></span></div>'+chips(dims,'Nessun tratto nuovo dominante')+'</article>';
+    return '<article class="addition"><small>SE VOLESSIMO CAMBIARE QUALCOSA</small><h3>'+esc(x.name)+'</h3><p>'+esc(judgement)+'</p><div class="mini-metrics"><span>Affinità <b>'+pct(x.affinity)+'</b></span><span>Fattibilità <b>'+pct(x.feasibility)+'</b></span><span>Valore aggiunto <b>'+pct(x.marginal&&x.marginal.score)+'</b></span></div>'+chips(dims,'Nessun tratto nuovo dominante')+'</article>';
   }).join('');
 }
 function scenarioCards(a,state){
@@ -294,9 +304,9 @@ function scenarioCards(a,state){
   return cards.map(c=>'<article class="scenario"><small>'+c.ey+'</small><h3>'+c.title+'</h3><p>'+c.body+'</p><footer>'+c.foot+'</footer></article>').join('');
 }
 function constraintBlock(a){
-  const c=a.constraints||{},all=[...(c.hard||[]).map(x=>({kind:'HARD',...x})),...(c.soft||[]).map(x=>({kind:'SOFT',...x})),...(c.info||[]).map(x=>({kind:'INFO',...x}))];
-  if(!all.length)return '<p class="muted">Nessun vincolo esplicito rilevato dal motore.</p>';
-  return '<div class="constraint-list">'+all.map(x=>'<article class="'+x.kind.toLowerCase()+'"><small>'+x.kind+'</small><p>'+esc(x.message||x.id)+'</p></article>').join('')+'</div>';
+  const c=a.constraints||{},all=[...(c.hard||[]).map(x=>({kind:'hard',label:'DA RISOLVERE',...x})),...(c.soft||[]).map(x=>({kind:'soft',label:'DA VALUTARE',...x})),...(c.info||[]).map(x=>({kind:'info',label:'NOTA',...x}))];
+  if(!all.length)return '<p class="muted">Non emergono ostacoli particolari in questa prima lettura.</p>';
+  return '<div class="constraint-list">'+all.map(x=>'<article class="'+x.kind+'"><small>'+x.label+'</small><p>'+esc(x.message||x.id)+'</p></article>').join('')+'</div>';
 }
 function firstReadCards(engine){
   const rules=engine&&engine.narrative&&engine.narrative.firstRead||[];
