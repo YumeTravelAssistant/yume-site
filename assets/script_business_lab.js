@@ -153,7 +153,12 @@ function showStep(n,options={}){
  requestAnimationFrame(()=>{
   if(options.scroll==='step'){
    const active=q('.yb-lab-step.is-active');
-   active&&active.scrollIntoView({block:'start',behavior:options.smooth===false?'auto':'smooth'});
+   const nav=q('.yb-nav-wrap');
+   if(active){
+    const offset=(nav?nav.getBoundingClientRect().height:76)+14;
+    const top=Math.max(0,active.getBoundingClientRect().top+window.scrollY-offset);
+    window.scrollTo({top,behavior:options.smooth===false?'auto':'smooth'});
+   }
   }else if(options.scroll!=='none'){
    window.scrollTo({top:preserveY,behavior:'auto'});
   }
@@ -253,22 +258,31 @@ function bind(){
  q('[data-phone]').oninput=e=>{state.phone=e.target.value;save()};
  q('[data-consent]').onchange=e=>{state.consent=e.target.checked;save()};
 
- q('[data-next]').onclick=()=>{if(validateStep(state.step))showStep(state.step+1,{history:'push',scroll:'preserve'})};
+ q('[data-next]').onclick=()=>{if(validateStep(state.step))showStep(state.step+1,{history:'push',scroll:'step'})};
  q('[data-back]').onclick=()=>{
   if(state.step<=1)return;
   if(navDepth>0)history.back();
-  else showStep(state.step-1,{history:'replace',scroll:'preserve'});
+  else showStep(state.step-1,{history:'replace',scroll:'step'});
  };
  qa('[data-act]').forEach(b=>b.onclick=()=>showStep(actStart(+b.dataset.act),{history:'push',scroll:'step'}));
  qa('[data-step-jump]').forEach(b=>b.onclick=()=>showStep(+b.dataset.stepJump,{history:'push',scroll:'step'}));
  q('[data-restart]')&&(q('[data-restart]').onclick=resetMission);
+ const summaryBtn=q('[data-summary-toggle]');
+ const summary=q('.yb-lab-canvas');
+ if(summaryBtn&&summary){
+  summaryBtn.onclick=()=>{
+   const open=summary.classList.toggle('is-mobile-open');
+   summaryBtn.setAttribute('aria-expanded',open?'true':'false');
+   summaryBtn.textContent=open?'Chiudi riepilogo':'Riepilogo';
+  };
+ }
  q('[data-share]').onclick=share;
  q('[data-print]').onclick=openMissionBook;
 
  window.addEventListener('popstate',e=>{
   const n=e.state&&Number(e.state.ybLabStep);
   navDepth=e.state&&Number.isFinite(Number(e.state.ybLabDepth))?Number(e.state.ybLabDepth):0;
-  if(n>=1&&n<=8)showStep(n,{history:'none',scroll:'preserve'});
+  if(n>=1&&n<=8)showStep(n,{history:'none',scroll:'step'});
  });
 }
 function init(){
