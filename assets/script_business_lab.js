@@ -163,6 +163,7 @@ function resetMission(){
  if(!confirm('Vuoi iniziare una nuova missione? La bozza attuale verrà sostituita su questo dispositivo.'))return;
  state=createState();
  navDepth=0;
+ try{localStorage.removeItem('yumeBusinessMissionLabTransportV8')}catch{}
  save();
  hydrate();
  renderActivities();
@@ -225,7 +226,7 @@ async function share(){
  if(state.phone&&state.phone.replace(/[^0-9]/g,'').length<6){status.textContent='Inserisci un numero di telefono valido.';status.className='yb-status is-error';return}
  if(!q('[data-consent]').checked){status.textContent='Serve il consenso al ricontatto per condividere il Mission Concept.';status.className='yb-status is-error';return}
  const btn=q('[data-share]');btn.disabled=true;status.textContent='Condivisione in corso…';status.className='yb-status';
- try{const res=await fetch(SUPABASE_URL+'/rest/v1/business_mission_briefs',{method:'POST',headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(payload(true))});if(!res.ok){const detail=await res.text();console.error('Mission Lab submit failed',res.status,detail);throw new Error('HTTP '+res.status)}status.textContent='Mission Concept '+state.missionId+' condiviso con YUME.';status.className='yb-status is-ok';btn.textContent='Condiviso ✓';save()}catch(e){console.error(e);status.textContent='Invio non riuscito'+(e&&e.message?' ('+e.message+')':'')+'. La bozza resta salvata su questo dispositivo.';status.className='yb-status is-error';btn.disabled=false}
+ try{const res=await fetch(SUPABASE_URL+'/rest/v1/business_mission_briefs',{method:'POST',headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(payload(true))});if(!res.ok){const detail=await res.text();console.error('Mission Lab submit failed',res.status,detail);throw new Error('HTTP '+res.status)}state.submittedMissionId=state.missionId;state.submittedAt=new Date().toISOString();save();status.textContent='Mission Concept '+state.missionId+' condiviso con YUME.';status.className='yb-status is-ok';btn.textContent='Condiviso ✓'}catch(e){console.error(e);status.textContent='Invio non riuscito'+(e&&e.message?' ('+e.message+')':'')+'. La bozza resta salvata su questo dispositivo.';status.className='yb-status is-error';btn.disabled=false}
 }
 function openMissionBook(){
  const w=window.open('','_blank');if(!w)return;
