@@ -1,6 +1,6 @@
 (()=>{'use strict';
 const SUPABASE_URL='https://eniewpjsahqzrsxldymh.supabase.co';
-const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXJhYmFzZSIsInJlZiI6ImVuaWV3cGpzYWhxenJzeGxkeW1oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU1NDQ2NTAsImV4cCI6MjA3MTEyMDY1MH0.Yrrl6z4KM1wbEbHbA_Xigs7DurVXWpMM8-3ENNl-7ww';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVuaWV3cGpzYWhxenJzeGxkeW1oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU1NDQ2NTAsImV4cCI6MjA3MTEyMDY1MH0.Yrrl6z4KM1wbEbHbA_Xigs7DurVXWpMM8-3ENNl-7ww';
 const STORAGE='yumeBusinessMissionLabV2';
 const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
 const uuid=()=>crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2)+Date.now();
@@ -84,9 +84,11 @@ async function share(){
  const status=q('[data-share-status]');state.company=q('[data-company]').value.trim();state.name=q('[data-name]').value.trim();state.email=q('[data-email]').value.trim();state.phone=q('[data-phone]').value.trim();
  if(!state.company||!state.name){status.textContent='Inserisci azienda e referente.';status.className='yb-status is-error';return}
  if(!state.email&&!state.phone){status.textContent='Inserisci almeno email o telefono.';status.className='yb-status is-error';return}
+ if(state.email&&(!state.email.includes('@')||!state.email.includes('.'))){status.textContent='Inserisci un indirizzo email valido.';status.className='yb-status is-error';return}
+ if(state.phone&&state.phone.replace(/[^0-9]/g,'').length<6){status.textContent='Inserisci un numero di telefono valido.';status.className='yb-status is-error';return}
  if(!q('[data-consent]').checked){status.textContent='Serve il consenso al ricontatto per condividere il Mission Concept.';status.className='yb-status is-error';return}
  const btn=q('[data-share]');btn.disabled=true;status.textContent='Condivisione in corso…';status.className='yb-status';
- try{const res=await fetch(SUPABASE_URL+'/rest/v1/business_mission_briefs',{method:'POST',headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(payload(true))});if(!res.ok)throw new Error(await res.text());status.textContent='Mission Concept '+state.missionId+' condiviso con YUME.';status.className='yb-status is-ok';btn.textContent='Condiviso ✓';save()}catch(e){console.error(e);status.textContent='Invio non riuscito. La bozza resta salvata su questo dispositivo.';status.className='yb-status is-error';btn.disabled=false}
+ try{const res=await fetch(SUPABASE_URL+'/rest/v1/business_mission_briefs',{method:'POST',headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(payload(true))});if(!res.ok){const detail=await res.text();console.error('Mission Lab submit failed',res.status,detail);throw new Error('HTTP '+res.status)}status.textContent='Mission Concept '+state.missionId+' condiviso con YUME.';status.className='yb-status is-ok';btn.textContent='Condiviso ✓';save()}catch(e){console.error(e);status.textContent='Invio non riuscito'+(e&&e.message?' ('+e.message+')':'')+'. La bozza resta salvata su questo dispositivo.';status.className='yb-status is-error';btn.disabled=false}
 }
 function openMissionBook(){
  const w=window.open('','_blank');if(!w)return;
