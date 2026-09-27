@@ -117,27 +117,50 @@ function strongestReadableTraits(a){
     .slice(0,4);
 }
 function editorialVerdict(a,state){
-  if(!a)return{title:'Un concept da leggere insieme',text:'Le vostre scelte hanno già una direzione, ma il valore del prossimo passaggio sarà trasformarle in ritmo, luoghi e priorità reali.',protect:'Il desiderio che vi ha portati fin qui.',watch:'Ciò che va ancora chiarito insieme.'};
+  if(!a)return{title:'Un viaggio da leggere insieme',text:'Le vostre scelte hanno già una direzione. Il prossimo passo è trasformarle in ritmo, luoghi e priorità reali.',protect:'Il desiderio che vi ha portati fin qui.',watch:'Ci sono ancora alcuni punti da mettere a fuoco.'};
   const traits=strongestReadableTraits(a);
+  const keys=traits.map(x=>x.key);
   const labels=traits.map(x=>x.label.toLowerCase());
   const readable=labels.length>=2?labels.slice(0,3).join(', ').replace(/, ([^,]*)$/, ' e $1'):'il modo in cui volete vivere il viaggio';
-  const r=a.route||{},scope=geographicScope(state);
-  let title='Una base già molto personale';
-  let routeText='La composizione è credibile: il lavoro più importante non è aggiungere tappe, ma dare a ciascuna un motivo preciso per esserci.';
-  if(Number(r.pressure)>=62){title='Bello, ma oggi un po’ troppo pieno';routeText='Il viaggio vi assomiglia, ma nella forma attuale rischia di chiedervi più energia del necessario. Prima di aggiungere, alleggeriremmo e proteggeremmo meglio il tempo nei luoghi che contano davvero.'}
-  else if(Number(r.redundancy)>=78){title='La direzione è giusta. Alcune tappe si somigliano troppo.';routeText='La geografia funziona, ma alcune soste stanno raccontando parti simili del viaggio. Il passo successivo è dare a ogni tappa una funzione più distinta, oppure liberare spazio per un contrasto che renda il viaggio più memorabile.'}
-  else if(Number(r.pressure)<=35){title='Un viaggio che ha già spazio per respirare';routeText='La composizione lascia abbastanza tempo per vivere i luoghi senza trasformare il viaggio in una sequenza di partenze e check-in. È una base preziosa da conservare.'}
+  const r=a.route||{};
+  const conf=Number(a.analysisConfidence||0);
+  let title='Una base che vi assomiglia';
+  if(conf<72) title='La direzione c’è. Va ancora resa più vostra.';
+  else if(keys.includes('food')&&keys.includes('local')) title='Un viaggio da vivere anche a tavola';
+  else if(keys.includes('nature')&&keys.includes('adventure')) title='Un viaggio che ha bisogno di spazio e movimento';
+  else if(keys.includes('urban')&&(keys.includes('nightlife')||keys.includes('discovery'))) title='Un viaggio acceso, libero e contemporaneo';
+  else if(keys.includes('sea')&&keys.includes('slow')) title='Un viaggio che alterna scoperta e respiro';
+  else if((keys.includes('craft')||keys.includes('heritage'))&&keys.includes('depth')) title='Un viaggio fatto di cultura, gesti e profondità';
+  else if(keys.includes('design')&&(keys.includes('privacy')||keys.includes('comfort'))) title='Un viaggio curato, senza bisogno di ostentare';
+  else if(keys.includes('slow')&&keys.includes('depth')) title='Meno tappe. Più tempo dentro i luoghi';
+  else if(keys.includes('iconic')) title='Un primo Giappone completo, ma non standard';
+
+  let routeText='La composizione è credibile. Il lavoro più importante non è aggiungere tappe, ma dare a ciascuna un motivo preciso per esserci.';
+  if(Number(r.pressure)>=55){
+    routeText='La traccia che avete costruito è ricca, ma oggi chiede più energia di quella che serve. Prima di aggiungere altro, alleggerirei e proteggerei meglio il tempo nei luoghi che contano davvero.';
+  }else if(Number(r.coverage)<70){
+    routeText='La rotta funziona, ma non copre ancora bene tutto ciò che emerge dalle vostre scelte. Cercherei un’aggiunta mirata o una sostituzione, non una tappa in più “per completezza”.';
+  }else if(Number(r.redundancy)>=90){
+    routeText='La base è buona, ma alcune tappe stanno raccontando parti simili del viaggio. Non le toglierei automaticamente: prima darei a ciascuna una funzione più netta, così il viaggio acquista contrasto.';
+  }else if(Number(r.score)>=80&&Number(r.pressure)<=35){
+    routeText='La composizione è già molto solida e non sembra chiedere correzioni drastiche. Lavorerei soprattutto su ritmo, quartieri, esperienze e qualità delle soste.';
+  }else if(Number(r.pressure)<=35){
+    routeText='La composizione respira bene: c’è spazio per vivere i luoghi senza trasformare il viaggio in una sequenza di partenze e check-in.';
+  }
+
   const traitText=traits.length?'Le vostre scelte raccontano soprattutto '+readable+'. ':'Le vostre risposte non chiedono un viaggio costruito intorno a un solo tema. ';
   let protect='Proteggerei ciò che ricorre con più coerenza nelle vostre scelte, prima ancora dei singoli luoghi.';
   const top=traits[0]&&traits[0].key;
   if(top==='food')protect='La gastronomia non è un extra: può diventare uno dei fili con cui scegliere quartieri, orari, mercati e momenti speciali.';
-  else if(top==='nature')protect='La natura sembra avere un peso vero: non la ridurrei a una sola escursione, ma le darei spazio dentro il ritmo del viaggio.';
+  else if(top==='nature')protect='La natura ha un peso vero: non la ridurrei a una sola escursione, ma le darei spazio dentro il ritmo del viaggio.';
   else if(top==='slow'||top==='depth')protect='Il tempo nei luoghi conta quanto i luoghi stessi: eviterei di sacrificare profondità soltanto per aumentare il numero delle tappe.';
   else if(top==='urban')protect='L’energia urbana è parte del vostro modo di viaggiare: sceglierei città e quartieri con caratteri diversi, non una semplice successione di grandi centri.';
   else if(top==='local'||top==='craft')protect='L’incontro con il territorio deve essere concreto: quartieri, botteghe, mercati e persone valgono più di una lista di attrazioni.';
   else if(top==='adventure'||top==='discovery')protect='La scoperta deve restare autentica: lascerei margine per luoghi meno ovvi, ma solo quando aggiungono davvero qualcosa alla rotta.';
-  const scopeText=scope.length===1?'Le alternative proposte restano dentro lo stesso Paese della rotta scelta.':'Le alternative restano dentro i Paesi già presenti nel vostro concept.';
-  return{title,text:traitText+routeText,protect,watch:scopeText};
+  else if(top==='sea')protect='Il mare deve cambiare il ritmo del viaggio, non essere soltanto una parentesi finale: gli darei tempo vero e una funzione precisa.';
+  const scope=geographicScope(state);
+  const watch=scope.length===1?'Qualunque alternativa resta dentro lo stesso Paese della rotta scelta.':'Qualunque alternativa resta dentro i Paesi già presenti nel vostro concept.';
+  return{title,text:traitText+routeText,protect,watch};
 }
 function clarityLabel(a){
   const c=Number(a&&a.analysisConfidence||0);
