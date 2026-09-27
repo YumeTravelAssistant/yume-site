@@ -6,7 +6,7 @@ const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelecto
 const uuid=()=>crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2)+Date.now();
 const missionId=()=>{const d=new Date(),yy=String(d.getFullYear()).slice(-2),mm=String(d.getMonth()+1).padStart(2,'0'),r=Math.random().toString(36).slice(2,7).toUpperCase();return 'YM-'+yy+mm+'-'+r};
 const objectiveLabels={market_access:'Market access',intelligence:'Ecosystem intelligence',sourcing:'Sourcing & partners',innovation:'Innovation & R&D',fair:'Fair / professional event',people:'Leadership / incentive'};
-const createState=()=>({missionId:missionId(),sessionToken:uuid(),step:1,objective:'',outcome:'',sector:'',size:'',geo:'japan',destinations:[],activities:[],people:null,seniority:'',period:'',duration:'',support:{agenda:80,logistics:75,language:50,onsite:60,followup:65},budget:'',constraints:'',company:'',name:'',email:'',phone:''});
+const createState=()=>({missionId:missionId(),sessionToken:uuid(),step:1,objective:'',outcome:'',sector:'',size:'',geo:'japan',destinations:[],activities:[],people:null,seniority:'',period:'',duration:'',support:{agenda:80,logistics:75,language:50,onsite:60,followup:65},budget:'',constraints:'',company:'',name:'',email:'',phone:'',consent:false});
 const defaultState=createState();
 let state=load();
 let navDepth=0;
@@ -150,10 +150,11 @@ function showStep(n,options={}){
 function resetMission(){
  if(!confirm('Vuoi iniziare una nuova missione? La bozza attuale verrà sostituita su questo dispositivo.'))return;
  state=createState();
+ navDepth=0;
  save();
  hydrate();
  renderActivities();
- showStep(1,{history:'push',scroll:'step'});
+ showStep(1,{history:'replace',scroll:'step'});
 }
 function hydrate(){
  qa('[data-objective]').forEach(b=>b.classList.toggle('is-selected',b.dataset.objective===state.objective));
@@ -162,6 +163,7 @@ function hydrate(){
  qa('[data-destination]').forEach(b=>b.classList.toggle('is-selected',state.destinations.includes(b.dataset.destination)));
  q('[data-outcome]').value=state.outcome;q('[data-sector]').value=state.sector;q('[data-size]').value=state.size;
  q('[data-people]').value=state.people??'';q('[data-seniority]').value=state.seniority;q('[data-period]').value=state.period;q('[data-duration]').value=state.duration;q('[data-constraints]').value=state.constraints;
+ q('[data-company]').value=state.company||'';q('[data-name]').value=state.name||'';q('[data-email]').value=state.email||'';q('[data-phone]').value=state.phone||'';q('[data-consent]').checked=Boolean(state.consent);
  Object.entries(state.support).forEach(([k,v])=>{const i=q('[data-support="'+k+'"]'),o=q('[data-support-value="'+k+'"]');if(i)i.value=v;if(o)o.textContent=v});
 }
 function renderActivities(){
@@ -187,8 +189,24 @@ function payload(shared=true){return{
  services:supportServices(),constraints:{notes:state.constraints||null,support:state.support,geo_mode:state.geo},
  notes:null,attribution:attribution(),consent_to_contact:shared===true,page_path:location.pathname,user_agent:navigator.userAgent
 }}
+function firstIncompleteStep(){
+ if(!state.objective)return 1;
+ if(!state.outcome.trim()||!state.sector)return 2;
+ if(!state.activities.length)return 4;
+ if(!state.people||state.people<1||!state.seniority)return 5;
+ if(!state.budget)return 7;
+ return 0;
+}
 async function share(){
- const status=q('[data-share-status]');state.company=q('[data-company]').value.trim();state.name=q('[data-name]').value.trim();state.email=q('[data-email]').value.trim();state.phone=q('[data-phone]').value.trim();
+ const status=q('[data-share-status]');state.company=q('[data-company]').value.trim();state.name=q('[data-name]').value.trim();state.email=q('[data-email]').value.trim();state.phone=q('[data-phone]').value.trim();state.consent=q('[data-consent]').checked;save();
+ const missing=firstIncompleteStep();
+ if(missing){
+  status.textContent='Completa prima i passaggi obbligatori del Mission Brief.';
+  status.className='yb-status is-error';
+  showStep(missing,{history:'push',scroll:'step'});
+  validateStep(missing);
+  return;
+ }
  if(!state.company||!state.name){status.textContent='Inserisci azienda e referente.';status.className='yb-status is-error';return}
  if(!state.email&&!state.phone){status.textContent='Inserisci almeno email o telefono.';status.className='yb-status is-error';return}
  if(state.email&&(!state.email.includes('@')||!state.email.includes('.'))){status.textContent='Inserisci un indirizzo email valido.';status.className='yb-status is-error';return}
@@ -216,6 +234,11 @@ function bind(){
  q('[data-duration]').onchange=e=>{state.duration=e.target.value;save();renderCanvas()};
  qa('[data-support]').forEach(i=>i.oninput=()=>{state.support[i.dataset.support]=Number(i.value);q('[data-support-value="'+i.dataset.support+'"]').textContent=i.value;save();renderCanvas()});
  q('[data-constraints]').oninput=e=>{state.constraints=e.target.value;save()};
+ q('[data-company]').oninput=e=>{state.company=e.target.value;save()};
+ q('[data-name]').oninput=e=>{state.name=e.target.value;save()};
+ q('[data-email]').oninput=e=>{state.email=e.target.value;save()};
+ q('[data-phone]').oninput=e=>{state.phone=e.target.value;save()};
+ q('[data-consent]').onchange=e=>{state.consent=e.target.checked;save()};
 
  q('[data-next]').onclick=()=>{if(validateStep(state.step))showStep(state.step+1,{history:'push',scroll:'preserve'})};
  q('[data-back]').onclick=()=>{
