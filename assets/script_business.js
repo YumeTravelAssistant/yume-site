@@ -90,6 +90,7 @@ function initMissionLabReliability(){
    delete draft.submittedMissionId;
    writeJson(STORAGE,draft);
    localStorage.removeItem(TRANSPORT);
+   try{history.replaceState({ybLabStep:1,ybLabDepth:0},'',location.href)}catch{}
   }
   localStorage.setItem(MIGRATION,'1');
  }catch(e){console.warn('Mission Lab v8 lifecycle migration skipped',e)}
