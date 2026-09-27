@@ -83,3 +83,103 @@
  .yb-lab-nav{min-height:48px}
  .yb-lab-nav--next{min-width:118px}
 }
+
+
+/* Mission Lab v8 · mobile-first refinement */
+.yb-mobile-summary-btn{display:none}
+.yb-field input[type="checkbox"]{
+  width:20px;height:20px;min-height:0;flex:0 0 20px;padding:0;margin:1px 0 0;
+  border-radius:6px;accent-color:var(--yb-accent);box-shadow:none
+}
+.yb-share-panel .yb-field--full>label:has(input[type="checkbox"]){
+  display:flex;align-items:flex-start;gap:10px;line-height:1.45
+}
+.yb-submit-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:18px}
+
+@media(max-width:820px){
+  .yb-lab-shell{padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+  .yb-lab-shell .yb-nav-wrap{padding:8px}
+  .yb-lab-shell .yb-nav{min-height:58px;padding:6px 7px 6px 8px;border-radius:16px}
+  .yb-lab-shell .yb-brand{min-width:0;gap:10px}
+  .yb-lab-shell .yb-brand-mark{width:36px;height:36px}
+  .yb-lab-shell .yb-brand-copy strong{font-size:10px}
+  .yb-lab-shell .yb-brand-copy span{font-size:7.5px;margin-top:5px;letter-spacing:.14em}
+  .yb-lab-shell .yb-menu-btn{width:44px;height:44px;border-radius:13px}
+
+  .yb-lab-workspace{width:calc(100vw - 16px);padding-top:82px;padding-bottom:30px}
+  .yb-lab-topbar{
+    display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 10px;align-items:center;
+    margin-bottom:10px;padding:0 4px
+  }
+  .yb-lab-id{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px;letter-spacing:.11em}
+  .yb-lab-progress-wrap{grid-column:1/-1;grid-row:2;width:100%;min-width:0}
+  .yb-lab-progress-wrap span{font-size:9px}
+
+  .yb-mobile-summary-btn{
+    display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 12px;
+    border:1px solid var(--yb-line);border-radius:12px;background:#fff;color:var(--yb-ink);
+    font-size:10px;font-weight:800
+  }
+
+  .yb-lab-stage{padding:18px;border-radius:20px;min-height:0}
+  .yb-lab-toolbar{justify-content:flex-end;margin-bottom:10px}
+  .yb-lab-actbar{display:none}
+  .yb-lab-restart{min-height:40px;padding:0 12px}
+
+  .yb-step-rail{
+    margin:0 -4px 18px;padding:6px;border-radius:14px;
+    scroll-padding-inline:6px
+  }
+  .yb-step-rail button{flex:0 0 104px;min-height:58px;padding:8px 7px}
+  .yb-step-rail button span{width:21px;height:21px;margin-bottom:5px}
+  .yb-step-rail button b{font-size:8.5px}
+
+  .yb-lab-step{min-height:0;scroll-margin-top:82px}
+  .yb-lab-step h2{font-size:clamp(31px,8vw,42px);line-height:1.02;margin-top:8px}
+  .yb-lab-step>p{font-size:13px;line-height:1.62}
+  .yb-option-grid{margin-top:20px;gap:8px}
+  .yb-option{min-height:0;padding:15px;border-radius:15px}
+  .yb-option strong{font-size:14px}
+  .yb-option span{font-size:11px;line-height:1.4}
+  .yb-chip-grid{gap:7px;margin-top:18px}
+  .yb-chip{min-height:42px;padding:9px 12px}
+
+  .yb-field{gap:6px}
+  .yb-field label{font-size:11px}
+  .yb-field input:not([type="checkbox"]),.yb-field select,.yb-field textarea{
+    min-height:52px;font-size:16px;padding:12px 13px;border-radius:13px
+  }
+  .yb-field textarea{min-height:116px}
+
+  .yb-lab-canvas{display:none!important;position:static;order:initial;margin-top:12px;padding:18px;border-radius:18px}
+  .yb-lab-canvas.is-mobile-open{display:block!important}
+
+  .yb-lab-actions{
+    position:sticky;bottom:calc(8px + env(safe-area-inset-bottom));margin:22px -4px 0;padding:8px;
+    border:1px solid rgba(17,25,35,.08);border-radius:15px;background:rgba(255,255,255,.97);
+    backdrop-filter:blur(16px);box-shadow:0 10px 28px rgba(17,25,35,.12);z-index:20
+  }
+  .yb-lab-nav{min-height:46px}
+  .yb-lab-stage:has(input:focus) .yb-lab-actions,
+  .yb-lab-stage:has(textarea:focus) .yb-lab-actions,
+  .yb-lab-stage:has(select:focus) .yb-lab-actions{position:static}
+
+  .yb-share-panel{padding:16px;border-radius:16px}
+  .yb-submit-row{display:grid;grid-template-columns:1fr;gap:8px}
+  .yb-submit-row .yb-btn,.yb-submit-row .yb-lab-nav{width:100%;min-height:50px}
+}
+
+@media(max-width:560px){
+  .yb-lab-shell{padding-bottom:calc(14px + env(safe-area-inset-bottom))}
+  .yb-lab-workspace{width:calc(100vw - 12px);padding-top:78px}
+  .yb-lab-stage{padding:15px;border-radius:18px}
+  .yb-lab-topbar{padding:0 2px}
+  .yb-lab-restart{font-size:9px}
+  .yb-step-rail{margin-left:-2px;margin-right:-2px}
+  .yb-step-rail button{flex-basis:98px}
+  .yb-lab-step{min-height:0}
+  .yb-lab-step h2{font-size:clamp(29px,8.8vw,38px)}
+  .yb-option{padding:14px}
+  .yb-share-panel{margin-left:-2px;margin-right:-2px}
+  .yb-status{font-size:12px;line-height:1.45}
+}
