@@ -58,7 +58,8 @@ function initMissionLabReliability(){
  if(path!=='/business/lab')return;
 
  const STORAGE='yumeBusinessMissionLabV2';
- const MIGRATION='yumeBusinessMissionLabV5Migrated';
+ const TRANSPORT='yumeBusinessMissionLabTransportV8';
+ const MIGRATION='yumeBusinessMissionLabV8Migrated';
  const nativeFetch=window.fetch.bind(window);
  const sleep=(ms)=>new Promise(resolve=>setTimeout(resolve,ms));
  const retryable=new Set([408,503,504,520]);
@@ -71,28 +72,27 @@ function initMissionLabReliability(){
   return 'YM-'+yy+mm+'-'+rand;
  };
 
- const readState=()=>{try{return JSON.parse(localStorage.getItem(STORAGE)||'{}')}catch{return{}}};
- const writeState=(s)=>{try{localStorage.setItem(STORAGE,JSON.stringify(s))}catch{}};
- const mark=(missionId,status)=>{
-  const s=readState();
-  s.transportLastAttempt={missionId,status,at:new Date().toISOString()};
-  writeState(s);
- };
+ const readJson=(key)=>{try{return JSON.parse(localStorage.getItem(key)||'{}')}catch{return{}}};
+ const writeJson=(key,value)=>{try{localStorage.setItem(key,JSON.stringify(value))}catch{}};
+ const mark=(missionId,status)=>writeJson(TRANSPORT,{missionId,status,at:new Date().toISOString()});
 
  try{
-  const s=readState();
-  const a=s.transportLastAttempt;
-  const firstV5=localStorage.getItem(MIGRATION)!=='1';
-  const previousSubmit=a&&a.missionId&&a.missionId===s.missionId&&['acknowledged','unknown','sending'].includes(a.status);
-  if((firstV5||previousSubmit)&&s.missionId){
-   s.missionId=newMissionId();
-   delete s.submittedAt;
-   delete s.submittedMissionId;
-   delete s.transportLastAttempt;
-   writeState(s);
+  const draft=readJson(STORAGE);
+  const transport=readJson(TRANSPORT);
+  const firstV8=localStorage.getItem(MIGRATION)!=='1';
+  const submittedInDraft=draft.submittedMissionId&&draft.submittedMissionId===draft.missionId;
+  const acknowledgedByTransport=transport.missionId&&transport.missionId===draft.missionId&&['acknowledged','acknowledged-after-conflict'].includes(transport.status);
+
+  if(draft.missionId&&(firstV8||submittedInDraft||acknowledgedByTransport)){
+   draft.missionId=newMissionId();
+   draft.step=1;
+   delete draft.submittedAt;
+   delete draft.submittedMissionId;
+   writeJson(STORAGE,draft);
+   localStorage.removeItem(TRANSPORT);
   }
   localStorage.setItem(MIGRATION,'1');
- }catch(e){console.warn('Mission Lab lifecycle migration skipped',e)}
+ }catch(e){console.warn('Mission Lab v8 lifecycle migration skipped',e)}
 
  window.fetch=async function(input,init){
   const method=String(init&&init.method||'GET').toUpperCase();
@@ -111,9 +111,6 @@ function initMissionLabReliability(){
    try{
     const response=await nativeFetch(rawUrl,requestInit);
 
-    // A retry can legitimately receive 409 when the first POST was already
-    // committed but Safari/WebKit lost the acknowledgement. mission_id is
-    // unique, so that conflict means this exact Mission Concept already exists.
     if(response.status===409&&attempt===2){
      if(missionId)mark(missionId,'acknowledged-after-conflict');
      return typeof Response!=='undefined'
