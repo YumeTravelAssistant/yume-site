@@ -45,6 +45,8 @@ const CLIENT_DIM_LABELS={
  privacy:'Privacy',romance:'Dimensione romantica',local:'Immersione locale'
 };
 const clientDimLabel=d=>CLIENT_DIM_LABELS[d]||(DATA.dimensionMeta&&DATA.dimensionMeta[d]&&DATA.dimensionMeta[d].label)||d;
+const KEYWORD_LABELS={food:'gastronomia',nightlife:'vita serale',slow:'tempo lento',beach:'spiagge','gold leaf':'foglia d’oro',heritage:'patrimonio',nature:'natura',urban:'città',craft:'artigianato'};
+const keywordLabel=k=>KEYWORD_LABELS[String(k).toLowerCase()]||k;
 const matchLabel=c=>({
  'STRUCTURAL MATCH':'Molto coerente con il viaggio',
  'NATURAL MATCH':'Affinità naturale',
@@ -142,6 +144,7 @@ function editorialVerdict(a,state){
   const conf=Number(a.analysisConfidence||0);
   let title='Una base che vi assomiglia';
   if(conf<72) title='La direzione c’è. Va ancora resa più vostra.';
+  else if(keys.includes('food')&&keys.includes('nature')&&keys.includes('craft')) title='Un viaggio fatto di sapori, natura e dettagli';
   else if(keys.includes('food')&&keys.includes('local')) title='Un viaggio da vivere anche a tavola';
   else if(keys.includes('nature')&&keys.includes('adventure')) title='Un viaggio che ha bisogno di spazio e movimento';
   else if(keys.includes('urban')&&(keys.includes('nightlife')||keys.includes('discovery'))) title='Un viaggio acceso, libero e contemporaneo';
@@ -184,6 +187,7 @@ function clarityLabel(a){
 }
 function profileTitle(a){
   const t=strongestReadableTraits(a).map(x=>x.key);
+  if(t.includes('food')&&t.includes('nature')&&t.includes('craft'))return'Sapori, natura e dettagli da ricordare';
   if(t.includes('food')&&t.includes('local'))return'Il gusto come modo di entrare nei luoghi';
   if(t.includes('nature')&&t.includes('adventure'))return'Natura, scoperta e libertà di movimento';
   if(t.includes('slow')&&t.includes('depth'))return'Meno tappe. Più tempo dentro i luoghi';
@@ -260,14 +264,13 @@ function matchCards(a,state){
   const rows=scopedRanking(a,state).slice(0,6),selected=new Set(state.destinations||[]);
   if(!rows.length)return '<p class="muted">Nessuna proposta aggiuntiva è abbastanza solida dentro il perimetro geografico scelto.</p>';
   return rows.map((r,i)=>{
-    const range=r.affinityRange||[r.affinity,r.affinity];
     const drivers=(r&&r.semantic&&r.semantic.breakdown?r.semantic.breakdown:[]).slice(0,3);
     const why=drivers.length
       ? drivers.map(x=>clientDimLabel(x.dimension).toLowerCase()).join(', ').replace(/, ([^,]*)$/, ' e $1')
       : 'il vostro modo di viaggiare';
     const season=r.feasibility&&r.feasibility.season&&r.feasibility.season.score;
     const place=selected.has(r.id)?' · già nella vostra rotta':'';
-    return '<article class="match-card"><div class="rank">'+String(i+1).padStart(2,'0')+'</div><div><small>'+esc(matchLabel(r.classification))+esc(place)+'</small><h3>'+esc(r.destination.name)+'</h3><p class="human-copy">Ci torna soprattutto per '+esc(why)+'.</p><div class="scoreline"><b>Affinità '+pct(r.affinity)+'</b><span>lettura '+pct(range[0])+'–'+pct(range[1])+'</span></div><div class="mini-metrics"><span>Fattibilità <b>'+pct(r.feasibility&&r.feasibility.score)+'</b></span><span>Solidità <b>'+pct(r.robustness)+'</b></span>'+(Number.isFinite(Number(season))?'<span>Periodo <b>'+pct(season)+'</b></span>':'')+'</div></div></article>';
+    return '<article class="match-card"><div class="rank">'+String(i+1).padStart(2,'0')+'</div><div><small>'+esc(matchLabel(r.classification))+esc(place)+'</small><h3>'+esc(r.destination.name)+'</h3><p class="human-copy">Ci torna soprattutto per '+esc(why)+'.</p><div class="scoreline"><b>Affinità '+pct(r.affinity)+'</b></div><div class="mini-metrics"><span>Fattibilità <b>'+pct(r.feasibility&&r.feasibility.score)+'</b></span>'+(Number.isFinite(Number(season))?'<span>Periodo <b>'+pct(season)+'</b></span>':'')+'</div></div></article>';
   }).join('');
 }
 function surpriseCards(a,state){
@@ -286,7 +289,7 @@ function destinationDNACard(d,a,state){
   const signature=Object.entries(d.dna||{}).map(([key,value])=>({key,value,label:clientDimLabel(key)})).sort((x,y)=>y.value-x.value).slice(0,5);
   const alignment=(r&&r.semantic&&r.semantic.breakdown?r.semantic.breakdown:[]).slice(0,3);
   const nights=state.nights&&state.nights[d.id]!=null?state.nights[d.id]:d.ideal;
-  return '<article class="dest-dna"><header><div><small>'+esc(ROLE_LABELS[role&&role.role]||'TAPPA DI SUPPORTO')+' · '+esc(d.region||d.country)+'</small><h3>'+esc(d.name)+'</h3></div><div class="affinity">'+(r?pct(r.affinity):'—')+'<small>AFFINITÀ</small></div></header><div class="mini-metrics"><span>'+nights+' notti</span><span>Fattibilità <b>'+(r?pct(r.feasibility&&r.feasibility.score):'—')+'</b></span><span>Solidità <b>'+(r?pct(r.robustness):'—')+'</b></span></div><h4>Destination DNA · il carattere del luogo</h4><div class="signature-bars">'+signature.map(x=>bar(x.label,x.value,'LUOGO')).join('')+'</div><h4>Perché può funzionare per voi</h4><ul class="driver-list">'+(alignment.length?alignment.map(x=>'<li><b>'+esc(clientDimLabel(x.dimension))+'</b><span>incontro '+pct(x.fit)+' · voi '+pct(x.traveller)+' · luogo '+pct(x.destination)+'</span></li>').join(''):'<li><span>Segnale non abbastanza forte per una spiegazione specifica.</span></li>')+'</ul>'+(role?'<p class="role-why">'+esc(role.why)+'</p>':'')+'</article>';
+  return '<article class="dest-dna"><header><div><small>'+esc(ROLE_LABELS[role&&role.role]||'TAPPA DI SUPPORTO')+' · '+esc(d.region||d.country)+'</small><h3>'+esc(d.name)+'</h3></div><div class="affinity">'+(r?pct(r.affinity):'—')+'<small>AFFINITÀ</small></div></header><div class="mini-metrics"><span>'+nights+' notti</span><span>Fattibilità <b>'+(r?pct(r.feasibility&&r.feasibility.score):'—')+'</b></span></div><h4>Destination DNA · il carattere del luogo</h4><div class="signature-bars">'+signature.map(x=>bar(x.label,x.value,'LUOGO')).join('')+'</div><h4>Perché può funzionare per voi</h4><ul class="driver-list">'+(alignment.length?alignment.map(x=>'<li><b>'+esc(clientDimLabel(x.dimension))+'</b><span>incontro '+pct(x.fit)+' · voi '+pct(x.traveller)+' · luogo '+pct(x.destination)+'</span></li>').join(''):'<li><span>Segnale non abbastanza forte per una spiegazione specifica.</span></li>')+'</ul>'+(role?'<p class="role-why">'+esc(role.why)+'</p>':'')+'</article>';
 }
 function routeMetrics(a){
   const r=a.route||{};
@@ -371,7 +374,7 @@ function routeSummary(state,a,sel){
   const roleMap=Object.fromEntries((a.routeRoles||[]).map(r=>[r.id,r]));
   return sel.map((d,i)=>{
     const rr=roleMap[d.id],nights=state.nights&&state.nights[d.id]!=null?state.nights[d.id]:d.ideal;
-    return '<article><em>'+String(i+1).padStart(2,'0')+'</em><div><small>'+esc(ROLE_LABELS[rr&&rr.role]||'TAPPA DI SUPPORTO')+'</small><b>'+esc(d.name)+'</b><small>'+esc(d.region||d.country)+' · '+nights+' notti</small><p>'+esc((d.keywords||[]).slice(0,5).join(' · '))+'</p></div></article>';
+    return '<article><em>'+String(i+1).padStart(2,'0')+'</em><div><small>'+esc(ROLE_LABELS[rr&&rr.role]||'TAPPA DI SUPPORTO')+'</small><b>'+esc(d.name)+'</b><small>'+esc(d.region||d.country)+' · '+nights+' notti</small><p>'+esc((d.keywords||[]).slice(0,5).map(keywordLabel).join(' · '))+'</p></div></article>';
   }).join('');
 }
 function buildHtml(state,engine){
