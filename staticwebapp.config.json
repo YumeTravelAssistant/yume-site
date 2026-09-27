@@ -1,6 +1,98 @@
 {
   "routes": [
     {
+      "route": "/business",
+      "rewrite": "/business.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet"
+      }
+    },
+    {
+      "route": "/business/",
+      "rewrite": "/business.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet"
+      }
+    },
+    {
+      "route": "/business/soluzioni",
+      "rewrite": "/business-solutions.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet"
+      }
+    },
+    {
+      "route": "/business/soluzioni/",
+      "rewrite": "/business-solutions.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet"
+      }
+    },
+    {
+      "route": "/business/metodo",
+      "rewrite": "/business-method.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet"
+      }
+    },
+    {
+      "route": "/business/metodo/",
+      "rewrite": "/business-method.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet"
+      }
+    },
+    {
+      "route": "/business/lab",
+      "rewrite": "/business-lab.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet"
+      }
+    },
+    {
+      "route": "/business/lab/",
+      "rewrite": "/business-lab.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet"
+      }
+    },
+    {
+      "route": "/business.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet"
+      }
+    },
+    {
+      "route": "/business-solutions.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet"
+      }
+    },
+    {
+      "route": "/business-method.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet"
+      }
+    },
+    {
+      "route": "/business-lab.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet"
+      }
+    },
+    {
       "route": "/honeymoon/lab",
       "rewrite": "/honeymoon-lab.html",
       "headers": {
