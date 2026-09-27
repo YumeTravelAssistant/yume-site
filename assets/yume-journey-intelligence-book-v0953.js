@@ -286,7 +286,7 @@ function destinationDNACard(d,a,state){
   const signature=Object.entries(d.dna||{}).map(([key,value])=>({key,value,label:clientDimLabel(key)})).sort((x,y)=>y.value-x.value).slice(0,5);
   const alignment=(r&&r.semantic&&r.semantic.breakdown?r.semantic.breakdown:[]).slice(0,3);
   const nights=state.nights&&state.nights[d.id]!=null?state.nights[d.id]:d.ideal;
-  return '<article class="dest-dna"><header><div><small>'+esc(role&&role.role||'SUPPORT')+' · '+esc(d.region||d.country)+'</small><h3>'+esc(d.name)+'</h3></div><div class="affinity">'+(r?pct(r.affinity):'—')+'<small>AFFINITÀ</small></div></header><div class="mini-metrics"><span>'+nights+' notti</span><span>Fattibilità <b>'+(r?pct(r.feasibility&&r.feasibility.score):'—')+'</b></span><span>Solidità <b>'+(r?pct(r.robustness):'—')+'</b></span></div><h4>Destination DNA · il carattere del luogo</h4><div class="signature-bars">'+signature.map(x=>bar(x.label,x.value,'LUOGO')).join('')+'</div><h4>Perché può funzionare per voi</h4><ul class="driver-list">'+(alignment.length?alignment.map(x=>'<li><b>'+esc(clientDimLabel(x.dimension))+'</b><span>incontro '+pct(x.fit)+' · voi '+pct(x.traveller)+' · luogo '+pct(x.destination)+'</span></li>').join(''):'<li><span>Segnale non abbastanza forte per una spiegazione specifica.</span></li>')+'</ul>'+(role?'<p class="role-why">'+esc(role.why)+'</p>':'')+'</article>';
+  return '<article class="dest-dna"><header><div><small>'+esc(ROLE_LABELS[role&&role.role]||'TAPPA DI SUPPORTO')+' · '+esc(d.region||d.country)+'</small><h3>'+esc(d.name)+'</h3></div><div class="affinity">'+(r?pct(r.affinity):'—')+'<small>AFFINITÀ</small></div></header><div class="mini-metrics"><span>'+nights+' notti</span><span>Fattibilità <b>'+(r?pct(r.feasibility&&r.feasibility.score):'—')+'</b></span><span>Solidità <b>'+(r?pct(r.robustness):'—')+'</b></span></div><h4>Destination DNA · il carattere del luogo</h4><div class="signature-bars">'+signature.map(x=>bar(x.label,x.value,'LUOGO')).join('')+'</div><h4>Perché può funzionare per voi</h4><ul class="driver-list">'+(alignment.length?alignment.map(x=>'<li><b>'+esc(clientDimLabel(x.dimension))+'</b><span>incontro '+pct(x.fit)+' · voi '+pct(x.traveller)+' · luogo '+pct(x.destination)+'</span></li>').join(''):'<li><span>Segnale non abbastanza forte per una spiegazione specifica.</span></li>')+'</ul>'+(role?'<p class="role-why">'+esc(role.why)+'</p>':'')+'</article>';
 }
 function routeMetrics(a){
   const r=a.route||{};
@@ -371,7 +371,7 @@ function routeSummary(state,a,sel){
   const roleMap=Object.fromEntries((a.routeRoles||[]).map(r=>[r.id,r]));
   return sel.map((d,i)=>{
     const rr=roleMap[d.id],nights=state.nights&&state.nights[d.id]!=null?state.nights[d.id]:d.ideal;
-    return '<article><em>'+String(i+1).padStart(2,'0')+'</em><div><small>'+esc(rr&&rr.role||'SUPPORT')+'</small><b>'+esc(d.name)+'</b><small>'+esc(d.region||d.country)+' · '+nights+' notti</small><p>'+esc((d.keywords||[]).slice(0,5).join(' · '))+'</p></div></article>';
+    return '<article><em>'+String(i+1).padStart(2,'0')+'</em><div><small>'+esc(ROLE_LABELS[rr&&rr.role]||'TAPPA DI SUPPORTO')+'</small><b>'+esc(d.name)+'</b><small>'+esc(d.region||d.country)+' · '+nights+' notti</small><p>'+esc((d.keywords||[]).slice(0,5).join(' · '))+'</p></div></article>';
   }).join('');
 }
 function buildHtml(state,engine){
