@@ -104,22 +104,28 @@ function initMissionLabReliability(){
   try{missionId=JSON.parse(init&&init.body||'{}').mission_id||''}catch{}
   if(missionId)mark(missionId,'sending');
 
-  const url=new URL(rawUrl,location.href);
-  url.searchParams.set('on_conflict','mission_id');
-
-  const headers=new Headers(init&&init.headers||{});
-  headers.set('Prefer','resolution=ignore-duplicates,return=minimal');
-
-  const requestInit={...init,headers};
+  const requestInit={...init};
   let lastError=null;
 
   for(let attempt=1;attempt<=2;attempt++){
    try{
-    const response=await nativeFetch(url.toString(),requestInit);
+    const response=await nativeFetch(rawUrl,requestInit);
+
+    // A retry can legitimately receive 409 when the first POST was already
+    // committed but Safari/WebKit lost the acknowledgement. mission_id is
+    // unique, so that conflict means this exact Mission Concept already exists.
+    if(response.status===409&&attempt===2){
+     if(missionId)mark(missionId,'acknowledged-after-conflict');
+     return typeof Response!=='undefined'
+      ? new Response(null,{status:204,statusText:'Already received'})
+      : {ok:true,status:204,text:async()=>''};
+    }
+
     if(attempt===1&&retryable.has(response.status)){
      await sleep(650);
      continue;
     }
+
     if(missionId)mark(missionId,response.ok?'acknowledged':'http-'+response.status);
     return response;
    }catch(error){
