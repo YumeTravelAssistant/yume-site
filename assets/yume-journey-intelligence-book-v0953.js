@@ -206,19 +206,26 @@ function matchDrivers(r){
   const list=(r&&r.semantic&&r.semantic.breakdown?r.semantic.breakdown:[]).slice(0,4);
   return list.length?list.map(x=>'<li><b>'+esc(x.label||x.dimension)+'</b><span>fit '+pct(x.fit)+' · voi '+pct(x.traveller)+' · luogo '+pct(x.destination)+'</span></li>').join(''):'<li><span>Driver non disponibili.</span></li>';
 }
-function matchCards(a){
+function matchCards(a,state){
   if(!a)return '';
-  return (a.destinationRanking||[]).slice(0,6).map((r,i)=>{
+  const rows=scopedRanking(a,state).slice(0,6);
+  if(!rows.length)return '<p class="muted">Nessuna proposta aggiuntiva è abbastanza solida dentro il perimetro geografico scelto.</p>';
+  return rows.map((r,i)=>{
     const range=r.affinityRange||[r.affinity,r.affinity];
-    return '<article class="match-card"><div class="rank">'+String(i+1).padStart(2,'0')+'</div><div><small>'+esc(r.classification||'MATCH')+'</small><h3>'+esc(r.destination.name)+'</h3><div class="scoreline"><b>Affinity '+pct(r.affinity)+'</b><span>range '+pct(range[0])+'–'+pct(range[1])+'</span></div><div class="mini-metrics"><span>Feasibility <b>'+pct(r.feasibility&&r.feasibility.score)+'</b></span><span>Robustness <b>'+pct(r.robustness)+'</b></span><span>Season <b>'+pct(r.feasibility&&r.feasibility.season&&r.feasibility.season.score)+'</b></span></div><ul class="driver-list">'+matchDrivers(r)+'</ul></div></article>';
+    const drivers=(r&&r.semantic&&r.semantic.breakdown?r.semantic.breakdown:[]).slice(0,3);
+    const why=drivers.length
+      ? drivers.map(x=>esc(x.label||x.dimension).toLowerCase()).join(', ').replace(/, ([^,]*)$/, ' e $1')
+      : 'il vostro modo di viaggiare';
+    const season=r.feasibility&&r.feasibility.season&&r.feasibility.season.score;
+    return '<article class="match-card"><div class="rank">'+String(i+1).padStart(2,'0')+'</div><div><small>'+esc(r.classification||'COERENTE')+'</small><h3>'+esc(r.destination.name)+'</h3><p class="human-copy">Ci torna soprattutto per '+why+'.</p><div class="scoreline"><b>Affinità '+pct(r.affinity)+'</b><span>lettura '+pct(range[0])+'–'+pct(range[1])+'</span></div><div class="mini-metrics"><span>Fattibilità <b>'+pct(r.feasibility&&r.feasibility.score)+'</b></span><span>Solidità <b>'+pct(r.robustness)+'</b></span>'+(Number.isFinite(Number(season))?'<span>Periodo <b>'+pct(season)+'</b></span>':'')+'</div></div></article>';
   }).join('');
 }
-function surpriseCards(a){
-  const items=(a&&a.surpriseMatches||[]).slice(0,3);
-  if(!items.length)return '<p class="muted">Nessun Surprise Match supera oggi le soglie minime di affinità e valore marginale.</p>';
+function surpriseCards(a,state){
+  const items=scopedSurprises(a,state).slice(0,3);
+  if(!items.length)return '<div class="soft-note"><h3>Nessuna deviazione necessaria</h3><p>Le alternative emerse non aggiungono abbastanza valore da giustificare un cambio di direzione. Per ora lavorerei meglio sui luoghi già scelti.</p></div>';
   return items.map((r,i)=>{
-    const dims=(r.marginal&&r.marginal.newDimensions||[]).slice(0,4).map(x=>x.label+' +'+Math.round(x.gain));
-    return '<article class="'+(i===0?'surprise hero-surprise':'surprise')+'"><small>'+(i===0?'SURPRISE MATCH PRINCIPALE':'SURPRISE MATCH')+'</small><h3>'+esc(r.destination.name)+'</h3><p class="surprise-copy">'+(i===0?esc(r.destination.name)+' non era nella vostra lista. Ma il vostro DNA la vede.':'Compatibilità emersa fuori dalla rotta attuale.')+'</p><div class="mini-metrics"><span>Affinity <b>'+pct(r.affinity)+'</b></span><span>Marginal Value <b>'+pct(r.marginal&&r.marginal.score)+'</b></span><span>Robustness <b>'+pct(r.robustness)+'</b></span><span>Feasibility <b>'+pct(r.feasibility&&r.feasibility.score)+'</b></span></div>'+chips(dims,'Nessuna nuova dimensione dominante')+'</article>';
+    const dims=(r.marginal&&r.marginal.newDimensions||[]).slice(0,4).map(x=>x.label);
+    return '<article class="'+(i===0?'surprise hero-surprise':'surprise')+'"><small>'+(i===0?'UNA POSSIBILITÀ DA TENERE D’OCCHIO':'ALTRA IPOTESI COERENTE')+'</small><h3>'+esc(r.destination.name)+'</h3><p class="surprise-copy">'+(i===0?'Non era tra le vostre prime scelte, ma introduce qualcosa che oggi manca alla rotta.':'Resta coerente con il vostro stile, senza uscire dal perimetro geografico scelto.')+'</p><div class="mini-metrics"><span>Affinità <b>'+pct(r.affinity)+'</b></span><span>Valore aggiunto <b>'+pct(r.marginal&&r.marginal.score)+'</b></span><span>Solidità <b>'+pct(r.robustness)+'</b></span></div>'+chips(dims,'Nessuna nuova dimensione dominante')+'</article>';
   }).join('');
 }
 function destinationDNACard(d,a,state){
@@ -262,19 +269,28 @@ function removalRows(a){
   const items=a.counterfactuals&&a.counterfactuals.removals||[];
   return items.map(x=>'<tr><td><b>'+esc(x.name)+'</b></td><td>'+pct(x.structurality)+'</td><td>'+signed(x.delta)+'</td><td>'+signed(x.coverageDelta)+'</td><td>'+signed(x.pressureDelta)+'</td><td>'+signed(x.distanceDelta)+' km</td></tr>').join('');
 }
-function additionCards(a){
-  const items=a.counterfactuals&&a.counterfactuals.additions||[];
-  return items.slice(0,6).map(x=>{
-    const dims=(x.marginal&&x.marginal.newDimensions||[]).slice(0,3).map(d=>d.label+' +'+Math.round(d.gain));
-    return '<article class="addition"><small>CANDIDATE ADDITION</small><h3>'+esc(x.name)+'</h3><div class="mini-metrics"><span>Affinity <b>'+pct(x.affinity)+'</b></span><span>Feasibility <b>'+pct(x.feasibility)+'</b></span><span>Marginal <b>'+pct(x.marginal&&x.marginal.score)+'</b></span></div><p>Coverage '+signed(x.marginal&&x.marginal.coverageGain)+' · Route '+signed(x.marginal&&x.marginal.routeDelta)+' · Pressure +'+pct(x.marginal&&x.marginal.pressureCost)+'</p>'+chips(dims,'Nessuna nuova dimensione forte')+'</article>';
+function additionCards(a,state){
+  const items=scopedAdditions(a,state).slice(0,6);
+  if(!items.length)return '<p class="muted">Non vediamo, al momento, una tappa aggiuntiva che migliori davvero la composizione senza appesantirla.</p>';
+  return items.map(x=>{
+    const dims=(x.marginal&&x.marginal.newDimensions||[]).slice(0,3).map(d=>d.label);
+    const pressure=pct(x.marginal&&x.marginal.pressureCost);
+    const judgement=pressure>=30?'Interessante, ma costosa in termini di ritmo.':pressure>=20?'Può avere senso solo se sostituisce, non se si somma.':'Può essere esplorata senza snaturare troppo il viaggio.';
+    return '<article class="addition"><small>SE VOLessIMO CAMBIARE QUALCOSA</small><h3>'+esc(x.name)+'</h3><p>'+esc(judgement)+'</p><div class="mini-metrics"><span>Affinità <b>'+pct(x.affinity)+'</b></span><span>Fattibilità <b>'+pct(x.feasibility)+'</b></span><span>Valore aggiunto <b>'+pct(x.marginal&&x.marginal.score)+'</b></span></div>'+chips(dims,'Nessun tratto nuovo dominante')+'</article>';
   }).join('');
 }
-function scenarioCards(a){
-  const s=a.scenarios||{},cards=[];
-  if(s.protectTime)cards.push({ey:'PROTECT TIME',title:'Proteggere il tempo',body:'Rotta: '+routeNames(s.protectTime.route).join(' → '),foot:'Removed: '+(routeNames(s.protectTime.removed).join(', ')||'nessuno')+' · Pressure '+pct(s.protectTime.pressure)+' · Δ '+signed(s.protectTime.impact&&s.protectTime.impact.pressure)});
-  if(s.protectIdentity)cards.push({ey:'PROTECT IDENTITY',title:'Proteggere il DNA',body:'Rotta: '+routeNames(s.protectIdentity.route).join(' → '),foot:'Removed: '+(routeNames(s.protectIdentity.removed).join(', ')||'nessuno')+' · Coverage '+pct(s.protectIdentity.coverage)});
-  if(s.protectExperiences)cards.push({ey:'PROTECT EXPERIENCE',title:'Proteggere le esperienze',body:'Azione: '+esc(s.protectExperiences.action||'none')+' · Rotta: '+routeNames(s.protectExperiences.route).join(' → '),foot:'Added: '+(routeName(s.protectExperiences.added)||'—')+' · Removed: '+(routeName(s.protectExperiences.removed)||'—')});
-  if(s.protectValue)cards.push({ey:'PROTECT VALUE',title:'Proteggere il valore',body:'Destinazioni con migliore relazione relativa tra affinità, fattibilità e burden operativo.',foot:(s.protectValue.destinations||[]).slice(0,6).map(x=>x.name+' '+x.efficiency).join(' · ')});
+function scenarioCards(a,state){
+  const sc=a&&a.scenarios||{},cards=[];
+  if(sc.protectTime)cards.push({ey:'SE VOLESSIMO PIÙ RESPIRO',title:'Proteggere il tempo',body:'Alleggerendo la rotta, la priorità sarebbe restare più a lungo nei luoghi che tengono meglio insieme il vostro viaggio.',foot:'Ipotesi: '+routeNames(sc.protectTime.route).join(' → ')});
+  if(sc.protectIdentity)cards.push({ey:'SE VOLESSIMO ESSERE PIÙ FEDELI A VOI',title:'Proteggere il carattere del viaggio',body:'Questa lettura privilegia le tappe che coprono meglio i tratti più forti del vostro Travel DNA.',foot:'Ipotesi: '+routeNames(sc.protectIdentity.route).join(' → ')});
+  if(sc.protectExperiences){
+    const added=sc.protectExperiences.added;
+    if(!added||inScopeDestination(DATA.destinationById[added],state)){
+      cards.push({ey:'SE VOLESSIMO PROTEGGERE LE ESPERIENZE',title:'Dare priorità ai momenti irrinunciabili',body:sc.protectExperiences.action==='review'?'Prima di aggiungere un altro luogo, riorganizzerei la rotta attuale intorno ai vostri must.':'L’idea è costruire la geografia intorno alle esperienze che avete indicato come davvero importanti.',foot:'Ipotesi: '+routeNames(sc.protectExperiences.route||[]).join(' → ')});
+    }
+  }
+  const value=scopedProtectValue(a,state);
+  if(value.length)cards.push({ey:'SE VOLESSIMO PROTEGGERE IL VALORE',title:'Spendere meglio, non semplicemente meno',body:'Qui guardiamo ai luoghi che tengono insieme affinità, fattibilità e semplicità operativa.',foot:value.slice(0,6).map(x=>x.name).join(' · ')});
   return cards.map(c=>'<article class="scenario"><small>'+c.ey+'</small><h3>'+c.title+'</h3><p>'+c.body+'</p><footer>'+c.foot+'</footer></article>').join('');
 }
 function constraintBlock(a){
@@ -284,8 +300,9 @@ function constraintBlock(a){
 }
 function firstReadCards(engine){
   const rules=engine&&engine.narrative&&engine.narrative.firstRead||[];
-  if(!rules.length)return '<p class="muted">Nessuna regola esperta attivata.</p>';
-  return rules.slice(0,8).map(r=>'<article class="read-card"><small>'+esc(r.category||'YUME RULE')+'</small><h3>'+esc(r.title||r.id)+'</h3><p>'+esc(r.copy||'')+'</p>'+(r.action?'<footer>'+esc(r.action)+'</footer>':'')+'</article>').join('');
+  if(!rules.length)return '<p class="muted">Le vostre scelte sono abbastanza coerenti da non richiedere particolari avvertenze.</p>';
+  const label={confidence:'DA CHIARIRE',protect:'DA PROTEGGERE',tension:'DA BILANCIARE',route:'SULLA ROTTA',budget:'SUL BUDGET',season:'SUL PERIODO'};
+  return rules.slice(0,6).map(r=>'<article class="read-card"><small>'+esc(label[r.category]||'PRIMA LETTURA')+'</small><h3>'+esc(r.title||r.id)+'</h3><p>'+esc(r.copy||'')+'</p>'+(r.action?'<footer>'+esc(r.action)+'</footer>':'')+'</article>').join('');
 }
 function questions(engine){
   const q=engine&&engine.narrative&&engine.narrative.questions||[];
