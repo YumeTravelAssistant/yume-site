@@ -6,7 +6,8 @@ const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelecto
 const uuid=()=>crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2)+Date.now();
 const missionId=()=>{const d=new Date(),yy=String(d.getFullYear()).slice(-2),mm=String(d.getMonth()+1).padStart(2,'0'),r=Math.random().toString(36).slice(2,7).toUpperCase();return 'YM-'+yy+mm+'-'+r};
 const objectiveLabels={market_access:'Market access',intelligence:'Ecosystem intelligence',sourcing:'Sourcing & partners',innovation:'Innovation & R&D',fair:'Fair / professional event',people:'Leadership / incentive'};
-const defaultState={missionId:missionId(),sessionToken:uuid(),step:1,objective:'',outcome:'',sector:'',size:'',geo:'japan',destinations:[],activities:[],people:null,seniority:'',period:'',duration:'',support:{agenda:80,logistics:75,language:50,onsite:60,followup:65},budget:'',constraints:'',company:'',name:'',email:'',phone:''};
+const createState=()=>({missionId:missionId(),sessionToken:uuid(),step:1,objective:'',outcome:'',sector:'',size:'',geo:'japan',destinations:[],activities:[],people:null,seniority:'',period:'',duration:'',support:{agenda:80,logistics:75,language:50,onsite:60,followup:65},budget:'',constraints:'',company:'',name:'',email:'',phone:''});
+const defaultState=createState();
 let state=load();
 function load(){try{const x=JSON.parse(localStorage.getItem(STORAGE)||'null');return x?{...defaultState,...x,support:{...defaultState.support,...(x.support||{})}}:{...defaultState}}catch{return{...defaultState}}}
 function save(){try{localStorage.setItem(STORAGE,JSON.stringify(state))}catch{}}
@@ -40,13 +41,117 @@ function renderCanvas(){
  q('[data-final-title]')&&(q('[data-final-title]').textContent=summary());
  if(q('[data-final-summary]'))q('[data-final-summary]').textContent=(state.outcome?state.outcome+' ':'')+(state.destinations.length?'Geografia: '+state.destinations.join(' → ')+'. ':'')+(state.activities.length?'Moduli prioritari: '+state.activities.slice(0,5).join(', ')+'.':'');
 }
-function showStep(n){
- state.step=Math.max(1,Math.min(8,n));qa('.yb-lab-step').forEach(x=>x.classList.toggle('is-active',+x.dataset.step===state.step));
+function announceStepError(message,focusTarget){
+ const step=q('.yb-lab-step.is-active');
+ if(!step)return;
+ let box=q('.yb-step-error',step);
+ if(!box){
+  box=document.createElement('div');
+  box.className='yb-step-error';
+  box.setAttribute('role','alert');
+  const intro=q('p',step);
+  (intro||step.firstElementChild)?.insertAdjacentElement('afterend',box);
+ }
+ box.textContent=message||'';
+ box.hidden=!message;
+ if(message&&focusTarget&&typeof focusTarget.focus==='function')focusTarget.focus({preventScroll:true});
+}
+function clearStepError(){
+ const step=q('.yb-lab-step.is-active');
+ const box=step&&q('.yb-step-error',step);
+ if(box){box.textContent='';box.hidden=true}
+ qa('.is-invalid',step||document).forEach(x=>x.classList.remove('is-invalid'));
+}
+function validateStep(step){
+ clearStepError();
+ if(step===1&&!state.objective){
+  const target=q('[data-objective]');
+  qa('[data-objective]').forEach(x=>x.classList.add('is-invalid'));
+  announceStepError('Scegli l’obiettivo principale della missione.',target);
+  return false;
+ }
+ if(step===2){
+  if(!state.outcome.trim()){
+   const target=q('[data-outcome]');target.classList.add('is-invalid');
+   announceStepError('Descrivi il risultato che vuoi ottenere al ritorno.',target);
+   return false;
+  }
+  if(!state.sector){
+   const target=q('[data-sector]');target.classList.add('is-invalid');
+   announceStepError('Seleziona il settore dell’azienda o del progetto.',target);
+   return false;
+  }
+ }
+ if(step===4&&!state.activities.length){
+  const target=q('[data-activity]');
+  announceStepError('Seleziona almeno un’attività da includere nella missione.',target);
+  return false;
+ }
+ if(step===5){
+  if(!state.people||state.people<1){
+   const target=q('[data-people]');target.classList.add('is-invalid');
+   announceStepError('Indica il numero previsto di partecipanti.',target);
+   return false;
+  }
+  if(!state.seniority){
+   const target=q('[data-seniority]');target.classList.add('is-invalid');
+   announceStepError('Indica la seniority prevalente della delegazione.',target);
+   return false;
+  }
+ }
+ if(step===7&&!state.budget){
+  const target=q('[data-budget]');
+  announceStepError('Scegli un range di budget, oppure “Da definire”.',target);
+  return false;
+ }
+ return true;
+}
+function updateStepNavigation(){
+ qa('[data-step-jump]').forEach(b=>{
+  const n=+b.dataset.stepJump;
+  b.classList.toggle('is-active',n===state.step);
+  b.classList.toggle('is-complete',n<state.step);
+  b.setAttribute('aria-current',n===state.step?'step':'false');
+ });
+}
+function showStep(n,options={}){
+ const target=Math.max(1,Math.min(8,n));
+ const preserveY=window.scrollY;
+ state.step=target;
+ qa('.yb-lab-step').forEach(x=>x.classList.toggle('is-active',+x.dataset.step===state.step));
  const act=currentAct(state.step),inside=act===1?state.step:act===2?state.step-2:act===3?state.step-5:1,total=act===1?2:act===2?3:act===3?2:1;
- q('[data-step-count]').textContent='Banco '+act+' · '+inside+'/'+total;q('[data-progress]').style.width=(state.step/8*100)+'%';
+ q('[data-step-count]').textContent='Banco '+act+' · '+inside+'/'+total;
+ q('[data-progress]').style.width=(state.step/8*100)+'%';
  qa('[data-act]').forEach(b=>b.classList.toggle('is-active',+b.dataset.act===act));
- q('[data-back]').disabled=state.step===1;q('[data-next]').hidden=state.step===8;
- save();renderCanvas();window.scrollTo({top:0,behavior:'smooth'});
+ q('[data-back]').disabled=state.step===1;
+ q('[data-next]').hidden=state.step===8;
+ updateStepNavigation();
+ clearStepError();
+ save();
+ renderCanvas();
+
+ if(options.history==='push'){
+  history.pushState({ybLabStep:state.step},'',location.href);
+ }else if(options.history==='replace'){
+  history.replaceState({ybLabStep:state.step},'',location.href);
+ }
+
+ requestAnimationFrame(()=>{
+  if(options.scroll==='step'){
+   const active=q('.yb-lab-step.is-active');
+   active&&active.scrollIntoView({block:'start',behavior:options.smooth===false?'auto':'smooth'});
+  }else if(options.scroll!=='none'){
+   window.scrollTo({top:preserveY,behavior:'auto'});
+  }
+ });
+}
+function resetMission(){
+ if(!confirm('Vuoi iniziare una nuova missione? La bozza attuale verrà sostituita su questo dispositivo.'))return;
+ state=createState();
+ save();
+ hydrate();
+ renderActivities();
+ showStep(1,{history:'push',scroll:'step'});
 }
 function hydrate(){
  qa('[data-objective]').forEach(b=>b.classList.toggle('is-selected',b.dataset.objective===state.objective));
@@ -96,16 +201,41 @@ function openMissionBook(){
  w.document.write('<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+state.missionId+' · YUME Mission Book</title><style>body{margin:0;background:#f5f2eb;color:#111923;font-family:Arial,sans-serif}main{max-width:1000px;margin:auto;padding:35px}.hero{padding:70px 0;border-bottom:1px solid #d9d2c6}.ey{font-size:10px;letter-spacing:.18em;color:#9a7540}.hero h1{font:58px Georgia,serif;margin:14px 0}.id{display:inline-block;padding:10px 14px;background:#111923;color:#fff;border-radius:9px}.sheet{background:#fff;border:1px solid #ded8cf;border-radius:22px;padding:28px;margin:22px 0}.sheet h2{font:34px Georgia,serif}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.tags{display:flex;flex-wrap:wrap;gap:7px}.tags span{padding:8px 10px;border:1px solid #ddd;border-radius:999px;font-size:11px}.muted{color:#65707a;line-height:1.7}.actions{position:sticky;bottom:10px;text-align:center}.actions button{padding:13px 18px;border:0;border-radius:10px;background:#111923;color:#fff;font-weight:bold}@media(max-width:680px){main{padding:18px}.hero h1{font-size:42px}.grid{grid-template-columns:1fr}}@media print{.actions{display:none}body{background:#fff}@page{margin:12mm}}</style></head><body><main><section class="hero"><div class="ey">YUME WORKS · MISSION BOOK</div><h1>'+esc(summary())+'</h1><div class="id">'+state.missionId+'</div><p class="muted">'+esc(state.outcome||'Outcome da definire')+'</p></section><section class="sheet grid"><div><div class="ey">SETTORE</div><h2>'+esc(state.sector||'Da definire')+'</h2></div><div><div class="ey">DELEGAZIONE</div><h2>'+esc([state.people?state.people+' pax':'',state.seniority].filter(Boolean).join(' · ')||'Da definire')+'</h2></div></section><section class="sheet"><div class="ey">GEOGRAFIA</div><h2>Japan Core / Asia Extension</h2><div class="tags">'+dest+'</div></section><section class="sheet"><div class="ey">MISSION MODULES</div><h2>Cosa deve succedere sul campo</h2><ul>'+activities+'</ul></section><section class="sheet grid"><div><div class="ey">TIMING</div><p class="muted">'+esc([state.period,state.duration].filter(Boolean).join(' · ')||'Da definire')+'</p></div><div><div class="ey">BUDGET</div><p class="muted">'+esc(state.budget||'Da definire')+'</p></div></section><section class="sheet"><div class="ey">REALITY CHECK</div><h2>Da brief a fattibilità.</h2><p class="muted">'+esc(state.constraints||'Nessun vincolo aggiuntivo indicato.')+'</p><p class="muted">Questo Mission Book non costituisce conferma di accesso, disponibilità o preventivo. YUME qualifica interlocutori, agenda, logistica e costi prima della proposta.</p></section><div class="actions"><button onclick="window.print()">Salva / stampa PDF</button></div></main></body></html>');w.document.close();
 }
 function bind(){
- qa('[data-objective]').forEach(b=>b.onclick=()=>{state.objective=b.dataset.objective;qa('[data-objective]').forEach(x=>x.classList.toggle('is-selected',x===b));save();renderCanvas()});
+ qa('[data-objective]').forEach(b=>b.onclick=()=>{state.objective=b.dataset.objective;qa('[data-objective]').forEach(x=>{x.classList.toggle('is-selected',x===b);x.classList.remove('is-invalid')});clearStepError();save();renderCanvas()});
  qa('[data-geo]').forEach(b=>b.onclick=()=>{state.geo=b.dataset.geo;qa('[data-geo]').forEach(x=>x.classList.toggle('is-selected',x===b));save();renderCanvas()});
- qa('[data-budget]').forEach(b=>b.onclick=()=>{state.budget=b.dataset.budget;qa('[data-budget]').forEach(x=>x.classList.toggle('is-selected',x===b));save();renderCanvas()});
+ qa('[data-budget]').forEach(b=>b.onclick=()=>{state.budget=b.dataset.budget;qa('[data-budget]').forEach(x=>x.classList.toggle('is-selected',x===b));clearStepError();save();renderCanvas()});
  qa('[data-destination]').forEach(b=>b.onclick=()=>{const v=b.dataset.destination,i=state.destinations.indexOf(v);if(i>=0)state.destinations.splice(i,1);else if(state.destinations.length<6)state.destinations.push(v);b.classList.toggle('is-selected',state.destinations.includes(v));save();renderCanvas()});
- q('[data-outcome]').oninput=e=>{state.outcome=e.target.value;save();renderCanvas()};q('[data-sector]').onchange=e=>{state.sector=e.target.value;save();renderCanvas()};q('[data-size]').onchange=e=>{state.size=e.target.value;save()};
- q('[data-people]').oninput=e=>{state.people=e.target.value?Number(e.target.value):null;save();renderCanvas()};q('[data-seniority]').onchange=e=>{state.seniority=e.target.value;save();renderCanvas()};q('[data-period]').oninput=e=>{state.period=e.target.value;save();renderCanvas()};q('[data-duration]').onchange=e=>{state.duration=e.target.value;save();renderCanvas()};
- qa('[data-support]').forEach(i=>i.oninput=()=>{state.support[i.dataset.support]=Number(i.value);q('[data-support-value="'+i.dataset.support+'"]').textContent=i.value;save();renderCanvas()});q('[data-constraints]').oninput=e=>{state.constraints=e.target.value;save()};
- q('[data-next]').onclick=()=>showStep(state.step+1);q('[data-back]').onclick=()=>showStep(state.step-1);qa('[data-act]').forEach(b=>b.onclick=()=>showStep(actStart(+b.dataset.act)));
- q('[data-share]').onclick=share;q('[data-print]').onclick=openMissionBook;
+ q('[data-outcome]').oninput=e=>{state.outcome=e.target.value;e.target.classList.remove('is-invalid');clearStepError();save();renderCanvas()};
+ q('[data-sector]').onchange=e=>{state.sector=e.target.value;e.target.classList.remove('is-invalid');clearStepError();save();renderCanvas()};
+ q('[data-size]').onchange=e=>{state.size=e.target.value;save()};
+ q('[data-people]').oninput=e=>{state.people=e.target.value?Number(e.target.value):null;e.target.classList.remove('is-invalid');clearStepError();save();renderCanvas()};
+ q('[data-seniority]').onchange=e=>{state.seniority=e.target.value;e.target.classList.remove('is-invalid');clearStepError();save();renderCanvas()};
+ q('[data-period]').oninput=e=>{state.period=e.target.value;save();renderCanvas()};
+ q('[data-duration]').onchange=e=>{state.duration=e.target.value;save();renderCanvas()};
+ qa('[data-support]').forEach(i=>i.oninput=()=>{state.support[i.dataset.support]=Number(i.value);q('[data-support-value="'+i.dataset.support+'"]').textContent=i.value;save();renderCanvas()});
+ q('[data-constraints]').oninput=e=>{state.constraints=e.target.value;save()};
+
+ q('[data-next]').onclick=()=>{if(validateStep(state.step))showStep(state.step+1,{history:'push',scroll:'preserve'})};
+ q('[data-back]').onclick=()=>showStep(state.step-1,{history:'push',scroll:'preserve'});
+ qa('[data-act]').forEach(b=>b.onclick=()=>showStep(actStart(+b.dataset.act),{history:'push',scroll:'step'}));
+ qa('[data-step-jump]').forEach(b=>b.onclick=()=>showStep(+b.dataset.stepJump,{history:'push',scroll:'step'}));
+ q('[data-restart]')&&(q('[data-restart]').onclick=resetMission);
+ q('[data-share]').onclick=share;
+ q('[data-print]').onclick=openMissionBook;
+
+ window.addEventListener('popstate',e=>{
+  const n=e.state&&Number(e.state.ybLabStep);
+  if(n>=1&&n<=8)showStep(n,{history:'none',scroll:'preserve'});
+ });
 }
-function init(){renderActivities();hydrate();bind();showStep(state.step||1);const pre=new URLSearchParams(location.search).get('activity');if(pre&&!state.activities.includes(pre)){state.activities.push(pre);renderActivities();save();renderCanvas()}}
+function init(){
+ renderActivities();
+ hydrate();
+ bind();
+ const initial=(history.state&&Number(history.state.ybLabStep))||state.step||1;
+ showStep(initial,{history:'replace',scroll:'none'});
+ const pre=new URLSearchParams(location.search).get('activity');
+ if(pre&&!state.activities.includes(pre)){state.activities.push(pre);renderActivities();save();renderCanvas()}
+}
 document.addEventListener('DOMContentLoaded',init);
 })();
