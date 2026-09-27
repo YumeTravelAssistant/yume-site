@@ -70,7 +70,7 @@ function renderActivities(){
 function attribution(){const p=new URLSearchParams(location.search),utm={};['utm_source','utm_medium','utm_campaign','utm_content','utm_term','ref'].forEach(k=>{if(p.get(k))utm[k]=p.get(k)});try{return{...JSON.parse(sessionStorage.getItem('yumeBusinessAttribution')||'{}'),...utm,referrer:document.referrer||null}}catch{return{...utm,referrer:document.referrer||null}}}
 function payload(shared=true){return{
  mission_id:state.missionId,source:'business_mission_lab_v2',schema_version:2,status:'submitted',locale:'it',
- direction:state.geo==='inbound'?'japan_to_italy':state.geo==='asia'||state.geo==='japan_asia'?'bilateral':'italy_to_japan',
+ direction:state.geo==='inbound'?'asia_to_italy':state.geo==='asia'?'italy_to_asia':state.geo==='japan_asia'?'bilateral':'italy_to_japan',
  company:{name:state.company,size:state.size||null},
  contact:{name:state.name,email:state.email||null,phone:state.phone||null},
  objective:objectiveLabels[state.objective]||state.objective||null,desired_outcome:state.outcome||null,sector:state.sector||null,company_size:state.size||null,
