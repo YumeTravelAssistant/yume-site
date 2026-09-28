@@ -591,8 +591,11 @@ function internalOnboarding(){
   const demos=rows.filter(r=>r.request_type==='demo').length;
   const statusText=s=>({submitted:'Submitted',under_review:'Under review',demo_approved:'Demo approved',platform_approved:'Platform approved',rejected:'Rejected',invited:'Invited',active:'Active'}[s]||s);
   const actions=r=>{
-    if(['submitted','under_review'].includes(r.status))return '<div class="ymc-inline-actions"><button class="ymc-btn ymc-btn--dark" data-ymc-review-request="'+r.id+':approve">Approva</button><button class="ymc-btn" data-ymc-review-request="'+r.id+':reject">Rifiuta</button></div>';
-    if(r.request_type==='platform'&&r.status==='platform_approved')return '<button class="ymc-btn ymc-btn--dark" data-ymc-invite-request="'+r.id+'">Invia invito →</button>';
+    if(['submitted','under_review'].includes(r.status)){
+      const approveLabel=r.request_type==='platform'?'Approva + invita':'Approva + invia codice';
+      return '<div class="ymc-inline-actions"><button class="ymc-btn ymc-btn--dark" data-ymc-review-request="'+r.id+':approve">'+approveLabel+'</button><button class="ymc-btn" data-ymc-review-request="'+r.id+':reject">Rifiuta</button></div>';
+    }
+    if(r.request_type==='platform'&&r.status==='platform_approved')return '<button class="ymc-btn ymc-btn--dark" data-ymc-invite-request="'+r.id+'">Riprova invito →</button>';
     if(r.request_type==='demo'&&r.status==='demo_approved')return '<code class="ymc-live-code">'+esc(r.demo_access_code||'Codice non disponibile')+'</code>';
     return '<span class="ymc-chip">'+esc(statusText(r.status))+'</span>';
   };
@@ -694,13 +697,16 @@ function renderOnboarding(){
 async function submitAccessRequest(){
   const f=state.onboardingForm||{},platform=state.onboardingType==='platform';
   const payload={
-    request_type:platform?'platform':'demo',status:'submitted',company_name:f.company,vat:f.vat||null,rea:f.rea||null,
-    hq:f.hq||null,website:f.website||null,sector:f.sector||null,contact_name:f.contact_name,
-    contact_role:f.contact_role||null,contact_email:String(f.contact_email||'').toLowerCase(),contact_phone:f.contact_phone||null,
-    use_case:f.use_case||null,requested_modules:[],privacy_accepted:true,terms_accepted:platform,source:'mission-control'
+    request_type:platform?'platform':'demo',
+    company_name:f.company,vat:f.vat||null,rea:f.rea||null,hq:f.hq||null,website:f.website||null,sector:f.sector||null,
+    contact_name:f.contact_name,contact_role:f.contact_role||null,contact_email:String(f.contact_email||'').toLowerCase(),
+    contact_phone:f.contact_phone||null,use_case:f.use_case||null,requested_modules:[],
+    privacy_accepted:true,terms_accepted:platform
   };
-  await ymcFetch('/rest/v1/ymc_access_requests',{method:'POST',body:payload,prefer:'return=minimal'});
-  state.onboardingSubmitted=true;state.onboardingResult={type:payload.request_type,status:'submitted'};save();renderOnboarding();
+  const data=await ymcFetch('/functions/v1/ymc-submit-access-request',{method:'POST',body:payload});
+  state.onboardingSubmitted=true;
+  state.onboardingResult={type:payload.request_type,status:'submitted',requestId:data?.request?.id||null,notificationStatus:data?.notification_status||null};
+  save();renderOnboarding();
 }
 async function onboardingNext(){
   collectOnboardingFields();
@@ -728,11 +734,29 @@ function bindDynamic(){
   els('[data-ymc-refresh-live]').forEach(b=>b.onclick=async()=>{b.disabled=true;await loadInternalLiveData();render();toast('Dati aggiornati da Supabase.');});
 
   els('[data-ymc-review-request]').forEach(b=>b.onclick=async()=>{
-    const [id,decision]=b.dataset.ymcReviewRequest.split(':');b.disabled=true;
+    const [id,decision]=b.dataset.ymcReviewRequest.split(':');
+    b.disabled=true;
     try{
-      await ymcFetch('/rest/v1/rpc/ymc_review_access_request',{method:'POST',token:internalToken(),body:{p_request_id:id,p_decision:decision,p_notes:null}});
-      await loadInternalLiveData();render();toast(decision==='approve'?'Richiesta approvata.':'Richiesta rifiutata.');
-    }catch(ex){b.disabled=false;toast('Review non riuscita: '+ex.message)}
+      const result=await ymcFetch('/functions/v1/ymc-review-access-request',{method:'POST',token:internalToken(),body:{request_id:id,decision,notes:null}});
+      await loadInternalLiveData();
+      render();
+      if(decision==='reject'){
+        toast('Richiesta rifiutata.');
+      }else if(result?.status==='invited'){
+        toast('Richiesta approvata e invito Corporate inviato.');
+      }else if(result?.status==='platform_approved'&&result?.invite_status==='failed'){
+        toast('Approvata, ma invito non inviato: '+(result?.invite_error||'configura SMTP e usa Riprova invito.'));
+      }else if(result?.status==='demo_approved'&&result?.email_status==='sent'){
+        toast('Demo approvata e codice inviato via email.');
+      }else if(result?.status==='demo_approved'){
+        toast('Demo approvata. Email non inviata: provider email da configurare.');
+      }else{
+        toast('Richiesta approvata.');
+      }
+    }catch(ex){
+      b.disabled=false;
+      toast('Review non riuscita: '+ex.message);
+    }
   });
   els('[data-ymc-invite-request]').forEach(b=>b.onclick=async()=>{
     const id=b.dataset.ymcInviteRequest;b.disabled=true;
