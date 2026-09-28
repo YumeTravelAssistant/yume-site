@@ -170,6 +170,10 @@ button,input{font:inherit}button,a{color:inherit}a{text-decoration:none}button{c
 .ymc-internal-login-brand{display:flex;align-items:center;gap:10px;margin-bottom:28px}.ymc-internal-login-brand img{width:48px;height:48px;border-radius:50%;object-fit:cover}.ymc-internal-login-brand strong{display:block;font-size:12px;letter-spacing:.14em}.ymc-internal-login-brand small{display:block;margin-top:4px;color:var(--ymc-brass-2);font-size:7px;letter-spacing:.12em}
 .ymc-internal-login-card h2{margin:8px 0 12px;font:500 42px/.98 "Playfair Display",serif}.ymc-internal-login-card h2 em{color:var(--ymc-brass-2)}.ymc-internal-login-card>p:not(.ymc-kicker){color:rgba(255,255,255,.62);font-size:11px;line-height:1.65}
 .ymc-internal-login-card .ymc-field input{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.13);color:#fff}
+.ymc-password-field{position:relative}
+.ymc-password-field input{width:100%;padding-right:92px}
+.ymc-password-toggle{position:absolute;right:8px;top:50%;transform:translateY(-50%);min-width:72px;min-height:36px;padding:0 10px;border:1px solid rgba(255,255,255,.14);border-radius:10px;background:rgba(255,255,255,.07);color:#fff;font-size:9px;font-weight:800}
+.ymc-password-toggle:hover,.ymc-password-toggle:focus-visible{background:rgba(255,255,255,.12);outline:none}
 .ymc-internal-login-security{margin-top:14px;padding:13px;border:1px solid rgba(255,255,255,.09);border-radius:13px;background:rgba(255,255,255,.045)}.ymc-internal-login-security span{color:var(--ymc-brass-2);font-size:7px;font-weight:900;letter-spacing:.12em}.ymc-internal-login-security p{margin:5px 0 0;color:rgba(255,255,255,.58);font-size:8px;line-height:1.5}
 
 /* Sidebar tap-away */
