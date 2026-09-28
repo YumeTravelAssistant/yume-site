@@ -134,6 +134,8 @@ function pageHead(kicker,title,copy,actions=''){
 function setRole(role){
   state.role=role==='internal'?'internal':'client';
   state.section=state.role==='client'?'overview':'network';
+  state.sidebar=false;
+  closeDrawer();
   save();render();
 }
 function setSection(section){
