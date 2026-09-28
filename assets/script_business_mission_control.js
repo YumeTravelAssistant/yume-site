@@ -595,7 +595,8 @@ function internalOnboarding(){
       const approveLabel=r.request_type==='platform'?'Approva + invita':'Approva + invia codice';
       return '<div class="ymc-inline-actions"><button class="ymc-btn ymc-btn--dark" data-ymc-review-request="'+r.id+':approve">'+approveLabel+'</button><button class="ymc-btn" data-ymc-review-request="'+r.id+':reject">Rifiuta</button></div>';
     }
-    if(r.request_type==='platform'&&r.status==='platform_approved')return '<button class="ymc-btn ymc-btn--dark" data-ymc-invite-request="'+r.id+'">Riprova invito →</button>';
+    if(r.request_type==='platform'&&r.status==='platform_approved')return '<button class="ymc-btn ymc-btn--dark" data-ymc-invite-request="'+r.id+'">Invia codice →</button>';
+    if(r.request_type==='platform'&&r.status==='invited')return '<button class="ymc-btn" data-ymc-invite-request="'+r.id+'">Rigenera codice →</button>';
     if(r.request_type==='demo'&&r.status==='demo_approved')return '<code class="ymc-live-code">'+esc(r.demo_access_code||'Codice non disponibile')+'</code>';
     return '<span class="ymc-chip">'+esc(statusText(r.status))+'</span>';
   };
