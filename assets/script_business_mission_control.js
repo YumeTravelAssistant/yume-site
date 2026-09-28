@@ -89,19 +89,29 @@ const DATA={
     {stage:'Preferred',count:0,detail:'Performance-based future tier'}
   ],
   roadmap:[
-    {period:'NOW',title:'Foundation',items:['Corporate data model','Partner Registry','Mission permissions','Auth architecture']},
-    {period:'NEXT',title:'Mission Control MVP',items:['Dashboard','Decisions','Documents','Participants','Travel summary']},
-    {period:'PILOT',title:'Real missions',items:['1–3 corporate projects','Measure usage','Refine roles','Partner pilots']},
-    {period:'LATER',title:'Network intelligence',items:['Partner scoring','Benchmarks','Enterprise SSO','Partner workspace']}
+    {period:'TTG 2026',title:'Demo-ready operating story',items:['Controlled access workflow','Mission Control UX','YUME Network view','Japan Core + Asia Extension']},
+    {period:'POST-TTG',title:'Production foundation',items:['Supabase Auth + MFA','Organization / Membership','Private document storage','Audit & permission model']},
+    {period:'PILOT',title:'Real corporate missions',items:['1–3 projects','Partner qualification pilots','Measure real usage','Refine document pack']},
+    {period:'BIT',title:'Enterprise-ready layer',items:['Network intelligence','Partner scoring','Client account history','SSO / WorkOS readiness if required']}
+  ],
+  asia:[
+    {name:'South Korea',hub:'Seoul',role:'Tech · consumer · beauty',state:'Exploration',note:'Estensione solo quando completa il business case giapponese o crea confronto utile.'},
+    {name:'Singapore',hub:'APAC',role:'Regional HQ · digital gateway',state:'Exploration',note:'Hub regionale per headquarters, servizi, fintech e innovation.'},
+    {name:'Hong Kong',hub:'Greater China',role:'Trade · finance · distribution',state:'Exploration',note:'Nodo commerciale da usare con logica selettiva e progetto-specifica.'},
+    {name:'Taiwan',hub:'Taipei',role:'Electronics · supply chain',state:'Exploration',note:'Rilevante per elettronica, semiconduttori e filiere tecnologiche.'}
+  ],
+  onboardingReview:[
+    {company:'Nuova Impresa Demo S.r.l.',vat:'IT01122334455',admin:'Laura Bianchi',docs:'3/3',status:'Ready for review',risk:'Standard'},
+    {company:'Demo Industrial S.p.A.',vat:'IT09876543210',admin:'Marta Conti',docs:'2/3',status:'Missing delegation',risk:'Standard'}
   ]
 };
 
 const CLIENT_NAV=[
-  ['overview','◎','Overview'],['mission','◇','Mission'],['agenda','◫','Agenda'],['decisions','✓','Decisions'],
+  ['overview','◎','Overview'],['company','⌂','Company'],['mission','◇','Mission'],['agenda','◫','Agenda'],['decisions','✓','Decisions'],
   ['participants','○','People'],['travel','↗','Travel'],['documents','▤','Documents'],['financials','€','Financials'],['followup','↺','Follow-up']
 ];
 const INTERNAL_NAV=[
-  ['network','◎','Network'],['partners','◇','Partners'],['coverage','◫','Coverage'],['pipeline','↗','Pipeline'],['roadmap','↺','Roadmap'],['access','⌁','Access architecture']
+  ['network','◎','Network'],['onboarding','⌂','Onboarding'],['partners','◇','Partners'],['coverage','◫','Coverage'],['pipeline','↗','Pipeline'],['roadmap','↺','Roadmap'],['access','⌁','Access architecture']
 ];
 
 let state=loadState();
@@ -114,7 +124,7 @@ function loadState(){
   }catch(_){}
   return baseState();
 }
-function baseState(){return{session:false,role:'client',section:'overview',decisionStatus:{d1:'required',d2:'open',d3:'approved'},sidebar:false,drawer:false}}
+function baseState(){return{session:false,onboarding:false,onboardingStep:1,onboardingSubmitted:false,onboardingApproved:false,role:'client',section:'overview',decisionStatus:{d1:'required',d2:'open',d3:'approved'},sidebar:false,drawer:false,uploadedDocs:{}}}
 function save(){try{localStorage.setItem(STORAGE,JSON.stringify(state))}catch(_){}}
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function money(v){return new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(v)}
@@ -183,7 +193,7 @@ function renderNav(){
   const n=el('[data-ymc-nav]');
   n.innerHTML=nav.map(([id,icon,label])=>'<button type="button" data-ymc-section="'+id+'" class="'+(state.section===id?'is-active':'')+'"><span>'+icon+'</span>'+esc(label)+'</button>').join('');
   const mobile=el('[data-ymc-mobile-nav]');
-  const picks=state.role==='client'?[CLIENT_NAV[0],CLIENT_NAV[2],CLIENT_NAV[3],CLIENT_NAV[6]]:[INTERNAL_NAV[0],INTERNAL_NAV[1],INTERNAL_NAV[2],INTERNAL_NAV[4]];
+  const picks=state.role==='client'?[CLIENT_NAV[0],CLIENT_NAV[3],CLIENT_NAV[4],CLIENT_NAV[7]]:[INTERNAL_NAV[0],INTERNAL_NAV[1],INTERNAL_NAV[2],INTERNAL_NAV[4]];
   mobile.innerHTML=picks.map(([id,icon,label])=>'<button type="button" data-ymc-section="'+id+'" class="'+(state.section===id?'is-active':'')+'"><span>'+icon+'</span>'+esc(label)+'</button>').join('')+
     '<button type="button" data-ymc-open-menu><span>•••</span>More</button>';
 }
@@ -194,8 +204,10 @@ function renderRole(){
   el('[data-ymc-profile-role]').textContent=state.role==='client'?'Corporate Admin · Demo':'Internal Operations · Demo';
 }
 function render(){
-  el('[data-ymc-gate]').hidden=state.session;
+  el('[data-ymc-gate]').hidden=state.session||state.onboarding;
+  el('[data-ymc-onboarding]').hidden=!state.onboarding;
   el('[data-ymc-app]').hidden=!state.session;
+  if(state.onboarding){renderOnboarding();return;}
   if(!state.session)return;
   renderNav();renderRole();
   const content=el('[data-ymc-content]');
@@ -204,7 +216,7 @@ function render(){
   el('[data-ymc-sidebar]').classList.toggle('is-open',!!state.sidebar);
 }
 function renderClient(section){
-  const map={overview:clientOverview,mission:clientMission,agenda:clientAgenda,decisions:clientDecisions,participants:clientParticipants,travel:clientTravel,documents:clientDocuments,financials:clientFinancials,followup:clientFollowup};
+  const map={overview:clientOverview,company:clientCompany,mission:clientMission,agenda:clientAgenda,decisions:clientDecisions,participants:clientParticipants,travel:clientTravel,documents:clientDocuments,financials:clientFinancials,followup:clientFollowup};
   return (map[section]||clientOverview)();
 }
 function clientOverview(){
@@ -226,11 +238,30 @@ function clientOverview(){
       '<article class="ymc-card"><div class="ymc-card-head"><div><span>VISIBLE NETWORK</span><h2>Project partners</h2></div><button data-ymc-section="mission">Why these →</button></div><div class="ymc-list">'+DATA.visiblePartners.map(p=>'<div class="ymc-list-row"><div><b>'+esc(p.role)+'</b><small>'+esc(p.geo)+' · '+esc(p.note)+'</small></div><span class="ymc-chip">'+esc(p.status)+'</span></div>').join('')+'</div></article>'+
     '</section>';
 }
+function clientCompany(){
+  return pageHead('COMPANY ACCESS','Verified organization. <em>Controlled membership.</em>','Mission Control non nasce da una registrazione libera: l’Organization viene creata e abilitata da YUME dopo la verifica del set documentale e del referente.')+
+    '<section class="ymc-grid ymc-grid--3">'+
+      '<article class="ymc-card ymc-stat"><span>ORGANIZATION</span><strong>Verified</strong><small>'+esc(DATA.organization.name)+'</small></article>'+
+      '<article class="ymc-card ymc-stat"><span>ACCESS MODEL</span><strong>Invite-only</strong><small>YUME-issued membership</small></article>'+
+      '<article class="ymc-card ymc-stat"><span>ADMIN</span><strong>1 active</strong><small>'+esc(DATA.organization.member)+'</small></article>'+
+    '</section>'+
+    '<section class="ymc-grid ymc-grid--2" style="margin-top:12px">'+
+      '<article class="ymc-card"><div class="ymc-card-head"><div><span>VERIFICATION RECORD</span><h2>Organization profile</h2></div>'+chip('approved')+'</div><div class="ymc-list">'+
+        '<div class="ymc-list-row"><div><b>Ragione sociale</b><small>'+esc(DATA.organization.name)+'</small></div><span>Verified</span></div>'+
+        '<div class="ymc-list-row"><div><b>VAT / company identity</b><small>Demo data · production: verified source</small></div><span>Verified</span></div>'+
+        '<div class="ymc-list-row"><div><b>Company administrator</b><small>'+esc(DATA.organization.member)+' · '+esc(DATA.organization.role)+'</small></div><span>Active</span></div>'+
+        '<div class="ymc-list-row"><div><b>Verification review</b><small>Production: expiry / refresh policy configurable</small></div><span>Annual</span></div>'+
+      '</div></article>'+
+      '<article class="ymc-card ymc-card--dark"><span class="ymc-section-label">SECURITY PRINCIPLE</span><h2>Access follows the company, not the browser.</h2><p>In produzione il token di onboarding serve solo ad attivare l’identità verificata. L’accesso ordinario passa poi da Supabase Auth / MFA e da Organization Membership, con permessi RLS legati alla missione.</p><div class="ymc-decision-meta"><span>No public signup</span><span>MFA staff</span><span>Audit log</span><span>RLS</span></div></article>'+
+    '</section>'+
+    '<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>DOCUMENT POLICY</span><h2>Upload temporaneo. Conservazione controllata.</h2></div></div><p>Visura camerale e documenti di identificazione non devono vivere nel frontend o nel localStorage. La produzione dovrà usare signed upload URL, storage privato, retention policy, access log e cancellazione/aggiornamento secondo la policy YUME validata legalmente.</p></section>';
+}
+
 function clientMission(){
   return pageHead('MISSION · '+DATA.mission.id,'Why this mission <em>exists.</em>','Il progetto non parte dall’itinerario: parte dal purpose e dal risultato che deve rientrare in azienda.','<button class="ymc-btn">Mission Book</button><button class="ymc-btn ymc-btn--dark" data-ymc-section="decisions">Open decisions</button>')+
     '<section class="ymc-mission-frame"><div><span>PURPOSE</span><strong>'+esc(DATA.mission.purpose)+'</strong><p>'+esc(DATA.mission.sector)+'</p></div><div><span>ON THE GROUND</span><strong>'+esc(DATA.mission.modules.slice(0,2).join(' + '))+'</strong><p>'+DATA.mission.modules.length+' moduli selezionati</p></div><div><span>RETURN</span><strong>'+esc(DATA.mission.outcome)+'</strong><p>Il criterio di successo deve restare leggibile dopo il rientro.</p></div></section>'+
     '<section class="ymc-grid ymc-grid--2" style="margin-top:12px"><article class="ymc-card"><div class="ymc-card-head"><div><span>GEOGRAPHY</span><h2>Sequence</h2></div></div><div class="ymc-route">'+DATA.mission.route.map((x,i)=>'<span>'+esc(x)+'</span>'+(i<DATA.mission.route.length-1?'<i>→</i>':'')).join('')+'</div><p>Sequenza concettuale. Ogni tappa deve giustificarsi rispetto all’outcome, ai partner qualificati e ai buffer logistici.</p></article><article class="ymc-card"><div class="ymc-card-head"><div><span>MISSION MODULES</span><h2>On the ground</h2></div></div><div class="ymc-decision-meta">'+DATA.mission.modules.map(x=>'<span>'+esc(x)+'</span>').join('')+'</div><p>Il modulo entra nell’agenda solo dopo qualification: accesso, timing, interlocutore, costo e owner.</p></article></section>'+
-    '<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>CONTROL LAYER</span><h2>What YUME is orchestrating</h2></div></div><div class="ymc-grid ymc-grid--4"><div class="ymc-stat"><span>BUSINESS</span><strong>Agenda</strong><small>meetings · intelligence · modules</small></div><div class="ymc-stat"><span>TRAVEL</span><strong>Execution</strong><small>flight · hotel · rail · transfer</small></div><div class="ymc-stat"><span>PEOPLE</span><strong>4 pax</strong><small>readiness · roles · needs</small></div><div class="ymc-stat"><span>CONTINUITY</span><strong>Follow-up</strong><small>owner · next action · relation</small></div></div></section>';
+    '<section class="ymc-card ymc-card--dark ymc-asia-layer" style="margin-top:12px"><div class="ymc-card-head"><div><span>JAPAN CORE · ASIA EXTENSION</span><h2>Asia entra solo se migliora il business case.</h2></div><span class="ymc-chip">Japan Core active</span></div><p>La missione demo resta centrata sul Giappone. Gli hub asiatici sono un layer opzionale da valutare per settore, outcome e continuità regionale, non una collezione di tappe.</p><div class="ymc-asia-grid">'+DATA.asia.map(a=>'<article><span>'+esc(a.name)+'</span><b>'+esc(a.hub)+'</b><small>'+esc(a.role)+'</small><p>'+esc(a.note)+'</p></article>').join('')+'</div></section>'+'<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>CONTROL LAYER</span><h2>What YUME is orchestrating</h2></div></div><div class="ymc-grid ymc-grid--4"><div class="ymc-stat"><span>BUSINESS</span><strong>Agenda</strong><small>meetings · intelligence · modules</small></div><div class="ymc-stat"><span>TRAVEL</span><strong>Execution</strong><small>flight · hotel · rail · transfer</small></div><div class="ymc-stat"><span>PEOPLE</span><strong>4 pax</strong><small>readiness · roles · needs</small></div><div class="ymc-stat"><span>CONTINUITY</span><strong>Follow-up</strong><small>owner · next action · relation</small></div></div></section>';
 }
 function agendaTimeline(items){
   return '<div class="ymc-timeline">'+items.map((a,i)=>'<button type="button" class="ymc-timeline-item" data-ymc-drawer-open="agenda:'+DATA.agenda.indexOf(a)+'" style="border:0;background:transparent;text-align:left;width:100%"><span class="ymc-timeline-time">'+esc(a.day)+'<br>'+esc(a.time)+'</span><i class="ymc-timeline-dot is-'+(a.status==='confirmed'?'confirmed':a.status==='pending'?'pending':'')+'"></i><span class="ymc-timeline-body"><b>'+esc(a.title)+'</b><small>'+esc(a.place)+' · '+esc(a.owner)+'</small></span></button>').join('')+'</div>';
@@ -267,7 +298,7 @@ function clientFollowup(){
     '<section class="ymc-card ymc-card--brass" style="margin-top:12px"><span class="ymc-section-label">ACCOUNT MEMORY</span><h2>Il vantaggio cresce missione dopo missione.</h2><p>Quando la stessa azienda torna in Giappone o Asia, YUME non riparte da zero: storico delle missioni, contatti, decisioni, documenti e follow-up diventano memoria aziendale condivisa.</p></section>';
 }
 function renderInternal(section){
-  const map={network:internalNetwork,partners:internalPartners,coverage:internalCoverage,pipeline:internalPipeline,roadmap:internalRoadmap,access:internalAccess};
+  const map={network:internalNetwork,onboarding:internalOnboarding,partners:internalPartners,coverage:internalCoverage,pipeline:internalPipeline,roadmap:internalRoadmap,access:internalAccess};
   return (map[section]||internalNetwork)();
 }
 function internalNetwork(){
@@ -281,6 +312,18 @@ function internalNetwork(){
     '<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>NEXT RELATIONSHIP MOVES</span><h2>Work in progress</h2></div></div><div class="ymc-list">'+DATA.network.slice(0,4).map(p=>'<div class="ymc-list-row"><div><b>'+esc(p.name)+'</b><small>'+esc(p.stage)+' · Next: '+esc(p.next)+'</small></div><button data-ymc-drawer-open="partner:'+p.id+'">Open →</button></div>').join('')+'</div></section>';
 }
 function coverageRow(c){return '<div class="ymc-coverage-row"><div class="ymc-coverage-top"><b>'+esc(c.label)+'</b><span>'+esc(c.state)+' · '+c.value+'%</span></div><div class="ymc-coverage-bar"><i style="width:'+c.value+'%"></i></div></div>'}
+function internalOnboarding(){
+  const reviewStatus=state.onboardingApproved?'Approved · invite ready':state.onboardingSubmitted?'Submitted · review':'Ready for review';
+  return pageHead('COMPANY ONBOARDING','Verify first. <em>Activate second.</em>','Nessuna registrazione pubblica: YUME controlla Organization, documenti, referente e livello di accesso prima dell’emissione dell’invito.','<button class="ymc-btn" data-ymc-toast="Preview: nuovo link onboarding non viene inviato">+ Generate onboarding link</button>')+
+    '<section class="ymc-grid ymc-grid--3">'+
+      '<article class="ymc-card ymc-stat"><span>ACCESS MODEL</span><strong>Invite-only</strong><small>No self-registration</small></article>'+
+      '<article class="ymc-card ymc-stat"><span>READY FOR REVIEW</span><strong>'+(state.onboardingApproved?'0':'1')+'</strong><small>'+esc(reviewStatus)+'</small></article>'+
+      '<article class="ymc-card ymc-stat"><span>SECURITY</span><strong>Private upload</strong><small>signed URL · expiry · audit</small></article>'+
+    '</section>'+
+    '<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>VERIFICATION QUEUE</span><h2>Organizations waiting for YUME</h2></div></div><div class="ymc-table-wrap"><table class="ymc-table"><thead><tr><th>Company</th><th>VAT</th><th>Admin</th><th>Docs</th><th>Status</th><th>Action</th></tr></thead><tbody>'+DATA.onboardingReview.map((r,i)=>'<tr><td><b>'+esc(r.company)+'</b></td><td>'+esc(r.vat)+'</td><td>'+esc(r.admin)+'</td><td>'+esc(r.docs)+'</td><td>'+(i===0?esc(reviewStatus):esc(r.status))+'</td><td><button class="ymc-btn '+(i===0&&!state.onboardingApproved?'ymc-btn--dark':'')+'" '+(i===0&&!state.onboardingApproved?'data-ymc-onboarding-approve':'disabled')+'>'+(i===0?(state.onboardingApproved?'Invite ready':'Review & approve'):'Waiting docs')+'</button></td></tr>').join('')+'</tbody></table></div>'+(state.onboardingApproved?'<div class="ymc-access-issued"><span>ONE-TIME INVITE · DEMO</span><b>YUME-ORG-DEMO-7H2K</b><small>In produzione: link firmato e a scadenza, non token persistente.</small></div>':'')+'</section>'+
+    '<section class="ymc-grid ymc-grid--2" style="margin-top:12px"><article class="ymc-card"><span class="ymc-section-label">REQUIRED SET · PREVIEW</span><h2>Configurable company pack</h2><div class="ymc-list"><div class="ymc-list-row"><div><b>Visura camerale</b><small>Recente secondo policy YUME da validare legalmente</small></div><span>Core</span></div><div class="ymc-list-row"><div><b>Identità del legale rappresentante</b><small>O altro meccanismo equivalente di verifica</small></div><span>Core</span></div><div class="ymc-list-row"><div><b>Delega / autorizzazione</b><small>Se il referente amministratore non coincide con il rappresentante</small></div><span>Conditional</span></div><div class="ymc-list-row"><div><b>Privacy / terms</b><small>Consensi e ruoli di trattamento da definire per il servizio reale</small></div><span>Core</span></div></div></article><article class="ymc-card ymc-card--brass"><span class="ymc-section-label">TOKEN LIFECYCLE</span><h2>Upload link ≠ login credential.</h2><p>Il link documentale è temporaneo e monouso. Dopo la verifica YUME crea Organization + Membership e invia l’accesso. Il token di onboarding non deve diventare una password permanente.</p><div class="ymc-route"><span>Invite</span><i>→</i><span>Upload</span><i>→</i><span>Review</span><i>→</i><span>Organization</span><i>→</i><span>Access</span></div></article></section>';
+}
+
 function internalPartners(){
   return pageHead('PARTNER REGISTRY','One master. <em>Different channels.</em>','Selection e Works possono condividere lo stesso partner master senza condividere visibilità, regole commerciali o cliente.','<button class="ymc-btn" data-ymc-toast="Preview: creazione partner non attiva">+ New partner</button>')+
     '<section class="ymc-grid ymc-grid--2">'+DATA.network.map(p=>'<article class="ymc-partner-card"><div class="ymc-partner-head"><div><span class="ymc-section-label">'+esc(p.kind)+'</span><strong>'+esc(p.name)+'</strong></div><span class="ymc-chip">'+esc(p.tier)+'</span></div><div class="ymc-partner-meta"><span>'+esc(p.geo)+'</span><span>'+esc(p.stage)+'</span><span>Owner · '+esc(p.owner)+'</span></div><p>'+esc(p.note)+'</p><div class="ymc-partner-actions"><small>Next · '+esc(p.next)+'</small><button data-ymc-drawer-open="partner:'+p.id+'">Open record →</button></div></article>').join('')+'</section>'+
@@ -305,21 +348,105 @@ function internalAccess(){
     '<section class="ymc-auth-architecture"><article class="ymc-auth-card is-recommended"><span>PHASE 1 · RECOMMENDED</span><h3>Supabase Auth</h3><p>Coerente con stack attuale e RLS.</p><ul><li>Staff: password + MFA</li><li>Client: magic link / OTP</li><li>Organization membership</li><li>JWT + RLS per missione</li></ul></article><article class="ymc-auth-card"><span>ENTERPRISE TRIGGER</span><h3>WorkOS</h3><p>Quando un cliente chiede SAML/OIDC/SCIM.</p><ul><li>Enterprise SSO</li><li>Directory sync</li><li>Organization policies</li><li>Upgrade senza riscrivere domain model</li></ul></article><article class="ymc-auth-card"><span>NOT FIRST CHOICE</span><h3>Clerk / Auth0</h3><p>Validi, ma aggiungono un identity stack che oggi non serve.</p><ul><li>Ottima developer UX</li><li>Enterprise features</li><li>Più dipendenza esterna</li><li>Valutabili se cambiano i requisiti</li></ul></article></section>'+
     '<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>DOMAIN MODEL</span><h2>Do not couple business data to one auth vendor.</h2></div></div><div class="ymc-route"><span>Organization</span><i>→</i><span>Membership</span><i>→</i><span>Mission</span><i>→</i><span>Permission</span><i>→</i><span>Audit log</span></div><p>Le entità business devono usare ID interni YUME. L’identity provider si collega tramite identity_provider + identity_subject, così Supabase oggi e WorkOS domani non richiedono una riscrittura del progetto.</p></section>';
 }
+function openOnboarding(){
+  state.session=false;state.onboarding=true;state.onboardingStep=1;state.onboardingSubmitted=false;state.uploadedDocs={};save();render();
+}
+function closeOnboarding(){
+  state.onboarding=false;state.onboardingSubmitted=false;save();render();
+}
+function onboardingProgress(){
+  const labels=['Azienda','Documenti','Amministratore','Review'];
+  return labels.map((label,i)=>'<div class="'+(state.onboardingStep===i+1?'is-active':state.onboardingStep>i+1?'is-complete':'')+'"><span>'+(i+1)+'</span><b>'+label+'</b></div>').join('');
+}
+function renderOnboarding(){
+  const progress=el('[data-ymc-onboarding-progress]'),content=el('[data-ymc-onboarding-content]');
+  if(!progress||!content)return;
+  progress.innerHTML=onboardingProgress();
+  const back=el('[data-ymc-onboarding-back]'),next=el('[data-ymc-onboarding-next]');
+  if(state.onboardingSubmitted){
+    content.innerHTML='<div class="ymc-onboarding-complete"><span class="ymc-section-label">SUBMITTED TO YUME · DEMO</span><i>✓</i><h1>La richiesta non crea ancora un account.</h1><p>YUME verifica Organization, set documentale e referente. Solo dopo l’approvazione viene creata la Membership e viene inviato l’accesso. In produzione questa fase genererà audit log, scadenza del link e notifica allo staff.</p><div class="ymc-onboarding-statusline"><span class="is-done">Link ricevuto</span><span class="is-done">Documenti inviati</span><span class="is-current">Verifica YUME</span><span>Accesso</span></div><button class="ymc-btn ymc-btn--dark" type="button" data-ymc-close-onboarding>Chiudi preview onboarding</button></div>';
+    back.hidden=true;next.hidden=true;
+    els('[data-ymc-close-onboarding]').forEach(b=>b.onclick=closeOnboarding);
+    return;
+  }
+  back.hidden=state.onboardingStep===1;next.hidden=false;
+  next.textContent=state.onboardingStep===4?'Invia alla verifica YUME →':'Continua →';
+  if(state.onboardingStep===1){
+    content.innerHTML='<span class="ymc-section-label">STEP 01 · ORGANIZATION</span><h1>Identificare l’azienda, non creare un semplice utente.</h1><p class="ymc-onboarding-lead">Il referente riceve un link nominativo YUME. La produzione dovrà collegare la richiesta a una Organization verificata.</p><div class="ymc-form-grid"><label><span>Ragione sociale</span><input value="Nuova Impresa Demo S.r.l." data-ymc-onboard-field="company"></label><label><span>Partita IVA / VAT</span><input value="IT01122334455" data-ymc-onboard-field="vat"></label><label><span>REA / Registro imprese</span><input value="MI-1234567" data-ymc-onboard-field="rea"></label><label><span>Sede legale</span><input value="Milano, Italia" data-ymc-onboard-field="hq"></label><label class="is-wide"><span>Sito aziendale</span><input value="https://azienda.example" data-ymc-onboard-field="website"></label></div><div class="ymc-form-note"><b>Production rule</b><span>I dati dichiarati vengono confrontati con documentazione/verifiche definite da YUME. Nessun account viene creato in automatico.</span></div>';
+  }else if(state.onboardingStep===2){
+    const docs=state.uploadedDocs||{};
+    content.innerHTML='<span class="ymc-section-label">STEP 02 · DOCUMENT SET</span><h1>Upload temporaneo. Nessun documento nel frontend.</h1><p class="ymc-onboarding-lead">Nella preview i file non vengono trasmessi: salviamo solo il nome nel browser. In produzione useremo storage privato e signed upload URL.</p><div class="ymc-upload-list">'+
+      uploadRow('visura','Visura camerale','Core',docs.visura)+
+      uploadRow('identity','Identità legale rappresentante','Core',docs.identity)+
+      uploadRow('delegation','Delega / autorizzazione','Se richiesta',docs.delegation)+
+    '</div><div class="ymc-form-note"><b>Nota legale</b><span>Il set documentale definitivo, le basi giuridiche, retention e modalità di verifica devono essere validati prima del go-live. Questa preview mostra solo il workflow.</span></div>';
+  }else if(state.onboardingStep===3){
+    content.innerHTML='<span class="ymc-section-label">STEP 03 · CORPORATE ADMIN</span><h1>Chi può amministrare la missione?</h1><p class="ymc-onboarding-lead">Il primo utente non si registra da solo: viene nominato dall’azienda e abilitato da YUME come Organization Admin.</p><div class="ymc-form-grid"><label><span>Nome e cognome</span><input value="Laura Bianchi"></label><label><span>Ruolo aziendale</span><input value="Amministratrice"></label><label><span>Email aziendale</span><input type="email" value="admin@nuovaimpresa.it"></label><label><span>Dominio aziendale</span><input value="nuovaimpresa.it"></label></div><div class="ymc-form-note"><b>Security</b><span>Produzione: email verificata, MFA per ruoli sensibili, audit log e possibilità di revoca immediata della Membership.</span></div>';
+  }else{
+    const docs=state.uploadedDocs||{};
+    content.innerHTML='<span class="ymc-section-label">STEP 04 · REVIEW</span><h1>YUME decide quando l’Organization è pronta.</h1><p class="ymc-onboarding-lead">Inviare il set documentale non equivale a ricevere credenziali. La review interna precede Organization + Membership + accesso.</p><div class="ymc-review-grid"><article><span>ORGANIZATION</span><b>Nuova Impresa Demo S.r.l.</b><small>VAT · IT01122334455</small></article><article><span>DOCUMENTS</span><b>'+((docs.visura?1:0)+(docs.identity?1:0)+(docs.delegation?1:0))+'/3 demo</b><small>Visura + identity richiesti nella preview</small></article><article><span>ADMIN</span><b>Laura Bianchi</b><small>admin@nuovaimpresa.it</small></article><article><span>ACCESS</span><b>Pending YUME</b><small>No account yet</small></article></div><label class="ymc-review-check"><input type="checkbox" data-ymc-onboarding-confirm><span>Confermo di aver compreso che questa è una simulazione UX e che i documenti non vengono trasmessi.</span></label><p class="ymc-access-error" data-ymc-onboarding-error hidden></p>';
+  }
+  bindOnboardingDynamic();
+}
+function uploadRow(key,title,requirement,current){
+  return '<div class="ymc-upload-row '+(current?'is-ready':'')+'"><div><span>'+esc(requirement)+'</span><b>'+esc(title)+'</b><small>'+(current?esc(current):'Nessun file selezionato')+'</small></div><div><label class="ymc-upload-btn">Scegli file<input type="file" data-ymc-upload="'+key+'" accept=".pdf,.p7m,.jpg,.jpeg,.png"></label><button type="button" data-ymc-demo-doc="'+key+'">Usa demo</button></div></div>';
+}
+function bindOnboardingDynamic(){
+  els('[data-ymc-upload]').forEach(input=>input.onchange=()=>{
+    const file=input.files&&input.files[0];if(!file)return;
+    state.uploadedDocs[input.dataset.ymcUpload]=file.name;save();renderOnboarding();
+  });
+  els('[data-ymc-demo-doc]').forEach(btn=>btn.onclick=()=>{
+    const names={visura:'visura_demo.pdf',identity:'documento_identita_demo.pdf',delegation:'delega_demo.pdf'};
+    state.uploadedDocs[btn.dataset.ymcDemoDoc]=names[btn.dataset.ymcDemoDoc];save();renderOnboarding();
+  });
+}
+function onboardingNext(){
+  if(state.onboardingStep===2&&(!state.uploadedDocs.visura||!state.uploadedDocs.identity)){
+    const content=el('[data-ymc-onboarding-content]');
+    const note=document.createElement('p');note.className='ymc-access-error';note.textContent='Per la preview servono almeno Visura camerale e documento del legale rappresentante.';content.appendChild(note);return;
+  }
+  if(state.onboardingStep===4){
+    const check=el('[data-ymc-onboarding-confirm]'),err=el('[data-ymc-onboarding-error]');
+    if(!check||!check.checked){if(err){err.hidden=false;err.textContent='Conferma la natura dimostrativa del flusso prima di inviare.'}return;}
+    state.onboardingSubmitted=true;save();renderOnboarding();return;
+  }
+  state.onboardingStep=Math.min(4,state.onboardingStep+1);save();renderOnboarding();
+}
+function onboardingBack(){
+  state.onboardingStep=Math.max(1,state.onboardingStep-1);save();renderOnboarding();
+}
+
 function bindDynamic(){
   els('[data-ymc-section]').forEach(b=>b.onclick=()=>setSection(b.dataset.ymcSection));
   els('[data-ymc-decision]').forEach(b=>b.onclick=()=>{const [id,status]=b.dataset.ymcDecision.split(':');updateDecision(id,status)});
   els('[data-ymc-drawer-open]').forEach(b=>b.onclick=()=>{const [type,id]=b.dataset.ymcDrawerOpen.split(':');openDrawer(type,id)});
   els('[data-ymc-toast]').forEach(b=>b.onclick=()=>toast(b.dataset.ymcToast));
+  els('[data-ymc-onboarding-approve]').forEach(b=>b.onclick=()=>{state.onboardingApproved=true;save();render();toast('Organization approvata nella preview: invito nominativo pronto.');});
   els('[data-ymc-open-menu]').forEach(b=>b.onclick=()=>toggleMenu(true));
 }
 function enter(role){
-  state.session=true;state.role=role;state.section=role==='client'?'overview':'network';save();render();
+  if(role==='client'){
+    const email=el('[data-ymc-demo-email]')?.value.trim()||'';
+    const token=el('[data-ymc-demo-token]')?.value.trim()||'';
+    const err=el('[data-ymc-access-error]');
+    if(!email.includes('@')||token!=='YUME-DEMO-2701'){
+      if(err){err.hidden=false;err.textContent='Accesso demo non valido. Usa email aziendale + token YUME-DEMO-2701.'}
+      return;
+    }
+    if(err)err.hidden=true;
+  }
+  state.onboarding=false;state.session=true;state.role=role;state.section=role==='client'?'overview':'network';save();render();
 }
 function logout(){state={...baseState()};save();render()}
 function resetPreview(){try{localStorage.removeItem(STORAGE)}catch(_){}state={...baseState(),session:true,role:'client',section:'overview'};save();render();toast('Preview ripristinata.')}
 function toggleMenu(open){state.sidebar=typeof open==='boolean'?open:!state.sidebar;el('[data-ymc-sidebar]')?.classList.toggle('is-open',state.sidebar)}
 function initStatic(){
   els('[data-ymc-enter]').forEach(b=>b.onclick=()=>enter(b.dataset.ymcEnter));
+  els('[data-ymc-open-onboarding]').forEach(b=>b.onclick=openOnboarding);
+  els('[data-ymc-close-onboarding]').forEach(b=>b.onclick=closeOnboarding);
+  el('[data-ymc-onboarding-next]').onclick=onboardingNext;
+  el('[data-ymc-onboarding-back]').onclick=onboardingBack;
   els('[data-ymc-role]').forEach(b=>b.onclick=()=>setRole(b.dataset.ymcRole));
   els('[data-ymc-open-menu]').forEach(b=>b.onclick=()=>toggleMenu(true));
   el('[data-ymc-close-menu]').onclick=()=>toggleMenu(false);
