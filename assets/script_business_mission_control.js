@@ -193,7 +193,7 @@ function renderNav(){
   const n=el('[data-ymc-nav]');
   n.innerHTML=nav.map(([id,icon,label])=>'<button type="button" data-ymc-section="'+id+'" class="'+(state.section===id?'is-active':'')+'"><span>'+icon+'</span>'+esc(label)+'</button>').join('');
   const mobile=el('[data-ymc-mobile-nav]');
-  const picks=state.role==='client'?[CLIENT_NAV[0],CLIENT_NAV[2],CLIENT_NAV[3],CLIENT_NAV[6]]:[INTERNAL_NAV[0],INTERNAL_NAV[1],INTERNAL_NAV[2],INTERNAL_NAV[4]];
+  const picks=state.role==='client'?[CLIENT_NAV[0],CLIENT_NAV[3],CLIENT_NAV[4],CLIENT_NAV[7]]:[INTERNAL_NAV[0],INTERNAL_NAV[1],INTERNAL_NAV[2],INTERNAL_NAV[4]];
   mobile.innerHTML=picks.map(([id,icon,label])=>'<button type="button" data-ymc-section="'+id+'" class="'+(state.section===id?'is-active':'')+'"><span>'+icon+'</span>'+esc(label)+'</button>').join('')+
     '<button type="button" data-ymc-open-menu><span>•••</span>More</button>';
 }
@@ -347,21 +347,105 @@ function internalAccess(){
     '<section class="ymc-auth-architecture"><article class="ymc-auth-card is-recommended"><span>PHASE 1 · RECOMMENDED</span><h3>Supabase Auth</h3><p>Coerente con stack attuale e RLS.</p><ul><li>Staff: password + MFA</li><li>Client: magic link / OTP</li><li>Organization membership</li><li>JWT + RLS per missione</li></ul></article><article class="ymc-auth-card"><span>ENTERPRISE TRIGGER</span><h3>WorkOS</h3><p>Quando un cliente chiede SAML/OIDC/SCIM.</p><ul><li>Enterprise SSO</li><li>Directory sync</li><li>Organization policies</li><li>Upgrade senza riscrivere domain model</li></ul></article><article class="ymc-auth-card"><span>NOT FIRST CHOICE</span><h3>Clerk / Auth0</h3><p>Validi, ma aggiungono un identity stack che oggi non serve.</p><ul><li>Ottima developer UX</li><li>Enterprise features</li><li>Più dipendenza esterna</li><li>Valutabili se cambiano i requisiti</li></ul></article></section>'+
     '<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>DOMAIN MODEL</span><h2>Do not couple business data to one auth vendor.</h2></div></div><div class="ymc-route"><span>Organization</span><i>→</i><span>Membership</span><i>→</i><span>Mission</span><i>→</i><span>Permission</span><i>→</i><span>Audit log</span></div><p>Le entità business devono usare ID interni YUME. L’identity provider si collega tramite identity_provider + identity_subject, così Supabase oggi e WorkOS domani non richiedono una riscrittura del progetto.</p></section>';
 }
+function openOnboarding(){
+  state.session=false;state.onboarding=true;state.onboardingStep=1;state.onboardingSubmitted=false;state.uploadedDocs={};save();render();
+}
+function closeOnboarding(){
+  state.onboarding=false;state.onboardingSubmitted=false;save();render();
+}
+function onboardingProgress(){
+  const labels=['Azienda','Documenti','Amministratore','Review'];
+  return labels.map((label,i)=>'<div class="'+(state.onboardingStep===i+1?'is-active':state.onboardingStep>i+1?'is-complete':'')+'"><span>'+(i+1)+'</span><b>'+label+'</b></div>').join('');
+}
+function renderOnboarding(){
+  const progress=el('[data-ymc-onboarding-progress]'),content=el('[data-ymc-onboarding-content]');
+  if(!progress||!content)return;
+  progress.innerHTML=onboardingProgress();
+  const back=el('[data-ymc-onboarding-back]'),next=el('[data-ymc-onboarding-next]');
+  if(state.onboardingSubmitted){
+    content.innerHTML='<div class="ymc-onboarding-complete"><span class="ymc-section-label">SUBMITTED TO YUME · DEMO</span><i>✓</i><h1>La richiesta non crea ancora un account.</h1><p>YUME verifica Organization, set documentale e referente. Solo dopo l’approvazione viene creata la Membership e viene inviato l’accesso. In produzione questa fase genererà audit log, scadenza del link e notifica allo staff.</p><div class="ymc-onboarding-statusline"><span class="is-done">Link ricevuto</span><span class="is-done">Documenti inviati</span><span class="is-current">Verifica YUME</span><span>Accesso</span></div><button class="ymc-btn ymc-btn--dark" type="button" data-ymc-close-onboarding>Chiudi preview onboarding</button></div>';
+    back.hidden=true;next.hidden=true;
+    els('[data-ymc-close-onboarding]').forEach(b=>b.onclick=closeOnboarding);
+    return;
+  }
+  back.hidden=state.onboardingStep===1;next.hidden=false;
+  next.textContent=state.onboardingStep===4?'Invia alla verifica YUME →':'Continua →';
+  if(state.onboardingStep===1){
+    content.innerHTML='<span class="ymc-section-label">STEP 01 · ORGANIZATION</span><h1>Identificare l’azienda, non creare un semplice utente.</h1><p class="ymc-onboarding-lead">Il referente riceve un link nominativo YUME. La produzione dovrà collegare la richiesta a una Organization verificata.</p><div class="ymc-form-grid"><label><span>Ragione sociale</span><input value="Aurea Italia S.r.l." data-ymc-onboard-field="company"></label><label><span>Partita IVA / VAT</span><input value="IT01234567890" data-ymc-onboard-field="vat"></label><label><span>REA / Registro imprese</span><input value="MI-1234567" data-ymc-onboard-field="rea"></label><label><span>Sede legale</span><input value="Milano, Italia" data-ymc-onboard-field="hq"></label><label class="is-wide"><span>Sito aziendale</span><input value="https://azienda.example" data-ymc-onboard-field="website"></label></div><div class="ymc-form-note"><b>Production rule</b><span>I dati dichiarati vengono confrontati con documentazione/verifiche definite da YUME. Nessun account viene creato in automatico.</span></div>';
+  }else if(state.onboardingStep===2){
+    const docs=state.uploadedDocs||{};
+    content.innerHTML='<span class="ymc-section-label">STEP 02 · DOCUMENT SET</span><h1>Upload temporaneo. Nessun documento nel frontend.</h1><p class="ymc-onboarding-lead">Nella preview i file non vengono trasmessi: salviamo solo il nome nel browser. In produzione useremo storage privato e signed upload URL.</p><div class="ymc-upload-list">'+
+      uploadRow('visura','Visura camerale','Core',docs.visura)+
+      uploadRow('identity','Identità legale rappresentante','Core',docs.identity)+
+      uploadRow('delegation','Delega / autorizzazione','Se richiesta',docs.delegation)+
+    '</div><div class="ymc-form-note"><b>Nota legale</b><span>Il set documentale definitivo, le basi giuridiche, retention e modalità di verifica devono essere validati prima del go-live. Questa preview mostra solo il workflow.</span></div>';
+  }else if(state.onboardingStep===3){
+    content.innerHTML='<span class="ymc-section-label">STEP 03 · CORPORATE ADMIN</span><h1>Chi può amministrare la missione?</h1><p class="ymc-onboarding-lead">Il primo utente non si registra da solo: viene nominato dall’azienda e abilitato da YUME come Organization Admin.</p><div class="ymc-form-grid"><label><span>Nome e cognome</span><input value="Alessandro Rinaldi"></label><label><span>Ruolo aziendale</span><input value="Founder / proprietà"></label><label><span>Email aziendale</span><input type="email" value="demo@azienda.it"></label><label><span>Dominio aziendale</span><input value="azienda.it"></label></div><div class="ymc-form-note"><b>Security</b><span>Produzione: email verificata, MFA per ruoli sensibili, audit log e possibilità di revoca immediata della Membership.</span></div>';
+  }else{
+    const docs=state.uploadedDocs||{};
+    content.innerHTML='<span class="ymc-section-label">STEP 04 · REVIEW</span><h1>YUME decide quando l’Organization è pronta.</h1><p class="ymc-onboarding-lead">Inviare il set documentale non equivale a ricevere credenziali. La review interna precede Organization + Membership + accesso.</p><div class="ymc-review-grid"><article><span>ORGANIZATION</span><b>Aurea Italia S.r.l.</b><small>VAT · IT01234567890</small></article><article><span>DOCUMENTS</span><b>'+((docs.visura?1:0)+(docs.identity?1:0)+(docs.delegation?1:0))+'/3 demo</b><small>Visura + identity richiesti nella preview</small></article><article><span>ADMIN</span><b>Alessandro Rinaldi</b><small>demo@azienda.it</small></article><article><span>ACCESS</span><b>Pending YUME</b><small>No account yet</small></article></div><label class="ymc-review-check"><input type="checkbox" data-ymc-onboarding-confirm><span>Confermo di aver compreso che questa è una simulazione UX e che i documenti non vengono trasmessi.</span></label><p class="ymc-access-error" data-ymc-onboarding-error hidden></p>';
+  }
+  bindOnboardingDynamic();
+}
+function uploadRow(key,title,requirement,current){
+  return '<div class="ymc-upload-row '+(current?'is-ready':'')+'"><div><span>'+esc(requirement)+'</span><b>'+esc(title)+'</b><small>'+(current?esc(current):'Nessun file selezionato')+'</small></div><div><label class="ymc-upload-btn">Scegli file<input type="file" data-ymc-upload="'+key+'" accept=".pdf,.p7m,.jpg,.jpeg,.png"></label><button type="button" data-ymc-demo-doc="'+key+'">Usa demo</button></div></div>';
+}
+function bindOnboardingDynamic(){
+  els('[data-ymc-upload]').forEach(input=>input.onchange=()=>{
+    const file=input.files&&input.files[0];if(!file)return;
+    state.uploadedDocs[input.dataset.ymcUpload]=file.name;save();renderOnboarding();
+  });
+  els('[data-ymc-demo-doc]').forEach(btn=>btn.onclick=()=>{
+    const names={visura:'visura_demo.pdf',identity:'documento_identita_demo.pdf',delegation:'delega_demo.pdf'};
+    state.uploadedDocs[btn.dataset.ymcDemoDoc]=names[btn.dataset.ymcDemoDoc];save();renderOnboarding();
+  });
+}
+function onboardingNext(){
+  if(state.onboardingStep===2&&(!state.uploadedDocs.visura||!state.uploadedDocs.identity)){
+    const content=el('[data-ymc-onboarding-content]');
+    const note=document.createElement('p');note.className='ymc-access-error';note.textContent='Per la preview servono almeno Visura camerale e documento del legale rappresentante.';content.appendChild(note);return;
+  }
+  if(state.onboardingStep===4){
+    const check=el('[data-ymc-onboarding-confirm]'),err=el('[data-ymc-onboarding-error]');
+    if(!check||!check.checked){if(err){err.hidden=false;err.textContent='Conferma la natura dimostrativa del flusso prima di inviare.'}return;}
+    state.onboardingSubmitted=true;save();renderOnboarding();return;
+  }
+  state.onboardingStep=Math.min(4,state.onboardingStep+1);save();renderOnboarding();
+}
+function onboardingBack(){
+  state.onboardingStep=Math.max(1,state.onboardingStep-1);save();renderOnboarding();
+}
+
 function bindDynamic(){
   els('[data-ymc-section]').forEach(b=>b.onclick=()=>setSection(b.dataset.ymcSection));
   els('[data-ymc-decision]').forEach(b=>b.onclick=()=>{const [id,status]=b.dataset.ymcDecision.split(':');updateDecision(id,status)});
   els('[data-ymc-drawer-open]').forEach(b=>b.onclick=()=>{const [type,id]=b.dataset.ymcDrawerOpen.split(':');openDrawer(type,id)});
   els('[data-ymc-toast]').forEach(b=>b.onclick=()=>toast(b.dataset.ymcToast));
+  els('[data-ymc-onboarding-approve]').forEach(b=>b.onclick=()=>toast('Preview: Organization approvata. In produzione partirebbe l’invito nominativo.'));
   els('[data-ymc-open-menu]').forEach(b=>b.onclick=()=>toggleMenu(true));
 }
 function enter(role){
-  state.session=true;state.role=role;state.section=role==='client'?'overview':'network';save();render();
+  if(role==='client'){
+    const email=el('[data-ymc-demo-email]')?.value.trim()||'';
+    const token=el('[data-ymc-demo-token]')?.value.trim()||'';
+    const err=el('[data-ymc-access-error]');
+    if(!email.includes('@')||token!=='YUME-DEMO-2701'){
+      if(err){err.hidden=false;err.textContent='Accesso demo non valido. Usa email aziendale + token YUME-DEMO-2701.'}
+      return;
+    }
+    if(err)err.hidden=true;
+  }
+  state.onboarding=false;state.session=true;state.role=role;state.section=role==='client'?'overview':'network';save();render();
 }
 function logout(){state={...baseState()};save();render()}
 function resetPreview(){try{localStorage.removeItem(STORAGE)}catch(_){}state={...baseState(),session:true,role:'client',section:'overview'};save();render();toast('Preview ripristinata.')}
 function toggleMenu(open){state.sidebar=typeof open==='boolean'?open:!state.sidebar;el('[data-ymc-sidebar]')?.classList.toggle('is-open',state.sidebar)}
 function initStatic(){
   els('[data-ymc-enter]').forEach(b=>b.onclick=()=>enter(b.dataset.ymcEnter));
+  els('[data-ymc-open-onboarding]').forEach(b=>b.onclick=openOnboarding);
+  els('[data-ymc-close-onboarding]').forEach(b=>b.onclick=closeOnboarding);
+  el('[data-ymc-onboarding-next]').onclick=onboardingNext;
+  el('[data-ymc-onboarding-back]').onclick=onboardingBack;
   els('[data-ymc-role]').forEach(b=>b.onclick=()=>setRole(b.dataset.ymcRole));
   els('[data-ymc-open-menu]').forEach(b=>b.onclick=()=>toggleMenu(true));
   el('[data-ymc-close-menu]').onclick=()=>toggleMenu(false);
