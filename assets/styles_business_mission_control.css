@@ -173,6 +173,7 @@ button,input{font:inherit}button,a{color:inherit}a{text-decoration:none}button{c
 .ymc-internal-login-security{margin-top:14px;padding:13px;border:1px solid rgba(255,255,255,.09);border-radius:13px;background:rgba(255,255,255,.045)}.ymc-internal-login-security span{color:var(--ymc-brass-2);font-size:7px;font-weight:900;letter-spacing:.12em}.ymc-internal-login-security p{margin:5px 0 0;color:rgba(255,255,255,.58);font-size:8px;line-height:1.5}
 
 /* Sidebar tap-away */
+body.ymc-nav-open{overflow:hidden}
 .ymc-sidebar-backdrop{display:none}
 @media(max-width:900px){
   .ymc-sidebar-backdrop{position:fixed;inset:34px 0 0;z-index:175;background:rgba(13,21,29,.38);opacity:0;pointer-events:none;display:block;transition:.2s}
