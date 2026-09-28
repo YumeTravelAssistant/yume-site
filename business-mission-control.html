@@ -12,8 +12,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/styles_business_mission_control.css?v=20260928-v5">
-  <script defer src="/assets/script_business_mission_control.js?v=20260928-v5"></script>
+  <link rel="stylesheet" href="/assets/styles_business_mission_control.css?v=20260928-v6">
+  <script defer src="/assets/script_business_mission_control.js?v=20260928-v6"></script>
 </head>
 <body>
 <a class="ymc-skip" href="#ymc-main">Vai al contenuto</a>
@@ -131,11 +131,14 @@
     <form data-ymc-internal-login-form>
       <label class="ymc-field">
         <span>Email YUME</span>
-        <input type="email" placeholder="Email staff YUME" data-ymc-internal-email autocomplete="username">
+        <input type="email" value="" placeholder="Email staff YUME" data-ymc-internal-email autocomplete="username" autocapitalize="none" spellcheck="false">
       </label>
       <label class="ymc-field">
         <span>Password</span>
-        <input type="password" placeholder="Password staff" data-ymc-internal-password autocomplete="current-password">
+        <div class="ymc-password-field">
+          <input type="password" placeholder="Password staff" data-ymc-internal-password autocomplete="current-password">
+          <button type="button" class="ymc-password-toggle" data-ymc-toggle-password aria-pressed="false" aria-label="Mostra password">Mostra</button>
+        </div>
       </label>
       <p class="ymc-access-error" data-ymc-internal-login-error hidden></p>
       <button type="submit" class="ymc-gate-action">
