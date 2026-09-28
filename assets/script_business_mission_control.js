@@ -550,21 +550,92 @@ function renderClient(section){
   const map={overview:clientOverview,company:clientCompany,mission:clientMission,agenda:clientAgenda,decisions:clientDecisions,participants:clientParticipants,travel:clientTravel,documents:clientDocuments,financials:clientFinancials,followup:clientFollowup};
   return (map[section]||clientOverview)();
 }
-function renderPlatformClient(section){
+function platformHome(){
+  const org=clientOrg(),missions=state.clientMissions||[],requests=state.clientRequests||[];
+  const open=requests.filter(r=>!['closed','rejected'].includes(r.status)).length;
+  const network=requests.filter(r=>['partner_search','introduction','business_meeting','recruiting_partner','market_research'].includes(r.request_type)&&!['closed','rejected'].includes(r.status)).length;
+  const latest=missions[0]||null;
+  return pageHead('YUME WORKS · BUSINESS OS','Buongiorno, <em>'+esc((org.member||'').split(' ')[0]||org.name||'Corporate')+'.</em>','Da qui potete aprire una missione, chiedere un itinerario, cercare controparti o attivare il team YUME su una richiesta specifica.')+
+    '<section class="ymc-grid ymc-grid--4"><article class="ymc-card ymc-stat"><span>MISSIONS</span><strong>'+missions.length+'</strong><small>'+esc(latest?latest.mission_code+' · '+latest.status:'Nessun progetto attivo')+'</small></article><article class="ymc-card ymc-stat"><span>OPEN REQUESTS</span><strong>'+open+'</strong><small>richieste in lavorazione</small></article><article class="ymc-card ymc-stat"><span>NETWORK DESK</span><strong>'+network+'</strong><small>ricerche / introduzioni aperte</small></article><article class="ymc-card ymc-stat"><span>ACCOUNT</span><strong>LIVE</strong><small>'+esc(org.name||'Organization verificata')+'</small></article></section>'+
+    '<section class="ymc-os-actions" style="margin-top:12px">'+
+      '<button type="button" data-ymc-quick-request="new_mission"><span>01 · BUILD</span><b>Start a Business Mission</b><small>Market entry, sourcing, fiere, executive learning o progetto custom.</small><i>→</i></button>'+
+      '<button type="button" data-ymc-quick-request="itinerary"><span>02 · TRAVEL</span><b>Request itinerary</b><small>Business travel, delegazione, logistica, hotel, transfer e agenda.</small><i>→</i></button>'+
+      '<button type="button" data-ymc-quick-request="partner_search"><span>03 · NETWORK</span><b>Find partners</b><small>Buyer, distributori, fornitori, specialisti, recruiting e istituzioni.</small><i>→</i></button>'+
+      '<button type="button" data-ymc-quick-request="market_research"><span>04 · INTELLIGENCE</span><b>Ask YUME</b><small>Mercato, fiere, cluster, opportunità e supporto operativo Japan / Asia.</small><i>→</i></button>'+
+    '</section>'+
+    '<section class="ymc-grid ymc-grid--2" style="margin-top:12px">'+
+      '<article class="ymc-card"><div class="ymc-card-head"><div><span>RECENT MISSIONS</span><h2>Projects</h2></div><button data-ymc-section="mission">View all →</button></div><div class="ymc-list">'+(missions.length?missions.slice(0,4).map(m=>'<div class="ymc-list-row"><div><b>'+esc(m.title)+'</b><small>'+esc(m.mission_code)+' · '+esc(m.status)+'</small></div><button data-ymc-select-mission="'+m.id+'">Open →</button></div>').join(''):'<div class="ymc-empty-inline">Nessuna missione. Potete crearne una direttamente dal portale.</div>')+'</div></article>'+
+      '<article class="ymc-card"><div class="ymc-card-head"><div><span>CLIENT DESK</span><h2>Requests</h2></div><button data-ymc-section="requests">Open desk →</button></div><div class="ymc-list">'+(requests.length?requests.slice(0,4).map(r=>'<div class="ymc-list-row"><div><b>'+esc(r.subject)+'</b><small>'+esc(requestTypeLabel(r.request_type))+' · '+esc(requestStatusLabel(r.status))+'</small></div><button data-ymc-open-client-request="'+r.id+'">Open →</button></div>').join(''):'<div class="ymc-empty-inline">Nessuna richiesta aperta.</div>')+'</div></article>'+
+    '</section>';
+}
+function platformMissions(){
+  const missions=state.clientMissions||[],m=activeMission();
+  return pageHead('MISSIONS','From intent to <em>execution.</em>','Una Mission è il contenitore operativo: obiettivo, interlocutori, agenda, viaggio e follow-up. Potete inviare un nuovo progetto a YUME direttamente da qui.')+
+    '<section class="ymc-grid ymc-grid--2">'+
+      '<article class="ymc-card"><div class="ymc-card-head"><div><span>YOUR MISSIONS</span><h2>'+missions.length+' project'+(missions.length===1?'':'s')+'</h2></div></div><div class="ymc-list">'+(missions.length?missions.map(x=>'<div class="ymc-list-row"><div><b>'+esc(x.title)+'</b><small>'+esc(x.mission_code)+' · '+esc(x.mission_type)+' · '+esc(x.status)+'</small></div><button data-ymc-select-mission="'+x.id+'">'+(m?.id===x.id?'Selected':'Open')+' →</button></div>').join(''):'<div class="ymc-empty-inline">Nessuna Mission ancora creata.</div>')+'</div></article>'+
+      '<article class="ymc-card ymc-card--brass"><span class="ymc-section-label">ACTIVE MISSION</span><h2>'+esc(m?.title||'No active mission')+'</h2><p>'+(m?esc(m.objective||m.desired_outcome||'Mission sottoposta a YUME per la qualificazione.'):'Create una Mission quando volete trasformare un obiettivo di business in un progetto operativo.')+'</p>'+(m?'<div class="ymc-route"><span>'+esc(m.status)+'</span><i>→</i><span>'+esc((m.target_markets||[]).join(', ')||'Market TBD')+'</span><i>→</i><span>'+esc(m.budget_band||'Budget TBD')+'</span></div>':'')+'</article>'+
+    '</section>'+
+    '<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>NEW MISSION REQUEST</span><h2>Tell us what must happen.</h2></div></div>'+
+      '<form class="ymc-os-form" data-ymc-new-mission-form>'+
+        '<label><span>Mission title *</span><input name="title" required maxlength="180" placeholder="Es. Japan distributor search 2027"></label>'+
+        '<label><span>Mission type</span><select name="mission_type"><option value="business_mission">Business mission</option><option value="market_entry">Market entry</option><option value="sourcing">Sourcing</option><option value="fair_support">Fair support</option><option value="executive_learning">Executive learning</option><option value="travel_only">Business travel only</option><option value="incoming">Incoming to Italy</option><option value="other">Other</option></select></label>'+
+        '<label><span>Sector</span><input name="sector" maxlength="120" placeholder="Automotive, food, tech…"></label>'+
+        '<label><span>Target markets</span><input name="target_markets" maxlength="240" placeholder="Japan, South Korea…"></label>'+
+        '<label class="is-wide"><span>Objective *</span><textarea name="objective" required maxlength="2500" placeholder="Cosa volete ottenere?"></textarea></label>'+
+        '<label class="is-wide"><span>Desired outcome</span><textarea name="desired_outcome" maxlength="2500" placeholder="Cosa dovrebbe essere diverso al ritorno?"></textarea></label>'+
+        '<label><span>Target cities</span><input name="target_cities" maxlength="240" placeholder="Tokyo, Osaka, Nagoya…"></label>'+
+        '<label><span>Budget band</span><input name="budget_band" maxlength="120" placeholder="Es. €10.000–25.000"></label>'+
+        '<label><span>Participants</span><input name="participants_count" type="number" min="1" max="500" placeholder="4"></label>'+
+        '<div class="ymc-os-form-action"><button class="ymc-btn ymc-btn--dark" type="submit">Submit Mission →</button><small>YUME riceverà il progetto in stato Submitted e lo qualificherà prima di qualsiasi impegno operativo.</small></div>'+
+      '</form>'+
+    '</section>';
+}
+function platformRequests(){
+  const rows=state.clientRequests||[],selected=rows.find(r=>r.id===state.activeClientRequestId);
+  if(selected){
+    const messages=state.requestMessages[selected.id]||[];
+    return pageHead('CLIENT DESK','Request <em>detail.</em>','Qui resta la conversazione operativa con YUME.','<button class="ymc-btn" data-ymc-back-requests>← All requests</button>')+
+      '<section class="ymc-grid ymc-grid--2"><article class="ymc-card"><span class="ymc-section-label">'+esc(requestTypeLabel(selected.request_type))+'</span><h2>'+esc(selected.subject)+'</h2><p>'+esc(selected.description)+'</p><div class="ymc-request-meta"><span>Status · '+esc(requestStatusLabel(selected.status))+'</span><span>Priority · '+esc(selected.priority)+'</span><span>Scope · '+esc(selected.service_scope)+'</span></div>'+(selected.target_profile?'<p><b>Target:</b> '+esc(selected.target_profile)+'</p>':'')+'</article>'+
+      '<article class="ymc-card"><div class="ymc-card-head"><div><span>CONVERSATION</span><h2>YUME ↔ '+esc(clientOrg().name||'Client')+'</h2></div></div><div class="ymc-thread">'+(messages.length?messages.map(msg=>'<div class="ymc-thread-item is-'+esc(msg.sender_side)+'"><span>'+esc(msg.sender_side==='client'?'Client':'YUME')+' · '+esc(new Date(msg.created_at).toLocaleString('it-IT'))+'</span><p>'+esc(msg.body)+'</p></div>').join(''):'<div class="ymc-empty-inline">Nessun messaggio ancora. Potete aggiungere contesto qui sotto.</div>')+'</div><form data-ymc-client-message-form="'+selected.id+'" class="ymc-message-form"><textarea name="body" maxlength="8000" required placeholder="Scrivi a YUME…"></textarea><button class="ymc-btn ymc-btn--dark" type="submit">Send →</button></form></article></section>';
+  }
+  const pre=state.quickRequestType||'';
+  return pageHead('CLIENT DESK','Ask YUME. <em>Track the answer.</em>','Aprite una richiesta per travel, partner search, introduzioni, ricerca di mercato, interpreti, recruiting partner o altre necessità. Ogni richiesta resta tracciata.')+
+    '<section class="ymc-card"><div class="ymc-card-head"><div><span>NEW REQUEST</span><h2>What do you need?</h2></div></div>'+
+      '<form class="ymc-os-form" data-ymc-new-request-form>'+
+        '<label><span>Request type *</span><select name="request_type" required>'+
+          '<option value="itinerary" '+(pre==='itinerary'?'selected':'')+'>Itinerary / Business Travel</option>'+
+          '<option value="partner_search" '+(pre==='partner_search'?'selected':'')+'>Partner Search</option>'+
+          '<option value="introduction">Business Introduction</option><option value="business_meeting">Business Meeting</option><option value="market_research" '+(pre==='market_research'?'selected':'')+'>Market Research</option><option value="interpreter">Interpreter</option><option value="factory_visit">Factory Visit</option><option value="fair_support">Fair Support</option><option value="recruiting_partner">Recruiting / HR Partner</option><option value="travel_change">Travel Change</option><option value="document_visa">Documents / Visa</option><option value="other">Other</option>'+
+        '</select></label>'+
+        '<label><span>Priority</span><select name="priority"><option value="normal">Normal</option><option value="high">High</option><option value="urgent">Urgent</option><option value="low">Low</option></select></label>'+
+        '<label><span>Sector</span><input name="sector" maxlength="120" placeholder="Your industry"></label>'+
+        '<label><span>Target markets</span><input name="target_markets" maxlength="240" placeholder="Japan, Korea…"></label>'+
+        '<label class="is-wide"><span>Subject *</span><input name="subject" required maxlength="200" placeholder="Es. Cerchiamo distributori B2B in Kansai"></label>'+
+        '<label class="is-wide"><span>Describe the request *</span><textarea name="description" required maxlength="5000" placeholder="Obiettivo, contesto, timing, vincoli e cosa vi aspettate da YUME."></textarea></label>'+
+        '<label class="is-wide"><span>Target profile / counterpart</span><textarea name="target_profile" maxlength="2500" placeholder="Se cercate partner: profilo ideale, dimensione, canale, territorio, competenze…"></textarea></label>'+
+        '<div class="ymc-os-form-action"><button class="ymc-btn ymc-btn--dark" type="submit">Open request →</button><small>La richiesta entra nel Client Desk YUME. La presa in carico non implica automaticamente un incarico di mediazione o la disponibilità di una controparte.</small></div>'+
+      '</form>'+
+    '</section>'+
+    '<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>REQUEST HISTORY</span><h2>'+rows.length+' request'+(rows.length===1?'':'s')+'</h2></div></div><div class="ymc-list">'+(rows.length?rows.map(r=>'<div class="ymc-list-row"><div><b>'+esc(r.subject)+'</b><small>'+esc(requestTypeLabel(r.request_type))+' · '+esc(requestStatusLabel(r.status))+' · '+esc(new Date(r.created_at).toLocaleDateString('it-IT'))+'</small></div><button data-ymc-open-client-request="'+r.id+'">Open →</button></div>').join(''):'<div class="ymc-empty-inline">Nessuna richiesta inviata.</div>')+'</div></section>';
+}
+function platformNetwork(){
+  return pageHead('YUME NETWORK','Search with a <em>business case.</em>','Non una directory aperta: descrivete il tipo di controparte che cercate e YUME attiva il percorso più adatto tra network proprietario, istituzioni, camere, specialisti e ricerca mirata.')+
+    '<section class="ymc-os-actions">'+
+      '<button type="button" data-ymc-quick-request="partner_search"><span>PARTNER SEARCH</span><b>Buyer / Distributor / Supplier</b><small>Ricerca e qualificazione di controparti coerenti con settore e obiettivo.</small><i>→</i></button>'+
+      '<button type="button" data-ymc-quick-request="introduction"><span>INTRODUCTION</span><b>Request an introduction</b><small>Quando esiste già un soggetto o un ecosistema rilevante da attivare.</small><i>→</i></button>'+
+      '<button type="button" data-ymc-quick-request="recruiting_partner"><span>PEOPLE</span><b>Recruiting / HR partner</b><small>Ricerca di operatori o società specializzate; YUME coordina la richiesta, non svolge selezione del personale.</small><i>→</i></button>'+
+      '<button type="button" data-ymc-quick-request="market_research"><span>INSTITUTIONAL</span><b>Chambers & ecosystem</b><small>Camera di commercio, cluster, fiere, università e organismi di supporto quando utili al caso.</small><i>→</i></button>'+
+    '</section>'+
+    '<section class="ymc-grid ymc-grid--2" style="margin-top:12px"><article class="ymc-card"><span class="ymc-section-label">HOW IT WORKS</span><h2>Request → qualify → connect.</h2><div class="ymc-route"><span>Business need</span><i>→</i><span>YUME review</span><i>→</i><span>Search / Network</span><i>→</i><span>Introduction</span><i>→</i><span>Follow-up</span></div><p>Il nome e i contatti dei partner non vengono esposti automaticamente: il registry interno resta intelligence YUME e le introduzioni vengono gestite caso per caso.</p></article><article class="ymc-card ymc-card--brass"><span class="ymc-section-label">JAPAN CORE · ASIA EXTENSION</span><h2>Network follows demand.</h2><p>Giappone come core; Corea, Singapore, Hong Kong, Taiwan e altri hub entrano solo quando migliorano il business case. Partner e istituzioni vengono qualificati in funzione della Mission, non aggiunti per quantità.</p></article></section>';
+}
+function platformCompany(){
   const org=clientOrg();
-  if(section==='overview'){
-    return pageHead('CORPORATE PLATFORM · LIVE','Benvenuti in <em>'+esc(org.name||'Mission Control')+'.</em>','Organization e Membership sono reali. I moduli missione restano vuoti finché YUME non assegna un progetto operativo.')+
-      '<section class="ymc-grid ymc-grid--4"><article class="ymc-card ymc-stat"><span>ORGANIZATION</span><strong>Active</strong><small>'+esc(org.name||'—')+'</small></article><article class="ymc-card ymc-stat"><span>MEMBERSHIP</span><strong>Corporate Admin</strong><small>Supabase Auth nominativo</small></article><article class="ymc-card ymc-stat"><span>MISSIONS</span><strong>0</strong><small>Nessuna missione assegnata</small></article><article class="ymc-card ymc-stat"><span>DATA MODE</span><strong>LIVE</strong><small>Nessun dato Demo mischiato</small></article></section>'+
-      '<section class="ymc-card ymc-card--brass" style="margin-top:12px"><span class="ymc-section-label">NEXT STEP</span><h2>Workspace pronto.</h2><p>YUME può ora collegare una missione reale a questa Organization. Fino a quel momento agenda, travel, documenti, decisioni, partecipanti e financials restano intenzionalmente vuoti.</p></section>';
-  }
-  if(section==='company'){
-    return pageHead('COMPANY','Organization <em>verified.</em>','Profilo corporate legato alla Membership attiva.')+
-      '<section class="ymc-card"><span class="ymc-section-label">LEGAL ORGANIZATION</span><h2>'+esc(org.name||'—')+'</h2><p>Corporate Admin: '+esc(org.member||'—')+'</p><div class="ymc-route"><span>Organization</span><i>→</i><span>Membership</span><i>→</i><span>Mission</span></div></section>';
-  }
-  const labels={mission:'Mission',agenda:'Agenda',decisions:'Decisions',participants:'Participants',travel:'Travel',documents:'Documents',financials:'Financials',followup:'Follow-up'};
-  const label=labels[section]||'Workspace';
-  return pageHead(label.toUpperCase(),label+' <em>workspace.</em>','Modulo disponibile per la Organization, ma senza dati fittizi.')+
-    '<section class="ymc-card"><span class="ymc-section-label">EMPTY STATE · LIVE PLATFORM</span><h2>Nessun dato ancora assegnato.</h2><p>Questo spazio verrà popolato esclusivamente con record reali collegati alla vostra Organization. La Demo resta separata.</p></section>';
+  return pageHead('COMPANY','Organization <em>verified.</em>','Profilo corporate e accesso nominativo collegati alla vostra Organization.')+
+    '<section class="ymc-grid ymc-grid--2"><article class="ymc-card"><span class="ymc-section-label">LEGAL ORGANIZATION</span><h2>'+esc(org.name||'—')+'</h2><p>Corporate Admin: '+esc(org.member||'—')+'</p><div class="ymc-route"><span>Organization</span><i>→</i><span>Membership</span><i>→</i><span>Missions</span></div></article><article class="ymc-card"><span class="ymc-section-label">WORKSPACE MODEL</span><h2>One company. Multiple missions.</h2><p>Missioni, richieste e conversazioni restano collegate alla stessa Organization. In una fase successiva potremo aggiungere altri membri con ruoli e permessi differenti.</p></article></section>';
+}
+function renderPlatformClient(section){
+  const map={overview:platformHome,mission:platformMissions,requests:platformRequests,networkClient:platformNetwork,company:platformCompany};
+  return (map[section]||platformHome)();
 }
 function clientOverview(){
   const next=DATA.decisions.find(d=>(state.decisionStatus[d.id]||d.status)==='required')||DATA.decisions[0];
@@ -645,8 +716,23 @@ function clientFollowup(){
     '<section class="ymc-card ymc-card--brass" style="margin-top:12px"><span class="ymc-section-label">ACCOUNT MEMORY</span><h2>Il vantaggio cresce missione dopo missione.</h2><p>Quando la stessa azienda torna in Giappone o Asia, YUME non riparte da zero: storico delle missioni, contatti, decisioni, documenti e follow-up diventano memoria aziendale condivisa.</p></section>';
 }
 function renderInternal(section){
-  const map={network:internalNetwork,onboarding:internalOnboarding,partners:internalPartners,partnerWorkspace:internalPartnerWorkspace,coverage:internalCoverage,pipeline:internalPipeline,roadmap:internalRoadmap,access:internalAccess};
+  const map={network:internalNetwork,clientDesk:internalClientDesk,onboarding:internalOnboarding,partners:internalPartners,partnerWorkspace:internalPartnerWorkspace,coverage:internalCoverage,pipeline:internalPipeline,roadmap:internalRoadmap,access:internalAccess};
   return (map[section]||internalNetwork)();
+}
+function internalClientDesk(){
+  const rows=state.internalClientRequests||[],missions=state.internalMissions||[],selected=rows.find(r=>r.id===state.activeInternalRequestId);
+  const open=rows.filter(r=>!['closed','rejected'].includes(r.status)).length;
+  if(selected){
+    const messages=state.requestMessages[selected.id]||[];
+    const org=selected.ymc_organizations?.legal_name||selected.organization_id;
+    return pageHead('CLIENT DESK · LIVE','Work the <em>request.</em>','Richiesta reale collegata alla Organization.','<button class="ymc-btn" data-ymc-back-internal-requests>← All requests</button>')+
+      '<section class="ymc-grid ymc-grid--2"><article class="ymc-card"><span class="ymc-section-label">'+esc(requestTypeLabel(selected.request_type))+'</span><h2>'+esc(selected.subject)+'</h2><p>'+esc(selected.description)+'</p><div class="ymc-request-meta"><span>'+esc(org)+'</span><span>Priority · '+esc(selected.priority)+'</span><span>Scope · '+esc(selected.service_scope)+'</span></div><label class="ymc-status-control"><span>STATUS</span><select data-ymc-internal-request-status="'+selected.id+'"><option value="submitted" '+(selected.status==='submitted'?'selected':'')+'>Submitted</option><option value="reviewing" '+(selected.status==='reviewing'?'selected':'')+'>Reviewing</option><option value="need_info" '+(selected.status==='need_info'?'selected':'')+'>Need info</option><option value="in_progress" '+(selected.status==='in_progress'?'selected':'')+'>In progress</option><option value="delivered" '+(selected.status==='delivered'?'selected':'')+'>Delivered</option><option value="closed" '+(selected.status==='closed'?'selected':'')+'>Closed</option><option value="rejected" '+(selected.status==='rejected'?'selected':'')+'>Rejected</option></select></label></article>'+
+      '<article class="ymc-card"><div class="ymc-card-head"><div><span>CLIENT THREAD</span><h2>'+esc(org)+'</h2></div></div><div class="ymc-thread">'+(messages.length?messages.map(msg=>'<div class="ymc-thread-item is-'+esc(msg.sender_side)+'"><span>'+esc(msg.sender_side==='client'?'Client':'YUME')+' · '+esc(new Date(msg.created_at).toLocaleString('it-IT'))+'</span><p>'+esc(msg.body)+'</p></div>').join(''):'<div class="ymc-empty-inline">Nessun messaggio.</div>')+'</div><form data-ymc-internal-message-form="'+selected.id+'" class="ymc-message-form"><textarea name="body" maxlength="8000" required placeholder="Rispondi al cliente…"></textarea><button class="ymc-btn ymc-btn--dark" type="submit">Send as YUME →</button></form></article></section>';
+  }
+  return pageHead('CLIENT DESK · LIVE','Requests become <em>work.</em>','Qui arrivano le richieste Corporate: travel, ricerca partner, introduzioni, market research, interpreti, recruiting partner e altri servizi.','<button class="ymc-btn" data-ymc-refresh-live>↻ Refresh</button>')+
+    '<section class="ymc-grid ymc-grid--3"><article class="ymc-card ymc-stat"><span>OPEN REQUESTS</span><strong>'+open+'</strong><small>da prendere in carico / lavorare</small></article><article class="ymc-card ymc-stat"><span>TOTAL REQUESTS</span><strong>'+rows.length+'</strong><small>client desk</small></article><article class="ymc-card ymc-stat"><span>MISSIONS</span><strong>'+missions.length+'</strong><small>progetti Corporate reali</small></article></section>'+
+    '<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>CLIENT REQUESTS</span><h2>Operations queue</h2></div></div><div class="ymc-table-wrap"><table class="ymc-table"><thead><tr><th>Company</th><th>Request</th><th>Type</th><th>Priority</th><th>Status</th><th>Created</th><th></th></tr></thead><tbody>'+(rows.length?rows.map(r=>'<tr><td><b>'+esc(r.ymc_organizations?.legal_name||'Organization')+'</b></td><td><b>'+esc(r.subject)+'</b><small>'+esc((r.target_markets||[]).join(', ')||r.sector||'')+'</small></td><td>'+esc(requestTypeLabel(r.request_type))+'</td><td>'+esc(r.priority)+'</td><td>'+esc(requestStatusLabel(r.status))+'</td><td>'+esc(new Date(r.created_at).toLocaleDateString('it-IT'))+'</td><td><button data-ymc-open-internal-request="'+r.id+'">Open →</button></td></tr>').join(''):'<tr><td colspan="7">Nessuna richiesta Corporate.</td></tr>')+'</tbody></table></div></section>'+
+    '<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>MISSIONS</span><h2>Project intake</h2></div></div><div class="ymc-list">'+(missions.length?missions.slice(0,8).map(m=>'<div class="ymc-list-row"><div><b>'+esc(m.title)+'</b><small>'+esc(m.ymc_organizations?.legal_name||'Organization')+' · '+esc(m.mission_code)+' · '+esc(m.status)+'</small></div><span>'+esc(m.mission_type)+'</span></div>').join(''):'<div class="ymc-empty-inline">Nessuna Mission inviata dalla Platform.</div>')+'</div></section>';
 }
 function internalNetwork(){
   const net=networkData(),qual=net.filter(p=>['Qualification','Pilot','Approved','Preferred'].includes(partnerStatus(p.id))).length;
