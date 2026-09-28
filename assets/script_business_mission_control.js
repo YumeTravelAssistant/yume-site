@@ -5,6 +5,61 @@ const INTERNAL_AUTH_URL='https://hlikhyemzophandqkjdy.supabase.co';
 const INTERNAL_AUTH_KEY='sb_publishable_Z5S66pZ85I3WlGuJDArJhA_QuXhKP51';
 const INTERNAL_TOKEN_KEY='ymcInternalAccessToken';
 const INTERNAL_ALLOWED_ROLES=new Set(['staff','admin']);
+const CORPORATE_TOKEN_KEY='ymcCorporateAccessToken';
+const PARTNER_STAGES=['Mapping','Contacted','Qualification','Pilot','Approved','Preferred'];
+
+async function ymcFetch(path,{method='GET',body=null,token=null,prefer=null}={}){
+  const headers={'apikey':INTERNAL_AUTH_KEY,'Accept':'application/json'};
+  if(token)headers.Authorization='Bearer '+token;
+  if(body!==null)headers['Content-Type']='application/json';
+  if(prefer)headers.Prefer=prefer;
+  const res=await fetch(INTERNAL_AUTH_URL+path,{method,headers,body:body===null?undefined:JSON.stringify(body)});
+  const text=await res.text();
+  let data=null;
+  try{data=text?JSON.parse(text):null}catch(_){data=text}
+  if(!res.ok){
+    const message=(data&&typeof data==='object'&&(data.message||data.error_description||data.error))||('HTTP '+res.status);
+    throw new Error(String(message));
+  }
+  return data;
+}
+function internalToken(){return sessionStorage.getItem(INTERNAL_TOKEN_KEY)||''}
+function corporateToken(){return sessionStorage.getItem(CORPORATE_TOKEN_KEY)||''}
+function networkData(){return state.livePartners?.length?state.livePartners:DATA.network}
+function mapPartnerRow(r){
+  return {id:r.id,externalKey:r.external_key||'',name:r.name,kind:r.kind||'',geo:r.geo||'',stage:r.stage||'Mapping',tier:r.tier||'',cap:r.capabilities||[],owner:r.owner||'',next:r.next_action||'',note:r.note||''};
+}
+async function loadInternalLiveData(){
+  const token=internalToken();if(!token)return false;
+  try{
+    const [requests,partners]=await Promise.all([
+      ymcFetch('/rest/v1/ymc_access_requests?select=id,request_type,status,company_name,vat,rea,hq,website,sector,contact_name,contact_role,contact_email,contact_phone,use_case,submitted_at,reviewed_at,review_notes,demo_access_code&order=submitted_at.desc',{token}),
+      ymcFetch('/rest/v1/ymc_partners?select=id,external_key,name,kind,geo,stage,tier,capabilities,owner,next_action,note,active,updated_at&active=eq.true&order=name.asc',{token})
+    ]);
+    state.liveAccessRequests=Array.isArray(requests)?requests:[];
+    state.livePartners=Array.isArray(partners)?partners.map(mapPartnerRow):[];
+    state.liveLoaded=true;save();return true;
+  }catch(ex){console.error('Mission Control live load failed',ex);state.liveLoaded=false;return false}
+}
+async function loadPartnerWorkspaceData(id){
+  const token=internalToken();if(!token||!id)return;
+  try{
+    const q=encodeURIComponent(id);
+    const [contacts,tickets,requests,events,docs]=await Promise.all([
+      ymcFetch('/rest/v1/ymc_partner_contacts?select=id,name,role,email,phone,created_at&partner_id=eq.'+q+'&order=created_at.asc',{token}),
+      ymcFetch('/rest/v1/ymc_partner_tickets?select=id,title,owner,status,priority,due_date,created_at&partner_id=eq.'+q+'&order=created_at.desc',{token}),
+      ymcFetch('/rest/v1/ymc_partner_requests?select=id,request_type,subject,status,owner,created_at&partner_id=eq.'+q+'&order=created_at.desc',{token}),
+      ymcFetch('/rest/v1/ymc_partner_events?select=id,event_type,title,detail,created_at&partner_id=eq.'+q+'&order=created_at.asc',{token}),
+      ymcFetch('/rest/v1/ymc_partner_documents?select=id,file_name,status,created_at&partner_id=eq.'+q+'&order=created_at.desc',{token})
+    ]);
+    state.partnerContacts[id]=(contacts||[]).map(x=>({name:x.name,role:x.role||'',email:x.email||'',phone:x.phone||''}));
+    state.partnerTickets[id]=(tickets||[]).map(x=>({id:x.id,title:x.title,owner:x.owner||'',status:x.status,priority:x.priority,due:x.due_date||'—'}));
+    state.partnerRequests[id]=(requests||[]).map(x=>({id:x.id,type:x.request_type,subject:x.subject,status:x.status,owner:x.owner||''}));
+    state.partnerTimeline[id]=(events||[]).map(x=>({date:new Date(x.created_at).toLocaleDateString('it-IT'),title:x.title,detail:x.detail||'',type:x.event_type}));
+    state.partnerDocs[id]=(docs||[]).map(x=>x.file_name);
+    save();
+  }catch(ex){console.error('Partner workspace load failed',ex)}
+}
 
 const DATA={
   organization:{name:'Aurea Italia S.r.l.',short:'Aurea Italia',industry:'Wine & Spirits',member:'Alessandro Rinaldi',role:'Corporate Admin'},
@@ -142,10 +197,17 @@ function loadState(){
   return base;
 }
 function baseState(){
-  const partnerStatuses=Object.fromEntries(DATA.network.map(p=>[p.id,'Da contattare']));
-  const partnerTickets=Object.fromEntries(DATA.network.map(p=>[p.id,[{id:'T-'+p.id+'-001',title:p.next,owner:p.owner,status:'Aperto',priority:'Media',due:'Da pianificare'}]]));
-  const partnerTimeline=Object.fromEntries(DATA.network.map(p=>[p.id,[{date:'Oggi',title:'Record creato',detail:'Target inserito nel Partner Registry YUME.',type:'System'}]]));
-  return{session:false,onboarding:false,onboardingStep:1,onboardingSubmitted:false,onboardingApproved:false,role:'client',section:'overview',activePartnerId:null,decisionStatus:{d1:'required',d2:'open',d3:'approved'},sidebar:false,drawer:false,uploadedDocs:{},partnerStatuses,partnerContacts:{},partnerTickets,partnerRequests:{},partnerTimeline,partnerDocs:{}};
+  const partnerStatuses=Object.fromEntries(DATA.network.map(p=>[p.id,p.stage||'Mapping']));
+  const partnerTickets=Object.fromEntries(DATA.network.map(p=>[p.id,[]]));
+  const partnerTimeline=Object.fromEntries(DATA.network.map(p=>[p.id,[{date:'Oggi',title:'Record locale',detail:'Fallback locale finché il backend non risponde.',type:'System'}]]));
+  return{
+    session:false,onboarding:false,onboardingType:'demo',onboardingStep:1,onboardingSubmitted:false,
+    onboardingResult:null,onboardingForm:{company:'',vat:'',rea:'',hq:'',website:'',sector:'',contact_name:'',contact_role:'',contact_email:'',contact_phone:'',use_case:''},
+    role:'client',section:'overview',activePartnerId:null,decisionStatus:{d1:'required',d2:'open',d3:'approved'},
+    sidebar:false,drawer:false,uploadedDocs:{},partnerStatuses,partnerContacts:{},partnerTickets,
+    partnerRequests:{},partnerTimeline,partnerDocs:{},liveAccessRequests:[],livePartners:[],liveLoaded:false,
+    clientMode:'demo',clientOrganization:null
+  };
 }
 function save(){try{localStorage.setItem(STORAGE,JSON.stringify(state))}catch(_){}}
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
@@ -173,18 +235,30 @@ function setSection(section){
   if(section!=='partnerWorkspace')state.activePartnerId=null;
   state.section=section;state.sidebar=false;save();render();requestAnimationFrame(()=>el('#ymc-main')?.focus({preventScroll:true}));
 }
-function partnerStatus(id){return state.partnerStatuses?.[id]||'Da contattare'}
-function openPartnerWorkspace(id){
-  state.activePartnerId=id;state.section='partnerWorkspace';state.sidebar=false;closeDrawer();save();render();requestAnimationFrame(()=>el('#ymc-main')?.focus({preventScroll:true}));
+function partnerStatus(id){
+  const p=networkData().find(x=>x.id===id);
+  return p?.stage||state.partnerStatuses?.[id]||'Mapping';
+}
+async function openPartnerWorkspace(id){
+  state.activePartnerId=id;state.section='partnerWorkspace';state.sidebar=false;closeDrawer();save();render();
+  await loadPartnerWorkspaceData(id);
+  render();requestAnimationFrame(()=>el('#ymc-main')?.focus({preventScroll:true}));
 }
 function addPartnerTimeline(id,title,detail,type='Team'){
   state.partnerTimeline=state.partnerTimeline||{};
   state.partnerTimeline[id]=[...(state.partnerTimeline[id]||[]),{date:new Date().toLocaleDateString('it-IT'),title,detail,type}];
 }
-function updatePartnerStatus(id,status){
-  state.partnerStatuses[id]=status;
-  addPartnerTimeline(id,'Stato rapporto aggiornato',status,'Status');
-  save();render();toast('Stato partner aggiornato: '+status);
+async function updatePartnerStatus(id,status){
+  const token=internalToken();
+  if(token){
+    try{
+      await ymcFetch('/rest/v1/rpc/ymc_update_partner_stage',{method:'POST',token,body:{p_partner_id:id,p_stage:status}});
+      const p=state.livePartners.find(x=>x.id===id);if(p)p.stage=status;
+      addPartnerTimeline(id,'Stato rapporto aggiornato',status,'Status');
+      await loadPartnerWorkspaceData(id);save();render();toast('Stato partner salvato: '+status);return;
+    }catch(ex){toast('Errore salvataggio stato: '+ex.message);return}
+  }
+  state.partnerStatuses[id]=status;addPartnerTimeline(id,'Stato rapporto aggiornato',status,'Status');save();render();
 }
 function toast(msg){
   const t=el('[data-ymc-toast]');if(!t)return;
