@@ -237,3 +237,16 @@ body.ymc-nav-open{overflow:hidden}
 @media(max-width:620px){
   .ymc-mini-form--wide{grid-template-columns:1fr}
 }
+
+/* Mission Control private partner documents */
+.ymc-doc--live{display:grid;gap:7px;align-content:start}
+.ymc-doc--live .ymc-doc-icon{display:inline-grid;place-items:center;width:42px;height:28px;border-radius:8px;background:#0d151d;color:#f0cf8c;font-size:9px;font-weight:900;letter-spacing:.08em}
+.ymc-doc--live b{overflow-wrap:anywhere}
+.ymc-doc--live small{line-height:1.45}
+.ymc-doc-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:3px}
+.ymc-doc-actions button{border:1px solid rgba(13,21,29,.14);background:#fff;border-radius:9px;padding:7px 9px;font-size:9px;font-weight:850;cursor:pointer}
+.ymc-doc-actions button:hover,.ymc-doc-actions button:focus-visible{border-color:rgba(13,21,29,.35);outline:none}
+.ymc-doc-actions button.is-danger{color:#8b2c2b;border-color:rgba(139,44,43,.22)}
+.ymc-doc-actions button.is-danger:hover{background:#fff3f1}
+.ymc-doc-policy{margin-top:12px!important;padding-top:10px;border-top:1px solid rgba(13,21,29,.08);font-size:11px!important;line-height:1.55!important}
+.ymc-upload-btn:has(input:disabled){opacity:.55;pointer-events:none}

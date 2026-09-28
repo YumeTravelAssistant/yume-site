@@ -8,6 +8,127 @@ const INTERNAL_ALLOWED_ROLES=new Set(['staff','admin']);
 const CORPORATE_TOKEN_KEY='ymcCorporateAccessToken';
 const PARTNER_STAGES=['Mapping','Contacted','Qualification','Pilot','Approved','Preferred'];
 
+const YMC_UPLOAD_HARD_LIMIT_BYTES=400*1024;
+const YMC_UPLOAD_TARGET_BYTES=380*1024;
+const YMC_UPLOAD_MAX_INPUT_BYTES=30*1024*1024;
+const YMC_PDFJS_MODULE='https://cdn.jsdelivr.net/npm/pdfjs-dist@5.6.205/legacy/build/pdf.mjs';
+const YMC_PDFJS_WORKER='https://cdn.jsdelivr.net/npm/pdfjs-dist@5.6.205/legacy/build/pdf.worker.min.mjs';
+const YMC_PDFLIB_MODULE='https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm';
+const YMC_PDF_PROFILES=[
+  {scale:1.25,quality:.62,grayscale:false},{scale:1.05,quality:.52,grayscale:false},
+  {scale:.90,quality:.44,grayscale:false},{scale:.78,quality:.36,grayscale:true},
+  {scale:.66,quality:.29,grayscale:true},{scale:.55,quality:.23,grayscale:true},
+  {scale:.45,quality:.18,grayscale:true},{scale:.36,quality:.13,grayscale:true},
+  {scale:.29,quality:.10,grayscale:true}
+];
+const YMC_IMAGE_PROFILES=[
+  {maxLongSide:1900,quality:.72,grayscale:false},{maxLongSide:1650,quality:.60,grayscale:false},
+  {maxLongSide:1400,quality:.50,grayscale:false},{maxLongSide:1200,quality:.42,grayscale:true},
+  {maxLongSide:1000,quality:.34,grayscale:true},{maxLongSide:850,quality:.28,grayscale:true},
+  {maxLongSide:700,quality:.22,grayscale:true},{maxLongSide:560,quality:.17,grayscale:true}
+];
+
+function formatDocumentBytes(bytes){
+  const n=Number(bytes)||0;if(n<=0)return '0 KB';
+  return n<1024*1024?Math.round(n/1024)+' KB':(n/1024/1024).toFixed(2)+' MB';
+}
+function safeUploadBaseName(name){
+  return (String(name||'documento').replace(/\.(pdf|jpe?g|png)$/i,'')||'documento').trim()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^\w\-]+/g,'-')
+    .replace(/-+/g,'-').replace(/^-|-$/g,'').toLowerCase()||'documento';
+}
+function uploadFormat(file){
+  const mime=String(file.type||'').toLowerCase(),name=String(file.name||'').toLowerCase();
+  if(mime==='application/pdf'||name.endsWith('.pdf'))return 'pdf';
+  if(mime==='image/jpeg'||name.endsWith('.jpg')||name.endsWith('.jpeg'))return 'jpeg';
+  if(mime==='image/png'||name.endsWith('.png'))return 'png';
+  return null;
+}
+function canvasJpeg(canvas,quality){
+  return new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Impossibile generare il JPEG compresso.')),'image/jpeg',quality));
+}
+function grayscaleCanvas(ctx,w,h){
+  const img=ctx.getImageData(0,0,w,h),px=img.data;
+  for(let i=0;i<px.length;i+=4){const g=Math.round(px[i]*.299+px[i+1]*.587+px[i+2]*.114);px[i]=g;px[i+1]=g;px[i+2]=g}
+  ctx.putImageData(img,0,0);
+}
+async function loadUploadImage(file){
+  const url=URL.createObjectURL(file),img=new Image();img.decoding='async';img.src=url;
+  try{if(typeof img.decode==='function')await img.decode();else await new Promise((res,rej)=>{img.onload=res;img.onerror=()=>rej(new Error('Il browser non riesce a leggere l’immagine.'))});return{img,cleanup:()=>URL.revokeObjectURL(url)}}catch(e){URL.revokeObjectURL(url);throw e}
+}
+async function compressMissionImage(file){
+  const {img,cleanup}=await loadUploadImage(file);
+  try{
+    const sw=img.naturalWidth||img.width,sh=img.naturalHeight||img.height;if(!sw||!sh)throw new Error('Immagine senza dimensioni valide.');
+    let smallest=null;
+    for(const p of YMC_IMAGE_PROFILES){
+      const scale=Math.min(1,p.maxLongSide/Math.max(sw,sh)),w=Math.max(1,Math.round(sw*scale)),h=Math.max(1,Math.round(sh*scale));
+      const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;const ctx=canvas.getContext('2d',{alpha:false});if(!ctx)throw new Error('Canvas non disponibile.');
+      ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.drawImage(img,0,0,w,h);if(p.grayscale)grayscaleCanvas(ctx,w,h);
+      const blob=await canvasJpeg(canvas,p.quality);if(!smallest||blob.size<smallest.size)smallest=blob;canvas.width=1;canvas.height=1;if(blob.size<=YMC_UPLOAD_TARGET_BYTES)return blob;
+    }
+    if(smallest&&smallest.size<=YMC_UPLOAD_HARD_LIMIT_BYTES)return smallest;
+    throw new Error('Non è stato possibile portare l’immagine sotto 400 KB.');
+  }finally{cleanup()}
+}
+async function compressMissionPdf(file){
+  const pdfjs=await import(YMC_PDFJS_MODULE);pdfjs.GlobalWorkerOptions.workerSrc=YMC_PDFJS_WORKER;
+  const source=await pdfjs.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;
+  try{
+    if(source.numPages<1)throw new Error('Il PDF non contiene pagine.');
+    const {PDFDocument}=await import(YMC_PDFLIB_MODULE);let smallest=null;
+    for(const p of YMC_PDF_PROFILES){
+      const out=await PDFDocument.create();
+      for(let n=1;n<=source.numPages;n++){
+        const page=await source.getPage(n),base=page.getViewport({scale:1}),view=page.getViewport({scale:p.scale});
+        const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(view.width));canvas.height=Math.max(1,Math.round(view.height));
+        const ctx=canvas.getContext('2d',{alpha:false});if(!ctx)throw new Error('Canvas PDF non disponibile.');
+        ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);await page.render({canvasContext:ctx,viewport:view}).promise;if(p.grayscale)grayscaleCanvas(ctx,canvas.width,canvas.height);
+        const jpg=await canvasJpeg(canvas,p.quality),embedded=await out.embedJpg(await jpg.arrayBuffer()),op=out.addPage([base.width,base.height]);
+        op.drawImage(embedded,{x:0,y:0,width:base.width,height:base.height});page.cleanup();canvas.width=1;canvas.height=1;
+      }
+      const bytes=await out.save({useObjectStreams:true}),blob=new Blob([bytes],{type:'application/pdf'});if(!smallest||blob.size<smallest.size)smallest=blob;if(blob.size<=YMC_UPLOAD_TARGET_BYTES)return blob;
+    }
+    if(smallest&&smallest.size<=YMC_UPLOAD_HARD_LIMIT_BYTES)return smallest;
+    throw new Error('Non è stato possibile portare il PDF sotto 400 KB senza degradarlo eccessivamente.');
+  }finally{await source.destroy()}
+}
+async function prepareMissionDocument(file){
+  const format=uploadFormat(file);if(!format)throw new Error('Formato non supportato. Usa PDF, JPG, JPEG o PNG.');
+  if(file.size<=0)throw new Error('Il file selezionato è vuoto.');
+  if(file.size>YMC_UPLOAD_MAX_INPUT_BYTES)throw new Error('Il file originale supera 30 MB e non può essere elaborato.');
+  const base=safeUploadBaseName(file.name);
+  if(file.size<=YMC_UPLOAD_HARD_LIMIT_BYTES){
+    const ext=format==='pdf'?'.pdf':format==='png'?'.png':'.jpg',mime=format==='pdf'?'application/pdf':format==='png'?'image/png':'image/jpeg';
+    return{blob:file,fileName:base+ext,mimeType:mime,originalSizeBytes:file.size,storedSizeBytes:file.size,wasCompressed:false,notes:'[ORIGINAL_UNDER_400KB] '+file.name+' · '+file.size+' bytes'};
+  }
+  if(format==='pdf'){
+    const blob=await compressMissionPdf(file);return{blob,fileName:base+'-compresso.pdf',mimeType:'application/pdf',originalSizeBytes:file.size,storedSizeBytes:blob.size,wasCompressed:true,notes:'[AUTO_COMPRESSED_PDF] '+file.name+' · '+file.size+' → '+blob.size+' bytes'};
+  }
+  const blob=await compressMissionImage(file);return{blob,fileName:base+'-compresso.jpg',mimeType:'image/jpeg',originalSizeBytes:file.size,storedSizeBytes:blob.size,wasCompressed:true,notes:'[AUTO_COMPRESSED_IMAGE] '+file.name+' · '+file.size+' → '+blob.size+' bytes'};
+}
+async function ymcDocumentUpload(partnerId,prepared){
+  const form=new FormData();form.set('action','upload');form.set('partner_id',partnerId);
+  form.set('file',new File([prepared.blob],prepared.fileName,{type:prepared.mimeType}));
+  form.set('original_size_bytes',String(prepared.originalSizeBytes));form.set('was_compressed',String(prepared.wasCompressed));form.set('compression_note',prepared.notes);
+  const res=await fetch(INTERNAL_AUTH_URL+'/functions/v1/ymc-partner-documents',{method:'POST',headers:{apikey:INTERNAL_AUTH_KEY,Authorization:'Bearer '+internalToken()},body:form});
+  const data=await res.json().catch(()=>({}));if(!res.ok||!data?.ok)throw new Error(data?.error||('Upload non riuscito ('+res.status+').'));return data;
+}
+async function ymcDocumentAction(documentId,action){
+  return ymcFetch('/functions/v1/ymc-partner-documents',{method:'POST',token:internalToken(),body:{action,document_id:documentId}});
+}
+async function openPartnerDocument(documentId,download=false){
+  const popup=download?null:window.open('about:blank','_blank');
+  if(popup){try{popup.opener=null;popup.document.title='Apertura documento…'}catch(_){}}
+  try{
+    const data=await ymcDocumentAction(documentId,download?'download':'open');if(!data?.url)throw new Error('URL documento non disponibile.');
+    if(download){const a=document.createElement('a');a.href=data.url;a.rel='noopener';a.download=data.file_name||'documento';document.body.appendChild(a);a.click();a.remove();return}
+    if(popup&&!popup.closed){popup.location.replace(data.url);return}
+    window.location.assign(data.url);
+  }catch(ex){if(popup&&!popup.closed)popup.close();throw ex}
+}
+
+
 async function ymcFetch(path,{method='GET',body=null,token=null,prefer=null}={}){
   const headers={'apikey':INTERNAL_AUTH_KEY,'Accept':'application/json'};
   if(token)headers.Authorization='Bearer '+token;
@@ -51,13 +172,13 @@ async function loadPartnerWorkspaceData(id){
       ymcFetch('/rest/v1/ymc_partner_tickets?select=id,title,owner,status,priority,due_date,created_at&partner_id=eq.'+q+'&order=created_at.desc',{token}),
       ymcFetch('/rest/v1/ymc_partner_requests?select=id,request_type,subject,status,owner,created_at&partner_id=eq.'+q+'&order=created_at.desc',{token}),
       ymcFetch('/rest/v1/ymc_partner_events?select=id,event_type,title,detail,created_at&partner_id=eq.'+q+'&order=created_at.asc',{token}),
-      ymcFetch('/rest/v1/ymc_partner_documents?select=id,file_name,status,created_at&partner_id=eq.'+q+'&order=created_at.desc',{token})
+      ymcFetch('/rest/v1/ymc_partner_documents?select=id,file_name,mime_type,file_size,original_size_bytes,was_compressed,compression_note,status,created_at&partner_id=eq.'+q+'&status=eq.uploaded&order=created_at.desc',{token})
     ]);
     state.partnerContacts[id]=(contacts||[]).map(x=>({name:x.name,role:x.role||'',email:x.email||'',phone:x.phone||''}));
     state.partnerTickets[id]=(tickets||[]).map(x=>({id:x.id,title:x.title,owner:x.owner||'',status:x.status,priority:x.priority,due:x.due_date||'—'}));
     state.partnerRequests[id]=(requests||[]).map(x=>({id:x.id,type:x.request_type,subject:x.subject,status:x.status,owner:x.owner||''}));
     state.partnerTimeline[id]=(events||[]).map(x=>({date:new Date(x.created_at).toLocaleDateString('it-IT'),title:x.title,detail:x.detail||'',type:x.event_type}));
-    state.partnerDocs[id]=(docs||[]).map(x=>x.file_name);
+    state.partnerDocs[id]=(docs||[]).map(x=>({id:x.id,fileName:x.file_name,mimeType:x.mime_type||'',size:Number(x.file_size)||0,originalSize:Number(x.original_size_bytes)||Number(x.file_size)||0,wasCompressed:!!x.was_compressed,compressionNote:x.compression_note||'',status:x.status,createdAt:x.created_at}));
     save();
   }catch(ex){console.error('Partner workspace load failed',ex)}
 }
@@ -469,7 +590,7 @@ function internalPartnerWorkspace(){
     '<section class="ymc-grid ymc-grid--2" style="margin-top:12px"><article class="ymc-card"><div class="ymc-card-head"><div><span>REFERENTI</span><h2>Persone della relazione</h2></div></div><div class="ymc-contact-cards">'+(contacts.length?contacts.map(x=>'<article><b>'+esc(x.name)+'</b><span>'+esc(x.role)+'</span><small>'+esc(x.email||'')+(x.phone?' · '+esc(x.phone):'')+'</small></article>').join(''):'<p>Nessun referente registrato.</p>')+'</div><form class="ymc-mini-form" data-ymc-contact-form="'+p.id+'"><input name="name" placeholder="Nome e cognome" required><input name="role" placeholder="Ruolo / reparto"><input name="email" type="email" placeholder="Email"><input name="phone" placeholder="Telefono"><button class="ymc-btn ymc-btn--dark" type="submit">+ Referente</button></form></article>'+
     '<article class="ymc-card"><div class="ymc-card-head"><div><span>TICKET INTERNI</span><h2>Rapporto & attività</h2></div></div><div class="ymc-ticket-list">'+(tickets.length?tickets.map(t=>'<div><span class="ymc-chip">'+esc(t.status)+'</span><b>'+esc(t.title)+'</b><small>'+esc(t.owner)+' · '+esc(t.priority)+' · '+esc(t.due)+'</small></div>').join(''):'<p>Nessun ticket.</p>')+'</div><form class="ymc-mini-form" data-ymc-ticket-form="'+p.id+'"><input name="title" placeholder="Nuovo ticket / attività" required><select name="owner"><option>Alessio</option><option>Gaia</option><option>Romina</option><option>Operations</option></select><select name="priority"><option value="Medium">Media</option><option value="High">Alta</option><option value="Low">Bassa</option><option value="Critical">Critica</option></select><input name="due" type="date"><button class="ymc-btn ymc-btn--dark" type="submit">+ Ticket</button></form></article></section>'+
     '<section class="ymc-grid ymc-grid--2" style="margin-top:12px"><article class="ymc-card"><div class="ymc-card-head"><div><span>RICHIESTE AL PARTNER</span><h2>Quotazioni, disponibilità, accordi</h2></div></div><div class="ymc-request-list">'+(requests.length?requests.map(r=>'<div><span>'+esc(r.type)+'</span><b>'+esc(r.subject)+'</b><small>'+esc(r.status)+' · '+esc(r.owner)+'</small></div>').join(''):'<p>Nessuna richiesta aperta.</p>')+'</div><form class="ymc-mini-form" data-ymc-request-form="'+p.id+'"><select name="type"><option>Quotazione</option><option>Disponibilità</option><option>Condizioni commerciali</option><option>Meeting</option><option>Documentazione</option></select><input name="subject" placeholder="Oggetto richiesta" required><select name="owner"><option>Operations</option><option>Alessio</option><option>Gaia</option><option>Romina</option></select><button class="ymc-btn ymc-btn--dark" type="submit">+ Richiesta</button></form></article>'+
-    '<article class="ymc-card"><div class="ymc-card-head"><div><span>DOCUMENTI & ACCORDI</span><h2>Dossier relazione</h2></div><label class="ymc-upload-btn">Registra documento<input type="file" data-ymc-partner-upload="'+p.id+'" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"></label></div><div class="ymc-doc-grid">'+(docs.length?docs.map(d=>'<article class="ymc-doc"><span class="ymc-doc-icon">DOC</span><b>'+esc(d)+'</b><small>Metadato registrato</small></article>').join(''):'<p>Nessun documento registrato.</p>')+'</div><p>In questa fase salviamo il metadato; il binary upload verrà agganciato a Storage privato dopo la validazione privacy/documentale.</p></article></section>'+
+    '<article class="ymc-card"><div class="ymc-card-head"><div><span>DOCUMENTI & ACCORDI</span><h2>Dossier relazione · Storage privato</h2></div><label class="ymc-upload-btn">Carica PDF / immagine<input type="file" data-ymc-partner-upload="'+p.id+'" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"></label></div><div class="ymc-doc-grid">'+(docs.length?docs.map(d=>'<article class="ymc-doc ymc-doc--live"><span class="ymc-doc-icon">'+(d.mimeType==='application/pdf'?'PDF':'IMG')+'</span><b>'+esc(d.fileName)+'</b><small>'+formatDocumentBytes(d.size)+(d.wasCompressed?' · compresso da '+formatDocumentBytes(d.originalSize):' · originale')+'</small><div class="ymc-doc-actions"><button type="button" data-ymc-doc-open="'+d.id+'">Apri</button><button type="button" data-ymc-doc-download="'+d.id+'">Scarica</button><button type="button" class="is-danger" data-ymc-doc-delete="'+d.id+'">Elimina</button></div></article>').join(''):'<p>Nessun documento registrato.</p>')+'</div><p class="ymc-doc-policy">PDF, JPG e PNG. Input massimo 30 MB; compressione automatica con target 380 KB e hard limit 400 KB. I file restano nel bucket privato YUME e vengono aperti tramite link temporanei di 10 minuti.</p></article></section>'+
     '<section class="ymc-card ymc-partner-timeline-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>TIMELINE</span><h2>Storia completa del rapporto</h2></div></div><div class="ymc-partner-timeline">'+(timeline.length?timeline.slice().reverse().map(t=>'<div><span>'+esc(t.date)+'</span><i></i><section><b>'+esc(t.title)+'</b><small>'+esc(t.type)+'</small><p>'+esc(t.detail)+'</p></section></div>').join(''):'<p>Nessun evento registrato.</p>')+'</div></section>';
 }
 
@@ -630,12 +751,19 @@ function bindDynamic(){
     }catch(ex){toast('Richiesta non salvata: '+ex.message)}
   });
   els('[data-ymc-partner-upload]').forEach(input=>input.onchange=async()=>{
-    const file=input.files&&input.files[0];if(!file)return;const id=input.dataset.ymcPartnerUpload;
+    const file=input.files&&input.files[0];if(!file)return;const id=input.dataset.ymcPartnerUpload;input.disabled=true;
     try{
-      await ymcFetch('/rest/v1/ymc_partner_documents',{method:'POST',token:internalToken(),body:{partner_id:id,file_name:file.name,mime_type:file.type||null,file_size:file.size,status:'metadata_only'},prefer:'return=minimal'});
-      await ymcFetch('/rest/v1/ymc_partner_events',{method:'POST',token:internalToken(),body:{partner_id:id,event_type:'Document',title:'Documento registrato',detail:file.name},prefer:'return=minimal'});
-      await loadPartnerWorkspaceData(id);render();toast('Metadato documento registrato.');
-    }catch(ex){toast('Documento non registrato: '+ex.message)}
+      toast(file.size>YMC_UPLOAD_HARD_LIMIT_BYTES?'Compressione automatica in corso…':'Preparazione documento…');
+      const prepared=await prepareMissionDocument(file);
+      await ymcDocumentUpload(id,prepared);
+      await loadPartnerWorkspaceData(id);render();toast(prepared.wasCompressed?'Documento compresso e caricato: '+formatDocumentBytes(prepared.storedSizeBytes):'Documento caricato: '+formatDocumentBytes(prepared.storedSizeBytes));
+    }catch(ex){input.disabled=false;input.value='';toast('Upload non riuscito: '+ex.message)}
+  });
+  els('[data-ymc-doc-open]').forEach(b=>b.onclick=async()=>{try{await openPartnerDocument(b.dataset.ymcDocOpen,false)}catch(ex){toast('Apertura non riuscita: '+ex.message)}});
+  els('[data-ymc-doc-download]').forEach(b=>b.onclick=async()=>{try{await openPartnerDocument(b.dataset.ymcDocDownload,true)}catch(ex){toast('Download non riuscito: '+ex.message)}});
+  els('[data-ymc-doc-delete]').forEach(b=>b.onclick=async()=>{
+    const docId=b.dataset.ymcDocDelete;if(!window.confirm('Eliminare definitivamente questo documento dal dossier partner?'))return;b.disabled=true;
+    try{await ymcDocumentAction(docId,'delete');await loadPartnerWorkspaceData(state.activePartnerId);render();toast('Documento eliminato da Storage e database.')}catch(ex){b.disabled=false;toast('Eliminazione non riuscita: '+ex.message)}
   });
   els('[data-ymc-toast]').forEach(b=>b.onclick=()=>toast(b.dataset.ymcToast));
   els('[data-ymc-open-menu]').forEach(b=>b.onclick=()=>toggleMenu(true));
