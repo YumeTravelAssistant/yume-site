@@ -12,6 +12,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+  const selectPacchetto = document.getElementById("pacchetto");
+  if (!selectPacchetto) return;
+
+  const params = new URLSearchParams(window.location.search);
+  const richiesto = (params.get("pacchetto") || "").trim().toLowerCase();
+  if (!richiesto) return;
+
+  const option = Array.from(selectPacchetto.options).find(opt => opt.value === richiesto);
+  if (!option) return;
+
+  selectPacchetto.value = richiesto;
+  selectPacchetto.dispatchEvent(new Event("change", { bubbles: true }));
+});
+
 const cittaPerPacchetto = {
   hajimete: [
     "Tokyo", "Kyoto", "Osaka", "Hakone", "Nara",
@@ -329,75 +344,82 @@ function aggiornaControlloAutomaticoCamere() {
 
 document.getElementById("partecipanti").addEventListener("input", aggiornaErroreCamere);
 
-// =================== SUBMIT (feedback breve) ===================
-document.getElementById('formPacchetto').addEventListener('submit', function (e) {
-  e.preventDefault(); // blocca invio classico
-  const feedback = document.getElementById('formFeedback');
+// =================== SUBMIT (riepilogo + invio a backend) ===================
+let invioPacchettoInCorso = false;
 
-  // 🔍 simulazione: se tutti i controlli sono rispettati, mostra successo
-  if (validaForm()) {
-    feedback.textContent = "Richiesta inviata con successo!";
-    feedback.className = "form-feedback-msg success";
-  } else {
-    feedback.textContent = "Errore: verifica i campi obbligatori.";
-    feedback.className = "form-feedback-msg error";
-  }
-
-  setTimeout(() => {
-    feedback.className = "form-feedback-msg"; // reset dopo 5s
-    feedback.textContent = "";
-  }, 5000);
-});
-
-// Funzione placeholder da completare
-function validaForm() {
-  // qui puoi inserire controlli JS aggiuntivi se vuoi
-  return true;
+function escapeHtmlPacchetti(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+  }[ch]));
 }
 
-// =================== SUBMIT (riepilogo + invio a backend) ===================
+function setPacchettoLoading(active, text = "Invio in corso…") {
+  const submitBtn = document.getElementById("inviaPacchettoBtn");
+  const loading = document.getElementById("formLoading");
+  const loadingText = document.getElementById("formLoadingText");
+
+  if (submitBtn) {
+    submitBtn.disabled = active;
+    submitBtn.setAttribute("aria-busy", active ? "true" : "false");
+    submitBtn.textContent = active ? "Invio in corso…" : "Invia richiesta";
+  }
+  if (loading) {
+    loading.classList.toggle("is-active", active);
+    loading.setAttribute("aria-hidden", active ? "false" : "true");
+  }
+  if (loadingText) loadingText.textContent = text;
+}
+
 document.getElementById("formPacchetto").addEventListener("submit", function (e) {
   e.preventDefault();
 
+  if (invioPacchettoInCorso) return;
+  if (document.querySelector("[data-yume-pacchetto-riepilogo]")) return;
+  if (!validaForm()) return;
+
   const form = new FormData(this);
+  const camereRiepilogo = [...document.querySelectorAll(".camera-box")].map(box => {
+    const tipo = box.querySelector(".tipo-camera")?.value || "";
+    const ospiti = box.querySelector(".ospiti-camera")?.value || "";
+    return `${tipo} x ${ospiti}`;
+  }).join(" / ");
 
   const riepilogo = `
     <h3>Conferma dati inseriti</h3>
     <ul>
-      <li><strong>Nome:</strong> ${form.get("nome")}</li>
-      <li><strong>Cognome:</strong> ${form.get("cognome")}</li>
-      <li><strong>Email:</strong> ${form.get("email")}</li>
-      <li><strong>Pacchetto:</strong> ${form.get("pacchetto")}</li>
-      <li><strong>Data Partenza:</strong> ${form.get("dataPartenza")}</li>
-      <li><strong>Data Ritorno:</strong> ${form.get("dataRitorno")}</li>
-      <li><strong>Tipologia Gruppo:</strong> ${form.get("tipologiaGruppo")}</li>
-      <li><strong>Dettagli Gruppo:</strong> ${form.get("dettagliGruppo") || "Nessuno"}</li>
-      <li><strong>Partecipanti:</strong> ${form.get("partecipanti")}</li>
-      <li><strong>Adulti:</strong> ${form.get("adulti")}</li>
-      <li><strong>Bambini:</strong> ${form.get("bambini")}</li>
-      <li><strong>Fascia Prezzo:</strong> ${form.get("fasciaPrezzo")}</li>
-      <li><strong>Trasporto:</strong> ${form.get("trasporto")}</li>
-      <li><strong>Connettività:</strong> ${form.get("connettivita")}</li>
-      <li><strong>Città:</strong> ${(form.getAll("citta[]") || []).join(", ")}</li>
-      <li><strong>Camere:</strong> ${[...document.querySelectorAll('.camera-box')].map(box => {
-        const tipo = box.querySelector(".tipo-camera")?.value || "";
-        const ospiti = box.querySelector(".ospiti-camera")?.value || "";
-        return `${tipo} x ${ospiti}`;
-      }).join(" / ")}</li>
-      <li><strong>Richieste Aggiuntive:</strong> ${form.get("richieste") || "Nessuna"}</li>
+      <li><strong>Nome:</strong> ${escapeHtmlPacchetti(form.get("nome"))}</li>
+      <li><strong>Cognome:</strong> ${escapeHtmlPacchetti(form.get("cognome"))}</li>
+      <li><strong>Email:</strong> ${escapeHtmlPacchetti(form.get("email"))}</li>
+      <li><strong>Telefono:</strong> ${escapeHtmlPacchetti(form.get("telefono"))}</li>
+      <li><strong>Pacchetto:</strong> ${escapeHtmlPacchetti(form.get("pacchetto"))}</li>
+      <li><strong>Flessibilità date:</strong> ${escapeHtmlPacchetti(form.get("flessibilitaDate") || "Da definire")}</li>
+      <li><strong>Data partenza:</strong> ${escapeHtmlPacchetti(form.get("dataPartenza"))}</li>
+      <li><strong>Data ritorno:</strong> ${escapeHtmlPacchetti(form.get("dataRitorno"))}</li>
+      <li><strong>Tipologia gruppo:</strong> ${escapeHtmlPacchetti(form.get("tipologiaGruppo"))}</li>
+      <li><strong>Dettagli gruppo:</strong> ${escapeHtmlPacchetti(form.get("dettagliGruppo") || "Nessuno")}</li>
+      <li><strong>Partecipanti:</strong> ${escapeHtmlPacchetti(form.get("partecipanti"))}</li>
+      <li><strong>Adulti:</strong> ${escapeHtmlPacchetti(form.get("adulti"))}</li>
+      <li><strong>Bambini:</strong> ${escapeHtmlPacchetti(form.get("bambini"))}</li>
+      <li><strong>Fascia prezzo:</strong> ${escapeHtmlPacchetti(form.get("fasciaPrezzo"))}</li>
+      <li><strong>Trasporto:</strong> ${escapeHtmlPacchetti(form.get("trasporto"))}</li>
+      <li><strong>Connettività:</strong> ${escapeHtmlPacchetti(form.get("connettivita"))}</li>
+      <li><strong>Città:</strong> ${escapeHtmlPacchetti((form.getAll("citta[]") || []).join(", "))}</li>
+      <li><strong>Camere:</strong> ${escapeHtmlPacchetti(camereRiepilogo || "Da definire")}</li>
+      <li><strong>Richieste aggiuntive:</strong> ${escapeHtmlPacchetti(form.get("richieste") || "Nessuna")}</li>
     </ul>
     <p>Vuoi confermare e inviare la richiesta?</p>
   `;
 
   const modal = document.createElement("div");
   modal.classList.add("riepilogo-modal");
+  modal.dataset.yumePacchettoRiepilogo = "1";
   modal.innerHTML = `
     <div class="riepilogo-modal">
       <div class="riepilogo-content">
         ${riepilogo}
         <div class="riepilogo-buttons">
-          <button id="confermaInvio" class="modern-btn conferma-btn">Conferma</button>
-          <button id="annullaInvio" class="modern-btn annulla-btn">Annulla</button>
+          <button type="button" id="confermaInvio" class="modern-btn conferma-btn">Conferma</button>
+          <button type="button" id="annullaInvio" class="modern-btn annulla-btn">Annulla</button>
         </div>
       </div>
     </div>
@@ -406,7 +428,20 @@ document.getElementById("formPacchetto").addEventListener("submit", function (e)
   document.body.appendChild(modal);
 
   document.getElementById("confermaInvio").addEventListener("click", () => {
-    document.body.removeChild(modal);
+    if (invioPacchettoInCorso) return;
+
+    invioPacchettoInCorso = true;
+    const confermaBtn = document.getElementById("confermaInvio");
+    const annullaBtn = document.getElementById("annullaInvio");
+    if (confermaBtn) {
+      confermaBtn.disabled = true;
+      confermaBtn.setAttribute("aria-busy", "true");
+      confermaBtn.textContent = "Invio…";
+    }
+    if (annullaBtn) annullaBtn.disabled = true;
+
+    setPacchettoLoading(true);
+    modal.remove();
 
     const dati = {
       // --- dati form ---
@@ -414,7 +449,9 @@ document.getElementById("formPacchetto").addEventListener("submit", function (e)
       nome: form.get("nome"),
       cognome: form.get("cognome"),
       email: form.get("email"),
+      telefono: form.get("telefono"),
       pacchetto: form.get("pacchetto"),
+      flessibilitaDate: form.get("flessibilitaDate") || "",
       dataPartenza: form.get("dataPartenza"),
       dataRitorno: form.get("dataRitorno"),
       tipologiaGruppo: form.get("tipologiaGruppo"),
@@ -426,7 +463,7 @@ document.getElementById("formPacchetto").addEventListener("submit", function (e)
       trasporto: form.get("trasporto"),
       connettivita: form.get("connettivita"),
       citta: form.getAll("citta[]"),
-      camere: [...document.querySelectorAll('.camera-box')].map(box => {
+      camere: [...document.querySelectorAll(".camera-box")].map(box => {
         const tipo = box.querySelector(".tipo-camera")?.selectedOptions[0]?.text || "";
         const ospiti = box.querySelector(".ospiti-camera")?.value || "";
         return `${tipo} x ${ospiti}`;
@@ -434,13 +471,13 @@ document.getElementById("formPacchetto").addEventListener("submit", function (e)
       richieste: form.get("richieste"),
 
       // --- CONSENSO PRIVACY (campi unificati per GDPR) ---
-      privacy: document.getElementById("consensoGDPR")?.checked === true,   // boolean
-      policy_key: POLICY_PRIVACY_KEY,                                        // 'privacy'
-      policy_version: POLICY_PRIVACY_VERSION,                                // es. 'v1.0-2025-08-19'
+      privacy: document.getElementById("consensoGDPR")?.checked === true,
+      policy_key: POLICY_PRIVACY_KEY,
+      policy_version: POLICY_PRIVACY_VERSION,
 
       // --- metadati utili (prova del consenso) ---
       userAgent: navigator.userAgent || null,
-      lang: navigator.language || 'it',
+      lang: navigator.language || "it",
       referrer: document.referrer || null
     };
 
@@ -449,27 +486,55 @@ document.getElementById("formPacchetto").addEventListener("submit", function (e)
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(dati)
     })
-      .then(response => response.json())
+      .then(async response => {
+        let data = {};
+        try { data = await response.json(); } catch {}
+        if (!response.ok) throw new Error(data?.message || "Errore HTTP " + response.status);
+        return data;
+      })
       .then(data => {
-        if (data.status === "success") {
-          if (typeof tracciaConversioneLeadGoogleAds === "function") tracciaConversioneLeadGoogleAds();
-          alert("Richiesta inviata con successo!");
-          document.getElementById("formPacchetto").reset();
-          document.getElementById("counterCitta").textContent = "";
-          document.getElementById("maxCittaMsg").textContent = "";
-          document.getElementById("erroreCitta").textContent = "";
-        } else {
-          alert("Si è verificato un errore. Riprova.");
+        if (data.status !== "success" && data.ok !== true) {
+          throw new Error(data.message || "Il server non ha confermato l'invio.");
         }
+
+        if (typeof tracciaConversioneLeadGoogleAds === "function") {
+          tracciaConversioneLeadGoogleAds();
+        }
+
+        const feedback = document.getElementById("formFeedback");
+        if (feedback) {
+          feedback.textContent = "Richiesta inviata con successo!";
+          feedback.className = "form-feedback-msg success";
+        }
+
+        document.getElementById("formPacchetto").reset();
+        document.getElementById("counterCitta").textContent = "";
+        document.getElementById("maxCittaMsg").textContent = "";
+        document.getElementById("erroreCitta").textContent = "";
+
+        if (choicesCittaInstance) {
+          try { choicesCittaInstance.removeActiveItems(); } catch {}
+        }
+
+        alert("Richiesta inviata con successo!");
       })
       .catch(error => {
-        console.error("Errore:", error);
-        alert("Errore di rete. Riprova più tardi.");
+        console.error("Errore invio pacchetto:", error);
+        const feedback = document.getElementById("formFeedback");
+        if (feedback) {
+          feedback.textContent = "Invio non completato. Controlla la connessione e riprova.";
+          feedback.className = "form-feedback-msg error";
+        }
+        alert("Invio non completato. Riprova: non verrà effettuato un secondo invio automatico.");
+      })
+      .finally(() => {
+        invioPacchettoInCorso = false;
+        setPacchettoLoading(false);
       });
   });
 
   document.getElementById("annullaInvio").addEventListener("click", () => {
-    document.body.removeChild(modal);
+    if (!invioPacchettoInCorso) modal.remove();
   });
 });
 
@@ -478,6 +543,7 @@ function validaForm() {
   const cognome = document.getElementById("cognome").value.trim();
   const email = document.getElementById("email").value.trim();
   const confermaEmail = document.getElementById("confermaEmail").value.trim();
+  const telefono = document.getElementById("telefono")?.value.trim() || "";
   const pacchetto = document.getElementById("pacchetto").value;
   const partecipanti = parseInt(document.getElementById("partecipanti").value);
   const adulti = parseInt(document.getElementById("adulti").value);
@@ -497,8 +563,13 @@ function validaForm() {
   erroreCitta.textContent = "";
 
   // Controllo campi obbligatori
-  if (!nome || !cognome || !email || !confermaEmail) {
-    alert("Inserisci nome, cognome ed email.");
+  if (!nome || !cognome || !email || !confermaEmail || !telefono) {
+    alert("Inserisci nome, cognome, email e numero di telefono.");
+    return false;
+  }
+
+  if (!/^[0-9+()\\s-]{6,25}$/.test(telefono)) {
+    alert("Inserisci un numero di telefono valido.");
     return false;
   }
 
