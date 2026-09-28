@@ -63,12 +63,12 @@ const DATA={
     {role:'Market specialist',geo:'Japan',status:'Optional module',note:'Activated only if the business case requires specialist research.'}
   ],
   network:[
-    {id:'p1',name:'ICCJ · Camera di Commercio Italiana in Giappone',kind:'Institutional node',geo:'Japan',stage:'Target relationship',tier:'Mapping',cap:['Networking','Business ecosystem','Events'],owner:'Alessio',next:'Prepare introduction & collaboration framing',note:'Target di relazione istituzionale. Nessuna partnership implicata.'},
-    {id:'p2',name:'JNTO / JATA mapping',kind:'Travel trade ecosystem',geo:'Japan',stage:'Mapping',tier:'Exploration',cap:['Destination trade','Tourism network','DMC discovery'],owner:'Gaia',next:'Use trade relationship to identify local operators',note:'Canale potenziale per ampliare la conoscenza del network travel locale.'},
-    {id:'p3',name:'Japan DMC · Candidate A',kind:'DMC',geo:'Tokyo / Nationwide',stage:'Qualification',tier:'Candidate',cap:['Ground handling','Corporate groups','Transport','Guides'],owner:'Operations',next:'Request corporate capability deck + commercial terms',note:'Nome oscurato in preview. Processo previsto: candidate → pilot → approved.'},
-    {id:'p4',name:'Japan DMC · Candidate B',kind:'DMC',geo:'Kansai / Nationwide',stage:'Discovery',tier:'Candidate',cap:['MICE','Business travel','Venues','Transfers'],owner:'Operations',next:'Initial call',note:'Seconda opzione per evitare single-source dependency.'},
-    {id:'p5',name:'JETRO / EU-Japan ecosystem',kind:'Business support mapping',geo:'Japan / EU',stage:'Mapping',tier:'External ecosystem',cap:['Market entry resources','Business matching','Research'],owner:'Business Design',next:'Map public tools & non-overlap opportunities',note:'Risorsa/ecosistema esterno; non presentato come partner YUME.'},
-    {id:'p6',name:'Technical interpreter pool',kind:'Specialist network',geo:'Japan',stage:'Build on demand',tier:'Early',cap:['Automotive','Manufacturing','Business'],owner:'Operations',next:'Create first qualified shortlist',note:'Network da approfondire seguendo la domanda reale.'}
+    {id:'p1',name:'ICCJ · Camera di Commercio Italiana in Giappone',kind:'Institutional node',geo:'Japan',stage:'Da contattare',tier:'Target',cap:['Networking','Business ecosystem','Events'],owner:'Alessio',next:'Preparare introduction & collaboration framing',note:'Target di relazione istituzionale. Nessuna partnership implicata.'},
+    {id:'p2',name:'JNTO / JATA mapping',kind:'Travel trade ecosystem',geo:'Japan',stage:'Da contattare',tier:'Target',cap:['Destination trade','Tourism network','DMC discovery'],owner:'Gaia',next:'Aprire il contatto trade e mappare DMC locali',note:'Canale potenziale per ampliare la conoscenza del network travel locale.'},
+    {id:'p3',name:'Japan DMC · Candidate A',kind:'DMC',geo:'Tokyo / Nationwide',stage:'Da contattare',tier:'Candidate',cap:['Ground handling','Corporate groups','Transport','Guides'],owner:'Operations',next:'Richiedere capability deck e condizioni commerciali',note:'Nome oscurato in preview. Nessun rapporto attivo ancora registrato.'},
+    {id:'p4',name:'Japan DMC · Candidate B',kind:'DMC',geo:'Kansai / Nationwide',stage:'Da contattare',tier:'Candidate',cap:['MICE','Business travel','Venues','Transfers'],owner:'Operations',next:'Organizzare primo contatto',note:'Seconda opzione per evitare single-source dependency.'},
+    {id:'p5',name:'JETRO / EU-Japan ecosystem',kind:'Business support mapping',geo:'Japan / EU',stage:'Da contattare',tier:'External ecosystem',cap:['Market entry resources','Business matching','Research'],owner:'Business Design',next:'Mappare strumenti pubblici e opportunità non-overlap',note:'Risorsa/ecosistema esterno; non presentato come partner YUME.'},
+    {id:'p6',name:'Technical interpreter pool',kind:'Specialist network',geo:'Japan',stage:'Da contattare',tier:'Candidate pool',cap:['Automotive','Manufacturing','Business'],owner:'Operations',next:'Costruire prima shortlist qualificata',note:'Network da approfondire seguendo la domanda reale.'}
   ],
   coverage:[
     {label:'Institutional · Japan',value:55,state:'Developing'},
@@ -81,12 +81,12 @@ const DATA={
     {label:'Singapore / APAC',value:8,state:'Exploration'}
   ],
   partnerPipeline:[
-    {stage:'Mapping',count:12,detail:'Organizations / providers identified'},
-    {stage:'Contacted',count:5,detail:'Initial outreach or introduction'},
-    {stage:'Qualification',count:3,detail:'Capability / commercial check'},
-    {stage:'Pilot',count:1,detail:'To be validated on a real mission'},
-    {stage:'Approved',count:0,detail:'No partner promoted before pilot'},
-    {stage:'Preferred',count:0,detail:'Performance-based future tier'}
+    {stage:'Da contattare',count:6,detail:'Target identificati · nessun contatto registrato'},
+    {stage:'Primo contatto',count:0,detail:'Introduzione o primo scambio avvenuto'},
+    {stage:'In valutazione',count:0,detail:'Capability, referenti e condizioni in verifica'},
+    {stage:'Trattativa',count:0,detail:'Termini, SLA o accordo in discussione'},
+    {stage:'Pilot',count:0,detail:'Validazione su progetto reale'},
+    {stage:'Accordo attivo',count:0,detail:'Rapporto formalizzato e utilizzabile'}
   ],
   roadmap:[
     {period:'TTG 2026',title:'Demo-ready operating story',items:['Controlled access workflow','Mission Control UX','YUME Network view','Japan Core + Asia Extension']},
@@ -118,13 +118,30 @@ let state=loadState();
 let toastTimer=null;
 
 function loadState(){
+  const base=baseState();
   try{
     const raw=localStorage.getItem(STORAGE);
-    if(raw){const s=JSON.parse(raw);return {...baseState(),...s,decisionStatus:{...baseState().decisionStatus,...(s.decisionStatus||{})}}}
+    if(raw){
+      const s=JSON.parse(raw);
+      return {...base,...s,
+        decisionStatus:{...base.decisionStatus,...(s.decisionStatus||{})},
+        partnerStatuses:{...base.partnerStatuses,...(s.partnerStatuses||{})},
+        partnerContacts:{...base.partnerContacts,...(s.partnerContacts||{})},
+        partnerTickets:{...base.partnerTickets,...(s.partnerTickets||{})},
+        partnerRequests:{...base.partnerRequests,...(s.partnerRequests||{})},
+        partnerTimeline:{...base.partnerTimeline,...(s.partnerTimeline||{})},
+        partnerDocs:{...base.partnerDocs,...(s.partnerDocs||{})}
+      };
+    }
   }catch(_){}
-  return baseState();
+  return base;
 }
-function baseState(){return{session:false,onboarding:false,onboardingStep:1,onboardingSubmitted:false,onboardingApproved:false,role:'client',section:'overview',decisionStatus:{d1:'required',d2:'open',d3:'approved'},sidebar:false,drawer:false,uploadedDocs:{}}}
+function baseState(){
+  const partnerStatuses=Object.fromEntries(DATA.network.map(p=>[p.id,'Da contattare']));
+  const partnerTickets=Object.fromEntries(DATA.network.map(p=>[p.id,[{id:'T-'+p.id+'-001',title:p.next,owner:p.owner,status:'Aperto',priority:'Media',due:'Da pianificare'}]]));
+  const partnerTimeline=Object.fromEntries(DATA.network.map(p=>[p.id,[{date:'Oggi',title:'Record creato',detail:'Target inserito nel Partner Registry YUME.',type:'System'}]]));
+  return{session:false,onboarding:false,onboardingStep:1,onboardingSubmitted:false,onboardingApproved:false,role:'client',section:'overview',activePartnerId:null,decisionStatus:{d1:'required',d2:'open',d3:'approved'},sidebar:false,drawer:false,uploadedDocs:{},partnerStatuses,partnerContacts:{},partnerTickets,partnerRequests:{},partnerTimeline,partnerDocs:{}};
+}
 function save(){try{localStorage.setItem(STORAGE,JSON.stringify(state))}catch(_){}}
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function money(v){return new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(v)}
