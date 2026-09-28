@@ -93,15 +93,25 @@ const DATA={
     {period:'NEXT',title:'Mission Control MVP',items:['Dashboard','Decisions','Documents','Participants','Travel summary']},
     {period:'PILOT',title:'Real missions',items:['1–3 corporate projects','Measure usage','Refine roles','Partner pilots']},
     {period:'LATER',title:'Network intelligence',items:['Partner scoring','Benchmarks','Enterprise SSO','Partner workspace']}
+  ],
+  asia:[
+    {name:'South Korea',hub:'Seoul',role:'Tech · consumer · beauty',state:'Exploration',note:'Estensione solo quando completa il business case giapponese o crea confronto utile.'},
+    {name:'Singapore',hub:'APAC',role:'Regional HQ · digital gateway',state:'Exploration',note:'Hub regionale per headquarters, servizi, fintech e innovation.'},
+    {name:'Hong Kong',hub:'Greater China',role:'Trade · finance · distribution',state:'Exploration',note:'Nodo commerciale da usare con logica selettiva e progetto-specifica.'},
+    {name:'Taiwan',hub:'Taipei',role:'Electronics · supply chain',state:'Exploration',note:'Rilevante per elettronica, semiconduttori e filiere tecnologiche.'}
+  ],
+  onboardingReview:[
+    {company:'Aurea Italia S.r.l.',vat:'IT01234567890',admin:'Alessandro Rinaldi',docs:'3/3',status:'Ready for review',risk:'Standard'},
+    {company:'Demo Industrial S.p.A.',vat:'IT09876543210',admin:'Marta Conti',docs:'2/3',status:'Missing delegation',risk:'Standard'}
   ]
 };
 
 const CLIENT_NAV=[
-  ['overview','◎','Overview'],['mission','◇','Mission'],['agenda','◫','Agenda'],['decisions','✓','Decisions'],
+  ['overview','◎','Overview'],['company','⌂','Company'],['mission','◇','Mission'],['agenda','◫','Agenda'],['decisions','✓','Decisions'],
   ['participants','○','People'],['travel','↗','Travel'],['documents','▤','Documents'],['financials','€','Financials'],['followup','↺','Follow-up']
 ];
 const INTERNAL_NAV=[
-  ['network','◎','Network'],['partners','◇','Partners'],['coverage','◫','Coverage'],['pipeline','↗','Pipeline'],['roadmap','↺','Roadmap'],['access','⌁','Access architecture']
+  ['network','◎','Network'],['onboarding','⌂','Onboarding'],['partners','◇','Partners'],['coverage','◫','Coverage'],['pipeline','↗','Pipeline'],['roadmap','↺','Roadmap'],['access','⌁','Access architecture']
 ];
 
 let state=loadState();
@@ -114,7 +124,7 @@ function loadState(){
   }catch(_){}
   return baseState();
 }
-function baseState(){return{session:false,role:'client',section:'overview',decisionStatus:{d1:'required',d2:'open',d3:'approved'},sidebar:false,drawer:false}}
+function baseState(){return{session:false,onboarding:false,onboardingStep:1,onboardingSubmitted:false,role:'client',section:'overview',decisionStatus:{d1:'required',d2:'open',d3:'approved'},sidebar:false,drawer:false,uploadedDocs:{}}}
 function save(){try{localStorage.setItem(STORAGE,JSON.stringify(state))}catch(_){}}
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function money(v){return new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(v)}
@@ -194,8 +204,10 @@ function renderRole(){
   el('[data-ymc-profile-role]').textContent=state.role==='client'?'Corporate Admin · Demo':'Internal Operations · Demo';
 }
 function render(){
-  el('[data-ymc-gate]').hidden=state.session;
+  el('[data-ymc-gate]').hidden=state.session||state.onboarding;
+  el('[data-ymc-onboarding]').hidden=!state.onboarding;
   el('[data-ymc-app]').hidden=!state.session;
+  if(state.onboarding){renderOnboarding();return;}
   if(!state.session)return;
   renderNav();renderRole();
   const content=el('[data-ymc-content]');
@@ -204,7 +216,7 @@ function render(){
   el('[data-ymc-sidebar]').classList.toggle('is-open',!!state.sidebar);
 }
 function renderClient(section){
-  const map={overview:clientOverview,mission:clientMission,agenda:clientAgenda,decisions:clientDecisions,participants:clientParticipants,travel:clientTravel,documents:clientDocuments,financials:clientFinancials,followup:clientFollowup};
+  const map={overview:clientOverview,company:clientCompany,mission:clientMission,agenda:clientAgenda,decisions:clientDecisions,participants:clientParticipants,travel:clientTravel,documents:clientDocuments,financials:clientFinancials,followup:clientFollowup};
   return (map[section]||clientOverview)();
 }
 function clientOverview(){
@@ -267,7 +279,7 @@ function clientFollowup(){
     '<section class="ymc-card ymc-card--brass" style="margin-top:12px"><span class="ymc-section-label">ACCOUNT MEMORY</span><h2>Il vantaggio cresce missione dopo missione.</h2><p>Quando la stessa azienda torna in Giappone o Asia, YUME non riparte da zero: storico delle missioni, contatti, decisioni, documenti e follow-up diventano memoria aziendale condivisa.</p></section>';
 }
 function renderInternal(section){
-  const map={network:internalNetwork,partners:internalPartners,coverage:internalCoverage,pipeline:internalPipeline,roadmap:internalRoadmap,access:internalAccess};
+  const map={network:internalNetwork,onboarding:internalOnboarding,partners:internalPartners,coverage:internalCoverage,pipeline:internalPipeline,roadmap:internalRoadmap,access:internalAccess};
   return (map[section]||internalNetwork)();
 }
 function internalNetwork(){
