@@ -397,7 +397,15 @@ function baseState(){
 }
 function save(){
   try{
-    const persisted={...state,partnerDocs:{}};
+    const persisted={
+      ...state,
+      partnerDocs:{},
+      clientMissions:[],
+      clientRequests:[],
+      requestMessages:{},
+      internalClientRequests:[],
+      internalMissions:[]
+    };
     localStorage.setItem(STORAGE,JSON.stringify(persisted));
   }catch(_){}
 }
