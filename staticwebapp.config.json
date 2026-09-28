@@ -9,6 +9,21 @@
       }
     },
     {
+      "route": "/business/mission-control",
+      "rewrite": "/business-mission-control.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet"
+      }
+    },
+    {
+      "route": "/business-mission-control.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet"
+      }
+    },
+    {
       "route": "/business/soluzioni",
       "rewrite": "/business-solutions.html",
       "headers": {
