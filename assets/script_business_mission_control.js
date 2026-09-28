@@ -330,8 +330,25 @@ function render(){
   bindDynamic();
 }
 function renderClient(section){
+  if(state.clientMode==='platform')return renderPlatformClient(section);
   const map={overview:clientOverview,company:clientCompany,mission:clientMission,agenda:clientAgenda,decisions:clientDecisions,participants:clientParticipants,travel:clientTravel,documents:clientDocuments,financials:clientFinancials,followup:clientFollowup};
   return (map[section]||clientOverview)();
+}
+function renderPlatformClient(section){
+  const org=clientOrg();
+  if(section==='overview'){
+    return pageHead('CORPORATE PLATFORM · LIVE','Benvenuti in <em>'+esc(org.name||'Mission Control')+'.</em>','Organization e Membership sono reali. I moduli missione restano vuoti finché YUME non assegna un progetto operativo.')+
+      '<section class="ymc-grid ymc-grid--4"><article class="ymc-card ymc-stat"><span>ORGANIZATION</span><strong>Active</strong><small>'+esc(org.name||'—')+'</small></article><article class="ymc-card ymc-stat"><span>MEMBERSHIP</span><strong>Corporate Admin</strong><small>Supabase Auth nominativo</small></article><article class="ymc-card ymc-stat"><span>MISSIONS</span><strong>0</strong><small>Nessuna missione assegnata</small></article><article class="ymc-card ymc-stat"><span>DATA MODE</span><strong>LIVE</strong><small>Nessun dato Demo mischiato</small></article></section>'+
+      '<section class="ymc-card ymc-card--brass" style="margin-top:12px"><span class="ymc-section-label">NEXT STEP</span><h2>Workspace pronto.</h2><p>YUME può ora collegare una missione reale a questa Organization. Fino a quel momento agenda, travel, documenti, decisioni, partecipanti e financials restano intenzionalmente vuoti.</p></section>';
+  }
+  if(section==='company'){
+    return pageHead('COMPANY','Organization <em>verified.</em>','Profilo corporate legato alla Membership attiva.')+
+      '<section class="ymc-card"><span class="ymc-section-label">LEGAL ORGANIZATION</span><h2>'+esc(org.name||'—')+'</h2><p>Corporate Admin: '+esc(org.member||'—')+'</p><div class="ymc-route"><span>Organization</span><i>→</i><span>Membership</span><i>→</i><span>Mission</span></div></section>';
+  }
+  const labels={mission:'Mission',agenda:'Agenda',decisions:'Decisions',participants:'Participants',travel:'Travel',documents:'Documents',financials:'Financials',followup:'Follow-up'};
+  const label=labels[section]||'Workspace';
+  return pageHead(label.toUpperCase(),label+' <em>workspace.</em>','Modulo disponibile per la Organization, ma senza dati fittizi.')+
+    '<section class="ymc-card"><span class="ymc-section-label">EMPTY STATE · LIVE PLATFORM</span><h2>Nessun dato ancora assegnato.</h2><p>Questo spazio verrà popolato esclusivamente con record reali collegati alla vostra Organization. La Demo resta separata.</p></section>';
 }
 function clientOverview(){
   const next=DATA.decisions.find(d=>(state.decisionStatus[d.id]||d.status)==='required')||DATA.decisions[0];
