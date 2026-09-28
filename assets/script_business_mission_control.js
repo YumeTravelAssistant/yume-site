@@ -501,7 +501,12 @@ function enter(role){
   if(err)err.hidden=true;
   state.onboarding=false;state.session=true;state.role='client';state.section='overview';save();render();
 }
-function openInternalLogin(){const m=el('[data-ymc-internal-login]');if(m){m.hidden=false;requestAnimationFrame(()=>el('[data-ymc-internal-password]')?.focus())}}
+function openInternalLogin(){
+  const m=el('[data-ymc-internal-login]');
+  const email=el('[data-ymc-internal-email]');
+  if(email)email.removeAttribute('readonly');
+  if(m){m.hidden=false;requestAnimationFrame(()=>email?.focus())}
+}
 function closeInternalLogin(){const m=el('[data-ymc-internal-login]');if(m)m.hidden=true;const e=el('[data-ymc-internal-login-error]');if(e)e.hidden=true;const p=el('[data-ymc-internal-password]');if(p)p.value=''}
 async function getAuthorizedInternalProfile(token,userId){
   if(!token||!userId)return null;
@@ -565,6 +570,15 @@ function initStatic(){
   els('[data-ymc-enter]').forEach(b=>b.onclick=()=>enter(b.dataset.ymcEnter));
   els('[data-ymc-open-internal-login]').forEach(b=>b.onclick=openInternalLogin);
   els('[data-ymc-close-internal-login]').forEach(b=>b.onclick=closeInternalLogin);
+  els('[data-ymc-toggle-password]').forEach(b=>b.onclick=()=>{
+    const input=el('[data-ymc-internal-password]');
+    if(!input)return;
+    const show=input.type==='password';
+    input.type=show?'text':'password';
+    b.textContent=show?'Nascondi':'Mostra';
+    b.setAttribute('aria-pressed',String(show));
+    b.setAttribute('aria-label',show?'Nascondi password':'Mostra password');
+  });
   el('[data-ymc-internal-login-form]').onsubmit=internalSignIn;
   els('[data-ymc-open-onboarding]').forEach(b=>b.onclick=openOnboarding);
   els('[data-ymc-close-onboarding]').forEach(b=>b.onclick=closeOnboarding);
