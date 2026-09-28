@@ -26,6 +26,7 @@ async function ymcFetch(path,{method='GET',body=null,token=null,prefer=null}={})
 function internalToken(){return sessionStorage.getItem(INTERNAL_TOKEN_KEY)||''}
 function corporateToken(){return sessionStorage.getItem(CORPORATE_TOKEN_KEY)||''}
 function networkData(){return state.livePartners?.length?state.livePartners:DATA.network}
+function clientOrg(){return state.clientOrganization||DATA.organization}
 function mapPartnerRow(r){
   return {id:r.id,externalKey:r.external_key||'',name:r.name,kind:r.kind||'',geo:r.geo||'',stage:r.stage||'Mapping',tier:r.tier||'',cap:r.capabilities||[],owner:r.owner||'',next:r.next_action||'',note:r.note||''};
 }
@@ -308,9 +309,10 @@ function renderNav(){
     '<button type="button" data-ymc-open-menu><span>•••</span>More</button>';
 }
 function renderRole(){
-  el('[data-ymc-avatar]').textContent=state.role==='client'?'AR':'YU';
-  el('[data-ymc-profile-name]').textContent=state.role==='client'?DATA.organization.short:'YUME Works Team';
-  el('[data-ymc-profile-role]').textContent=state.role==='client'?'Corporate Admin · Demo':'Internal Operations · Demo';
+  const org=clientOrg();
+  el('[data-ymc-avatar]').textContent=state.role==='client'?String(org.short||org.name||'CO').slice(0,2).toUpperCase():'YU';
+  el('[data-ymc-profile-name]').textContent=state.role==='client'?(org.short||org.name||'Corporate'):'YUME Works Team';
+  el('[data-ymc-profile-role]').textContent=state.role==='client'?(state.clientMode==='platform'?'Corporate Admin · Platform':'Corporate Admin · Demo'):'Internal Operations · Live';
 }
 function render(){
   el('[data-ymc-gate]').hidden=state.session||state.onboarding;
@@ -334,7 +336,7 @@ function renderClient(section){
 function clientOverview(){
   const next=DATA.decisions.find(d=>(state.decisionStatus[d.id]||d.status)==='required')||DATA.decisions[0];
   const health=Object.entries(DATA.mission.health).map(([k,v])=>'<div class="ymc-health-row"><span>'+esc(k)+'</span><i><b style="width:'+v+'%"></b></i><strong>'+v+'%</strong></div>').join('');
-  return pageHead('MISSION CONTROL · CLIENT','Buongiorno, <em>'+esc(DATA.organization.member.split(' ')[0])+'.</em>','Qui vedete cosa sta muovendo la missione, cosa richiede una decisione e cosa YUME sta qualificando.', '<button class="ymc-btn" data-ymc-drawer-open="decision:'+next.id+'">Next decision</button><button class="ymc-btn ymc-btn--dark" data-ymc-section="mission">Open mission</button>')+
+  return pageHead('MISSION CONTROL · CLIENT','Buongiorno, <em>'+esc(clientOrg().member.split(' ')[0])+'.</em>','Qui vedete cosa sta muovendo la missione, cosa richiede una decisione e cosa YUME sta qualificando.', '<button class="ymc-btn" data-ymc-drawer-open="decision:'+next.id+'">Next decision</button><button class="ymc-btn ymc-btn--dark" data-ymc-section="mission">Open mission</button>')+
     '<section class="ymc-grid ymc-grid--4">'+
       '<div class="ymc-card ymc-stat"><span>PHASE</span><strong>'+esc(DATA.mission.phase)+'</strong><small>Mission architecture in costruzione</small></div>'+
       '<div class="ymc-card ymc-stat"><span>NEXT MILESTONE</span><strong>20 Oct</strong><small>'+esc(DATA.mission.nextMilestone)+'</small></div>'+
@@ -353,15 +355,15 @@ function clientOverview(){
 function clientCompany(){
   return pageHead('COMPANY ACCESS','Verified organization. <em>Controlled membership.</em>','Mission Control non nasce da una registrazione libera: l’Organization viene creata e abilitata da YUME dopo la verifica del set documentale e del referente.')+
     '<section class="ymc-grid ymc-grid--3">'+
-      '<article class="ymc-card ymc-stat"><span>ORGANIZATION</span><strong>Verified</strong><small>'+esc(DATA.organization.name)+'</small></article>'+
+      '<article class="ymc-card ymc-stat"><span>ORGANIZATION</span><strong>Verified</strong><small>'+esc(clientOrg().name)+'</small></article>'+
       '<article class="ymc-card ymc-stat"><span>ACCESS MODEL</span><strong>Invite-only</strong><small>YUME-issued membership</small></article>'+
-      '<article class="ymc-card ymc-stat"><span>ADMIN</span><strong>1 active</strong><small>'+esc(DATA.organization.member)+'</small></article>'+
+      '<article class="ymc-card ymc-stat"><span>ADMIN</span><strong>1 active</strong><small>'+esc(clientOrg().member)+'</small></article>'+
     '</section>'+
     '<section class="ymc-grid ymc-grid--2" style="margin-top:12px">'+
       '<article class="ymc-card"><div class="ymc-card-head"><div><span>VERIFICATION RECORD</span><h2>Organization profile</h2></div>'+chip('approved')+'</div><div class="ymc-list">'+
-        '<div class="ymc-list-row"><div><b>Ragione sociale</b><small>'+esc(DATA.organization.name)+'</small></div><span>Verified</span></div>'+
+        '<div class="ymc-list-row"><div><b>Ragione sociale</b><small>'+esc(clientOrg().name)+'</small></div><span>Verified</span></div>'+
         '<div class="ymc-list-row"><div><b>VAT / company identity</b><small>Demo data · production: verified source</small></div><span>Verified</span></div>'+
-        '<div class="ymc-list-row"><div><b>Company administrator</b><small>'+esc(DATA.organization.member)+' · '+esc(DATA.organization.role)+'</small></div><span>Active</span></div>'+
+        '<div class="ymc-list-row"><div><b>Company administrator</b><small>'+esc(clientOrg().member)+' · '+esc(clientOrg().role)+'</small></div><span>Active</span></div>'+
         '<div class="ymc-list-row"><div><b>Verification review</b><small>Production: expiry / refresh policy configurable</small></div><span>Annual</span></div>'+
       '</div></article>'+
       '<article class="ymc-card ymc-card--dark"><span class="ymc-section-label">SECURITY PRINCIPLE</span><h2>Access follows the company, not the browser.</h2><p>In produzione il token di onboarding serve solo ad attivare l’identità verificata. L’accesso ordinario passa poi da Supabase Auth / MFA e da Organization Membership, con permessi RLS legati alla missione.</p><div class="ymc-decision-meta"><span>No public signup</span><span>MFA staff</span><span>Audit log</span><span>RLS</span></div></article>'+
@@ -562,26 +564,133 @@ function bindDynamic(){
   els('[data-ymc-drawer-open]').forEach(b=>b.onclick=()=>{const [type,id]=b.dataset.ymcDrawerOpen.split(':');openDrawer(type,id)});
   els('[data-ymc-open-partner]').forEach(b=>b.onclick=()=>openPartnerWorkspace(b.dataset.ymcOpenPartner));
   els('[data-ymc-partner-status]').forEach(s=>s.onchange=()=>updatePartnerStatus(s.dataset.ymcPartnerStatus,s.value));
-  els('[data-ymc-contact-form]').forEach(form=>form.onsubmit=e=>{e.preventDefault();const id=form.dataset.ymcContactForm,fd=new FormData(form);const name=String(fd.get('name')||'').trim();if(!name)return;state.partnerContacts[id]=[...(state.partnerContacts[id]||[]),{name,role:String(fd.get('role')||''),email:String(fd.get('email')||''),phone:String(fd.get('phone')||'')}];addPartnerTimeline(id,'Nuovo referente registrato',name+' · '+String(fd.get('role')||''),'Contact');save();render();toast('Referente aggiunto.');});
-  els('[data-ymc-ticket-form]').forEach(form=>form.onsubmit=e=>{e.preventDefault();const id=form.dataset.ymcTicketForm,fd=new FormData(form),title=String(fd.get('title')||'').trim();if(!title)return;state.partnerTickets[id]=[...(state.partnerTickets[id]||[]),{id:'T-'+Date.now(),title,owner:String(fd.get('owner')||'YUME'),status:'Aperto',priority:String(fd.get('priority')||'Media'),due:String(fd.get('due')||'Da pianificare')}];addPartnerTimeline(id,'Ticket interno creato',title,'Ticket');save();render();toast('Ticket interno creato.');});
-  els('[data-ymc-request-form]').forEach(form=>form.onsubmit=e=>{e.preventDefault();const id=form.dataset.ymcRequestForm,fd=new FormData(form),subject=String(fd.get('subject')||'').trim();if(!subject)return;state.partnerRequests[id]=[...(state.partnerRequests[id]||[]),{id:'R-'+Date.now(),type:String(fd.get('type')||'Richiesta'),subject,status:'Da inviare',owner:String(fd.get('owner')||'Operations')}];addPartnerTimeline(id,'Richiesta partner creata',String(fd.get('type')||'Richiesta')+' · '+subject,'Request');save();render();toast('Richiesta aggiunta al partner.');});
-  els('[data-ymc-partner-upload]').forEach(input=>input.onchange=()=>{const file=input.files&&input.files[0];if(!file)return;const id=input.dataset.ymcPartnerUpload;state.partnerDocs[id]=[...(state.partnerDocs[id]||[]),file.name];addPartnerTimeline(id,'Documento allegato',file.name,'Document');save();render();toast('Documento aggiunto alla preview locale.');});
+  els('[data-ymc-refresh-live]').forEach(b=>b.onclick=async()=>{b.disabled=true;await loadInternalLiveData();render();toast('Dati aggiornati da Supabase.');});
+
+  els('[data-ymc-review-request]').forEach(b=>b.onclick=async()=>{
+    const [id,decision]=b.dataset.ymcReviewRequest.split(':');b.disabled=true;
+    try{
+      await ymcFetch('/rest/v1/rpc/ymc_review_access_request',{method:'POST',token:internalToken(),body:{p_request_id:id,p_decision:decision,p_notes:null}});
+      await loadInternalLiveData();render();toast(decision==='approve'?'Richiesta approvata.':'Richiesta rifiutata.');
+    }catch(ex){b.disabled=false;toast('Review non riuscita: '+ex.message)}
+  });
+  els('[data-ymc-invite-request]').forEach(b=>b.onclick=async()=>{
+    const id=b.dataset.ymcInviteRequest;b.disabled=true;
+    try{
+      await ymcFetch('/functions/v1/ymc-invite-corporate-admin',{method:'POST',token:internalToken(),body:{request_id:id}});
+      await loadInternalLiveData();render();toast('Invito Corporate inviato.');
+    }catch(ex){b.disabled=false;toast('Invito non riuscito: '+ex.message)}
+  });
+
+  const newPartner=el('[data-ymc-new-partner-form]');
+  if(newPartner)newPartner.onsubmit=async e=>{
+    e.preventDefault();const fd=new FormData(newPartner),name=String(fd.get('name')||'').trim();if(!name)return;
+    const body={name,kind:String(fd.get('kind')||'').trim()||null,geo:String(fd.get('geo')||'').trim()||null,stage:'Mapping',tier:String(fd.get('tier')||'').trim()||null,owner:String(fd.get('owner')||'').trim()||null,next_action:String(fd.get('next_action')||'').trim()||null,note:String(fd.get('note')||'').trim()||null,capabilities:String(fd.get('capabilities')||'').split(',').map(x=>x.trim()).filter(Boolean)};
+    try{await ymcFetch('/rest/v1/ymc_partners',{method:'POST',token:internalToken(),body,prefer:'return=minimal'});await loadInternalLiveData();render();toast('Partner creato nel registry.')}catch(ex){toast('Creazione partner non riuscita: '+ex.message)}
+  };
+
+  els('[data-ymc-contact-form]').forEach(form=>form.onsubmit=async e=>{
+    e.preventDefault();const id=form.dataset.ymcContactForm,fd=new FormData(form),name=String(fd.get('name')||'').trim();if(!name)return;
+    try{
+      await ymcFetch('/rest/v1/ymc_partner_contacts',{method:'POST',token:internalToken(),body:{partner_id:id,name,role:String(fd.get('role')||'').trim()||null,email:String(fd.get('email')||'').trim()||null,phone:String(fd.get('phone')||'').trim()||null},prefer:'return=minimal'});
+      await ymcFetch('/rest/v1/ymc_partner_events',{method:'POST',token:internalToken(),body:{partner_id:id,event_type:'Contact',title:'Nuovo referente registrato',detail:name+' · '+String(fd.get('role')||'')},prefer:'return=minimal'});
+      await loadPartnerWorkspaceData(id);render();toast('Referente salvato.');
+    }catch(ex){toast('Referente non salvato: '+ex.message)}
+  });
+  els('[data-ymc-ticket-form]').forEach(form=>form.onsubmit=async e=>{
+    e.preventDefault();const id=form.dataset.ymcTicketForm,fd=new FormData(form),title=String(fd.get('title')||'').trim();if(!title)return;
+    try{
+      await ymcFetch('/rest/v1/ymc_partner_tickets',{method:'POST',token:internalToken(),body:{partner_id:id,title,owner:String(fd.get('owner')||'YUME'),status:'Open',priority:String(fd.get('priority')||'Medium'),due_date:String(fd.get('due')||'')||null},prefer:'return=minimal'});
+      await ymcFetch('/rest/v1/ymc_partner_events',{method:'POST',token:internalToken(),body:{partner_id:id,event_type:'Ticket',title:'Ticket interno creato',detail:title},prefer:'return=minimal'});
+      await loadPartnerWorkspaceData(id);render();toast('Ticket salvato.');
+    }catch(ex){toast('Ticket non salvato: '+ex.message)}
+  });
+  els('[data-ymc-request-form]').forEach(form=>form.onsubmit=async e=>{
+    e.preventDefault();const id=form.dataset.ymcRequestForm,fd=new FormData(form),subject=String(fd.get('subject')||'').trim();if(!subject)return;
+    try{
+      await ymcFetch('/rest/v1/ymc_partner_requests',{method:'POST',token:internalToken(),body:{partner_id:id,request_type:String(fd.get('type')||'Request'),subject,status:'Draft',owner:String(fd.get('owner')||'Operations')},prefer:'return=minimal'});
+      await ymcFetch('/rest/v1/ymc_partner_events',{method:'POST',token:internalToken(),body:{partner_id:id,event_type:'Request',title:'Richiesta partner creata',detail:String(fd.get('type')||'Request')+' · '+subject},prefer:'return=minimal'});
+      await loadPartnerWorkspaceData(id);render();toast('Richiesta salvata.');
+    }catch(ex){toast('Richiesta non salvata: '+ex.message)}
+  });
+  els('[data-ymc-partner-upload]').forEach(input=>input.onchange=async()=>{
+    const file=input.files&&input.files[0];if(!file)return;const id=input.dataset.ymcPartnerUpload;
+    try{
+      await ymcFetch('/rest/v1/ymc_partner_documents',{method:'POST',token:internalToken(),body:{partner_id:id,file_name:file.name,mime_type:file.type||null,file_size:file.size,status:'metadata_only'},prefer:'return=minimal'});
+      await ymcFetch('/rest/v1/ymc_partner_events',{method:'POST',token:internalToken(),body:{partner_id:id,event_type:'Document',title:'Documento registrato',detail:file.name},prefer:'return=minimal'});
+      await loadPartnerWorkspaceData(id);render();toast('Metadato documento registrato.');
+    }catch(ex){toast('Documento non registrato: '+ex.message)}
+  });
   els('[data-ymc-toast]').forEach(b=>b.onclick=()=>toast(b.dataset.ymcToast));
-  els('[data-ymc-onboarding-approve]').forEach(b=>b.onclick=()=>{state.onboardingApproved=true;save();render();toast('Organization approvata nella preview: invito nominativo pronto.');});
   els('[data-ymc-open-menu]').forEach(b=>b.onclick=()=>toggleMenu(true));
 }
-function enter(role){
+
+async function enter(role){
   if(role!=='client')return openInternalLogin();
-  const email=el('[data-ymc-demo-email]')?.value.trim()||'';
-  const token=el('[data-ymc-demo-token]')?.value.trim()||'';
+  const email=el('[data-ymc-demo-email]')?.value.trim().toLowerCase()||'';
+  const code=el('[data-ymc-demo-token]')?.value.trim().toUpperCase()||'';
   const err=el('[data-ymc-access-error]');
-  if(!email.includes('@')||token!=='YUME-DEMO-2701'){
-    if(err){err.hidden=false;err.textContent='Accesso demo non valido. Usa email aziendale + token YUME-DEMO-2701.'}
-    return;
-  }
-  if(err)err.hidden=true;
-  state.onboarding=false;state.session=true;state.role='client';state.section='overview';save();render();
+  if(!email.includes('@')||!code){if(err){err.hidden=false;err.textContent='Inserisci email aziendale e codice Demo approvato.'}return}
+  try{
+    const data=await ymcFetch('/functions/v1/ymc-demo-access',{method:'POST',body:{email,code}});
+    if(!data?.ok)throw new Error(data?.error||'Demo non autorizzata');
+    if(err)err.hidden=true;
+    state.onboarding=false;state.session=true;state.role='client';state.clientMode='demo';state.section='overview';
+    state.clientOrganization={name:data.company_name,short:data.company_name,member:data.contact_name||email,role:'Corporate Demo'};save();render();
+  }catch(ex){if(err){err.hidden=false;err.textContent=ex.message}}
 }
+
+function openCorporateLogin(){
+  const m=el('[data-ymc-corporate-login]');if(m)m.hidden=false;
+  el('[data-ymc-corporate-email]')?.focus();
+}
+function closeCorporateLogin(){
+  const m=el('[data-ymc-corporate-login]');if(m)m.hidden=true;
+  const e=el('[data-ymc-corporate-login-error]');if(e)e.hidden=true;
+}
+async function activateCorporateToken(token){
+  const activation=await ymcFetch('/functions/v1/ymc-activate-membership',{method:'POST',token,body:{}});
+  if(!activation?.ok||!activation.organization)throw new Error(activation?.error||'Membership YUME non valida');
+  const user=await ymcFetch('/auth/v1/user',{token});
+  sessionStorage.setItem(CORPORATE_TOKEN_KEY,token);
+  state.session=true;state.onboarding=false;state.role='client';state.clientMode='platform';state.section='overview';
+  state.clientOrganization={name:activation.organization.legal_name,short:activation.organization.legal_name,member:user?.user_metadata?.full_name||user?.email||'Corporate Admin',role:'Corporate Admin'};
+  save();closeCorporateLogin();render();return true;
+}
+async function corporateSignIn(e){
+  e.preventDefault();const email=el('[data-ymc-corporate-email]')?.value.trim().toLowerCase()||'',password=el('[data-ymc-corporate-password]')?.value||'',err=el('[data-ymc-corporate-login-error]'),btn=e.currentTarget.querySelector('button[type="submit"]');
+  if(!email.includes('@')||!password){err.hidden=false;err.textContent='Inserisci email e password.';return}
+  btn.disabled=true;err.hidden=true;
+  try{
+    const data=await ymcFetch('/auth/v1/token?grant_type=password',{method:'POST',body:{email,password}});
+    if(!data?.access_token)throw new Error('Credenziali Corporate non valide.');
+    await activateCorporateToken(data.access_token);
+  }catch(ex){err.hidden=false;err.textContent=ex.message}finally{btn.disabled=false}
+}
+async function corporateActivate(e){
+  e.preventDefault();const token=sessionStorage.getItem('ymcPendingInviteToken')||'',pwd=el('[data-ymc-corporate-new-password]')?.value||'',confirm=el('[data-ymc-corporate-confirm-password]')?.value||'',err=el('[data-ymc-corporate-activation-error]'),btn=e.currentTarget.querySelector('button[type="submit"]');
+  if(pwd.length<10){err.hidden=false;err.textContent='Usa una password di almeno 10 caratteri.';return}
+  if(pwd!==confirm){err.hidden=false;err.textContent='Le password non coincidono.';return}
+  btn.disabled=true;err.hidden=true;
+  try{
+    await ymcFetch('/auth/v1/user',{method:'PUT',token,body:{password:pwd}});
+    await activateCorporateToken(token);
+    sessionStorage.removeItem('ymcPendingInviteToken');
+    history.replaceState(null,'',location.pathname+location.search);
+  }catch(ex){err.hidden=false;err.textContent=ex.message}finally{btn.disabled=false}
+}
+function detectCorporateInvite(){
+  if(!location.hash)return false;
+  const p=new URLSearchParams(location.hash.slice(1)),token=p.get('access_token'),type=p.get('type');
+  if(!token||!['invite','recovery','signup'].includes(type||''))return false;
+  sessionStorage.setItem('ymcPendingInviteToken',token);
+  const login=el('[data-ymc-corporate-login-form]'),activation=el('[data-ymc-corporate-activation-form]');
+  if(login)login.hidden=true;if(activation)activation.hidden=false;openCorporateLogin();return true;
+}
+async function validateCorporateSession(){
+  const token=corporateToken();if(!token)return false;
+  try{await activateCorporateToken(token);return true}catch(_){return false}
+}
+
 function openInternalLogin(){
   const m=el('[data-ymc-internal-login]');
   const email=el('[data-ymc-internal-email]');
