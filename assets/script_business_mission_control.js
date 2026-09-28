@@ -399,7 +399,7 @@ function internalRoadmap(){
     '<section class="ymc-card" style="margin-top:12px"><span class="ymc-section-label">DO NOT BUILD YET</span><h2>Partner portal, booking engine, expense management.</h2><p>La preview mantiene intenzionalmente fuori ciò che oggi aumenterebbe complessità senza validare il core: self-booking, note spese, chat completa, partner login, marketplace e app nativa.</p></section>';
 }
 function internalAccess(){
-  return pageHead('ACCESS ARCHITECTURE','Authentication is infrastructure. <em>Not a custom feature.</em>','La preview non autentica davvero nessuno. La produzione dovrebbe usare identity provider esterno, Organization Membership, MFA e RLS.')+
+  return pageHead('ACCESS ARCHITECTURE','Authentication is infrastructure. <em>Not a custom feature.</em>','YUME Internal usa già Supabase Auth nella preview protetta. Il passo production è aggiungere ruolo staff verificato, MFA obbligatoria, Organization Membership e RLS sui dati reali.')+
     '<section class="ymc-auth-architecture"><article class="ymc-auth-card is-recommended"><span>PHASE 1 · RECOMMENDED</span><h3>Supabase Auth</h3><p>Coerente con stack attuale e RLS.</p><ul><li>Staff: password + MFA</li><li>Client: magic link / OTP</li><li>Organization membership</li><li>JWT + RLS per missione</li></ul></article><article class="ymc-auth-card"><span>ENTERPRISE TRIGGER</span><h3>WorkOS</h3><p>Quando un cliente chiede SAML/OIDC/SCIM.</p><ul><li>Enterprise SSO</li><li>Directory sync</li><li>Organization policies</li><li>Upgrade senza riscrivere domain model</li></ul></article><article class="ymc-auth-card"><span>NOT FIRST CHOICE</span><h3>Clerk / Auth0</h3><p>Validi, ma aggiungono un identity stack che oggi non serve.</p><ul><li>Ottima developer UX</li><li>Enterprise features</li><li>Più dipendenza esterna</li><li>Valutabili se cambiano i requisiti</li></ul></article></section>'+
     '<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>DOMAIN MODEL</span><h2>Do not couple business data to one auth vendor.</h2></div></div><div class="ymc-route"><span>Organization</span><i>→</i><span>Membership</span><i>→</i><span>Mission</span><i>→</i><span>Permission</span><i>→</i><span>Audit log</span></div><p>Le entità business devono usare ID interni YUME. L’identity provider si collega tramite identity_provider + identity_subject, così Supabase oggi e WorkOS domani non richiedono una riscrittura del progetto.</p></section>';
 }
@@ -517,6 +517,30 @@ async function internalSignIn(e){
   }catch(ex){err.hidden=false;err.textContent=String(ex.message||ex)}
   finally{submit.disabled=false}
 }
+async function validateInternalSession(){
+  const token=sessionStorage.getItem(INTERNAL_TOKEN_KEY);
+  if(!token)return false;
+  try{
+    const res=await fetch(INTERNAL_AUTH_URL+'/auth/v1/user',{
+      headers:{'apikey':INTERNAL_AUTH_KEY,'Authorization':'Bearer '+token}
+    });
+    if(!res.ok)return false;
+    const user=await res.json().catch(()=>({}));
+    return String(user?.email||'').toLowerCase()===INTERNAL_EMAIL;
+  }catch(_){return false}
+}
+async function bootstrap(){
+  initStatic();
+  if(state.session&&state.role==='internal'){
+    const valid=await validateInternalSession();
+    if(!valid){
+      sessionStorage.removeItem(INTERNAL_TOKEN_KEY);
+      state=baseState();
+      save();
+    }
+  }
+  render();
+}
 function logout(){sessionStorage.removeItem(INTERNAL_TOKEN_KEY);state={...baseState()};save();render()}
 function resetPreview(){try{localStorage.removeItem(STORAGE)}catch(_){}sessionStorage.removeItem(INTERNAL_TOKEN_KEY);state={...baseState(),session:true,role:'client',section:'overview'};save();render();toast('Preview ripristinata.')}
 function toggleMenu(open){state.sidebar=typeof open==='boolean'?open:!state.sidebar;el('[data-ymc-sidebar]')?.classList.toggle('is-open',state.sidebar);el('[data-ymc-sidebar-backdrop]')?.classList.toggle('is-open',state.sidebar)}
@@ -544,5 +568,5 @@ function initStatic(){
     if(!e.target.closest('[data-ymc-profile]')&&!e.target.closest('[data-ymc-profile-menu]'))el('[data-ymc-profile-menu]').hidden=true;
   });
 }
-document.addEventListener('DOMContentLoaded',()=>{initStatic();render()});
+document.addEventListener('DOMContentLoaded',bootstrap);
 })();
