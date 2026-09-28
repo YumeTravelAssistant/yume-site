@@ -75,3 +75,38 @@ button,input{font:inherit}button,a{color:inherit}a{text-decoration:none}button{c
   .ymc-mobile-nav{left:6px;right:6px}.ymc-mobile-nav button{font-size:6.5px}
 }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* Mission Control v2 · visual storytelling polish */
+.ymc-gate-visuals{display:grid;grid-template-columns:1.25fr .82fr .82fr;gap:9px;margin-top:30px}
+.ymc-visual{position:relative;min-height:180px;margin:0;overflow:hidden;border-radius:18px;border:1px solid rgba(255,255,255,.1);background:#15232f;box-shadow:0 16px 42px rgba(0,0,0,.18)}
+.ymc-visual img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.86) contrast(1.03);transform:scale(1.01);transition:transform .65s var(--ymc-ease),filter .4s var(--ymc-ease)}
+.ymc-visual:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,16,23,.05),rgba(9,16,23,.78))}
+.ymc-visual:hover img{transform:scale(1.045);filter:saturate(1) contrast(1.04)}
+.ymc-visual figcaption{position:absolute;z-index:2;left:15px;right:15px;bottom:14px;color:#fff}
+.ymc-visual figcaption span{display:inline-grid;place-items:center;width:25px;height:25px;margin-bottom:9px;border:1px solid rgba(255,255,255,.34);border-radius:50%;font-size:7px;font-weight:900}
+.ymc-visual figcaption strong{display:block;font:600 17px/1.05 "Playfair Display",serif}
+.ymc-visual figcaption small{display:block;margin-top:5px;color:rgba(255,255,255,.64);font-size:8px}
+.ymc-visual--culture,.ymc-visual--fuji{min-height:180px}
+.ymc-gate-card{position:relative}
+.ymc-gate-card:before{content:"PRIVATE PREVIEW";position:absolute;right:18px;top:18px;color:rgba(255,255,255,.22);font-size:7px;font-weight:900;letter-spacing:.14em}
+.ymc-network-map{background-image:linear-gradient(145deg,rgba(8,14,20,.93),rgba(19,34,45,.88)),url("/assets/tecnologia.jpg");background-size:cover;background-position:center}
+.ymc-network-map:after{background-image:linear-gradient(rgba(255,255,255,.024) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.024) 1px,transparent 1px);background-size:32px 32px}
+.ymc-card,.ymc-partner-card,.ymc-doc,.ymc-approval,.ymc-followup-card,.ymc-auth-card{transition:transform .2s var(--ymc-ease),box-shadow .2s var(--ymc-ease),border-color .2s var(--ymc-ease)}
+.ymc-card:hover,.ymc-partner-card:hover,.ymc-doc:hover,.ymc-approval:hover,.ymc-followup-card:hover,.ymc-auth-card:hover{border-color:#d2c7b6;box-shadow:0 12px 34px rgba(13,21,29,.065)}
+.ymc-page-head h1 em,.ymc-next-decision h2 em{color:#9f7e48}
+@media(max-width:900px){
+  .ymc-gate-visuals{grid-template-columns:1.15fr .85fr .85fr;margin-top:24px}
+  .ymc-visual{min-height:150px}
+}
+@media(max-width:700px){
+  .ymc-gate-visuals{display:flex;overflow-x:auto;gap:8px;margin:22px -2px 0;padding:0 2px 5px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .ymc-gate-visuals::-webkit-scrollbar{display:none}
+  .ymc-visual{flex:0 0 74vw;min-height:170px;scroll-snap-align:start}
+  .ymc-visual--culture,.ymc-visual--fuji{flex-basis:58vw}
+}
+@media(max-width:480px){
+  .ymc-gate-visuals{margin-top:18px}
+  .ymc-visual{flex-basis:78vw;min-height:154px}
+  .ymc-visual--culture,.ymc-visual--fuji{flex-basis:62vw}
+  .ymc-visual figcaption strong{font-size:15px}
+}
