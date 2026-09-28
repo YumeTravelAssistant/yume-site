@@ -12,15 +12,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/styles_business_mission_control.css?v=20260928-v3">
-  <script defer src="/assets/script_business_mission_control.js?v=20260928-v2"></script>
+  <link rel="stylesheet" href="/assets/styles_business_mission_control.css?v=20260928-v4">
+  <script defer src="/assets/script_business_mission_control.js?v=20260928-v4"></script>
 </head>
 <body>
 <a class="ymc-skip" href="#ymc-main">Vai al contenuto</a>
 
 <div class="ymc-preview-ribbon" aria-label="Stato preview">
   <span>PREVIEW PRIVATA</span>
-  <b>Mission Control · dati demo · nessun login reale</b>
+  <b>Mission Control · Corporate demo + YUME Internal protetto</b>
   <a href="/business">← Torna a YUME Works</a>
 </div>
 
@@ -76,8 +76,8 @@
         <button class="ymc-onboarding-entry" type="button" data-ymc-open-onboarding>
           <span><b>Hai ricevuto il link di onboarding?</b><small>Simula verifica aziendale e documenti</small></span><i>↗</i>
         </button>
-        <button class="ymc-gate-action ymc-gate-action--secondary" type="button" data-ymc-enter="internal">
-          <span><b>YUME Internal</b><small>Network · onboarding · project operations</small></span><i>→</i>
+        <button class="ymc-gate-action ymc-gate-action--secondary" type="button" data-ymc-open-internal-login>
+          <span><b>YUME Internal</b><small>Accesso staff protetto · Supabase Auth</small></span><i>→</i>
         </button>
         <small class="ymc-gate-disclaimer">Preview UX/UI. Nessun documento viene caricato davvero e nessun dato viene inviato a Supabase/CRM. Il set documentale definitivo dovrà essere validato sul piano legale/privacy prima della produzione.</small>
       </div>
@@ -117,7 +117,40 @@
   </div>
 </section>
 
+<section class="ymc-internal-login" data-ymc-internal-login hidden>
+  <div class="ymc-internal-login-backdrop" data-ymc-close-internal-login></div>
+  <div class="ymc-internal-login-card" role="dialog" aria-modal="true" aria-labelledby="ymc-internal-title">
+    <button type="button" class="ymc-internal-login-close" data-ymc-close-internal-login aria-label="Chiudi">×</button>
+    <div class="ymc-internal-login-brand">
+      <img src="/assets/logo-yume.jpg" alt="" width="48" height="48">
+      <span><strong>YUME</strong><small>WORKS · INTERNAL</small></span>
+    </div>
+    <p class="ymc-kicker">STAFF ACCESS · SUPABASE AUTH</p>
+    <h2 id="ymc-internal-title">Accesso operativo<br><em>separato.</em></h2>
+    <p>Network, trattative, documenti e note interne non sono accessibili con il token Corporate.</p>
+    <form data-ymc-internal-login-form>
+      <label class="ymc-field">
+        <span>Email YUME</span>
+        <input type="email" value="info-yume@gmail.com" readonly data-ymc-internal-email autocomplete="username">
+      </label>
+      <label class="ymc-field">
+        <span>Password</span>
+        <input type="password" placeholder="Password staff" data-ymc-internal-password autocomplete="current-password">
+      </label>
+      <p class="ymc-access-error" data-ymc-internal-login-error hidden></p>
+      <button type="submit" class="ymc-gate-action">
+        <span><b>Accedi a YUME Internal</b><small>Password inviata direttamente a Supabase Auth</small></span><i>→</i>
+      </button>
+    </form>
+    <div class="ymc-internal-login-security">
+      <span>MFA READY</span>
+      <p>La password non viene salvata nel frontend. In produzione lo staff dovrà usare MFA e un ruolo YUME autorizzato.</p>
+    </div>
+  </div>
+</section>
+
 <div class="ymc-app" data-ymc-app hidden>
+  <div class="ymc-sidebar-backdrop" data-ymc-sidebar-backdrop></div>
   <aside class="ymc-sidebar" data-ymc-sidebar>
     <div class="ymc-sidebar-brand">
       <a href="/business" aria-label="YUME Works">
@@ -125,11 +158,6 @@
         <span><strong>YUME</strong><small>WORKS · MISSION CONTROL</small></span>
       </a>
       <button type="button" class="ymc-sidebar-close" data-ymc-close-menu aria-label="Chiudi menu">×</button>
-    </div>
-
-    <div class="ymc-mode-switch" role="group" aria-label="Vista demo">
-      <button type="button" data-ymc-role="client">Client</button>
-      <button type="button" data-ymc-role="internal">YUME</button>
     </div>
 
     <nav class="ymc-nav" aria-label="Mission Control" data-ymc-nav></nav>

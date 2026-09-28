@@ -1,6 +1,10 @@
 (()=>{'use strict';
 
 const STORAGE='yumeMissionControlPreviewV1';
+const INTERNAL_AUTH_URL='https://hlikhyemzophandqkjdy.supabase.co';
+const INTERNAL_AUTH_KEY='sb_publishable_Z5S66pZ85I3WlGuJDArJhA_QuXhKP51';
+const INTERNAL_EMAIL='info-yume@gmail.com';
+const INTERNAL_TOKEN_KEY='ymcInternalAccessToken';
 
 const DATA={
   organization:{name:'Aurea Italia S.r.l.',short:'Aurea Italia',industry:'Wine & Spirits',member:'Alessandro Rinaldi',role:'Corporate Admin'},
@@ -63,12 +67,12 @@ const DATA={
     {role:'Market specialist',geo:'Japan',status:'Optional module',note:'Activated only if the business case requires specialist research.'}
   ],
   network:[
-    {id:'p1',name:'ICCJ · Camera di Commercio Italiana in Giappone',kind:'Institutional node',geo:'Japan',stage:'Target relationship',tier:'Mapping',cap:['Networking','Business ecosystem','Events'],owner:'Alessio',next:'Prepare introduction & collaboration framing',note:'Target di relazione istituzionale. Nessuna partnership implicata.'},
-    {id:'p2',name:'JNTO / JATA mapping',kind:'Travel trade ecosystem',geo:'Japan',stage:'Mapping',tier:'Exploration',cap:['Destination trade','Tourism network','DMC discovery'],owner:'Gaia',next:'Use trade relationship to identify local operators',note:'Canale potenziale per ampliare la conoscenza del network travel locale.'},
-    {id:'p3',name:'Japan DMC · Candidate A',kind:'DMC',geo:'Tokyo / Nationwide',stage:'Qualification',tier:'Candidate',cap:['Ground handling','Corporate groups','Transport','Guides'],owner:'Operations',next:'Request corporate capability deck + commercial terms',note:'Nome oscurato in preview. Processo previsto: candidate → pilot → approved.'},
-    {id:'p4',name:'Japan DMC · Candidate B',kind:'DMC',geo:'Kansai / Nationwide',stage:'Discovery',tier:'Candidate',cap:['MICE','Business travel','Venues','Transfers'],owner:'Operations',next:'Initial call',note:'Seconda opzione per evitare single-source dependency.'},
-    {id:'p5',name:'JETRO / EU-Japan ecosystem',kind:'Business support mapping',geo:'Japan / EU',stage:'Mapping',tier:'External ecosystem',cap:['Market entry resources','Business matching','Research'],owner:'Business Design',next:'Map public tools & non-overlap opportunities',note:'Risorsa/ecosistema esterno; non presentato come partner YUME.'},
-    {id:'p6',name:'Technical interpreter pool',kind:'Specialist network',geo:'Japan',stage:'Build on demand',tier:'Early',cap:['Automotive','Manufacturing','Business'],owner:'Operations',next:'Create first qualified shortlist',note:'Network da approfondire seguendo la domanda reale.'}
+    {id:'p1',name:'ICCJ · Camera di Commercio Italiana in Giappone',kind:'Institutional node',geo:'Japan',stage:'Da contattare',tier:'Target',cap:['Networking','Business ecosystem','Events'],owner:'Alessio',next:'Preparare introduction & collaboration framing',note:'Target di relazione istituzionale. Nessuna partnership implicata.'},
+    {id:'p2',name:'JNTO / JATA mapping',kind:'Travel trade ecosystem',geo:'Japan',stage:'Da contattare',tier:'Target',cap:['Destination trade','Tourism network','DMC discovery'],owner:'Gaia',next:'Aprire il contatto trade e mappare DMC locali',note:'Canale potenziale per ampliare la conoscenza del network travel locale.'},
+    {id:'p3',name:'Japan DMC · Candidate A',kind:'DMC',geo:'Tokyo / Nationwide',stage:'Da contattare',tier:'Candidate',cap:['Ground handling','Corporate groups','Transport','Guides'],owner:'Operations',next:'Richiedere capability deck e condizioni commerciali',note:'Nome oscurato in preview. Nessun rapporto attivo ancora registrato.'},
+    {id:'p4',name:'Japan DMC · Candidate B',kind:'DMC',geo:'Kansai / Nationwide',stage:'Da contattare',tier:'Candidate',cap:['MICE','Business travel','Venues','Transfers'],owner:'Operations',next:'Organizzare primo contatto',note:'Seconda opzione per evitare single-source dependency.'},
+    {id:'p5',name:'JETRO / EU-Japan ecosystem',kind:'Business support mapping',geo:'Japan / EU',stage:'Da contattare',tier:'External ecosystem',cap:['Market entry resources','Business matching','Research'],owner:'Business Design',next:'Mappare strumenti pubblici e opportunità non-overlap',note:'Risorsa/ecosistema esterno; non presentato come partner YUME.'},
+    {id:'p6',name:'Technical interpreter pool',kind:'Specialist network',geo:'Japan',stage:'Da contattare',tier:'Candidate pool',cap:['Automotive','Manufacturing','Business'],owner:'Operations',next:'Costruire prima shortlist qualificata',note:'Network da approfondire seguendo la domanda reale.'}
   ],
   coverage:[
     {label:'Institutional · Japan',value:55,state:'Developing'},
@@ -81,12 +85,12 @@ const DATA={
     {label:'Singapore / APAC',value:8,state:'Exploration'}
   ],
   partnerPipeline:[
-    {stage:'Mapping',count:12,detail:'Organizations / providers identified'},
-    {stage:'Contacted',count:5,detail:'Initial outreach or introduction'},
-    {stage:'Qualification',count:3,detail:'Capability / commercial check'},
-    {stage:'Pilot',count:1,detail:'To be validated on a real mission'},
-    {stage:'Approved',count:0,detail:'No partner promoted before pilot'},
-    {stage:'Preferred',count:0,detail:'Performance-based future tier'}
+    {stage:'Da contattare',count:6,detail:'Target identificati · nessun contatto registrato'},
+    {stage:'Primo contatto',count:0,detail:'Introduzione o primo scambio avvenuto'},
+    {stage:'In valutazione',count:0,detail:'Capability, referenti e condizioni in verifica'},
+    {stage:'Trattativa',count:0,detail:'Termini, SLA o accordo in discussione'},
+    {stage:'Pilot',count:0,detail:'Validazione su progetto reale'},
+    {stage:'Accordo attivo',count:0,detail:'Rapporto formalizzato e utilizzabile'}
   ],
   roadmap:[
     {period:'TTG 2026',title:'Demo-ready operating story',items:['Controlled access workflow','Mission Control UX','YUME Network view','Japan Core + Asia Extension']},
@@ -115,16 +119,34 @@ const INTERNAL_NAV=[
 ];
 
 let state=loadState();
+if(state.role==='internal'&&!sessionStorage.getItem(INTERNAL_TOKEN_KEY))state=baseState();
 let toastTimer=null;
 
 function loadState(){
+  const base=baseState();
   try{
     const raw=localStorage.getItem(STORAGE);
-    if(raw){const s=JSON.parse(raw);return {...baseState(),...s,decisionStatus:{...baseState().decisionStatus,...(s.decisionStatus||{})}}}
+    if(raw){
+      const s=JSON.parse(raw);
+      return {...base,...s,
+        decisionStatus:{...base.decisionStatus,...(s.decisionStatus||{})},
+        partnerStatuses:{...base.partnerStatuses,...(s.partnerStatuses||{})},
+        partnerContacts:{...base.partnerContacts,...(s.partnerContacts||{})},
+        partnerTickets:{...base.partnerTickets,...(s.partnerTickets||{})},
+        partnerRequests:{...base.partnerRequests,...(s.partnerRequests||{})},
+        partnerTimeline:{...base.partnerTimeline,...(s.partnerTimeline||{})},
+        partnerDocs:{...base.partnerDocs,...(s.partnerDocs||{})}
+      };
+    }
   }catch(_){}
-  return baseState();
+  return base;
 }
-function baseState(){return{session:false,onboarding:false,onboardingStep:1,onboardingSubmitted:false,onboardingApproved:false,role:'client',section:'overview',decisionStatus:{d1:'required',d2:'open',d3:'approved'},sidebar:false,drawer:false,uploadedDocs:{}}}
+function baseState(){
+  const partnerStatuses=Object.fromEntries(DATA.network.map(p=>[p.id,'Da contattare']));
+  const partnerTickets=Object.fromEntries(DATA.network.map(p=>[p.id,[{id:'T-'+p.id+'-001',title:p.next,owner:p.owner,status:'Aperto',priority:'Media',due:'Da pianificare'}]]));
+  const partnerTimeline=Object.fromEntries(DATA.network.map(p=>[p.id,[{date:'Oggi',title:'Record creato',detail:'Target inserito nel Partner Registry YUME.',type:'System'}]]));
+  return{session:false,onboarding:false,onboardingStep:1,onboardingSubmitted:false,onboardingApproved:false,role:'client',section:'overview',activePartnerId:null,decisionStatus:{d1:'required',d2:'open',d3:'approved'},sidebar:false,drawer:false,uploadedDocs:{},partnerStatuses,partnerContacts:{},partnerTickets,partnerRequests:{},partnerTimeline,partnerDocs:{}};
+}
 function save(){try{localStorage.setItem(STORAGE,JSON.stringify(state))}catch(_){}}
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function money(v){return new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(v)}
@@ -142,14 +164,27 @@ function pageHead(kicker,title,copy,actions=''){
   return '<header class="ymc-page-head"><div><span class="ymc-section-label">'+esc(kicker)+'</span><h1>'+title+'</h1><p>'+copy+'</p></div><div class="ymc-page-head-actions">'+actions+'</div></header>';
 }
 function setRole(role){
+  if(role==='internal'&&!sessionStorage.getItem(INTERNAL_TOKEN_KEY))return openInternalLogin();
   state.role=role==='internal'?'internal':'client';
   state.section=state.role==='client'?'overview':'network';
-  state.sidebar=false;
-  closeDrawer();
-  save();render();
+  state.sidebar=false;closeDrawer();save();render();
 }
 function setSection(section){
+  if(section!=='partnerWorkspace')state.activePartnerId=null;
   state.section=section;state.sidebar=false;save();render();requestAnimationFrame(()=>el('#ymc-main')?.focus({preventScroll:true}));
+}
+function partnerStatus(id){return state.partnerStatuses?.[id]||'Da contattare'}
+function openPartnerWorkspace(id){
+  state.activePartnerId=id;state.section='partnerWorkspace';state.sidebar=false;closeDrawer();save();render();requestAnimationFrame(()=>el('#ymc-main')?.focus({preventScroll:true}));
+}
+function addPartnerTimeline(id,title,detail,type='Team'){
+  state.partnerTimeline=state.partnerTimeline||{};
+  state.partnerTimeline[id]=[...(state.partnerTimeline[id]||[]),{date:new Date().toLocaleDateString('it-IT'),title,detail,type}];
+}
+function updatePartnerStatus(id,status){
+  state.partnerStatuses[id]=status;
+  addPartnerTimeline(id,'Stato rapporto aggiornato',status,'Status');
+  save();render();toast('Stato partner aggiornato: '+status);
 }
 function toast(msg){
   const t=el('[data-ymc-toast]');if(!t)return;
@@ -161,7 +196,7 @@ function updateDecision(id,status){
 function openDrawer(type,id){
   state.drawer={type,id};
   const drawer=el('[data-ymc-drawer]'),back=el('[data-ymc-drawer-backdrop]'),content=el('[data-ymc-drawer-content]');
-  content.innerHTML=drawerContent(type,id);drawer.classList.add('is-open');drawer.setAttribute('aria-hidden','false');back.classList.add('is-open');
+  content.innerHTML=drawerContent(type,id);drawer.classList.add('is-open');drawer.setAttribute('aria-hidden','false');back.classList.add('is-open');bindDynamic();
 }
 function closeDrawer(){
   state.drawer=false;el('[data-ymc-drawer]')?.classList.remove('is-open');el('[data-ymc-drawer]')?.setAttribute('aria-hidden','true');el('[data-ymc-drawer-backdrop]')?.classList.remove('is-open');
@@ -175,10 +210,11 @@ function drawerContent(type,id){
   }
   if(type==='partner'){
     const p=DATA.network.find(x=>x.id===id);if(!p)return'';
-    return '<span class="ymc-section-label">PARTNER REGISTRY · INTERNAL</span><h2 class="ymc-drawer-title">'+esc(p.name)+'</h2><p class="ymc-drawer-copy">'+esc(p.note)+'</p>'+
-      '<div class="ymc-drawer-section"><dl><div><dt>Type</dt><dd>'+esc(p.kind)+'</dd></div><div><dt>Geography</dt><dd>'+esc(p.geo)+'</dd></div><div><dt>Stage</dt><dd>'+esc(p.stage)+'</dd></div><div><dt>Tier</dt><dd>'+esc(p.tier)+'</dd></div><div><dt>YUME owner</dt><dd>'+esc(p.owner)+'</dd></div></dl></div>'+
-      '<div class="ymc-drawer-section"><h4>Capabilities</h4><div class="ymc-decision-meta">'+p.cap.map(x=>'<span>'+esc(x)+'</span>').join('')+'</div></div>'+
-      '<div class="ymc-drawer-section"><h4>Next action</h4><p class="ymc-drawer-copy">'+esc(p.next)+'</p></div>';
+    return '<span class="ymc-section-label">PARTNER REGISTRY · QUICK VIEW</span><h2 class="ymc-drawer-title">'+esc(p.name)+'</h2><p class="ymc-drawer-copy">'+esc(p.note)+'</p>'+
+      '<div class="ymc-drawer-section"><dl><div><dt>Type</dt><dd>'+esc(p.kind)+'</dd></div><div><dt>Geography</dt><dd>'+esc(p.geo)+'</dd></div><div><dt>Stato</dt><dd>'+esc(partnerStatus(p.id))+'</dd></div><div><dt>Tier</dt><dd>'+esc(p.tier)+'</dd></div><div><dt>YUME owner</dt><dd>'+esc(p.owner)+'</dd></div></dl></div>'+
+      '<div class="ymc-drawer-section"><h4>Capabilities</h4><div class="ymc-partner-capabilities">'+p.cap.map(x=>'<span>'+esc(x)+'</span>').join('')+'</div></div>'+
+      '<div class="ymc-drawer-section"><h4>Next action</h4><p class="ymc-drawer-copy">'+esc(p.next)+'</p></div>'+
+      '<div class="ymc-drawer-section"><button type="button" class="ymc-btn ymc-btn--dark" data-ymc-open-partner="'+p.id+'">Apri Partner Workspace →</button></div>';
   }
   if(type==='agenda'){
     const a=DATA.agenda[Number(id)];if(!a)return'';
@@ -198,7 +234,6 @@ function renderNav(){
     '<button type="button" data-ymc-open-menu><span>•••</span>More</button>';
 }
 function renderRole(){
-  els('[data-ymc-role]').forEach(b=>b.classList.toggle('is-active',b.dataset.ymcRole===state.role));
   el('[data-ymc-avatar]').textContent=state.role==='client'?'AR':'YU';
   el('[data-ymc-profile-name]').textContent=state.role==='client'?DATA.organization.short:'YUME Works Team';
   el('[data-ymc-profile-role]').textContent=state.role==='client'?'Corporate Admin · Demo':'Internal Operations · Demo';
@@ -298,7 +333,7 @@ function clientFollowup(){
     '<section class="ymc-card ymc-card--brass" style="margin-top:12px"><span class="ymc-section-label">ACCOUNT MEMORY</span><h2>Il vantaggio cresce missione dopo missione.</h2><p>Quando la stessa azienda torna in Giappone o Asia, YUME non riparte da zero: storico delle missioni, contatti, decisioni, documenti e follow-up diventano memoria aziendale condivisa.</p></section>';
 }
 function renderInternal(section){
-  const map={network:internalNetwork,onboarding:internalOnboarding,partners:internalPartners,coverage:internalCoverage,pipeline:internalPipeline,roadmap:internalRoadmap,access:internalAccess};
+  const map={network:internalNetwork,onboarding:internalOnboarding,partners:internalPartners,partnerWorkspace:internalPartnerWorkspace,coverage:internalCoverage,pipeline:internalPipeline,roadmap:internalRoadmap,access:internalAccess};
   return (map[section]||internalNetwork)();
 }
 function internalNetwork(){
@@ -324,9 +359,27 @@ function internalOnboarding(){
     '<section class="ymc-grid ymc-grid--2" style="margin-top:12px"><article class="ymc-card"><span class="ymc-section-label">REQUIRED SET · PREVIEW</span><h2>Configurable company pack</h2><div class="ymc-list"><div class="ymc-list-row"><div><b>Visura camerale</b><small>Recente secondo policy YUME da validare legalmente</small></div><span>Core</span></div><div class="ymc-list-row"><div><b>Identità del legale rappresentante</b><small>O altro meccanismo equivalente di verifica</small></div><span>Core</span></div><div class="ymc-list-row"><div><b>Delega / autorizzazione</b><small>Se il referente amministratore non coincide con il rappresentante</small></div><span>Conditional</span></div><div class="ymc-list-row"><div><b>Privacy / terms</b><small>Consensi e ruoli di trattamento da definire per il servizio reale</small></div><span>Core</span></div></div></article><article class="ymc-card ymc-card--brass"><span class="ymc-section-label">TOKEN LIFECYCLE</span><h2>Upload link ≠ login credential.</h2><p>Il link documentale è temporaneo e monouso. Dopo la verifica YUME crea Organization + Membership e invia l’accesso. Il token di onboarding non deve diventare una password permanente.</p><div class="ymc-route"><span>Invite</span><i>→</i><span>Upload</span><i>→</i><span>Review</span><i>→</i><span>Organization</span><i>→</i><span>Access</span></div></article></section>';
 }
 
+function internalPartnerWorkspace(){
+  const p=DATA.network.find(x=>x.id===state.activePartnerId)||DATA.network[0];
+  const statuses=['Da contattare','Primo contatto','In valutazione','Trattativa','Pilot','Accordo attivo'];
+  const contacts=state.partnerContacts[p.id]||[];
+  const tickets=state.partnerTickets[p.id]||[];
+  const requests=state.partnerRequests[p.id]||[];
+  const timeline=state.partnerTimeline[p.id]||[];
+  const docs=state.partnerDocs[p.id]||[];
+  return pageHead('PARTNER WORKSPACE · INTERNAL','Gestire la relazione.<br><em>Non solo archiviarla.</em>','Questa è la pagina operativa del partner: stato, referenti, ticket, richieste, documenti, accordi e cronologia.','<button class="ymc-btn" data-ymc-section="partners">← Partner Registry</button><button class="ymc-btn ymc-btn--dark" data-ymc-drawer-open="partner:'+p.id+'">Quick view</button>')+
+    '<section class="ymc-partner-workspace-hero"><div><span class="ymc-section-label">'+esc(p.kind)+' · '+esc(p.geo)+'</span><h2>'+esc(p.name)+'</h2><p>'+esc(p.note)+'</p><div class="ymc-partner-capabilities">'+p.cap.map(x=>'<span>'+esc(x)+'</span>').join('')+'</div></div><div class="ymc-partner-status-panel"><label><span>STATO RAPPORTO</span><select data-ymc-partner-status="'+p.id+'">'+statuses.map(s=>'<option value="'+esc(s)+'" '+(partnerStatus(p.id)===s?'selected':'')+'>'+esc(s)+'</option>').join('')+'</select></label><div><span>OWNER</span><b>'+esc(p.owner)+'</b></div><div><span>NEXT ACTION</span><b>'+esc(p.next)+'</b></div></div></section>'+
+    '<section class="ymc-card ymc-partner-pipeline"><div class="ymc-card-head"><div><span>RELATIONSHIP PIPELINE</span><h2>Da target a rapporto attivo.</h2></div><span class="ymc-chip">'+esc(partnerStatus(p.id))+'</span></div><div class="ymc-partner-stage-rail">'+statuses.map((s,i)=>{const current=statuses.indexOf(partnerStatus(p.id));return '<div class="'+(i<current?'is-complete':i===current?'is-current':'')+'"><i>'+(i<current?'✓':i+1)+'</i><b>'+esc(s)+'</b><small>'+(i<current?'Completato':i===current?'Stato attuale':'Successivo')+'</small></div>'}).join('')+'</div></section>'+
+    '<section class="ymc-grid ymc-grid--2" style="margin-top:12px"><article class="ymc-card"><div class="ymc-card-head"><div><span>REFERENTI</span><h2>Persone della relazione</h2></div></div><div class="ymc-contact-cards">'+(contacts.length?contacts.map(x=>'<article><b>'+esc(x.name)+'</b><span>'+esc(x.role)+'</span><small>'+esc(x.email||'')+(x.phone?' · '+esc(x.phone):'')+'</small></article>').join(''):'<p>Nessun referente registrato.</p>')+'</div><form class="ymc-mini-form" data-ymc-contact-form="'+p.id+'"><input name="name" placeholder="Nome e cognome" required><input name="role" placeholder="Ruolo / reparto"><input name="email" type="email" placeholder="Email"><input name="phone" placeholder="Telefono"><button class="ymc-btn ymc-btn--dark" type="submit">+ Referente</button></form></article>'+
+    '<article class="ymc-card"><div class="ymc-card-head"><div><span>TICKET INTERNI</span><h2>Rapporto & attività</h2></div></div><div class="ymc-ticket-list">'+tickets.map(t=>'<div><span class="ymc-chip">'+esc(t.status)+'</span><b>'+esc(t.title)+'</b><small>'+esc(t.owner)+' · '+esc(t.priority)+' · '+esc(t.due)+'</small></div>').join('')+'</div><form class="ymc-mini-form" data-ymc-ticket-form="'+p.id+'"><input name="title" placeholder="Nuovo ticket / attività" required><select name="owner"><option>Alessio</option><option>Gaia</option><option>Romina</option><option>Operations</option></select><select name="priority"><option>Media</option><option>Alta</option><option>Bassa</option></select><input name="due" placeholder="Scadenza / follow-up"><button class="ymc-btn ymc-btn--dark" type="submit">+ Ticket</button></form></article></section>'+
+    '<section class="ymc-grid ymc-grid--2" style="margin-top:12px"><article class="ymc-card"><div class="ymc-card-head"><div><span>RICHIESTE AL PARTNER</span><h2>Quotazioni, disponibilità, accordi</h2></div></div><div class="ymc-request-list">'+(requests.length?requests.map(r=>'<div><span>'+esc(r.type)+'</span><b>'+esc(r.subject)+'</b><small>'+esc(r.status)+' · '+esc(r.owner)+'</small></div>').join(''):'<p>Nessuna richiesta aperta.</p>')+'</div><form class="ymc-mini-form" data-ymc-request-form="'+p.id+'"><select name="type"><option>Quotazione</option><option>Disponibilità</option><option>Condizioni commerciali</option><option>Meeting</option><option>Documentazione</option></select><input name="subject" placeholder="Oggetto richiesta" required><select name="owner"><option>Operations</option><option>Alessio</option><option>Gaia</option><option>Romina</option></select><button class="ymc-btn ymc-btn--dark" type="submit">+ Richiesta</button></form></article>'+
+    '<article class="ymc-card"><div class="ymc-card-head"><div><span>DOCUMENTI & ACCORDI</span><h2>Dossier relazione</h2></div><label class="ymc-upload-btn">Allega<input type="file" data-ymc-partner-upload="'+p.id+'" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"></label></div><div class="ymc-doc-grid">'+(docs.length?docs.map(d=>'<article class="ymc-doc"><span class="ymc-doc-icon">DOC</span><b>'+esc(d)+'</b><small>Preview locale</small></article>').join(''):'<p>Nessun documento allegato.</p>')+'</div><p>Produzione: accordi, listini, NDA, capability deck, insurance, condizioni di pagamento e SLA in storage privato con versioning.</p></article></section>'+
+    '<section class="ymc-card ymc-partner-timeline-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>TIMELINE</span><h2>Storia completa del rapporto</h2></div></div><div class="ymc-partner-timeline">'+timeline.slice().reverse().map(t=>'<div><span>'+esc(t.date)+'</span><i></i><section><b>'+esc(t.title)+'</b><small>'+esc(t.type)+'</small><p>'+esc(t.detail)+'</p></section></div>').join('')+'</div></section>';
+}
+
 function internalPartners(){
-  return pageHead('PARTNER REGISTRY','One master. <em>Different channels.</em>','Selection e Works possono condividere lo stesso partner master senza condividere visibilità, regole commerciali o cliente.','<button class="ymc-btn" data-ymc-toast="Preview: creazione partner non attiva">+ New partner</button>')+
-    '<section class="ymc-grid ymc-grid--2">'+DATA.network.map(p=>'<article class="ymc-partner-card"><div class="ymc-partner-head"><div><span class="ymc-section-label">'+esc(p.kind)+'</span><strong>'+esc(p.name)+'</strong></div><span class="ymc-chip">'+esc(p.tier)+'</span></div><div class="ymc-partner-meta"><span>'+esc(p.geo)+'</span><span>'+esc(p.stage)+'</span><span>Owner · '+esc(p.owner)+'</span></div><p>'+esc(p.note)+'</p><div class="ymc-partner-actions"><small>Next · '+esc(p.next)+'</small><button data-ymc-drawer-open="partner:'+p.id+'">Open record →</button></div></article>').join('')+'</section>'+
+  return pageHead('PARTNER REGISTRY','One master. <em>Different channels.</em>','Registry per mappare partner, target e specialisti. Tutti partono da “Da contattare” finché il team non registra un passaggio reale.','<button class="ymc-btn" data-ymc-toast="Preview: creazione nuovo partner sarà il prossimo step">+ New partner</button>')+
+    '<section class="ymc-grid ymc-grid--2">'+DATA.network.map(p=>'<article class="ymc-partner-card"><div class="ymc-partner-head"><div><span class="ymc-section-label">'+esc(p.kind)+'</span><strong>'+esc(p.name)+'</strong></div><span class="ymc-chip">'+esc(partnerStatus(p.id))+'</span></div><div class="ymc-partner-meta"><span>'+esc(p.geo)+'</span><span>'+esc(p.tier)+'</span><span>Owner · '+esc(p.owner)+'</span></div><p>'+esc(p.note)+'</p><div class="ymc-partner-actions"><small>Next · '+esc(p.next)+'</small><div><button data-ymc-drawer-open="partner:'+p.id+'">Quick view</button><button data-ymc-open-partner="'+p.id+'">Workspace →</button></div></div></article>').join('')+'</section>'+
     '<section class="ymc-card ymc-card--dark" style="margin-top:12px"><span class="ymc-section-label">SECRET BOUNDARY</span><h2>Credentials do not belong in normal database fields.</h2><p>Partner username / agency code possono stare nel registry. Password, API secret e credenziali sensibili devono vivere in un secret manager dedicato, referenziato dal CRM ma non esposto nel record partner.</p></section>';
 }
 function internalCoverage(){
@@ -334,9 +387,11 @@ function internalCoverage(){
     '<section class="ymc-grid ymc-grid--2"><article class="ymc-card"><div class="ymc-card-head"><div><span>JAPAN CORE</span><h2>Coverage matrix</h2></div></div><div class="ymc-coverage">'+DATA.coverage.map(c=>coverageRow(c)).join('')+'</div></article><article class="ymc-card ymc-card--brass"><span class="ymc-section-label">NETWORK PRINCIPLE</span><h2>Demand creates depth.</h2><p>Arriva una missione Wine? Rafforziamo buyer, importatori, tasting e interpreti. Arriva Automotive? Rafforziamo Chūbu, supply chain e interpretariato tecnico. Il network cresce con il lavoro reale.</p><div class="ymc-decision-meta"><span>Candidate</span><span>Qualified</span><span>Pilot</span><span>Approved</span><span>Preferred</span></div></article></section>';
 }
 function internalPipeline(){
-  return pageHead('PIPELINE','Relationship stages, <em>not logo collection.</em>','Ogni nodo della rete ha uno stato e una next action. Nessuno diventa “partner” solo perché è stato trovato online.')+
-    '<section class="ymc-grid ymc-grid--3">'+DATA.partnerPipeline.map(p=>'<article class="ymc-card ymc-stat"><span>'+esc(p.stage)+'</span><strong>'+p.count+'</strong><small>'+esc(p.detail)+'</small></article>').join('')+'</section>'+
-    '<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>QUALIFICATION LOGIC</span><h2>Candidate → Pilot → Approved.</h2></div></div><div class="ymc-mission-frame"><div><span>CANDIDATE</span><strong>Capability</strong><p>Coverage, corporate fit, language, response time, commercial terms.</p></div><div><span>PILOT</span><strong>Real mission</strong><p>La qualità viene verificata sul lavoro, non soltanto in call commerciali.</p></div><div><span>APPROVED</span><strong>Performance</strong><p>Solo dopo il pilot entrano scoring, preferred status e recurring assignment.</p></div></div></section>';
+  const stages=['Da contattare','Primo contatto','In valutazione','Trattativa','Pilot','Accordo attivo'];
+  const counts=Object.fromEntries(stages.map(s=>[s,DATA.network.filter(p=>partnerStatus(p.id)===s).length]));
+  return pageHead('PIPELINE','Relationship stages, <em>not logo collection.</em>','Vista lineare dell’intera rete: chi è ancora da contattare, chi è in valutazione, quali trattative sono aperte e quali rapporti sono davvero attivi.')+
+    '<section class="ymc-card ymc-network-pipeline"><div class="ymc-card-head"><div><span>NETWORK PIPELINE</span><h2>Una sola linea del tempo commerciale.</h2></div><span class="ymc-chip">Internal only</span></div><div class="ymc-network-stage-rail">'+stages.map((s,i)=>'<div><i>'+String(i+1).padStart(2,'0')+'</i><b>'+esc(s)+'</b><strong>'+counts[s]+'</strong><small>'+esc(DATA.partnerPipeline[i]?.detail||'')+'</small></div>').join('')+'</div></section>'+
+    '<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>RELATIONSHIPS</span><h2>Monitoraggio operativo</h2></div></div><div class="ymc-table-wrap"><table class="ymc-table"><thead><tr><th>Partner / target</th><th>Tipo</th><th>Stato</th><th>Owner</th><th>Next action</th><th></th></tr></thead><tbody>'+DATA.network.map(p=>'<tr><td><b>'+esc(p.name)+'</b><small>'+esc(p.geo)+'</small></td><td>'+esc(p.kind)+'</td><td>'+esc(partnerStatus(p.id))+'</td><td>'+esc(p.owner)+'</td><td>'+esc(p.next)+'</td><td><button class="ymc-btn" data-ymc-open-partner="'+p.id+'">Apri →</button></td></tr>').join('')+'</tbody></table></div></section>';
 }
 function internalRoadmap(){
   return pageHead('ROADMAP','Launch the system while the <em>network grows.</em>','La piattaforma può partire prima della rete completa: il Partner Registry rende visibile cosa manca e cosa va rafforzato.')+
@@ -344,7 +399,7 @@ function internalRoadmap(){
     '<section class="ymc-card" style="margin-top:12px"><span class="ymc-section-label">DO NOT BUILD YET</span><h2>Partner portal, booking engine, expense management.</h2><p>La preview mantiene intenzionalmente fuori ciò che oggi aumenterebbe complessità senza validare il core: self-booking, note spese, chat completa, partner login, marketplace e app nativa.</p></section>';
 }
 function internalAccess(){
-  return pageHead('ACCESS ARCHITECTURE','Authentication is infrastructure. <em>Not a custom feature.</em>','La preview non autentica davvero nessuno. La produzione dovrebbe usare identity provider esterno, Organization Membership, MFA e RLS.')+
+  return pageHead('ACCESS ARCHITECTURE','Authentication is infrastructure. <em>Not a custom feature.</em>','YUME Internal usa già Supabase Auth nella preview protetta. Il passo production è aggiungere ruolo staff verificato, MFA obbligatoria, Organization Membership e RLS sui dati reali.')+
     '<section class="ymc-auth-architecture"><article class="ymc-auth-card is-recommended"><span>PHASE 1 · RECOMMENDED</span><h3>Supabase Auth</h3><p>Coerente con stack attuale e RLS.</p><ul><li>Staff: password + MFA</li><li>Client: magic link / OTP</li><li>Organization membership</li><li>JWT + RLS per missione</li></ul></article><article class="ymc-auth-card"><span>ENTERPRISE TRIGGER</span><h3>WorkOS</h3><p>Quando un cliente chiede SAML/OIDC/SCIM.</p><ul><li>Enterprise SSO</li><li>Directory sync</li><li>Organization policies</li><li>Upgrade senza riscrivere domain model</li></ul></article><article class="ymc-auth-card"><span>NOT FIRST CHOICE</span><h3>Clerk / Auth0</h3><p>Validi, ma aggiungono un identity stack che oggi non serve.</p><ul><li>Ottima developer UX</li><li>Enterprise features</li><li>Più dipendenza esterna</li><li>Valutabili se cambiano i requisiti</li></ul></article></section>'+
     '<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>DOMAIN MODEL</span><h2>Do not couple business data to one auth vendor.</h2></div></div><div class="ymc-route"><span>Organization</span><i>→</i><span>Membership</span><i>→</i><span>Mission</span><i>→</i><span>Permission</span><i>→</i><span>Audit log</span></div><p>Le entità business devono usare ID interni YUME. L’identity provider si collega tramite identity_provider + identity_subject, così Supabase oggi e WorkOS domani non richiedono una riscrittura del progetto.</p></section>';
 }
@@ -421,46 +476,97 @@ function bindDynamic(){
   els('[data-ymc-section]').forEach(b=>b.onclick=()=>setSection(b.dataset.ymcSection));
   els('[data-ymc-decision]').forEach(b=>b.onclick=()=>{const [id,status]=b.dataset.ymcDecision.split(':');updateDecision(id,status)});
   els('[data-ymc-drawer-open]').forEach(b=>b.onclick=()=>{const [type,id]=b.dataset.ymcDrawerOpen.split(':');openDrawer(type,id)});
+  els('[data-ymc-open-partner]').forEach(b=>b.onclick=()=>openPartnerWorkspace(b.dataset.ymcOpenPartner));
+  els('[data-ymc-partner-status]').forEach(s=>s.onchange=()=>updatePartnerStatus(s.dataset.ymcPartnerStatus,s.value));
+  els('[data-ymc-contact-form]').forEach(form=>form.onsubmit=e=>{e.preventDefault();const id=form.dataset.ymcContactForm,fd=new FormData(form);const name=String(fd.get('name')||'').trim();if(!name)return;state.partnerContacts[id]=[...(state.partnerContacts[id]||[]),{name,role:String(fd.get('role')||''),email:String(fd.get('email')||''),phone:String(fd.get('phone')||'')}];addPartnerTimeline(id,'Nuovo referente registrato',name+' · '+String(fd.get('role')||''),'Contact');save();render();toast('Referente aggiunto.');});
+  els('[data-ymc-ticket-form]').forEach(form=>form.onsubmit=e=>{e.preventDefault();const id=form.dataset.ymcTicketForm,fd=new FormData(form),title=String(fd.get('title')||'').trim();if(!title)return;state.partnerTickets[id]=[...(state.partnerTickets[id]||[]),{id:'T-'+Date.now(),title,owner:String(fd.get('owner')||'YUME'),status:'Aperto',priority:String(fd.get('priority')||'Media'),due:String(fd.get('due')||'Da pianificare')}];addPartnerTimeline(id,'Ticket interno creato',title,'Ticket');save();render();toast('Ticket interno creato.');});
+  els('[data-ymc-request-form]').forEach(form=>form.onsubmit=e=>{e.preventDefault();const id=form.dataset.ymcRequestForm,fd=new FormData(form),subject=String(fd.get('subject')||'').trim();if(!subject)return;state.partnerRequests[id]=[...(state.partnerRequests[id]||[]),{id:'R-'+Date.now(),type:String(fd.get('type')||'Richiesta'),subject,status:'Da inviare',owner:String(fd.get('owner')||'Operations')}];addPartnerTimeline(id,'Richiesta partner creata',String(fd.get('type')||'Richiesta')+' · '+subject,'Request');save();render();toast('Richiesta aggiunta al partner.');});
+  els('[data-ymc-partner-upload]').forEach(input=>input.onchange=()=>{const file=input.files&&input.files[0];if(!file)return;const id=input.dataset.ymcPartnerUpload;state.partnerDocs[id]=[...(state.partnerDocs[id]||[]),file.name];addPartnerTimeline(id,'Documento allegato',file.name,'Document');save();render();toast('Documento aggiunto alla preview locale.');});
   els('[data-ymc-toast]').forEach(b=>b.onclick=()=>toast(b.dataset.ymcToast));
   els('[data-ymc-onboarding-approve]').forEach(b=>b.onclick=()=>{state.onboardingApproved=true;save();render();toast('Organization approvata nella preview: invito nominativo pronto.');});
   els('[data-ymc-open-menu]').forEach(b=>b.onclick=()=>toggleMenu(true));
 }
 function enter(role){
-  if(role==='client'){
-    const email=el('[data-ymc-demo-email]')?.value.trim()||'';
-    const token=el('[data-ymc-demo-token]')?.value.trim()||'';
-    const err=el('[data-ymc-access-error]');
-    if(!email.includes('@')||token!=='YUME-DEMO-2701'){
-      if(err){err.hidden=false;err.textContent='Accesso demo non valido. Usa email aziendale + token YUME-DEMO-2701.'}
-      return;
-    }
-    if(err)err.hidden=true;
+  if(role!=='client')return openInternalLogin();
+  const email=el('[data-ymc-demo-email]')?.value.trim()||'';
+  const token=el('[data-ymc-demo-token]')?.value.trim()||'';
+  const err=el('[data-ymc-access-error]');
+  if(!email.includes('@')||token!=='YUME-DEMO-2701'){
+    if(err){err.hidden=false;err.textContent='Accesso demo non valido. Usa email aziendale + token YUME-DEMO-2701.'}
+    return;
   }
-  state.onboarding=false;state.session=true;state.role=role;state.section=role==='client'?'overview':'network';save();render();
+  if(err)err.hidden=true;
+  state.onboarding=false;state.session=true;state.role='client';state.section='overview';save();render();
 }
-function logout(){state={...baseState()};save();render()}
-function resetPreview(){try{localStorage.removeItem(STORAGE)}catch(_){}state={...baseState(),session:true,role:'client',section:'overview'};save();render();toast('Preview ripristinata.')}
-function toggleMenu(open){state.sidebar=typeof open==='boolean'?open:!state.sidebar;el('[data-ymc-sidebar]')?.classList.toggle('is-open',state.sidebar)}
+function openInternalLogin(){const m=el('[data-ymc-internal-login]');if(m){m.hidden=false;requestAnimationFrame(()=>el('[data-ymc-internal-password]')?.focus())}}
+function closeInternalLogin(){const m=el('[data-ymc-internal-login]');if(m)m.hidden=true;const e=el('[data-ymc-internal-login-error]');if(e)e.hidden=true}
+async function internalSignIn(e){
+  e.preventDefault();
+  const email=el('[data-ymc-internal-email]')?.value.trim().toLowerCase()||'';
+  const password=el('[data-ymc-internal-password]')?.value||'';
+  const err=el('[data-ymc-internal-login-error]'),submit=e.currentTarget.querySelector('button[type="submit"]');
+  if(email!==INTERNAL_EMAIL){err.hidden=false;err.textContent='Account non autorizzato per YUME Internal.';return}
+  if(!password){err.hidden=false;err.textContent='Inserisci la password staff.';return}
+  submit.disabled=true;err.hidden=true;
+  try{
+    const res=await fetch(INTERNAL_AUTH_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'apikey':INTERNAL_AUTH_KEY,'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok||!data.access_token||String(data.user?.email||'').toLowerCase()!==INTERNAL_EMAIL)throw new Error(data.error_description||data.msg||'Credenziali non valide o utente staff non ancora creato.');
+    sessionStorage.setItem(INTERNAL_TOKEN_KEY,data.access_token);
+    closeInternalLogin();state.onboarding=false;state.session=true;state.role='internal';state.section='network';save();render();toast('YUME Internal autenticato.');
+  }catch(ex){err.hidden=false;err.textContent=String(ex.message||ex)}
+  finally{submit.disabled=false}
+}
+async function validateInternalSession(){
+  const token=sessionStorage.getItem(INTERNAL_TOKEN_KEY);
+  if(!token)return false;
+  try{
+    const res=await fetch(INTERNAL_AUTH_URL+'/auth/v1/user',{
+      headers:{'apikey':INTERNAL_AUTH_KEY,'Authorization':'Bearer '+token}
+    });
+    if(!res.ok)return false;
+    const user=await res.json().catch(()=>({}));
+    return String(user?.email||'').toLowerCase()===INTERNAL_EMAIL;
+  }catch(_){return false}
+}
+async function bootstrap(){
+  initStatic();
+  if(state.session&&state.role==='internal'){
+    const valid=await validateInternalSession();
+    if(!valid){
+      sessionStorage.removeItem(INTERNAL_TOKEN_KEY);
+      state=baseState();
+      save();
+    }
+  }
+  render();
+}
+function logout(){sessionStorage.removeItem(INTERNAL_TOKEN_KEY);state={...baseState()};save();render()}
+function resetPreview(){try{localStorage.removeItem(STORAGE)}catch(_){}sessionStorage.removeItem(INTERNAL_TOKEN_KEY);state={...baseState(),session:true,role:'client',section:'overview'};save();render();toast('Preview ripristinata.')}
+function toggleMenu(open){state.sidebar=typeof open==='boolean'?open:!state.sidebar;el('[data-ymc-sidebar]')?.classList.toggle('is-open',state.sidebar);el('[data-ymc-sidebar-backdrop]')?.classList.toggle('is-open',state.sidebar)}
 function initStatic(){
   els('[data-ymc-enter]').forEach(b=>b.onclick=()=>enter(b.dataset.ymcEnter));
+  els('[data-ymc-open-internal-login]').forEach(b=>b.onclick=openInternalLogin);
+  els('[data-ymc-close-internal-login]').forEach(b=>b.onclick=closeInternalLogin);
+  el('[data-ymc-internal-login-form]').onsubmit=internalSignIn;
   els('[data-ymc-open-onboarding]').forEach(b=>b.onclick=openOnboarding);
   els('[data-ymc-close-onboarding]').forEach(b=>b.onclick=closeOnboarding);
   el('[data-ymc-onboarding-next]').onclick=onboardingNext;
   el('[data-ymc-onboarding-back]').onclick=onboardingBack;
-  els('[data-ymc-role]').forEach(b=>b.onclick=()=>setRole(b.dataset.ymcRole));
   els('[data-ymc-open-menu]').forEach(b=>b.onclick=()=>toggleMenu(true));
   el('[data-ymc-close-menu]').onclick=()=>toggleMenu(false);
+  el('[data-ymc-sidebar-backdrop]').onclick=()=>toggleMenu(false);
   el('[data-ymc-close-drawer]').onclick=closeDrawer;
   el('[data-ymc-drawer-backdrop]').onclick=closeDrawer;
   el('[data-ymc-project-switch]').onclick=()=>{const m=el('[data-ymc-project-menu]');m.hidden=!m.hidden;el('[data-ymc-project-switch]').setAttribute('aria-expanded',String(!m.hidden))};
   el('[data-ymc-profile]').onclick=()=>{const m=el('[data-ymc-profile-menu]');m.hidden=!m.hidden};
   el('[data-ymc-logout]').onclick=logout;
   el('[data-ymc-reset]').onclick=resetPreview;
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDrawer();toggleMenu(false);el('[data-ymc-project-menu]').hidden=true;el('[data-ymc-profile-menu]').hidden=true}});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeInternalLogin();closeDrawer();toggleMenu(false);el('[data-ymc-project-menu]').hidden=true;el('[data-ymc-profile-menu]').hidden=true}});
   document.addEventListener('click',e=>{
     if(!e.target.closest('[data-ymc-project-switch]')&&!e.target.closest('[data-ymc-project-menu]'))el('[data-ymc-project-menu]').hidden=true;
     if(!e.target.closest('[data-ymc-profile]')&&!e.target.closest('[data-ymc-profile-menu]'))el('[data-ymc-profile-menu]').hidden=true;
   });
 }
-document.addEventListener('DOMContentLoaded',()=>{initStatic();render()});
+document.addEventListener('DOMContentLoaded',bootstrap);
 })();
