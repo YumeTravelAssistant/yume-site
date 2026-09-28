@@ -499,7 +499,7 @@ function enter(role){
   state.onboarding=false;state.session=true;state.role='client';state.section='overview';save();render();
 }
 function openInternalLogin(){const m=el('[data-ymc-internal-login]');if(m){m.hidden=false;requestAnimationFrame(()=>el('[data-ymc-internal-password]')?.focus())}}
-function closeInternalLogin(){const m=el('[data-ymc-internal-login]');if(m)m.hidden=true;const e=el('[data-ymc-internal-login-error]');if(e)e.hidden=true}
+function closeInternalLogin(){const m=el('[data-ymc-internal-login]');if(m)m.hidden=true;const e=el('[data-ymc-internal-login-error]');if(e)e.hidden=true;const p=el('[data-ymc-internal-password]');if(p)p.value=''}
 async function internalSignIn(e){
   e.preventDefault();
   const email=el('[data-ymc-internal-email]')?.value.trim().toLowerCase()||'';
@@ -542,7 +542,7 @@ async function bootstrap(){
   render();
 }
 function logout(){sessionStorage.removeItem(INTERNAL_TOKEN_KEY);state={...baseState()};save();render()}
-function resetPreview(){try{localStorage.removeItem(STORAGE)}catch(_){}sessionStorage.removeItem(INTERNAL_TOKEN_KEY);state={...baseState(),session:true,role:'client',section:'overview'};save();render();toast('Preview ripristinata.')}
+function resetPreview(){try{localStorage.removeItem(STORAGE)}catch(_){}sessionStorage.removeItem(INTERNAL_TOKEN_KEY);state=baseState();save();render()}
 function toggleMenu(open){state.sidebar=typeof open==='boolean'?open:!state.sidebar;el('[data-ymc-sidebar]')?.classList.toggle('is-open',state.sidebar);el('[data-ymc-sidebar-backdrop]')?.classList.toggle('is-open',state.sidebar)}
 function initStatic(){
   els('[data-ymc-enter]').forEach(b=>b.onclick=()=>enter(b.dataset.ymcEnter));
