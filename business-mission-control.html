@@ -12,8 +12,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/styles_business_mission_control.css?v=20260928-v6">
-  <script defer src="/assets/script_business_mission_control.js?v=20260928-v6"></script>
+  <link rel="stylesheet" href="/assets/styles_business_mission_control.css?v=20260928-v7">
+  <script defer src="/assets/script_business_mission_control.js?v=20260928-v7"></script>
 </head>
 <body>
 <a class="ymc-skip" href="#ymc-main">Vai al contenuto</a>
@@ -58,28 +58,36 @@
         <span class="ymc-gate-card-label">ACCESSO CONTROLLATO DA YUME</span>
         <h2>Nessuna registrazione libera.<br>Prima l’azienda. Poi l’accesso.</h2>
         <p>Mission Control è invitation-only: YUME identifica l’Organization, verifica il set documentale concordato e abilita il referente aziendale. Solo dopo viene emesso l’invito di accesso.</p>
-        <div class="ymc-access-notice"><i></i><span><b>Azienda già abilitata?</b> Inserisci email aziendale e token YUME.</span></div>
+        <div class="ymc-access-notice"><i></i><span><b>Demo già approvata?</b> Inserisci email aziendale e codice Demo ricevuto da YUME.</span></div>
         <div class="ymc-access-fields">
           <label class="ymc-field">
             <span>Email aziendale</span>
-            <input type="email" value="demo@azienda.it" autocomplete="off" data-ymc-demo-email>
+            <input type="email" placeholder="nome@azienda.it" autocomplete="email" data-ymc-demo-email>
           </label>
           <label class="ymc-field">
-            <span>Access token demo</span>
-            <input type="text" value="YUME-DEMO-2701" autocomplete="off" spellcheck="false" data-ymc-demo-token>
+            <span>Codice Demo YUME</span>
+            <input type="text" placeholder="YUME-DEMO-XXXXXXXX" autocomplete="off" spellcheck="false" data-ymc-demo-token>
           </label>
         </div>
         <p class="ymc-access-error" data-ymc-access-error hidden></p>
         <button class="ymc-gate-action" type="button" data-ymc-enter="client">
-          <span><b>Accedi come Corporate Admin</b><small>Organization verificata · demo</small></span><i>→</i>
+          <span><b>Entra nella Demo</b><small>Solo dopo approvazione YUME</small></span><i>→</i>
         </button>
-        <button class="ymc-onboarding-entry" type="button" data-ymc-open-onboarding>
-          <span><b>Hai ricevuto il link di onboarding?</b><small>Simula verifica aziendale e documenti</small></span><i>↗</i>
+        <div class="ymc-access-paths">
+          <button class="ymc-onboarding-entry" type="button" data-ymc-open-onboarding="demo">
+            <span><b>Richiedi una Demo</b><small>Flusso soft · azienda + referente + review</small></span><i>↗</i>
+          </button>
+          <button class="ymc-onboarding-entry" type="button" data-ymc-open-onboarding="platform">
+            <span><b>Richiedi accesso alla Piattaforma</b><small>Organization + Corporate Admin + invito nominativo</small></span><i>↗</i>
+          </button>
+        </div>
+        <button class="ymc-gate-action ymc-gate-action--secondary" type="button" data-ymc-open-corporate-login>
+          <span><b>Corporate Platform Login</b><small>Account approvato · Supabase Auth</small></span><i>→</i>
         </button>
         <button class="ymc-gate-action ymc-gate-action--secondary" type="button" data-ymc-open-internal-login>
           <span><b>YUME Internal</b><small>Accesso staff protetto · Supabase Auth</small></span><i>→</i>
         </button>
-        <small class="ymc-gate-disclaimer">Preview UX/UI. Nessun documento viene caricato davvero e nessun dato viene inviato a Supabase/CRM. Il set documentale definitivo dovrà essere validato sul piano legale/privacy prima della produzione.</small>
+        <small class="ymc-gate-disclaimer">Le richieste Demo e Piattaforma vengono registrate su YUME CRM beta. Nessun account corporate viene creato senza approvazione YUME. I documenti societari non vengono ancora raccolti in questo flusso.</small>
       </div>
     </div>
   </div>
@@ -114,6 +122,30 @@
         </div>
       </main>
     </div>
+  </div>
+</section>
+
+<section class="ymc-internal-login" data-ymc-corporate-login hidden>
+  <div class="ymc-internal-login-backdrop" data-ymc-close-corporate-login></div>
+  <div class="ymc-internal-login-card" role="dialog" aria-modal="true" aria-labelledby="ymc-corporate-title">
+    <button type="button" class="ymc-internal-login-close" data-ymc-close-corporate-login aria-label="Chiudi">×</button>
+    <div class="ymc-internal-login-brand"><img src="/assets/logo-yume.jpg" alt="" width="48" height="48"><span><strong>YUME</strong><small>WORKS · CORPORATE</small></span></div>
+    <p class="ymc-kicker">APPROVED ORGANIZATION · SUPABASE AUTH</p>
+    <h2 id="ymc-corporate-title">Accesso Corporate<br><em>nominativo.</em></h2>
+    <p>Disponibile soltanto per Organization approvate e utenti invitati da YUME.</p>
+    <form data-ymc-corporate-login-form>
+      <label class="ymc-field"><span>Email aziendale</span><input type="email" placeholder="nome@azienda.it" data-ymc-corporate-email autocomplete="username"></label>
+      <label class="ymc-field"><span>Password</span><div class="ymc-password-field"><input type="password" placeholder="Password" data-ymc-corporate-password autocomplete="current-password"><button type="button" class="ymc-password-toggle" data-ymc-toggle-corporate-password>Mostra</button></div></label>
+      <p class="ymc-access-error" data-ymc-corporate-login-error hidden></p>
+      <button type="submit" class="ymc-gate-action"><span><b>Accedi alla Piattaforma</b><small>Organization Membership verificata</small></span><i>→</i></button>
+    </form>
+    <form data-ymc-corporate-activation-form hidden>
+      <p class="ymc-form-note"><b>Invito YUME riconosciuto</b><span>Imposta la password per completare l’attivazione del tuo account Corporate.</span></p>
+      <label class="ymc-field"><span>Nuova password</span><div class="ymc-password-field"><input type="password" minlength="10" data-ymc-corporate-new-password autocomplete="new-password"><button type="button" class="ymc-password-toggle" data-ymc-toggle-corporate-new-password>Mostra</button></div></label>
+      <label class="ymc-field"><span>Conferma password</span><input type="password" minlength="10" data-ymc-corporate-confirm-password autocomplete="new-password"></label>
+      <p class="ymc-access-error" data-ymc-corporate-activation-error hidden></p>
+      <button type="submit" class="ymc-gate-action"><span><b>Attiva account Corporate</b><small>Password + Membership YUME</small></span><i>→</i></button>
+    </form>
   </div>
 </section>
 

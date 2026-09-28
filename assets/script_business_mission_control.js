@@ -5,6 +5,62 @@ const INTERNAL_AUTH_URL='https://hlikhyemzophandqkjdy.supabase.co';
 const INTERNAL_AUTH_KEY='sb_publishable_Z5S66pZ85I3WlGuJDArJhA_QuXhKP51';
 const INTERNAL_TOKEN_KEY='ymcInternalAccessToken';
 const INTERNAL_ALLOWED_ROLES=new Set(['staff','admin']);
+const CORPORATE_TOKEN_KEY='ymcCorporateAccessToken';
+const PARTNER_STAGES=['Mapping','Contacted','Qualification','Pilot','Approved','Preferred'];
+
+async function ymcFetch(path,{method='GET',body=null,token=null,prefer=null}={}){
+  const headers={'apikey':INTERNAL_AUTH_KEY,'Accept':'application/json'};
+  if(token)headers.Authorization='Bearer '+token;
+  if(body!==null)headers['Content-Type']='application/json';
+  if(prefer)headers.Prefer=prefer;
+  const res=await fetch(INTERNAL_AUTH_URL+path,{method,headers,body:body===null?undefined:JSON.stringify(body)});
+  const text=await res.text();
+  let data=null;
+  try{data=text?JSON.parse(text):null}catch(_){data=text}
+  if(!res.ok){
+    const message=(data&&typeof data==='object'&&(data.message||data.error_description||data.error))||('HTTP '+res.status);
+    throw new Error(String(message));
+  }
+  return data;
+}
+function internalToken(){return sessionStorage.getItem(INTERNAL_TOKEN_KEY)||''}
+function corporateToken(){return sessionStorage.getItem(CORPORATE_TOKEN_KEY)||''}
+function networkData(){return state.livePartners?.length?state.livePartners:DATA.network}
+function clientOrg(){return state.clientOrganization||DATA.organization}
+function mapPartnerRow(r){
+  return {id:r.id,externalKey:r.external_key||'',name:r.name,kind:r.kind||'',geo:r.geo||'',stage:r.stage||'Mapping',tier:r.tier||'',cap:r.capabilities||[],owner:r.owner||'',next:r.next_action||'',note:r.note||''};
+}
+async function loadInternalLiveData(){
+  const token=internalToken();if(!token)return false;
+  try{
+    const [requests,partners]=await Promise.all([
+      ymcFetch('/rest/v1/ymc_access_requests?select=id,request_type,status,company_name,vat,rea,hq,website,sector,contact_name,contact_role,contact_email,contact_phone,use_case,submitted_at,reviewed_at,review_notes,demo_access_code&order=submitted_at.desc',{token}),
+      ymcFetch('/rest/v1/ymc_partners?select=id,external_key,name,kind,geo,stage,tier,capabilities,owner,next_action,note,active,updated_at&active=eq.true&order=name.asc',{token})
+    ]);
+    state.liveAccessRequests=Array.isArray(requests)?requests:[];
+    state.livePartners=Array.isArray(partners)?partners.map(mapPartnerRow):[];
+    state.liveLoaded=true;save();return true;
+  }catch(ex){console.error('Mission Control live load failed',ex);state.liveLoaded=false;return false}
+}
+async function loadPartnerWorkspaceData(id){
+  const token=internalToken();if(!token||!id)return;
+  try{
+    const q=encodeURIComponent(id);
+    const [contacts,tickets,requests,events,docs]=await Promise.all([
+      ymcFetch('/rest/v1/ymc_partner_contacts?select=id,name,role,email,phone,created_at&partner_id=eq.'+q+'&order=created_at.asc',{token}),
+      ymcFetch('/rest/v1/ymc_partner_tickets?select=id,title,owner,status,priority,due_date,created_at&partner_id=eq.'+q+'&order=created_at.desc',{token}),
+      ymcFetch('/rest/v1/ymc_partner_requests?select=id,request_type,subject,status,owner,created_at&partner_id=eq.'+q+'&order=created_at.desc',{token}),
+      ymcFetch('/rest/v1/ymc_partner_events?select=id,event_type,title,detail,created_at&partner_id=eq.'+q+'&order=created_at.asc',{token}),
+      ymcFetch('/rest/v1/ymc_partner_documents?select=id,file_name,status,created_at&partner_id=eq.'+q+'&order=created_at.desc',{token})
+    ]);
+    state.partnerContacts[id]=(contacts||[]).map(x=>({name:x.name,role:x.role||'',email:x.email||'',phone:x.phone||''}));
+    state.partnerTickets[id]=(tickets||[]).map(x=>({id:x.id,title:x.title,owner:x.owner||'',status:x.status,priority:x.priority,due:x.due_date||'—'}));
+    state.partnerRequests[id]=(requests||[]).map(x=>({id:x.id,type:x.request_type,subject:x.subject,status:x.status,owner:x.owner||''}));
+    state.partnerTimeline[id]=(events||[]).map(x=>({date:new Date(x.created_at).toLocaleDateString('it-IT'),title:x.title,detail:x.detail||'',type:x.event_type}));
+    state.partnerDocs[id]=(docs||[]).map(x=>x.file_name);
+    save();
+  }catch(ex){console.error('Partner workspace load failed',ex)}
+}
 
 const DATA={
   organization:{name:'Aurea Italia S.r.l.',short:'Aurea Italia',industry:'Wine & Spirits',member:'Alessandro Rinaldi',role:'Corporate Admin'},
@@ -142,10 +198,17 @@ function loadState(){
   return base;
 }
 function baseState(){
-  const partnerStatuses=Object.fromEntries(DATA.network.map(p=>[p.id,'Da contattare']));
-  const partnerTickets=Object.fromEntries(DATA.network.map(p=>[p.id,[{id:'T-'+p.id+'-001',title:p.next,owner:p.owner,status:'Aperto',priority:'Media',due:'Da pianificare'}]]));
-  const partnerTimeline=Object.fromEntries(DATA.network.map(p=>[p.id,[{date:'Oggi',title:'Record creato',detail:'Target inserito nel Partner Registry YUME.',type:'System'}]]));
-  return{session:false,onboarding:false,onboardingStep:1,onboardingSubmitted:false,onboardingApproved:false,role:'client',section:'overview',activePartnerId:null,decisionStatus:{d1:'required',d2:'open',d3:'approved'},sidebar:false,drawer:false,uploadedDocs:{},partnerStatuses,partnerContacts:{},partnerTickets,partnerRequests:{},partnerTimeline,partnerDocs:{}};
+  const partnerStatuses=Object.fromEntries(DATA.network.map(p=>[p.id,p.stage||'Mapping']));
+  const partnerTickets=Object.fromEntries(DATA.network.map(p=>[p.id,[]]));
+  const partnerTimeline=Object.fromEntries(DATA.network.map(p=>[p.id,[{date:'Oggi',title:'Record locale',detail:'Fallback locale finché il backend non risponde.',type:'System'}]]));
+  return{
+    session:false,onboarding:false,onboardingType:'demo',onboardingStep:1,onboardingSubmitted:false,
+    onboardingResult:null,onboardingForm:{company:'',vat:'',rea:'',hq:'',website:'',sector:'',contact_name:'',contact_role:'',contact_email:'',contact_phone:'',use_case:''},
+    role:'client',section:'overview',activePartnerId:null,decisionStatus:{d1:'required',d2:'open',d3:'approved'},
+    sidebar:false,drawer:false,uploadedDocs:{},partnerStatuses,partnerContacts:{},partnerTickets,
+    partnerRequests:{},partnerTimeline,partnerDocs:{},liveAccessRequests:[],livePartners:[],liveLoaded:false,
+    clientMode:'demo',clientOrganization:null
+  };
 }
 function save(){try{localStorage.setItem(STORAGE,JSON.stringify(state))}catch(_){}}
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
@@ -173,18 +236,30 @@ function setSection(section){
   if(section!=='partnerWorkspace')state.activePartnerId=null;
   state.section=section;state.sidebar=false;save();render();requestAnimationFrame(()=>el('#ymc-main')?.focus({preventScroll:true}));
 }
-function partnerStatus(id){return state.partnerStatuses?.[id]||'Da contattare'}
-function openPartnerWorkspace(id){
-  state.activePartnerId=id;state.section='partnerWorkspace';state.sidebar=false;closeDrawer();save();render();requestAnimationFrame(()=>el('#ymc-main')?.focus({preventScroll:true}));
+function partnerStatus(id){
+  const p=networkData().find(x=>x.id===id);
+  return p?.stage||state.partnerStatuses?.[id]||'Mapping';
+}
+async function openPartnerWorkspace(id){
+  state.activePartnerId=id;state.section='partnerWorkspace';state.sidebar=false;closeDrawer();save();render();
+  await loadPartnerWorkspaceData(id);
+  render();requestAnimationFrame(()=>el('#ymc-main')?.focus({preventScroll:true}));
 }
 function addPartnerTimeline(id,title,detail,type='Team'){
   state.partnerTimeline=state.partnerTimeline||{};
   state.partnerTimeline[id]=[...(state.partnerTimeline[id]||[]),{date:new Date().toLocaleDateString('it-IT'),title,detail,type}];
 }
-function updatePartnerStatus(id,status){
-  state.partnerStatuses[id]=status;
-  addPartnerTimeline(id,'Stato rapporto aggiornato',status,'Status');
-  save();render();toast('Stato partner aggiornato: '+status);
+async function updatePartnerStatus(id,status){
+  const token=internalToken();
+  if(token){
+    try{
+      await ymcFetch('/rest/v1/rpc/ymc_update_partner_stage',{method:'POST',token,body:{p_partner_id:id,p_stage:status}});
+      const p=state.livePartners.find(x=>x.id===id);if(p)p.stage=status;
+      addPartnerTimeline(id,'Stato rapporto aggiornato',status,'Status');
+      await loadPartnerWorkspaceData(id);save();render();toast('Stato partner salvato: '+status);return;
+    }catch(ex){toast('Errore salvataggio stato: '+ex.message);return}
+  }
+  state.partnerStatuses[id]=status;addPartnerTimeline(id,'Stato rapporto aggiornato',status,'Status');save();render();
 }
 function toast(msg){
   const t=el('[data-ymc-toast]');if(!t)return;
@@ -209,7 +284,7 @@ function drawerContent(type,id){
       '<div class="ymc-drawer-section"><dl><div><dt>Due</dt><dd>'+esc(d.due)+'</dd></div><div><dt>Impact</dt><dd>'+esc(d.impact)+'</dd></div><div><dt>Status</dt><dd>'+esc(state.decisionStatus[d.id]||d.status)+'</dd></div></dl></div>';
   }
   if(type==='partner'){
-    const p=DATA.network.find(x=>x.id===id);if(!p)return'';
+    const p=networkData().find(x=>x.id===id);if(!p)return'';
     return '<span class="ymc-section-label">PARTNER REGISTRY · QUICK VIEW</span><h2 class="ymc-drawer-title">'+esc(p.name)+'</h2><p class="ymc-drawer-copy">'+esc(p.note)+'</p>'+
       '<div class="ymc-drawer-section"><dl><div><dt>Type</dt><dd>'+esc(p.kind)+'</dd></div><div><dt>Geography</dt><dd>'+esc(p.geo)+'</dd></div><div><dt>Stato</dt><dd>'+esc(partnerStatus(p.id))+'</dd></div><div><dt>Tier</dt><dd>'+esc(p.tier)+'</dd></div><div><dt>YUME owner</dt><dd>'+esc(p.owner)+'</dd></div></dl></div>'+
       '<div class="ymc-drawer-section"><h4>Capabilities</h4><div class="ymc-partner-capabilities">'+p.cap.map(x=>'<span>'+esc(x)+'</span>').join('')+'</div></div>'+
@@ -234,9 +309,10 @@ function renderNav(){
     '<button type="button" data-ymc-open-menu><span>•••</span>More</button>';
 }
 function renderRole(){
-  el('[data-ymc-avatar]').textContent=state.role==='client'?'AR':'YU';
-  el('[data-ymc-profile-name]').textContent=state.role==='client'?DATA.organization.short:'YUME Works Team';
-  el('[data-ymc-profile-role]').textContent=state.role==='client'?'Corporate Admin · Demo':'Internal Operations · Demo';
+  const org=clientOrg();
+  el('[data-ymc-avatar]').textContent=state.role==='client'?String(org.short||org.name||'CO').slice(0,2).toUpperCase():'YU';
+  el('[data-ymc-profile-name]').textContent=state.role==='client'?(org.short||org.name||'Corporate'):'YUME Works Team';
+  el('[data-ymc-profile-role]').textContent=state.role==='client'?(state.clientMode==='platform'?'Corporate Admin · Platform':'Corporate Admin · Demo'):'Internal Operations · Live';
 }
 function render(){
   el('[data-ymc-gate]').hidden=state.session||state.onboarding;
@@ -254,13 +330,30 @@ function render(){
   bindDynamic();
 }
 function renderClient(section){
+  if(state.clientMode==='platform')return renderPlatformClient(section);
   const map={overview:clientOverview,company:clientCompany,mission:clientMission,agenda:clientAgenda,decisions:clientDecisions,participants:clientParticipants,travel:clientTravel,documents:clientDocuments,financials:clientFinancials,followup:clientFollowup};
   return (map[section]||clientOverview)();
+}
+function renderPlatformClient(section){
+  const org=clientOrg();
+  if(section==='overview'){
+    return pageHead('CORPORATE PLATFORM · LIVE','Benvenuti in <em>'+esc(org.name||'Mission Control')+'.</em>','Organization e Membership sono reali. I moduli missione restano vuoti finché YUME non assegna un progetto operativo.')+
+      '<section class="ymc-grid ymc-grid--4"><article class="ymc-card ymc-stat"><span>ORGANIZATION</span><strong>Active</strong><small>'+esc(org.name||'—')+'</small></article><article class="ymc-card ymc-stat"><span>MEMBERSHIP</span><strong>Corporate Admin</strong><small>Supabase Auth nominativo</small></article><article class="ymc-card ymc-stat"><span>MISSIONS</span><strong>0</strong><small>Nessuna missione assegnata</small></article><article class="ymc-card ymc-stat"><span>DATA MODE</span><strong>LIVE</strong><small>Nessun dato Demo mischiato</small></article></section>'+
+      '<section class="ymc-card ymc-card--brass" style="margin-top:12px"><span class="ymc-section-label">NEXT STEP</span><h2>Workspace pronto.</h2><p>YUME può ora collegare una missione reale a questa Organization. Fino a quel momento agenda, travel, documenti, decisioni, partecipanti e financials restano intenzionalmente vuoti.</p></section>';
+  }
+  if(section==='company'){
+    return pageHead('COMPANY','Organization <em>verified.</em>','Profilo corporate legato alla Membership attiva.')+
+      '<section class="ymc-card"><span class="ymc-section-label">LEGAL ORGANIZATION</span><h2>'+esc(org.name||'—')+'</h2><p>Corporate Admin: '+esc(org.member||'—')+'</p><div class="ymc-route"><span>Organization</span><i>→</i><span>Membership</span><i>→</i><span>Mission</span></div></section>';
+  }
+  const labels={mission:'Mission',agenda:'Agenda',decisions:'Decisions',participants:'Participants',travel:'Travel',documents:'Documents',financials:'Financials',followup:'Follow-up'};
+  const label=labels[section]||'Workspace';
+  return pageHead(label.toUpperCase(),label+' <em>workspace.</em>','Modulo disponibile per la Organization, ma senza dati fittizi.')+
+    '<section class="ymc-card"><span class="ymc-section-label">EMPTY STATE · LIVE PLATFORM</span><h2>Nessun dato ancora assegnato.</h2><p>Questo spazio verrà popolato esclusivamente con record reali collegati alla vostra Organization. La Demo resta separata.</p></section>';
 }
 function clientOverview(){
   const next=DATA.decisions.find(d=>(state.decisionStatus[d.id]||d.status)==='required')||DATA.decisions[0];
   const health=Object.entries(DATA.mission.health).map(([k,v])=>'<div class="ymc-health-row"><span>'+esc(k)+'</span><i><b style="width:'+v+'%"></b></i><strong>'+v+'%</strong></div>').join('');
-  return pageHead('MISSION CONTROL · CLIENT','Buongiorno, <em>'+esc(DATA.organization.member.split(' ')[0])+'.</em>','Qui vedete cosa sta muovendo la missione, cosa richiede una decisione e cosa YUME sta qualificando.', '<button class="ymc-btn" data-ymc-drawer-open="decision:'+next.id+'">Next decision</button><button class="ymc-btn ymc-btn--dark" data-ymc-section="mission">Open mission</button>')+
+  return pageHead('MISSION CONTROL · CLIENT','Buongiorno, <em>'+esc(clientOrg().member.split(' ')[0])+'.</em>','Qui vedete cosa sta muovendo la missione, cosa richiede una decisione e cosa YUME sta qualificando.', '<button class="ymc-btn" data-ymc-drawer-open="decision:'+next.id+'">Next decision</button><button class="ymc-btn ymc-btn--dark" data-ymc-section="mission">Open mission</button>')+
     '<section class="ymc-grid ymc-grid--4">'+
       '<div class="ymc-card ymc-stat"><span>PHASE</span><strong>'+esc(DATA.mission.phase)+'</strong><small>Mission architecture in costruzione</small></div>'+
       '<div class="ymc-card ymc-stat"><span>NEXT MILESTONE</span><strong>20 Oct</strong><small>'+esc(DATA.mission.nextMilestone)+'</small></div>'+
@@ -279,15 +372,15 @@ function clientOverview(){
 function clientCompany(){
   return pageHead('COMPANY ACCESS','Verified organization. <em>Controlled membership.</em>','Mission Control non nasce da una registrazione libera: l’Organization viene creata e abilitata da YUME dopo la verifica del set documentale e del referente.')+
     '<section class="ymc-grid ymc-grid--3">'+
-      '<article class="ymc-card ymc-stat"><span>ORGANIZATION</span><strong>Verified</strong><small>'+esc(DATA.organization.name)+'</small></article>'+
+      '<article class="ymc-card ymc-stat"><span>ORGANIZATION</span><strong>Verified</strong><small>'+esc(clientOrg().name)+'</small></article>'+
       '<article class="ymc-card ymc-stat"><span>ACCESS MODEL</span><strong>Invite-only</strong><small>YUME-issued membership</small></article>'+
-      '<article class="ymc-card ymc-stat"><span>ADMIN</span><strong>1 active</strong><small>'+esc(DATA.organization.member)+'</small></article>'+
+      '<article class="ymc-card ymc-stat"><span>ADMIN</span><strong>1 active</strong><small>'+esc(clientOrg().member)+'</small></article>'+
     '</section>'+
     '<section class="ymc-grid ymc-grid--2" style="margin-top:12px">'+
       '<article class="ymc-card"><div class="ymc-card-head"><div><span>VERIFICATION RECORD</span><h2>Organization profile</h2></div>'+chip('approved')+'</div><div class="ymc-list">'+
-        '<div class="ymc-list-row"><div><b>Ragione sociale</b><small>'+esc(DATA.organization.name)+'</small></div><span>Verified</span></div>'+
+        '<div class="ymc-list-row"><div><b>Ragione sociale</b><small>'+esc(clientOrg().name)+'</small></div><span>Verified</span></div>'+
         '<div class="ymc-list-row"><div><b>VAT / company identity</b><small>Demo data · production: verified source</small></div><span>Verified</span></div>'+
-        '<div class="ymc-list-row"><div><b>Company administrator</b><small>'+esc(DATA.organization.member)+' · '+esc(DATA.organization.role)+'</small></div><span>Active</span></div>'+
+        '<div class="ymc-list-row"><div><b>Company administrator</b><small>'+esc(clientOrg().member)+' · '+esc(clientOrg().role)+'</small></div><span>Active</span></div>'+
         '<div class="ymc-list-row"><div><b>Verification review</b><small>Production: expiry / refresh policy configurable</small></div><span>Annual</span></div>'+
       '</div></article>'+
       '<article class="ymc-card ymc-card--dark"><span class="ymc-section-label">SECURITY PRINCIPLE</span><h2>Access follows the company, not the browser.</h2><p>In produzione il token di onboarding serve solo ad attivare l’identità verificata. L’accesso ordinario passa poi da Supabase Auth / MFA e da Organization Membership, con permessi RLS legati alla missione.</p><div class="ymc-decision-meta"><span>No public signup</span><span>MFA staff</span><span>Audit log</span><span>RLS</span></div></article>'+
@@ -340,62 +433,67 @@ function renderInternal(section){
   return (map[section]||internalNetwork)();
 }
 function internalNetwork(){
-  return pageHead('YUME INTERNAL · NETWORK','Build the network <em>with demand.</em>','La rete non deve essere completa prima del lancio. Deve diventare progressivamente più forte, verificabile e tracciabile.','<button class="ymc-btn" data-ymc-section="coverage">Coverage</button><button class="ymc-btn ymc-btn--dark" data-ymc-section="partners">Partner registry</button>')+
-    '<section class="ymc-network-hero"><article class="ymc-network-map"><div class="ymc-network-map-inner"><span class="ymc-section-label">JAPAN CORE · ASIA EXTENSION</span><h2>Network maturity is a project asset.</h2><p>Camera di Commercio e relazioni istituzionali possono essere il primo nodo; DMC e travel trade rafforzano execution; specialisti verticali crescono con le missioni reali.</p><div class="ymc-network-nodes"><span class="is-strong">ICCJ target</span><span>JNTO / JATA mapping</span><span>Japan DMCs</span><span>Interpreters</span><span>JETRO / EU-Japan resources</span><span>Sector specialists</span></div></div></article><article class="ymc-card"><div class="ymc-card-head"><div><span>NETWORK COVERAGE</span><h2>Current maturity</h2></div><button data-ymc-section="coverage">Details →</button></div><div class="ymc-coverage">'+DATA.coverage.slice(0,6).map(c=>coverageRow(c)).join('')+'</div></article></section>'+
-    '<section class="ymc-grid ymc-grid--3" style="margin-top:12px">'+
-      '<article class="ymc-card ymc-stat"><span>MAPPED NODES</span><strong>12</strong><small>demo pipeline · not active partners</small></article>'+
-      '<article class="ymc-card ymc-stat"><span>IN QUALIFICATION</span><strong>3</strong><small>DMC / institutional / specialist</small></article>'+
-      '<article class="ymc-card ymc-stat"><span>PRINCIPLE</span><strong>Demand-led</strong><small>network depth follows real missions</small></article>'+
-    '</section>'+
-    '<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>NEXT RELATIONSHIP MOVES</span><h2>Work in progress</h2></div></div><div class="ymc-list">'+DATA.network.slice(0,4).map(p=>'<div class="ymc-list-row"><div><b>'+esc(p.name)+'</b><small>'+esc(p.stage)+' · Next: '+esc(p.next)+'</small></div><button data-ymc-drawer-open="partner:'+p.id+'">Open →</button></div>').join('')+'</div></section>';
+  const net=networkData(),qual=net.filter(p=>['Qualification','Pilot','Approved','Preferred'].includes(partnerStatus(p.id))).length;
+  return pageHead('YUME INTERNAL · NETWORK','Build the network <em>with demand.</em>','Dati reali dal Partner Registry YUME: ogni passaggio è persistente e tracciabile.','<button class="ymc-btn" data-ymc-section="coverage">Coverage</button><button class="ymc-btn ymc-btn--dark" data-ymc-section="partners">Partner registry</button>')+
+    '<section class="ymc-network-hero"><article class="ymc-network-map"><div class="ymc-network-map-inner"><span class="ymc-section-label">JAPAN CORE · ASIA EXTENSION</span><h2>Network maturity is a project asset.</h2><p>Mapping, qualification, pilot e preferred status sono ora stati reali del database, non una preview locale.</p><div class="ymc-network-nodes"><span class="is-strong">Institutional</span><span>DMC</span><span>Travel trade</span><span>Interpreters</span><span>Market entry</span><span>Sector specialists</span></div></div></article><article class="ymc-card"><div class="ymc-card-head"><div><span>NETWORK COVERAGE</span><h2>Current maturity</h2></div><button data-ymc-section="coverage">Details →</button></div><div class="ymc-coverage">'+DATA.coverage.slice(0,6).map(c=>coverageRow(c)).join('')+'</div></article></section>'+
+    '<section class="ymc-grid ymc-grid--3" style="margin-top:12px"><article class="ymc-card ymc-stat"><span>MAPPED NODES</span><strong>'+net.length+'</strong><small>record reali nel registry</small></article><article class="ymc-card ymc-stat"><span>QUALIFICATION+</span><strong>'+qual+'</strong><small>qualification / pilot / approved / preferred</small></article><article class="ymc-card ymc-stat"><span>DATA MODE</span><strong>'+(state.liveLoaded?'LIVE':'FALLBACK')+'</strong><small>Supabase CRM beta</small></article></section>'+
+    '<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>NEXT RELATIONSHIP MOVES</span><h2>Work in progress</h2></div></div><div class="ymc-list">'+net.slice(0,6).map(p=>'<div class="ymc-list-row"><div><b>'+esc(p.name)+'</b><small>'+esc(partnerStatus(p.id))+' · Next: '+esc(p.next)+'</small></div><button data-ymc-open-partner="'+p.id+'">Open →</button></div>').join('')+'</div></section>';
 }
 function coverageRow(c){return '<div class="ymc-coverage-row"><div class="ymc-coverage-top"><b>'+esc(c.label)+'</b><span>'+esc(c.state)+' · '+c.value+'%</span></div><div class="ymc-coverage-bar"><i style="width:'+c.value+'%"></i></div></div>'}
 function internalOnboarding(){
-  const reviewStatus=state.onboardingApproved?'Approved · invite ready':state.onboardingSubmitted?'Submitted · review':'Ready for review';
-  return pageHead('COMPANY ONBOARDING','Verify first. <em>Activate second.</em>','Nessuna registrazione pubblica: YUME controlla Organization, documenti, referente e livello di accesso prima dell’emissione dell’invito.','<button class="ymc-btn" data-ymc-toast="Preview: nuovo link onboarding non viene inviato">+ Generate onboarding link</button>')+
-    '<section class="ymc-grid ymc-grid--3">'+
-      '<article class="ymc-card ymc-stat"><span>ACCESS MODEL</span><strong>Invite-only</strong><small>No self-registration</small></article>'+
-      '<article class="ymc-card ymc-stat"><span>READY FOR REVIEW</span><strong>'+(state.onboardingApproved?'0':'1')+'</strong><small>'+esc(reviewStatus)+'</small></article>'+
-      '<article class="ymc-card ymc-stat"><span>SECURITY</span><strong>Private upload</strong><small>signed URL · expiry · audit</small></article>'+
-    '</section>'+
-    '<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>VERIFICATION QUEUE</span><h2>Organizations waiting for YUME</h2></div></div><div class="ymc-table-wrap"><table class="ymc-table"><thead><tr><th>Company</th><th>VAT</th><th>Admin</th><th>Docs</th><th>Status</th><th>Action</th></tr></thead><tbody>'+DATA.onboardingReview.map((r,i)=>'<tr><td><b>'+esc(r.company)+'</b></td><td>'+esc(r.vat)+'</td><td>'+esc(r.admin)+'</td><td>'+esc(r.docs)+'</td><td>'+(i===0?esc(reviewStatus):esc(r.status))+'</td><td><button class="ymc-btn '+(i===0&&!state.onboardingApproved?'ymc-btn--dark':'')+'" '+(i===0&&!state.onboardingApproved?'data-ymc-onboarding-approve':'disabled')+'>'+(i===0?(state.onboardingApproved?'Invite ready':'Review & approve'):'Waiting docs')+'</button></td></tr>').join('')+'</tbody></table></div>'+(state.onboardingApproved?'<div class="ymc-access-issued"><span>ONE-TIME INVITE · DEMO</span><b>YUME-ORG-DEMO-7H2K</b><small>In produzione: link firmato e a scadenza, non token persistente.</small></div>':'')+'</section>'+
-    '<section class="ymc-grid ymc-grid--2" style="margin-top:12px"><article class="ymc-card"><span class="ymc-section-label">REQUIRED SET · PREVIEW</span><h2>Configurable company pack</h2><div class="ymc-list"><div class="ymc-list-row"><div><b>Visura camerale</b><small>Recente secondo policy YUME da validare legalmente</small></div><span>Core</span></div><div class="ymc-list-row"><div><b>Identità del legale rappresentante</b><small>O altro meccanismo equivalente di verifica</small></div><span>Core</span></div><div class="ymc-list-row"><div><b>Delega / autorizzazione</b><small>Se il referente amministratore non coincide con il rappresentante</small></div><span>Conditional</span></div><div class="ymc-list-row"><div><b>Privacy / terms</b><small>Consensi e ruoli di trattamento da definire per il servizio reale</small></div><span>Core</span></div></div></article><article class="ymc-card ymc-card--brass"><span class="ymc-section-label">TOKEN LIFECYCLE</span><h2>Upload link ≠ login credential.</h2><p>Il link documentale è temporaneo e monouso. Dopo la verifica YUME crea Organization + Membership e invia l’accesso. Il token di onboarding non deve diventare una password permanente.</p><div class="ymc-route"><span>Invite</span><i>→</i><span>Upload</span><i>→</i><span>Review</span><i>→</i><span>Organization</span><i>→</i><span>Access</span></div></article></section>';
+  const rows=state.liveAccessRequests||[];
+  const pending=rows.filter(r=>['submitted','under_review'].includes(r.status)).length;
+  const platforms=rows.filter(r=>r.request_type==='platform').length;
+  const demos=rows.filter(r=>r.request_type==='demo').length;
+  const statusText=s=>({submitted:'Submitted',under_review:'Under review',demo_approved:'Demo approved',platform_approved:'Platform approved',rejected:'Rejected',invited:'Invited',active:'Active'}[s]||s);
+  const actions=r=>{
+    if(['submitted','under_review'].includes(r.status))return '<div class="ymc-inline-actions"><button class="ymc-btn ymc-btn--dark" data-ymc-review-request="'+r.id+':approve">Approva</button><button class="ymc-btn" data-ymc-review-request="'+r.id+':reject">Rifiuta</button></div>';
+    if(r.request_type==='platform'&&r.status==='platform_approved')return '<button class="ymc-btn ymc-btn--dark" data-ymc-invite-request="'+r.id+'">Invia invito →</button>';
+    if(r.request_type==='demo'&&r.status==='demo_approved')return '<code class="ymc-live-code">'+esc(r.demo_access_code||'Codice non disponibile')+'</code>';
+    return '<span class="ymc-chip">'+esc(statusText(r.status))+'</span>';
+  };
+  return pageHead('COMPANY ONBOARDING','Request first. <em>Activate deliberately.</em>','Demo e Piattaforma seguono due livelli diversi: la Demo resta leggera; la Piattaforma crea Organization + Membership e poi un invito nominativo.','<button class="ymc-btn" data-ymc-refresh-live>↻ Refresh</button>')+
+    '<section class="ymc-grid ymc-grid--3"><article class="ymc-card ymc-stat"><span>READY FOR REVIEW</span><strong>'+pending+'</strong><small>richieste da lavorare</small></article><article class="ymc-card ymc-stat"><span>DEMO REQUESTS</span><strong>'+demos+'</strong><small>accesso dimostrativo controllato</small></article><article class="ymc-card ymc-stat"><span>PLATFORM APPLICATIONS</span><strong>'+platforms+'</strong><small>Organization + Membership</small></article></section>'+
+    '<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>VERIFICATION QUEUE · LIVE</span><h2>Organizations waiting for YUME</h2></div></div><div class="ymc-table-wrap"><table class="ymc-table"><thead><tr><th>Type</th><th>Company</th><th>VAT</th><th>Referente</th><th>Submitted</th><th>Status</th><th>Action</th></tr></thead><tbody>'+(rows.length?rows.map(r=>'<tr><td><b>'+esc(r.request_type==='platform'?'PLATFORM':'DEMO')+'</b></td><td><b>'+esc(r.company_name)+'</b><small>'+esc(r.sector||r.website||'')+'</small></td><td>'+esc(r.vat||'—')+'</td><td>'+esc(r.contact_name)+'<small>'+esc(r.contact_email)+'</small></td><td>'+esc(new Date(r.submitted_at).toLocaleString('it-IT'))+'</td><td>'+esc(statusText(r.status))+'</td><td>'+actions(r)+'</td></tr>').join(''):'<tr><td colspan="7">Nessuna richiesta registrata.</td></tr>')+'</tbody></table></div></section>'+
+    '<section class="ymc-grid ymc-grid--2" style="margin-top:12px"><article class="ymc-card"><span class="ymc-section-label">DEMO</span><h2>Soft qualification.</h2><p>Niente account Auth e niente documenti societari. YUME approva la richiesta e genera un codice Demo associato all’email aziendale.</p><div class="ymc-route"><span>Request</span><i>→</i><span>Review</span><i>→</i><span>Demo code</span><i>→</i><span>Preview</span></div></article><article class="ymc-card ymc-card--brass"><span class="ymc-section-label">PLATFORM</span><h2>Verified corporate access.</h2><p>La review crea Organization e Membership. Solo dopo YUME invia un invito Supabase al Corporate Admin; il login è nominativo e revocabile.</p><div class="ymc-route"><span>Application</span><i>→</i><span>Approval</span><i>→</i><span>Organization</span><i>→</i><span>Invite</span><i>→</i><span>Access</span></div></article></section>';
 }
+
 
 function internalPartnerWorkspace(){
-  const p=DATA.network.find(x=>x.id===state.activePartnerId)||DATA.network[0];
-  const statuses=['Da contattare','Primo contatto','In valutazione','Trattativa','Pilot','Accordo attivo'];
-  const contacts=state.partnerContacts[p.id]||[];
-  const tickets=state.partnerTickets[p.id]||[];
-  const requests=state.partnerRequests[p.id]||[];
-  const timeline=state.partnerTimeline[p.id]||[];
-  const docs=state.partnerDocs[p.id]||[];
-  return pageHead('PARTNER WORKSPACE · INTERNAL','Gestire la relazione.<br><em>Non solo archiviarla.</em>','Questa è la pagina operativa del partner: stato, referenti, ticket, richieste, documenti, accordi e cronologia.','<button class="ymc-btn" data-ymc-section="partners">← Partner Registry</button><button class="ymc-btn ymc-btn--dark" data-ymc-drawer-open="partner:'+p.id+'">Quick view</button>')+
-    '<section class="ymc-partner-workspace-hero"><div><span class="ymc-section-label">'+esc(p.kind)+' · '+esc(p.geo)+'</span><h2>'+esc(p.name)+'</h2><p>'+esc(p.note)+'</p><div class="ymc-partner-capabilities">'+p.cap.map(x=>'<span>'+esc(x)+'</span>').join('')+'</div></div><div class="ymc-partner-status-panel"><label><span>STATO RAPPORTO</span><select data-ymc-partner-status="'+p.id+'">'+statuses.map(s=>'<option value="'+esc(s)+'" '+(partnerStatus(p.id)===s?'selected':'')+'>'+esc(s)+'</option>').join('')+'</select></label><div><span>OWNER</span><b>'+esc(p.owner)+'</b></div><div><span>NEXT ACTION</span><b>'+esc(p.next)+'</b></div></div></section>'+
-    '<section class="ymc-card ymc-partner-pipeline"><div class="ymc-card-head"><div><span>RELATIONSHIP PIPELINE</span><h2>Da target a rapporto attivo.</h2></div><span class="ymc-chip">'+esc(partnerStatus(p.id))+'</span></div><div class="ymc-partner-stage-rail">'+statuses.map((s,i)=>{const current=statuses.indexOf(partnerStatus(p.id));return '<div class="'+(i<current?'is-complete':i===current?'is-current':'')+'"><i>'+(i<current?'✓':i+1)+'</i><b>'+esc(s)+'</b><small>'+(i<current?'Completato':i===current?'Stato attuale':'Successivo')+'</small></div>'}).join('')+'</div></section>'+
+  const net=networkData(),p=net.find(x=>x.id===state.activePartnerId)||net[0];
+  if(!p)return pageHead('PARTNER WORKSPACE','No partner selected.','','<button class="ymc-btn" data-ymc-section="partners">← Registry</button>');
+  const statuses=PARTNER_STAGES,contacts=state.partnerContacts[p.id]||[],tickets=state.partnerTickets[p.id]||[],requests=state.partnerRequests[p.id]||[],timeline=state.partnerTimeline[p.id]||[],docs=state.partnerDocs[p.id]||[];
+  return pageHead('PARTNER WORKSPACE · LIVE','Gestire la relazione.<br><em>Non solo archiviarla.</em>','Stato, referenti, ticket, richieste e cronologia vengono salvati nel database YUME.','<button class="ymc-btn" data-ymc-section="partners">← Partner Registry</button>')+
+    '<section class="ymc-partner-workspace-hero"><div><span class="ymc-section-label">'+esc(p.kind)+' · '+esc(p.geo)+'</span><h2>'+esc(p.name)+'</h2><p>'+esc(p.note)+'</p><div class="ymc-partner-capabilities">'+(p.cap||[]).map(x=>'<span>'+esc(x)+'</span>').join('')+'</div></div><div class="ymc-partner-status-panel"><label><span>STATO RAPPORTO</span><select data-ymc-partner-status="'+p.id+'">'+statuses.map(s=>'<option value="'+s+'" '+(partnerStatus(p.id)===s?'selected':'')+'>'+s+'</option>').join('')+'</select></label><div><span>OWNER</span><b>'+esc(p.owner||'—')+'</b></div><div><span>NEXT ACTION</span><b>'+esc(p.next||'—')+'</b></div></div></section>'+
+    '<section class="ymc-card ymc-partner-pipeline"><div class="ymc-card-head"><div><span>RELATIONSHIP PIPELINE</span><h2>Mapping → Preferred.</h2></div><span class="ymc-chip">'+esc(partnerStatus(p.id))+'</span></div><div class="ymc-partner-stage-rail">'+statuses.map((s,i)=>{const current=statuses.indexOf(partnerStatus(p.id));return '<div class="'+(i<current?'is-complete':i===current?'is-current':'')+'"><i>'+(i<current?'✓':i+1)+'</i><b>'+s+'</b><small>'+(i<current?'Completato':i===current?'Stato attuale':'Successivo')+'</small></div>'}).join('')+'</div></section>'+
     '<section class="ymc-grid ymc-grid--2" style="margin-top:12px"><article class="ymc-card"><div class="ymc-card-head"><div><span>REFERENTI</span><h2>Persone della relazione</h2></div></div><div class="ymc-contact-cards">'+(contacts.length?contacts.map(x=>'<article><b>'+esc(x.name)+'</b><span>'+esc(x.role)+'</span><small>'+esc(x.email||'')+(x.phone?' · '+esc(x.phone):'')+'</small></article>').join(''):'<p>Nessun referente registrato.</p>')+'</div><form class="ymc-mini-form" data-ymc-contact-form="'+p.id+'"><input name="name" placeholder="Nome e cognome" required><input name="role" placeholder="Ruolo / reparto"><input name="email" type="email" placeholder="Email"><input name="phone" placeholder="Telefono"><button class="ymc-btn ymc-btn--dark" type="submit">+ Referente</button></form></article>'+
-    '<article class="ymc-card"><div class="ymc-card-head"><div><span>TICKET INTERNI</span><h2>Rapporto & attività</h2></div></div><div class="ymc-ticket-list">'+tickets.map(t=>'<div><span class="ymc-chip">'+esc(t.status)+'</span><b>'+esc(t.title)+'</b><small>'+esc(t.owner)+' · '+esc(t.priority)+' · '+esc(t.due)+'</small></div>').join('')+'</div><form class="ymc-mini-form" data-ymc-ticket-form="'+p.id+'"><input name="title" placeholder="Nuovo ticket / attività" required><select name="owner"><option>Alessio</option><option>Gaia</option><option>Romina</option><option>Operations</option></select><select name="priority"><option>Media</option><option>Alta</option><option>Bassa</option></select><input name="due" placeholder="Scadenza / follow-up"><button class="ymc-btn ymc-btn--dark" type="submit">+ Ticket</button></form></article></section>'+
+    '<article class="ymc-card"><div class="ymc-card-head"><div><span>TICKET INTERNI</span><h2>Rapporto & attività</h2></div></div><div class="ymc-ticket-list">'+(tickets.length?tickets.map(t=>'<div><span class="ymc-chip">'+esc(t.status)+'</span><b>'+esc(t.title)+'</b><small>'+esc(t.owner)+' · '+esc(t.priority)+' · '+esc(t.due)+'</small></div>').join(''):'<p>Nessun ticket.</p>')+'</div><form class="ymc-mini-form" data-ymc-ticket-form="'+p.id+'"><input name="title" placeholder="Nuovo ticket / attività" required><select name="owner"><option>Alessio</option><option>Gaia</option><option>Romina</option><option>Operations</option></select><select name="priority"><option value="Medium">Media</option><option value="High">Alta</option><option value="Low">Bassa</option><option value="Critical">Critica</option></select><input name="due" type="date"><button class="ymc-btn ymc-btn--dark" type="submit">+ Ticket</button></form></article></section>'+
     '<section class="ymc-grid ymc-grid--2" style="margin-top:12px"><article class="ymc-card"><div class="ymc-card-head"><div><span>RICHIESTE AL PARTNER</span><h2>Quotazioni, disponibilità, accordi</h2></div></div><div class="ymc-request-list">'+(requests.length?requests.map(r=>'<div><span>'+esc(r.type)+'</span><b>'+esc(r.subject)+'</b><small>'+esc(r.status)+' · '+esc(r.owner)+'</small></div>').join(''):'<p>Nessuna richiesta aperta.</p>')+'</div><form class="ymc-mini-form" data-ymc-request-form="'+p.id+'"><select name="type"><option>Quotazione</option><option>Disponibilità</option><option>Condizioni commerciali</option><option>Meeting</option><option>Documentazione</option></select><input name="subject" placeholder="Oggetto richiesta" required><select name="owner"><option>Operations</option><option>Alessio</option><option>Gaia</option><option>Romina</option></select><button class="ymc-btn ymc-btn--dark" type="submit">+ Richiesta</button></form></article>'+
-    '<article class="ymc-card"><div class="ymc-card-head"><div><span>DOCUMENTI & ACCORDI</span><h2>Dossier relazione</h2></div><label class="ymc-upload-btn">Allega<input type="file" data-ymc-partner-upload="'+p.id+'" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"></label></div><div class="ymc-doc-grid">'+(docs.length?docs.map(d=>'<article class="ymc-doc"><span class="ymc-doc-icon">DOC</span><b>'+esc(d)+'</b><small>Preview locale</small></article>').join(''):'<p>Nessun documento allegato.</p>')+'</div><p>Produzione: accordi, listini, NDA, capability deck, insurance, condizioni di pagamento e SLA in storage privato con versioning.</p></article></section>'+
-    '<section class="ymc-card ymc-partner-timeline-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>TIMELINE</span><h2>Storia completa del rapporto</h2></div></div><div class="ymc-partner-timeline">'+timeline.slice().reverse().map(t=>'<div><span>'+esc(t.date)+'</span><i></i><section><b>'+esc(t.title)+'</b><small>'+esc(t.type)+'</small><p>'+esc(t.detail)+'</p></section></div>').join('')+'</div></section>';
+    '<article class="ymc-card"><div class="ymc-card-head"><div><span>DOCUMENTI & ACCORDI</span><h2>Dossier relazione</h2></div><label class="ymc-upload-btn">Registra documento<input type="file" data-ymc-partner-upload="'+p.id+'" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"></label></div><div class="ymc-doc-grid">'+(docs.length?docs.map(d=>'<article class="ymc-doc"><span class="ymc-doc-icon">DOC</span><b>'+esc(d)+'</b><small>Metadato registrato</small></article>').join(''):'<p>Nessun documento registrato.</p>')+'</div><p>In questa fase salviamo il metadato; il binary upload verrà agganciato a Storage privato dopo la validazione privacy/documentale.</p></article></section>'+
+    '<section class="ymc-card ymc-partner-timeline-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>TIMELINE</span><h2>Storia completa del rapporto</h2></div></div><div class="ymc-partner-timeline">'+(timeline.length?timeline.slice().reverse().map(t=>'<div><span>'+esc(t.date)+'</span><i></i><section><b>'+esc(t.title)+'</b><small>'+esc(t.type)+'</small><p>'+esc(t.detail)+'</p></section></div>').join(''):'<p>Nessun evento registrato.</p>')+'</div></section>';
 }
 
+
 function internalPartners(){
-  return pageHead('PARTNER REGISTRY','One master. <em>Different channels.</em>','Registry per mappare partner, target e specialisti. Tutti partono da “Da contattare” finché il team non registra un passaggio reale.','<button class="ymc-btn" data-ymc-toast="Preview: creazione nuovo partner sarà il prossimo step">+ New partner</button>')+
-    '<section class="ymc-grid ymc-grid--2">'+DATA.network.map(p=>'<article class="ymc-partner-card"><div class="ymc-partner-head"><div><span class="ymc-section-label">'+esc(p.kind)+'</span><strong>'+esc(p.name)+'</strong></div><span class="ymc-chip">'+esc(partnerStatus(p.id))+'</span></div><div class="ymc-partner-meta"><span>'+esc(p.geo)+'</span><span>'+esc(p.tier)+'</span><span>Owner · '+esc(p.owner)+'</span></div><p>'+esc(p.note)+'</p><div class="ymc-partner-actions"><small>Next · '+esc(p.next)+'</small><div><button data-ymc-drawer-open="partner:'+p.id+'">Quick view</button><button data-ymc-open-partner="'+p.id+'">Workspace →</button></div></div></article>').join('')+'</section>'+
-    '<section class="ymc-card ymc-card--dark" style="margin-top:12px"><span class="ymc-section-label">SECRET BOUNDARY</span><h2>Credentials do not belong in normal database fields.</h2><p>Partner username / agency code possono stare nel registry. Password, API secret e credenziali sensibili devono vivere in un secret manager dedicato, referenziato dal CRM ma non esposto nel record partner.</p></section>';
+  const net=networkData();
+  return pageHead('PARTNER REGISTRY · LIVE','One master. <em>Different channels.</em>','Registry persistente per target, partner e specialisti.','<button class="ymc-btn" data-ymc-refresh-live>↻ Refresh</button>')+
+    '<section class="ymc-card" style="margin-bottom:12px"><div class="ymc-card-head"><div><span>NEW PARTNER</span><h2>Aggiungi un nodo al registry</h2></div></div><form class="ymc-mini-form ymc-mini-form--wide" data-ymc-new-partner-form><input name="name" placeholder="Nome partner / target" required><input name="kind" placeholder="Tipo (DMC, istituzione...)"><input name="geo" placeholder="Geografia"><input name="tier" placeholder="Tier"><input name="owner" placeholder="Owner YUME"><input name="next_action" placeholder="Next action"><input name="capabilities" placeholder="Capabilities separate da virgola"><input name="note" placeholder="Nota"><button class="ymc-btn ymc-btn--dark" type="submit">+ Crea partner</button></form></section>'+
+    '<section class="ymc-grid ymc-grid--2">'+net.map(p=>'<article class="ymc-partner-card"><div class="ymc-partner-head"><div><span class="ymc-section-label">'+esc(p.kind)+'</span><strong>'+esc(p.name)+'</strong></div><span class="ymc-chip">'+esc(partnerStatus(p.id))+'</span></div><div class="ymc-partner-meta"><span>'+esc(p.geo)+'</span><span>'+esc(p.tier)+'</span><span>Owner · '+esc(p.owner)+'</span></div><p>'+esc(p.note)+'</p><div class="ymc-partner-actions"><small>Next · '+esc(p.next)+'</small><div><button data-ymc-drawer-open="partner:'+p.id+'">Quick view</button><button data-ymc-open-partner="'+p.id+'">Workspace →</button></div></div></article>').join('')+'</section>';
 }
+
 function internalCoverage(){
   return pageHead('COVERAGE','See where the network is <em>weak.</em>','Meglio una mappa onesta della maturità che una lista lunga di contatti non qualificati.')+
     '<section class="ymc-grid ymc-grid--2"><article class="ymc-card"><div class="ymc-card-head"><div><span>JAPAN CORE</span><h2>Coverage matrix</h2></div></div><div class="ymc-coverage">'+DATA.coverage.map(c=>coverageRow(c)).join('')+'</div></article><article class="ymc-card ymc-card--brass"><span class="ymc-section-label">NETWORK PRINCIPLE</span><h2>Demand creates depth.</h2><p>Arriva una missione Wine? Rafforziamo buyer, importatori, tasting e interpreti. Arriva Automotive? Rafforziamo Chūbu, supply chain e interpretariato tecnico. Il network cresce con il lavoro reale.</p><div class="ymc-decision-meta"><span>Candidate</span><span>Qualified</span><span>Pilot</span><span>Approved</span><span>Preferred</span></div></article></section>';
 }
 function internalPipeline(){
-  const stages=['Da contattare','Primo contatto','In valutazione','Trattativa','Pilot','Accordo attivo'];
-  const counts=Object.fromEntries(stages.map(s=>[s,DATA.network.filter(p=>partnerStatus(p.id)===s).length]));
-  return pageHead('PIPELINE','Relationship stages, <em>not logo collection.</em>','Vista lineare dell’intera rete: chi è ancora da contattare, chi è in valutazione, quali trattative sono aperte e quali rapporti sono davvero attivi.')+
-    '<section class="ymc-card ymc-network-pipeline"><div class="ymc-card-head"><div><span>NETWORK PIPELINE</span><h2>Una sola linea del tempo commerciale.</h2></div><span class="ymc-chip">Internal only</span></div><div class="ymc-network-stage-rail">'+stages.map((s,i)=>'<div><i>'+String(i+1).padStart(2,'0')+'</i><b>'+esc(s)+'</b><strong>'+counts[s]+'</strong><small>'+esc(DATA.partnerPipeline[i]?.detail||'')+'</small></div>').join('')+'</div></section>'+
-    '<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>RELATIONSHIPS</span><h2>Monitoraggio operativo</h2></div></div><div class="ymc-table-wrap"><table class="ymc-table"><thead><tr><th>Partner / target</th><th>Tipo</th><th>Stato</th><th>Owner</th><th>Next action</th><th></th></tr></thead><tbody>'+DATA.network.map(p=>'<tr><td><b>'+esc(p.name)+'</b><small>'+esc(p.geo)+'</small></td><td>'+esc(p.kind)+'</td><td>'+esc(partnerStatus(p.id))+'</td><td>'+esc(p.owner)+'</td><td>'+esc(p.next)+'</td><td><button class="ymc-btn" data-ymc-open-partner="'+p.id+'">Apri →</button></td></tr>').join('')+'</tbody></table></div></section>';
+  const net=networkData(),stages=PARTNER_STAGES;
+  const counts=Object.fromEntries(stages.map(s=>[s,net.filter(p=>partnerStatus(p.id)===s).length]));
+  const detail=['Target mappato','Contatto effettuato','Fit e capacità in verifica','Prova sul campo','Partner approvato','Partner preferenziale'];
+  return pageHead('PIPELINE','Relationship stages, <em>not logo collection.</em>','Pipeline persistente allineata a un lifecycle partner enterprise.')+
+    '<section class="ymc-card ymc-network-pipeline"><div class="ymc-card-head"><div><span>NETWORK PIPELINE · LIVE</span><h2>Mapping → Preferred.</h2></div><span class="ymc-chip">Internal only</span></div><div class="ymc-network-stage-rail">'+stages.map((s,i)=>'<div><i>'+String(i+1).padStart(2,'0')+'</i><b>'+s+'</b><strong>'+counts[s]+'</strong><small>'+detail[i]+'</small></div>').join('')+'</div></section>'+
+    '<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>RELATIONSHIPS</span><h2>Monitoraggio operativo</h2></div></div><div class="ymc-table-wrap"><table class="ymc-table"><thead><tr><th>Partner / target</th><th>Tipo</th><th>Stato</th><th>Owner</th><th>Next action</th><th></th></tr></thead><tbody>'+net.map(p=>'<tr><td><b>'+esc(p.name)+'</b><small>'+esc(p.geo)+'</small></td><td>'+esc(p.kind)+'</td><td>'+esc(partnerStatus(p.id))+'</td><td>'+esc(p.owner)+'</td><td>'+esc(p.next)+'</td><td><button class="ymc-btn" data-ymc-open-partner="'+p.id+'">Apri →</button></td></tr>').join('')+'</tbody></table></div></section>';
 }
+
 function internalRoadmap(){
   return pageHead('ROADMAP','Launch the system while the <em>network grows.</em>','La piattaforma può partire prima della rete completa: il Partner Registry rende visibile cosa manca e cosa va rafforzato.')+
     '<section class="ymc-roadmap">'+DATA.roadmap.map(r=>'<article><span>'+esc(r.period)+'</span><h3>'+esc(r.title)+'</h3><ul>'+r.items.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></article>').join('')+'</section>'+
@@ -406,74 +504,76 @@ function internalAccess(){
     '<section class="ymc-auth-architecture"><article class="ymc-auth-card is-recommended"><span>PHASE 1 · RECOMMENDED</span><h3>Supabase Auth</h3><p>Coerente con stack attuale e RLS.</p><ul><li>Staff: password + MFA</li><li>Client: magic link / OTP</li><li>Organization membership</li><li>JWT + RLS per missione</li></ul></article><article class="ymc-auth-card"><span>ENTERPRISE TRIGGER</span><h3>WorkOS</h3><p>Quando un cliente chiede SAML/OIDC/SCIM.</p><ul><li>Enterprise SSO</li><li>Directory sync</li><li>Organization policies</li><li>Upgrade senza riscrivere domain model</li></ul></article><article class="ymc-auth-card"><span>NOT FIRST CHOICE</span><h3>Clerk / Auth0</h3><p>Validi, ma aggiungono un identity stack che oggi non serve.</p><ul><li>Ottima developer UX</li><li>Enterprise features</li><li>Più dipendenza esterna</li><li>Valutabili se cambiano i requisiti</li></ul></article></section>'+
     '<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>DOMAIN MODEL</span><h2>Do not couple business data to one auth vendor.</h2></div></div><div class="ymc-route"><span>Organization</span><i>→</i><span>Membership</span><i>→</i><span>Mission</span><i>→</i><span>Permission</span><i>→</i><span>Audit log</span></div><p>Le entità business devono usare ID interni YUME. L’identity provider si collega tramite identity_provider + identity_subject, così Supabase oggi e WorkOS domani non richiedono una riscrittura del progetto.</p></section>';
 }
-function openOnboarding(){
-  state.session=false;state.onboarding=true;state.onboardingStep=1;state.onboardingSubmitted=false;state.uploadedDocs={};save();render();
+function openOnboarding(type='demo'){
+  state.session=false;state.onboarding=true;state.onboardingType=type==='platform'?'platform':'demo';
+  state.onboardingStep=1;state.onboardingSubmitted=false;state.onboardingResult=null;
+  state.onboardingForm={company:'',vat:'',rea:'',hq:'',website:'',sector:'',contact_name:'',contact_role:'',contact_email:'',contact_phone:'',use_case:''};
+  save();render();
 }
-function closeOnboarding(){
-  state.onboarding=false;state.onboardingSubmitted=false;save();render();
-}
+function closeOnboarding(){state.onboarding=false;state.onboardingSubmitted=false;save();render()}
+function onboardingMaxSteps(){return state.onboardingType==='platform'?4:3}
 function onboardingProgress(){
-  const labels=['Azienda','Documenti','Amministratore','Review'];
+  const labels=state.onboardingType==='platform'?['Azienda','Amministratore','Accesso','Review']:['Azienda','Referente','Review'];
   return labels.map((label,i)=>'<div class="'+(state.onboardingStep===i+1?'is-active':state.onboardingStep>i+1?'is-complete':'')+'"><span>'+(i+1)+'</span><b>'+label+'</b></div>').join('');
+}
+function onboardValue(key){return esc(state.onboardingForm?.[key]||'')}
+function collectOnboardingFields(){
+  els('[data-ymc-onboard-field]').forEach(input=>{state.onboardingForm[input.dataset.ymcOnboardField]=input.value.trim()});
+  save();
 }
 function renderOnboarding(){
   const progress=el('[data-ymc-onboarding-progress]'),content=el('[data-ymc-onboarding-content]');
   if(!progress||!content)return;
   progress.innerHTML=onboardingProgress();
   const back=el('[data-ymc-onboarding-back]'),next=el('[data-ymc-onboarding-next]');
+  const platform=state.onboardingType==='platform',max=onboardingMaxSteps();
   if(state.onboardingSubmitted){
-    content.innerHTML='<div class="ymc-onboarding-complete"><span class="ymc-section-label">SUBMITTED TO YUME · DEMO</span><i>✓</i><h1>La richiesta non crea ancora un account.</h1><p>YUME verifica Organization, set documentale e referente. Solo dopo l’approvazione viene creata la Membership e viene inviato l’accesso. In produzione questa fase genererà audit log, scadenza del link e notifica allo staff.</p><div class="ymc-onboarding-statusline"><span class="is-done">Link ricevuto</span><span class="is-done">Documenti inviati</span><span class="is-current">Verifica YUME</span><span>Accesso</span></div><button class="ymc-btn ymc-btn--dark" type="button" data-ymc-close-onboarding>Chiudi preview onboarding</button></div>';
-    back.hidden=true;next.hidden=true;
-    els('[data-ymc-close-onboarding]').forEach(b=>b.onclick=closeOnboarding);
-    return;
+    const title=platform?'Application inviata. Nessun accesso automatico.':'Richiesta Demo inviata.';
+    const copy=platform?'YUME verificherà azienda e referente. Solo dopo l’approvazione creeremo Organization + Membership e invieremo un invito nominativo Supabase.':'YUME valuterà la richiesta. Se approvata, riceverai un codice Demo personale da usare con la tua email aziendale.';
+    content.innerHTML='<div class="ymc-onboarding-complete"><span class="ymc-section-label">'+(platform?'PLATFORM APPLICATION':'DEMO REQUEST')+' · RECEIVED</span><i>✓</i><h1>'+title+'</h1><p>'+copy+'</p><div class="ymc-onboarding-statusline"><span class="is-done">Richiesta ricevuta</span><span class="is-current">Review YUME</span><span>'+(platform?'Invite nominativo':'Codice Demo')+'</span><span>Accesso</span></div><button class="ymc-btn ymc-btn--dark" type="button" data-ymc-close-onboarding>Chiudi</button></div>';
+    back.hidden=true;next.hidden=true;els('[data-ymc-close-onboarding]').forEach(b=>b.onclick=closeOnboarding);return;
   }
   back.hidden=state.onboardingStep===1;next.hidden=false;
-  next.textContent=state.onboardingStep===4?'Invia alla verifica YUME →':'Continua →';
+  next.textContent=state.onboardingStep===max?'Invia a YUME →':'Continua →';
+
   if(state.onboardingStep===1){
-    content.innerHTML='<span class="ymc-section-label">STEP 01 · ORGANIZATION</span><h1>Identificare l’azienda, non creare un semplice utente.</h1><p class="ymc-onboarding-lead">Il referente riceve un link nominativo YUME. La produzione dovrà collegare la richiesta a una Organization verificata.</p><div class="ymc-form-grid"><label><span>Ragione sociale</span><input value="Nuova Impresa Demo S.r.l." data-ymc-onboard-field="company"></label><label><span>Partita IVA / VAT</span><input value="IT01122334455" data-ymc-onboard-field="vat"></label><label><span>REA / Registro imprese</span><input value="MI-1234567" data-ymc-onboard-field="rea"></label><label><span>Sede legale</span><input value="Milano, Italia" data-ymc-onboard-field="hq"></label><label class="is-wide"><span>Sito aziendale</span><input value="https://azienda.example" data-ymc-onboard-field="website"></label></div><div class="ymc-form-note"><b>Production rule</b><span>I dati dichiarati vengono confrontati con documentazione/verifiche definite da YUME. Nessun account viene creato in automatico.</span></div>';
+    content.innerHTML='<span class="ymc-section-label">STEP 01 · '+(platform?'PLATFORM APPLICATION':'DEMO REQUEST')+'</span><h1>'+(platform?'Identifichiamo l’Organization.':'Partiamo dall’azienda, senza burocrazia inutile.')+'</h1><p class="ymc-onboarding-lead">'+(platform?'Questa richiesta può portare a un account reale Mission Control, ma solo dopo approvazione YUME.':'La Demo serve a valutare il fit: nessun documento societario viene richiesto in questa fase.')+'</p><div class="ymc-form-grid"><label><span>Ragione sociale *</span><input required value="'+onboardValue('company')+'" data-ymc-onboard-field="company"></label><label><span>Partita IVA / VAT</span><input value="'+onboardValue('vat')+'" data-ymc-onboard-field="vat"></label><label><span>REA / Registro imprese</span><input value="'+onboardValue('rea')+'" data-ymc-onboard-field="rea"></label><label><span>Sede</span><input value="'+onboardValue('hq')+'" data-ymc-onboard-field="hq"></label><label><span>Settore</span><input value="'+onboardValue('sector')+'" data-ymc-onboard-field="sector"></label><label><span>Sito aziendale</span><input value="'+onboardValue('website')+'" data-ymc-onboard-field="website" placeholder="https://"></label></div>';
   }else if(state.onboardingStep===2){
-    const docs=state.uploadedDocs||{};
-    content.innerHTML='<span class="ymc-section-label">STEP 02 · DOCUMENT SET</span><h1>Upload temporaneo. Nessun documento nel frontend.</h1><p class="ymc-onboarding-lead">Nella preview i file non vengono trasmessi: salviamo solo il nome nel browser. In produzione useremo storage privato e signed upload URL.</p><div class="ymc-upload-list">'+
-      uploadRow('visura','Visura camerale','Core',docs.visura)+
-      uploadRow('identity','Identità legale rappresentante','Core',docs.identity)+
-      uploadRow('delegation','Delega / autorizzazione','Se richiesta',docs.delegation)+
-    '</div><div class="ymc-form-note"><b>Nota legale</b><span>Il set documentale definitivo, le basi giuridiche, retention e modalità di verifica devono essere validati prima del go-live. Questa preview mostra solo il workflow.</span></div>';
-  }else if(state.onboardingStep===3){
-    content.innerHTML='<span class="ymc-section-label">STEP 03 · CORPORATE ADMIN</span><h1>Chi può amministrare la missione?</h1><p class="ymc-onboarding-lead">Il primo utente non si registra da solo: viene nominato dall’azienda e abilitato da YUME come Organization Admin.</p><div class="ymc-form-grid"><label><span>Nome e cognome</span><input value="Laura Bianchi"></label><label><span>Ruolo aziendale</span><input value="Amministratrice"></label><label><span>Email aziendale</span><input type="email" value="admin@nuovaimpresa.it"></label><label><span>Dominio aziendale</span><input value="nuovaimpresa.it"></label></div><div class="ymc-form-note"><b>Security</b><span>Produzione: email verificata, MFA per ruoli sensibili, audit log e possibilità di revoca immediata della Membership.</span></div>';
+    content.innerHTML='<span class="ymc-section-label">STEP 02 · '+(platform?'CORPORATE ADMIN':'DEMO CONTACT')+'</span><h1>'+(platform?'Chi amministrerà l’account?':'Chi testerà Mission Control?')+'</h1><p class="ymc-onboarding-lead">'+(platform?'Il referente sarà il primo Organization Admin se la richiesta viene approvata.':'Il codice Demo approvato sarà associato a questa email.')+'</p><div class="ymc-form-grid"><label><span>Nome e cognome *</span><input required value="'+onboardValue('contact_name')+'" data-ymc-onboard-field="contact_name"></label><label><span>Ruolo aziendale</span><input value="'+onboardValue('contact_role')+'" data-ymc-onboard-field="contact_role"></label><label><span>Email aziendale *</span><input type="email" required value="'+onboardValue('contact_email')+'" data-ymc-onboard-field="contact_email"></label><label><span>Telefono</span><input value="'+onboardValue('contact_phone')+'" data-ymc-onboard-field="contact_phone"></label></div>';
+  }else if(platform&&state.onboardingStep===3){
+    content.innerHTML='<span class="ymc-section-label">STEP 03 · ACCESS SCOPE</span><h1>Cosa deve governare Mission Control?</h1><p class="ymc-onboarding-lead">Descrivi il caso d’uso: missioni, partner, procurement, meeting, documenti, decisioni o follow-up.</p><label class="ymc-field"><span>Obiettivo / use case</span><textarea rows="7" data-ymc-onboard-field="use_case" placeholder="Es. missioni commerciali in Giappone, scouting partner, agenda B2B...">'+onboardValue('use_case')+'</textarea></label><div class="ymc-form-note"><b>Access principle</b><span>L’account reale viene emesso soltanto dopo review YUME. Nessun self-signup e nessun accesso automatico ai dati di altre Organization.</span></div>';
   }else{
-    const docs=state.uploadedDocs||{};
-    content.innerHTML='<span class="ymc-section-label">STEP 04 · REVIEW</span><h1>YUME decide quando l’Organization è pronta.</h1><p class="ymc-onboarding-lead">Inviare il set documentale non equivale a ricevere credenziali. La review interna precede Organization + Membership + accesso.</p><div class="ymc-review-grid"><article><span>ORGANIZATION</span><b>Nuova Impresa Demo S.r.l.</b><small>VAT · IT01122334455</small></article><article><span>DOCUMENTS</span><b>'+((docs.visura?1:0)+(docs.identity?1:0)+(docs.delegation?1:0))+'/3 demo</b><small>Visura + identity richiesti nella preview</small></article><article><span>ADMIN</span><b>Laura Bianchi</b><small>admin@nuovaimpresa.it</small></article><article><span>ACCESS</span><b>Pending YUME</b><small>No account yet</small></article></div><label class="ymc-review-check"><input type="checkbox" data-ymc-onboarding-confirm><span>Confermo di aver compreso che questa è una simulazione UX e che i documenti non vengono trasmessi.</span></label><p class="ymc-access-error" data-ymc-onboarding-error hidden></p>';
+    const f=state.onboardingForm||{};
+    content.innerHTML='<span class="ymc-section-label">FINAL REVIEW · '+(platform?'PLATFORM':'DEMO')+'</span><h1>Invia la richiesta a YUME.</h1><div class="ymc-review-grid"><article><span>ORGANIZATION</span><b>'+esc(f.company||'—')+'</b><small>'+esc(f.vat||'VAT non indicata')+'</small></article><article><span>REFERENTE</span><b>'+esc(f.contact_name||'—')+'</b><small>'+esc(f.contact_email||'—')+'</small></article><article><span>TIPO ACCESSO</span><b>'+(platform?'Piattaforma completa':'Demo controllata')+'</b><small>'+(platform?'Organization + Membership dopo approvazione':'Codice Demo dopo approvazione')+'</small></article><article><span>STATO INIZIALE</span><b>Submitted</b><small>Review manuale YUME</small></article></div><label class="ymc-review-check"><input type="checkbox" data-ymc-privacy-confirm><span>Confermo di poter inviare questi dati aziendali a YUME per la gestione della richiesta.</span></label>'+(platform?'<label class="ymc-review-check"><input type="checkbox" data-ymc-terms-confirm><span>Comprendo che l’invio non crea un account: l’accesso nasce solo dopo approvazione e invito nominativo.</span></label>':'')+'<p class="ymc-access-error" data-ymc-onboarding-error hidden></p>';
   }
-  bindOnboardingDynamic();
 }
-function uploadRow(key,title,requirement,current){
-  return '<div class="ymc-upload-row '+(current?'is-ready':'')+'"><div><span>'+esc(requirement)+'</span><b>'+esc(title)+'</b><small>'+(current?esc(current):'Nessun file selezionato')+'</small></div><div><label class="ymc-upload-btn">Scegli file<input type="file" data-ymc-upload="'+key+'" accept=".pdf,.p7m,.jpg,.jpeg,.png"></label><button type="button" data-ymc-demo-doc="'+key+'">Usa demo</button></div></div>';
+async function submitAccessRequest(){
+  const f=state.onboardingForm||{},platform=state.onboardingType==='platform';
+  const payload={
+    request_type:platform?'platform':'demo',status:'submitted',company_name:f.company,vat:f.vat||null,rea:f.rea||null,
+    hq:f.hq||null,website:f.website||null,sector:f.sector||null,contact_name:f.contact_name,
+    contact_role:f.contact_role||null,contact_email:String(f.contact_email||'').toLowerCase(),contact_phone:f.contact_phone||null,
+    use_case:f.use_case||null,requested_modules:[],privacy_accepted:true,terms_accepted:platform,source:'mission-control'
+  };
+  await ymcFetch('/rest/v1/ymc_access_requests',{method:'POST',body:payload,prefer:'return=minimal'});
+  state.onboardingSubmitted=true;state.onboardingResult={type:payload.request_type,status:'submitted'};save();renderOnboarding();
 }
-function bindOnboardingDynamic(){
-  els('[data-ymc-upload]').forEach(input=>input.onchange=()=>{
-    const file=input.files&&input.files[0];if(!file)return;
-    state.uploadedDocs[input.dataset.ymcUpload]=file.name;save();renderOnboarding();
-  });
-  els('[data-ymc-demo-doc]').forEach(btn=>btn.onclick=()=>{
-    const names={visura:'visura_demo.pdf',identity:'documento_identita_demo.pdf',delegation:'delega_demo.pdf'};
-    state.uploadedDocs[btn.dataset.ymcDemoDoc]=names[btn.dataset.ymcDemoDoc];save();renderOnboarding();
-  });
-}
-function onboardingNext(){
-  if(state.onboardingStep===2&&(!state.uploadedDocs.visura||!state.uploadedDocs.identity)){
-    const content=el('[data-ymc-onboarding-content]');
-    const note=document.createElement('p');note.className='ymc-access-error';note.textContent='Per la preview servono almeno Visura camerale e documento del legale rappresentante.';content.appendChild(note);return;
+async function onboardingNext(){
+  collectOnboardingFields();
+  const f=state.onboardingForm||{},platform=state.onboardingType==='platform',max=onboardingMaxSteps();
+  const err=(message)=>{const c=el('[data-ymc-onboarding-content]');const p=document.createElement('p');p.className='ymc-access-error';p.textContent=message||'Completa i campi richiesti.';c.appendChild(p)};
+  if(state.onboardingStep===1&&!f.company){err('Inserisci la ragione sociale.');return}
+  if(state.onboardingStep===2&&(!f.contact_name||!String(f.contact_email||'').includes('@'))){err('Inserisci nome e una email aziendale valida.');return}
+  if(state.onboardingStep===max){
+    const privacy=el('[data-ymc-privacy-confirm]'),terms=el('[data-ymc-terms-confirm]'),msg=el('[data-ymc-onboarding-error]');
+    if(!privacy?.checked||(platform&&!terms?.checked)){if(msg){msg.hidden=false;msg.textContent='Conferma le condizioni richieste prima dell’invio.'}return}
+    const btn=el('[data-ymc-onboarding-next]');if(btn)btn.disabled=true;
+    try{await submitAccessRequest()}catch(ex){if(msg){msg.hidden=false;msg.textContent='Invio non riuscito: '+ex.message}if(btn)btn.disabled=false}
+    return;
   }
-  if(state.onboardingStep===4){
-    const check=el('[data-ymc-onboarding-confirm]'),err=el('[data-ymc-onboarding-error]');
-    if(!check||!check.checked){if(err){err.hidden=false;err.textContent='Conferma la natura dimostrativa del flusso prima di inviare.'}return;}
-    state.onboardingSubmitted=true;save();renderOnboarding();return;
-  }
-  state.onboardingStep=Math.min(4,state.onboardingStep+1);save();renderOnboarding();
+  state.onboardingStep=Math.min(max,state.onboardingStep+1);save();renderOnboarding();
 }
-function onboardingBack(){
-  state.onboardingStep=Math.max(1,state.onboardingStep-1);save();renderOnboarding();
-}
+function onboardingBack(){collectOnboardingFields();state.onboardingStep=Math.max(1,state.onboardingStep-1);save();renderOnboarding()}
 
 function bindDynamic(){
   els('[data-ymc-section]').forEach(b=>b.onclick=()=>setSection(b.dataset.ymcSection));
@@ -481,26 +581,136 @@ function bindDynamic(){
   els('[data-ymc-drawer-open]').forEach(b=>b.onclick=()=>{const [type,id]=b.dataset.ymcDrawerOpen.split(':');openDrawer(type,id)});
   els('[data-ymc-open-partner]').forEach(b=>b.onclick=()=>openPartnerWorkspace(b.dataset.ymcOpenPartner));
   els('[data-ymc-partner-status]').forEach(s=>s.onchange=()=>updatePartnerStatus(s.dataset.ymcPartnerStatus,s.value));
-  els('[data-ymc-contact-form]').forEach(form=>form.onsubmit=e=>{e.preventDefault();const id=form.dataset.ymcContactForm,fd=new FormData(form);const name=String(fd.get('name')||'').trim();if(!name)return;state.partnerContacts[id]=[...(state.partnerContacts[id]||[]),{name,role:String(fd.get('role')||''),email:String(fd.get('email')||''),phone:String(fd.get('phone')||'')}];addPartnerTimeline(id,'Nuovo referente registrato',name+' · '+String(fd.get('role')||''),'Contact');save();render();toast('Referente aggiunto.');});
-  els('[data-ymc-ticket-form]').forEach(form=>form.onsubmit=e=>{e.preventDefault();const id=form.dataset.ymcTicketForm,fd=new FormData(form),title=String(fd.get('title')||'').trim();if(!title)return;state.partnerTickets[id]=[...(state.partnerTickets[id]||[]),{id:'T-'+Date.now(),title,owner:String(fd.get('owner')||'YUME'),status:'Aperto',priority:String(fd.get('priority')||'Media'),due:String(fd.get('due')||'Da pianificare')}];addPartnerTimeline(id,'Ticket interno creato',title,'Ticket');save();render();toast('Ticket interno creato.');});
-  els('[data-ymc-request-form]').forEach(form=>form.onsubmit=e=>{e.preventDefault();const id=form.dataset.ymcRequestForm,fd=new FormData(form),subject=String(fd.get('subject')||'').trim();if(!subject)return;state.partnerRequests[id]=[...(state.partnerRequests[id]||[]),{id:'R-'+Date.now(),type:String(fd.get('type')||'Richiesta'),subject,status:'Da inviare',owner:String(fd.get('owner')||'Operations')}];addPartnerTimeline(id,'Richiesta partner creata',String(fd.get('type')||'Richiesta')+' · '+subject,'Request');save();render();toast('Richiesta aggiunta al partner.');});
-  els('[data-ymc-partner-upload]').forEach(input=>input.onchange=()=>{const file=input.files&&input.files[0];if(!file)return;const id=input.dataset.ymcPartnerUpload;state.partnerDocs[id]=[...(state.partnerDocs[id]||[]),file.name];addPartnerTimeline(id,'Documento allegato',file.name,'Document');save();render();toast('Documento aggiunto alla preview locale.');});
+  els('[data-ymc-refresh-live]').forEach(b=>b.onclick=async()=>{b.disabled=true;await loadInternalLiveData();render();toast('Dati aggiornati da Supabase.');});
+
+  els('[data-ymc-review-request]').forEach(b=>b.onclick=async()=>{
+    const [id,decision]=b.dataset.ymcReviewRequest.split(':');b.disabled=true;
+    try{
+      await ymcFetch('/rest/v1/rpc/ymc_review_access_request',{method:'POST',token:internalToken(),body:{p_request_id:id,p_decision:decision,p_notes:null}});
+      await loadInternalLiveData();render();toast(decision==='approve'?'Richiesta approvata.':'Richiesta rifiutata.');
+    }catch(ex){b.disabled=false;toast('Review non riuscita: '+ex.message)}
+  });
+  els('[data-ymc-invite-request]').forEach(b=>b.onclick=async()=>{
+    const id=b.dataset.ymcInviteRequest;b.disabled=true;
+    try{
+      await ymcFetch('/functions/v1/ymc-invite-corporate-admin',{method:'POST',token:internalToken(),body:{request_id:id}});
+      await loadInternalLiveData();render();toast('Invito Corporate inviato.');
+    }catch(ex){b.disabled=false;toast('Invito non riuscito: '+ex.message)}
+  });
+
+  const newPartner=el('[data-ymc-new-partner-form]');
+  if(newPartner)newPartner.onsubmit=async e=>{
+    e.preventDefault();const fd=new FormData(newPartner),name=String(fd.get('name')||'').trim();if(!name)return;
+    const body={name,kind:String(fd.get('kind')||'').trim()||null,geo:String(fd.get('geo')||'').trim()||null,stage:'Mapping',tier:String(fd.get('tier')||'').trim()||null,owner:String(fd.get('owner')||'').trim()||null,next_action:String(fd.get('next_action')||'').trim()||null,note:String(fd.get('note')||'').trim()||null,capabilities:String(fd.get('capabilities')||'').split(',').map(x=>x.trim()).filter(Boolean)};
+    try{await ymcFetch('/rest/v1/ymc_partners',{method:'POST',token:internalToken(),body,prefer:'return=minimal'});await loadInternalLiveData();render();toast('Partner creato nel registry.')}catch(ex){toast('Creazione partner non riuscita: '+ex.message)}
+  };
+
+  els('[data-ymc-contact-form]').forEach(form=>form.onsubmit=async e=>{
+    e.preventDefault();const id=form.dataset.ymcContactForm,fd=new FormData(form),name=String(fd.get('name')||'').trim();if(!name)return;
+    try{
+      await ymcFetch('/rest/v1/ymc_partner_contacts',{method:'POST',token:internalToken(),body:{partner_id:id,name,role:String(fd.get('role')||'').trim()||null,email:String(fd.get('email')||'').trim()||null,phone:String(fd.get('phone')||'').trim()||null},prefer:'return=minimal'});
+      await ymcFetch('/rest/v1/ymc_partner_events',{method:'POST',token:internalToken(),body:{partner_id:id,event_type:'Contact',title:'Nuovo referente registrato',detail:name+' · '+String(fd.get('role')||'')},prefer:'return=minimal'});
+      await loadPartnerWorkspaceData(id);render();toast('Referente salvato.');
+    }catch(ex){toast('Referente non salvato: '+ex.message)}
+  });
+  els('[data-ymc-ticket-form]').forEach(form=>form.onsubmit=async e=>{
+    e.preventDefault();const id=form.dataset.ymcTicketForm,fd=new FormData(form),title=String(fd.get('title')||'').trim();if(!title)return;
+    try{
+      await ymcFetch('/rest/v1/ymc_partner_tickets',{method:'POST',token:internalToken(),body:{partner_id:id,title,owner:String(fd.get('owner')||'YUME'),status:'Open',priority:String(fd.get('priority')||'Medium'),due_date:String(fd.get('due')||'')||null},prefer:'return=minimal'});
+      await ymcFetch('/rest/v1/ymc_partner_events',{method:'POST',token:internalToken(),body:{partner_id:id,event_type:'Ticket',title:'Ticket interno creato',detail:title},prefer:'return=minimal'});
+      await loadPartnerWorkspaceData(id);render();toast('Ticket salvato.');
+    }catch(ex){toast('Ticket non salvato: '+ex.message)}
+  });
+  els('[data-ymc-request-form]').forEach(form=>form.onsubmit=async e=>{
+    e.preventDefault();const id=form.dataset.ymcRequestForm,fd=new FormData(form),subject=String(fd.get('subject')||'').trim();if(!subject)return;
+    try{
+      await ymcFetch('/rest/v1/ymc_partner_requests',{method:'POST',token:internalToken(),body:{partner_id:id,request_type:String(fd.get('type')||'Request'),subject,status:'Draft',owner:String(fd.get('owner')||'Operations')},prefer:'return=minimal'});
+      await ymcFetch('/rest/v1/ymc_partner_events',{method:'POST',token:internalToken(),body:{partner_id:id,event_type:'Request',title:'Richiesta partner creata',detail:String(fd.get('type')||'Request')+' · '+subject},prefer:'return=minimal'});
+      await loadPartnerWorkspaceData(id);render();toast('Richiesta salvata.');
+    }catch(ex){toast('Richiesta non salvata: '+ex.message)}
+  });
+  els('[data-ymc-partner-upload]').forEach(input=>input.onchange=async()=>{
+    const file=input.files&&input.files[0];if(!file)return;const id=input.dataset.ymcPartnerUpload;
+    try{
+      await ymcFetch('/rest/v1/ymc_partner_documents',{method:'POST',token:internalToken(),body:{partner_id:id,file_name:file.name,mime_type:file.type||null,file_size:file.size,status:'metadata_only'},prefer:'return=minimal'});
+      await ymcFetch('/rest/v1/ymc_partner_events',{method:'POST',token:internalToken(),body:{partner_id:id,event_type:'Document',title:'Documento registrato',detail:file.name},prefer:'return=minimal'});
+      await loadPartnerWorkspaceData(id);render();toast('Metadato documento registrato.');
+    }catch(ex){toast('Documento non registrato: '+ex.message)}
+  });
   els('[data-ymc-toast]').forEach(b=>b.onclick=()=>toast(b.dataset.ymcToast));
-  els('[data-ymc-onboarding-approve]').forEach(b=>b.onclick=()=>{state.onboardingApproved=true;save();render();toast('Organization approvata nella preview: invito nominativo pronto.');});
   els('[data-ymc-open-menu]').forEach(b=>b.onclick=()=>toggleMenu(true));
 }
-function enter(role){
+
+async function enter(role){
   if(role!=='client')return openInternalLogin();
-  const email=el('[data-ymc-demo-email]')?.value.trim()||'';
-  const token=el('[data-ymc-demo-token]')?.value.trim()||'';
+  const email=el('[data-ymc-demo-email]')?.value.trim().toLowerCase()||'';
+  const code=el('[data-ymc-demo-token]')?.value.trim().toUpperCase()||'';
   const err=el('[data-ymc-access-error]');
-  if(!email.includes('@')||token!=='YUME-DEMO-2701'){
-    if(err){err.hidden=false;err.textContent='Accesso demo non valido. Usa email aziendale + token YUME-DEMO-2701.'}
-    return;
-  }
-  if(err)err.hidden=true;
-  state.onboarding=false;state.session=true;state.role='client';state.section='overview';save();render();
+  if(!email.includes('@')||!code){if(err){err.hidden=false;err.textContent='Inserisci email aziendale e codice Demo approvato.'}return}
+  try{
+    const data=await ymcFetch('/functions/v1/ymc-demo-access',{method:'POST',body:{email,code}});
+    if(!data?.ok)throw new Error(data?.error||'Demo non autorizzata');
+    if(err)err.hidden=true;
+    state.onboarding=false;state.session=true;state.role='client';state.clientMode='demo';state.section='overview';
+    state.clientOrganization={name:data.company_name,short:data.company_name,member:data.contact_name||email,role:'Corporate Demo'};save();render();
+  }catch(ex){if(err){err.hidden=false;err.textContent=ex.message}}
 }
+
+function openCorporateLogin(){
+  const m=el('[data-ymc-corporate-login]'),pending=sessionStorage.getItem('ymcPendingInviteToken');
+  const login=el('[data-ymc-corporate-login-form]'),activation=el('[data-ymc-corporate-activation-form]');
+  if(login)login.hidden=!!pending;if(activation)activation.hidden=!pending;
+  if(m)m.hidden=false;
+  (pending?el('[data-ymc-corporate-new-password]'):el('[data-ymc-corporate-email]'))?.focus();
+}
+function closeCorporateLogin(){
+  const m=el('[data-ymc-corporate-login]');if(m)m.hidden=true;
+  const e=el('[data-ymc-corporate-login-error]');if(e)e.hidden=true;
+}
+async function activateCorporateToken(token){
+  const activation=await ymcFetch('/functions/v1/ymc-activate-membership',{method:'POST',token,body:{}});
+  if(!activation?.ok||!activation.organization)throw new Error(activation?.error||'Membership YUME non valida');
+  const user=await ymcFetch('/auth/v1/user',{token});
+  sessionStorage.setItem(CORPORATE_TOKEN_KEY,token);
+  state.session=true;state.onboarding=false;state.role='client';state.clientMode='platform';state.section='overview';
+  state.clientOrganization={name:activation.organization.legal_name,short:activation.organization.legal_name,member:user?.user_metadata?.full_name||user?.email||'Corporate Admin',role:'Corporate Admin'};
+  save();closeCorporateLogin();render();return true;
+}
+async function corporateSignIn(e){
+  e.preventDefault();const email=el('[data-ymc-corporate-email]')?.value.trim().toLowerCase()||'',password=el('[data-ymc-corporate-password]')?.value||'',err=el('[data-ymc-corporate-login-error]'),btn=e.currentTarget.querySelector('button[type="submit"]');
+  if(!email.includes('@')||!password){err.hidden=false;err.textContent='Inserisci email e password.';return}
+  btn.disabled=true;err.hidden=true;
+  try{
+    const data=await ymcFetch('/auth/v1/token?grant_type=password',{method:'POST',body:{email,password}});
+    if(!data?.access_token)throw new Error('Credenziali Corporate non valide.');
+    await activateCorporateToken(data.access_token);
+  }catch(ex){err.hidden=false;err.textContent=ex.message}finally{btn.disabled=false}
+}
+async function corporateActivate(e){
+  e.preventDefault();const token=sessionStorage.getItem('ymcPendingInviteToken')||'',pwd=el('[data-ymc-corporate-new-password]')?.value||'',confirm=el('[data-ymc-corporate-confirm-password]')?.value||'',err=el('[data-ymc-corporate-activation-error]'),btn=e.currentTarget.querySelector('button[type="submit"]');
+  if(pwd.length<10){err.hidden=false;err.textContent='Usa una password di almeno 10 caratteri.';return}
+  if(pwd!==confirm){err.hidden=false;err.textContent='Le password non coincidono.';return}
+  btn.disabled=true;err.hidden=true;
+  try{
+    await ymcFetch('/auth/v1/user',{method:'PUT',token,body:{password:pwd}});
+    await activateCorporateToken(token);
+    sessionStorage.removeItem('ymcPendingInviteToken');
+    history.replaceState(null,'',location.pathname+location.search);
+  }catch(ex){err.hidden=false;err.textContent=ex.message}finally{btn.disabled=false}
+}
+function detectCorporateInvite(){
+  if(!location.hash)return false;
+  const p=new URLSearchParams(location.hash.slice(1)),token=p.get('access_token'),type=p.get('type');
+  if(!token||!['invite','recovery','signup'].includes(type||''))return false;
+  sessionStorage.setItem('ymcPendingInviteToken',token);
+  const login=el('[data-ymc-corporate-login-form]'),activation=el('[data-ymc-corporate-activation-form]');
+  if(login)login.hidden=true;if(activation)activation.hidden=false;openCorporateLogin();return true;
+}
+async function validateCorporateSession(){
+  const token=corporateToken();if(!token)return false;
+  try{await activateCorporateToken(token);return true}catch(_){return false}
+}
+
 function openInternalLogin(){
   const m=el('[data-ymc-internal-login]');
   const email=el('[data-ymc-internal-email]');
@@ -534,7 +744,7 @@ async function internalSignIn(e){
     const profile=await getAuthorizedInternalProfile(data.access_token,data.user.id);
     if(!profile)throw new Error('Account autenticato ma non autorizzato per YUME Internal.');
     sessionStorage.setItem(INTERNAL_TOKEN_KEY,data.access_token);
-    closeInternalLogin();state.onboarding=false;state.session=true;state.role='internal';state.section='network';save();render();toast('YUME Internal autenticato.');
+    closeInternalLogin();state.onboarding=false;state.session=true;state.role='internal';state.section='network';await loadInternalLiveData();save();render();toast('YUME Internal autenticato.');
   }catch(ex){err.hidden=false;err.textContent=String(ex.message||ex)}
   finally{submit.disabled=false}
 }
@@ -553,21 +763,35 @@ async function validateInternalSession(){
 }
 async function bootstrap(){
   initStatic();
+  if(detectCorporateInvite()){render();return}
   if(state.session&&state.role==='internal'){
     const valid=await validateInternalSession();
-    if(!valid){
-      sessionStorage.removeItem(INTERNAL_TOKEN_KEY);
-      state=baseState();
-      save();
-    }
+    if(!valid){sessionStorage.removeItem(INTERNAL_TOKEN_KEY);state=baseState();save()}
+    else await loadInternalLiveData();
+  }else if(state.session&&state.role==='client'&&state.clientMode==='platform'){
+    const valid=await validateCorporateSession();
+    if(!valid){sessionStorage.removeItem(CORPORATE_TOKEN_KEY);state=baseState();save()}
   }
   render();
 }
-function logout(){sessionStorage.removeItem(INTERNAL_TOKEN_KEY);state={...baseState()};save();render()}
-function resetPreview(){try{localStorage.removeItem(STORAGE)}catch(_){}sessionStorage.removeItem(INTERNAL_TOKEN_KEY);state=baseState();save();render()}
+function logout(){
+  sessionStorage.removeItem(INTERNAL_TOKEN_KEY);sessionStorage.removeItem(CORPORATE_TOKEN_KEY);sessionStorage.removeItem('ymcPendingInviteToken');
+  state={...baseState()};save();render();
+}
+function resetPreview(){
+  try{localStorage.removeItem(STORAGE)}catch(_){}
+  sessionStorage.removeItem(INTERNAL_TOKEN_KEY);sessionStorage.removeItem(CORPORATE_TOKEN_KEY);sessionStorage.removeItem('ymcPendingInviteToken');
+  state=baseState();save();render();
+}
 function toggleMenu(open){state.sidebar=typeof open==='boolean'?open:!state.sidebar;const sidebarOpen=!!state.session&&!!state.sidebar;el('[data-ymc-sidebar]')?.classList.toggle('is-open',sidebarOpen);el('[data-ymc-sidebar-backdrop]')?.classList.toggle('is-open',sidebarOpen);document.body.classList.toggle('ymc-nav-open',sidebarOpen)}
 function initStatic(){
   els('[data-ymc-enter]').forEach(b=>b.onclick=()=>enter(b.dataset.ymcEnter));
+  els('[data-ymc-open-corporate-login]').forEach(b=>b.onclick=openCorporateLogin);
+  els('[data-ymc-close-corporate-login]').forEach(b=>b.onclick=closeCorporateLogin);
+  el('[data-ymc-corporate-login-form]').onsubmit=corporateSignIn;
+  el('[data-ymc-corporate-activation-form]').onsubmit=corporateActivate;
+  els('[data-ymc-toggle-corporate-password]').forEach(b=>b.onclick=()=>{const input=el('[data-ymc-corporate-password]');if(!input)return;const show=input.type==='password';input.type=show?'text':'password';b.textContent=show?'Nascondi':'Mostra'});
+  els('[data-ymc-toggle-corporate-new-password]').forEach(b=>b.onclick=()=>{const input=el('[data-ymc-corporate-new-password]');if(!input)return;const show=input.type==='password';input.type=show?'text':'password';b.textContent=show?'Nascondi':'Mostra'});
   els('[data-ymc-open-internal-login]').forEach(b=>b.onclick=openInternalLogin);
   els('[data-ymc-close-internal-login]').forEach(b=>b.onclick=closeInternalLogin);
   els('[data-ymc-toggle-password]').forEach(b=>b.onclick=()=>{
@@ -580,7 +804,7 @@ function initStatic(){
     b.setAttribute('aria-label',show?'Nascondi password':'Mostra password');
   });
   el('[data-ymc-internal-login-form]').onsubmit=internalSignIn;
-  els('[data-ymc-open-onboarding]').forEach(b=>b.onclick=openOnboarding);
+  els('[data-ymc-open-onboarding]').forEach(b=>b.onclick=()=>openOnboarding(b.dataset.ymcOpenOnboarding||'demo'));
   els('[data-ymc-close-onboarding]').forEach(b=>b.onclick=closeOnboarding);
   el('[data-ymc-onboarding-next]').onclick=onboardingNext;
   el('[data-ymc-onboarding-back]').onclick=onboardingBack;
@@ -593,7 +817,7 @@ function initStatic(){
   el('[data-ymc-profile]').onclick=()=>{const m=el('[data-ymc-profile-menu]');m.hidden=!m.hidden};
   el('[data-ymc-logout]').onclick=logout;
   el('[data-ymc-reset]').onclick=resetPreview;
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeInternalLogin();closeDrawer();toggleMenu(false);el('[data-ymc-project-menu]').hidden=true;el('[data-ymc-profile-menu]').hidden=true}});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeCorporateLogin();closeInternalLogin();closeDrawer();toggleMenu(false);el('[data-ymc-project-menu]').hidden=true;el('[data-ymc-profile-menu]').hidden=true}});
   document.addEventListener('click',e=>{
     if(!e.target.closest('[data-ymc-project-switch]')&&!e.target.closest('[data-ymc-project-menu]'))el('[data-ymc-project-menu]').hidden=true;
     if(!e.target.closest('[data-ymc-profile]')&&!e.target.closest('[data-ymc-profile-menu]'))el('[data-ymc-profile-menu]').hidden=true;
