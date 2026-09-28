@@ -201,6 +201,69 @@ body.ym-modern-page input:focus,body.ym-modern-page select:focus,body.ym-modern-
   }
 }
 </style>
+
+<style id="ym-pacchetti-form-modern-v1">
+#richiedi-pacchetto .ym-form-intro{
+  margin:0 0 20px;padding:18px 20px;border-radius:18px;
+  background:linear-gradient(135deg,rgba(139,44,43,.08),rgba(201,168,106,.12));
+  border:1px solid rgba(139,44,43,.12)
+}
+#richiedi-pacchetto .ym-form-intro strong{
+  display:block;margin-bottom:5px;color:var(--ym-red);
+  font:700 1.12rem 'Playfair Display',serif
+}
+#richiedi-pacchetto .ym-form-intro p{margin:0;color:#625754;font-size:.9rem;line-height:1.5}
+#richiedi-pacchetto .ym-form-section{
+  margin-top:14px;padding:20px;border:1px solid rgba(139,44,43,.10);
+  border-radius:18px;background:#fff;box-shadow:0 8px 24px rgba(55,35,31,.045)
+}
+#richiedi-pacchetto .ym-form-section-head{display:flex;align-items:flex-start;gap:11px;margin-bottom:17px}
+#richiedi-pacchetto .ym-form-step{
+  flex:0 0 30px;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;
+  border-radius:50%;background:var(--ym-red);color:#fff;font:700 .72rem 'Quicksand',sans-serif
+}
+#richiedi-pacchetto .ym-form-section-head strong{display:block;color:#332a28;font:700 1rem 'Quicksand',sans-serif}
+#richiedi-pacchetto .ym-form-section-head span{display:block;margin-top:2px;color:#756965;font-size:.79rem;line-height:1.35}
+#richiedi-pacchetto .ym-form-grid-2,#richiedi-pacchetto .ym-form-grid-3{display:grid;gap:12px}
+#richiedi-pacchetto .ym-form-grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+#richiedi-pacchetto .ym-form-grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+#richiedi-pacchetto .ym-field{min-width:0}
+#richiedi-pacchetto .ym-field + .ym-field--spaced{margin-top:12px}
+#richiedi-pacchetto .ym-field label,#richiedi-pacchetto .ym-field-label{
+  display:block;margin:0 0 6px;color:#433936;font-weight:650
+}
+#richiedi-pacchetto .ym-field input:not([type="checkbox"]),#richiedi-pacchetto .ym-field select,#richiedi-pacchetto .ym-field textarea{
+  width:100%;box-sizing:border-box
+}
+#richiedi-pacchetto .ym-field-help{margin:6px 0 0;color:#776a66;font-size:.78rem;line-height:1.4}
+#richiedi-pacchetto .ym-form-spacer{margin-top:12px}
+#richiedi-pacchetto .ym-budget-note{
+  margin-top:9px;padding:10px 12px;border-radius:12px;background:#faf6ef;color:#6e625d;font-size:.8rem;line-height:1.45
+}
+#richiedi-pacchetto .ym-submit-wrap{margin-top:18px}
+#richiedi-pacchetto #formLoading{
+  display:none;margin-top:12px;padding:12px 14px;border-radius:14px;
+  background:#faf6ef;border:1px solid rgba(139,44,43,.12);color:#5e514b
+}
+#richiedi-pacchetto #formLoading.is-active{display:block}
+#richiedi-pacchetto .ym-loading-row{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:.86rem}
+#richiedi-pacchetto .ym-loading-track{
+  height:6px;margin-top:9px;border-radius:999px;overflow:hidden;background:#eadfd3
+}
+#richiedi-pacchetto .ym-loading-bar{
+  width:38%;height:100%;border-radius:999px;background:var(--ym-red);
+  animation:ymPacchettiLoading 1.15s ease-in-out infinite
+}
+#richiedi-pacchetto button[disabled]{opacity:.62;cursor:not-allowed;transform:none!important}
+@keyframes ymPacchettiLoading{0%{transform:translateX(-110%)}50%{transform:translateX(115%)}100%{transform:translateX(300%)}}
+@media(max-width:720px){
+  #richiedi-pacchetto .ym-form-grid-2,#richiedi-pacchetto .ym-form-grid-3{grid-template-columns:1fr}
+  #richiedi-pacchetto .ym-form-section{padding:15px}
+  #richiedi-pacchetto .ym-form-intro{padding:16px}
+}
+@media(prefers-reduced-motion:reduce){#richiedi-pacchetto .ym-loading-bar{animation:none;width:100%}}
+</style>
+
 </head>
 <body class="ym-modern-page">
 <nav class="ym-smartnav" id="ymSmartNav" aria-label="Navigazione rapida della pagina"><div class="ym-smartnav-track"><a href="#ymFinder">Trova il tuo</a><a href="#pacchetti-main">Pacchetti</a><a href="#preferenze-avanzate">Preferenze</a><a href="#richiedi-pacchetto">Richiedi</a></div><button type="button" class="ym-smartnav-close" aria-label="Chiudi navigazione rapida">×</button></nav>
@@ -501,153 +564,227 @@ body.ym-modern-page input:focus,body.ym-modern-page select:focus,body.ym-modern-
 
 
 <section class="form-pacchetto-wrapper" id="richiedi-pacchetto">
-  <h2>Richiedi il tuo pacchetto personalizzato</h2>
+  <h2>Richiedi il tuo pacchetto flessibile</h2>
+  <div class="ym-form-intro">
+    <strong>Partiamo da una base già progettata e la adattiamo a te.</strong>
+    <p>Indica i dati essenziali, il pacchetto di partenza e il livello di flessibilità. Le fasce di budget sono orientative e servono a costruire una proposta coerente, non costituiscono un preventivo automatico.</p>
+  </div>
+
   <form id="formPacchetto">
+    <div class="ym-form-section">
+      <div class="ym-form-section-head">
+        <span class="ym-form-step">01</span>
+        <div><strong>Contatti</strong><span>I riferimenti che useremo per ricontattarti e preparare la proposta.</span></div>
+      </div>
 
-    <!-- INFORMAZIONI PERSONALI -->
-    <div class="due-colonne">
-      <div>
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome" required>
+      <div class="ym-form-grid-2">
+        <div class="ym-field">
+          <label for="nome">Nome</label>
+          <input type="text" id="nome" name="nome" autocomplete="given-name" required>
+        </div>
+        <div class="ym-field">
+          <label for="cognome">Cognome</label>
+          <input type="text" id="cognome" name="cognome" autocomplete="family-name" required>
+        </div>
       </div>
-      <div>
-        <label for="cognome">Cognome:</label>
-        <input type="text" id="cognome" name="cognome" required>
-      </div>
-    </div>
 
-    <div class="due-colonne">
-      <div>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
+      <div class="ym-form-grid-2 ym-form-spacer">
+        <div class="ym-field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" autocomplete="email" required>
+        </div>
+        <div class="ym-field">
+          <label for="confermaEmail">Conferma email</label>
+          <input type="email" id="confermaEmail" name="confermaEmail" autocomplete="email" required>
+        </div>
       </div>
-      <div>
-        <label for="confermaEmail">Conferma Email:</label>
-        <input type="email" id="confermaEmail" name="confermaEmail" required>
-      </div>
-    </div>
 
-    <!-- Pacchetto -->
-    <label for="pacchetto">Scegli un pacchetto:</label>
-    <select id="pacchetto" name="pacchetto" required>
-      <option value="" disabled selected>Seleziona...</option>
-      <option value="hajimete" data-min="8" data-max="18">Hajimete</option>
-      <option value="tetsugaku" data-min="8" data-max="18">Tetsugaku no Michi</option>
-      <option value="shizen" data-min="8" data-max="18">Shizen no Fūkei</option>
-      <option value="kodai" data-min="8" data-max="18">Kodai Kansai</option>
-      <option value="kataware" data-min="8" data-max="18">Kataware Doki</option>
-      <option value="hagane" data-min="8" data-max="18">Hagane to Ki</option>
-    </select>
-
-    <!-- Date -->
-    <div class="due-colonne">
-      <div>
-        <label for="dataPartenza">Data di partenza</label>
-        <input type="date" id="dataPartenza" name="dataPartenza" required>
-      </div>
-      <div>
-        <label for="dataRitorno">Data di ritorno</label>
-        <input type="date" id="dataRitorno" name="dataRitorno" required>
+      <div class="ym-field ym-form-spacer">
+        <label for="telefono">Numero di telefono</label>
+        <input type="tel" id="telefono" name="telefono" inputmode="tel" autocomplete="tel"
+               pattern="[0-9+ ()-]{6,25}" maxlength="25" placeholder="+39 370 308 1341" required>
+        <p class="ym-field-help">Fondamentale per ricontattarti rapidamente in caso servano chiarimenti sulla richiesta.</p>
       </div>
     </div>
 
-    <!-- Gruppo -->
-    <label for="tipologiaGruppo">Tipologia di gruppo:</label>
-    <select id="tipologiaGruppo" name="tipologiaGruppo" required>
-      <option value="" disabled selected>Seleziona una tipologia</option>
-      <option value="famiglia">Famiglia</option>
-      <option value="amici">Amici</option>
-      <option value="coppia">Coppia</option>
-      <option value="colleghi">Colleghi</option>
-      <option value="gruppo-misto">Gruppo misto</option>
-      <option value="altro">Altro</option>
-    </select>
-
-    <label for="dettagliGruppo">Dettagli aggiuntivi sul gruppo:</label>
-    <textarea id="dettagliGruppo" name="dettagliGruppo" rows="2" maxlength="250" placeholder="Es. età media, occasioni speciali..."></textarea>
-
-    <!-- Partecipanti -->
-    <label for="partecipanti">Numero totale partecipanti:</label>
-    <input type="number" id="partecipanti" name="partecipanti" min="1" value="0" required>
-
-    <div class="due-colonne">
-      <div>
-        <label for="adulti">Adulti:</label>
-        <input type="number" id="adulti" name="adulti" min="0" value="0" required>
+    <div class="ym-form-section">
+      <div class="ym-form-section-head">
+        <span class="ym-form-step">02</span>
+        <div><strong>Pacchetto, periodo e flessibilità</strong><span>Scegli la base YUME e indicaci quanto possiamo lavorare sulle date.</span></div>
       </div>
-      <div>
-        <label for="bambini">Bambini:</label>
-        <input type="number" id="bambini" name="bambini" min="0" value="0" required>
+
+      <div class="ym-form-grid-2">
+        <div class="ym-field">
+          <label for="pacchetto">Pacchetto di partenza</label>
+          <select id="pacchetto" name="pacchetto" required>
+            <option value="" disabled selected>Seleziona...</option>
+            <option value="hajimete" data-min="8" data-max="18">Hajimete</option>
+            <option value="tetsugaku" data-min="8" data-max="18">Tetsugaku no Michi</option>
+            <option value="shizen" data-min="8" data-max="18">Shizen no Fūkei</option>
+            <option value="kodai" data-min="8" data-max="18">Kodai Kansai</option>
+            <option value="kataware" data-min="8" data-max="18">Kataware Doki</option>
+            <option value="hagane" data-min="8" data-max="18">Hagane to Ki</option>
+          </select>
+        </div>
+        <div class="ym-field">
+          <label for="flessibilitaDate">Flessibilità sulle date</label>
+          <select id="flessibilitaDate" name="flessibilitaDate">
+            <option value="">Da definire</option>
+            <option value="date-fisse">Date definite · poca flessibilità</option>
+            <option value="3-5-giorni">Flessibile di circa ±3–5 giorni</option>
+            <option value="7-giorni">Flessibile di circa ±7 giorni</option>
+            <option value="molto-flessibile">Molto flessibile · periodo indicativo</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="ym-form-grid-2 ym-form-spacer">
+        <div class="ym-field">
+          <label for="dataPartenza">Data di partenza indicativa</label>
+          <input type="date" id="dataPartenza" name="dataPartenza" required>
+        </div>
+        <div class="ym-field">
+          <label for="dataRitorno">Data di ritorno indicativa</label>
+          <input type="date" id="dataRitorno" name="dataRitorno" required>
+        </div>
+      </div>
+      <p class="ym-field-help">Le regole di durata del pacchetto restano applicate anche quando le date sono flessibili.</p>
+    </div>
+
+    <div class="ym-form-section">
+      <div class="ym-form-section-head">
+        <span class="ym-form-step">03</span>
+        <div><strong>Viaggiatori e camere</strong><span>Composizione del viaggio e sistemazioni richieste.</span></div>
+      </div>
+
+      <div class="ym-form-grid-2">
+        <div class="ym-field">
+          <label for="tipologiaGruppo">Tipologia di gruppo</label>
+          <select id="tipologiaGruppo" name="tipologiaGruppo" required>
+            <option value="" disabled selected>Seleziona una tipologia</option>
+            <option value="famiglia">Famiglia</option>
+            <option value="amici">Amici</option>
+            <option value="coppia">Coppia</option>
+            <option value="colleghi">Colleghi</option>
+            <option value="gruppo-misto">Gruppo misto</option>
+            <option value="altro">Altro</option>
+          </select>
+        </div>
+        <div class="ym-field">
+          <label for="partecipanti">Numero totale partecipanti</label>
+          <input type="number" id="partecipanti" name="partecipanti" min="1" value="1" required>
+        </div>
+      </div>
+
+      <div class="ym-form-grid-2 ym-form-spacer">
+        <div class="ym-field">
+          <label for="adulti">Adulti</label>
+          <input type="number" id="adulti" name="adulti" min="0" value="1" required>
+        </div>
+        <div class="ym-field">
+          <label for="bambini">Bambini</label>
+          <input type="number" id="bambini" name="bambini" min="0" value="0" required>
+        </div>
+      </div>
+      <p id="errorePartecipanti" class="errore-msg" style="font-size:.9em;color:red;margin-top:4px;"></p>
+
+      <div class="ym-field ym-form-spacer">
+        <label for="dettagliGruppo">Dettagli sul gruppo <span style="font-weight:400">(facoltativo)</span></label>
+        <textarea id="dettagliGruppo" name="dettagliGruppo" rows="2" maxlength="250" placeholder="Es. età, occasione speciale, esigenze particolari..."></textarea>
+      </div>
+
+      <div class="ym-field ym-form-spacer">
+        <span class="ym-field-label">Camere richieste</span>
+        <div id="camereContainer"></div>
+        <button type="button" id="aggiungiCamera" class="modern-btn">+ Aggiungi camera</button>
+        <p id="erroreCamere" class="errore-msg" style="font-size:.9em;color:red;margin-top:4px;"></p>
       </div>
     </div>
 
-    <p id="errorePartecipanti" class="errore-msg" style="font-size: 0.9em; color: red; margin-top: 4px;"></p>
+    <div class="ym-form-section">
+      <div class="ym-form-section-head">
+        <span class="ym-form-step">04</span>
+        <div><strong>Budget e stile di viaggio</strong><span>Indicazioni utili per calibrare comfort, servizi e logistica.</span></div>
+      </div>
 
-    <!-- Camere -->
-    <label>Camere richieste:</label>
-    <div id="camereContainer"></div>
-    <button type="button" id="aggiungiCamera" class="modern-btn">+ Aggiungi camera</button>
-    <p id="erroreCamere" class="errore-msg" style="font-size: 0.9em; color: red; margin-top: 4px;"></p>
-
-    <!-- Fascia di spesa -->
-    <label for="fasciaPrezzo">Fascia di spesa desiderata:</label>
-    <select id="fasciaPrezzo" name="fasciaPrezzo" required>
-      <option value="" disabled selected>Seleziona fascia</option>
-      <option value="medio-bassa">Medio-bassa</option>
-      <option value="medio-alta">Medio-alta</option>
-    </select>
-
-    <!-- Trasporti -->
-    <label for="trasporto">Preferenza trasporti:</label>
-    <select id="trasporto" name="trasporto" required>
-      <option value="" disabled selected>Seleziona trasporto</option>
-      <option value="JRP">Japan Rail Pass</option>
-      <option value="regionali">Pass Regionali</option>
-      <option value="bus">Bus notturno</option>
-      <option value="nessuno">Nessun pass</option>
-    </select>
-
-    <!-- Connettività -->
-    <label for="connettivita">Preferenza per la connettività:</label>
-    <select id="connettivita" name="connettivita" required>
-      <option value="" disabled selected>Seleziona opzione</option>
-      <option value="esim">e-SIM</option>
-      <option value="sim">SIM fisica</option>
-      <option value="pocketwifi">Pocket Wi-Fi</option>
-      <option value="nessuno">Nessuna preferenza</option>
-    </select>
-
-    <!-- Città -->
-    <label for="citta">Seleziona le città</label>
-    <select id="citta" name="citta[]" multiple required></select>
-
-    <div class="citta-feedback">
-      <div id="maxCittaMsg" class="max-msg"></div>
-      <div id="counterCitta" class="citta-counter-msg"></div>
-      <div id="erroreCitta" class="errore-msg"></div>
+      <div class="ym-form-grid-3">
+        <div class="ym-field">
+          <label for="fasciaPrezzo">Budget indicativo per persona</label>
+          <select id="fasciaPrezzo" name="fasciaPrezzo" required>
+            <option value="" disabled selected>Seleziona fascia</option>
+            <option value="medio-bassa">Bassa · fino a 2.700 € p.p.</option>
+            <option value="media">Media · 2.700–3.500 € p.p.</option>
+            <option value="medio-alta">Alta · oltre 3.500 € p.p.</option>
+          </select>
+        </div>
+        <div class="ym-field">
+          <label for="trasporto">Preferenza trasporti</label>
+          <select id="trasporto" name="trasporto" required>
+            <option value="" disabled selected>Seleziona trasporto</option>
+            <option value="JRP">Japan Rail Pass</option>
+            <option value="regionali">Pass regionali</option>
+            <option value="bus">Bus notturno</option>
+            <option value="nessuno">Da valutare con YUME</option>
+          </select>
+        </div>
+        <div class="ym-field">
+          <label for="connettivita">Connettività</label>
+          <select id="connettivita" name="connettivita" required>
+            <option value="" disabled selected>Seleziona opzione</option>
+            <option value="esim">eSIM</option>
+            <option value="sim">SIM fisica</option>
+            <option value="pocketwifi">Pocket Wi-Fi</option>
+            <option value="nessuno">Nessuna preferenza</option>
+          </select>
+        </div>
+      </div>
+      <div class="ym-budget-note">Le cifre sono una fascia orientativa per capire il livello di investimento desiderato. Il prezzo finale dipende da periodo, voli, durata, disponibilità e personalizzazioni.</div>
     </div>
 
-    <!-- Richieste -->
-    <label for="richieste">Richieste Aggiuntive (facoltativo):</label>
-    <textarea id="richieste" name="richieste" rows="3" maxlength="250" placeholder="Scrivi qui numero di telefono ed eventuali esigenze, richieste o preferenze..."></textarea>
+    <div class="ym-form-section">
+      <div class="ym-form-section-head">
+        <span class="ym-form-step">05</span>
+        <div><strong>Tappe e richieste</strong><span>Le città selezionabili restano collegate al pacchetto e alla durata scelta.</span></div>
+      </div>
 
-<div class="checkbox-gdpr" style="margin-top:15px; display:flex; align-items:flex-start; gap:8px;">
-  <input type="checkbox" id="consensoGDPR" name="consensoGDPR" required aria-required="true">
-  <label for="consensoGDPR" style="line-height:1.4;">
-    Acconsento al trattamento dei miei dati personali ai sensi del
-    <a id="privacyLink" href="privacy.html" target="_blank" rel="noopener" style="color:#C9A86A; text-decoration:underline;">
-      Regolamento (UE) 2016/679 (GDPR)
-    </a>.
-    <br>
-    <small style="opacity:.75">Informativa privacy – versione: <span id="privacyVer">—</span></small>
-  </label>
-</div>
+      <div class="ym-field">
+        <label for="citta">Città da includere</label>
+        <select id="citta" name="citta[]" multiple required></select>
+        <div class="citta-feedback">
+          <div id="maxCittaMsg" class="max-msg"></div>
+          <div id="counterCitta" class="citta-counter-msg"></div>
+          <div id="erroreCitta" class="errore-msg"></div>
+        </div>
+      </div>
 
-    <button type="submit" class="modern-btn">Invia richiesta</button>
-    <div id="formFeedback" class="form-feedback-msg"></div>
+      <div class="ym-field ym-form-spacer">
+        <label for="richieste">Richieste aggiuntive <span style="font-weight:400">(facoltativo)</span></label>
+        <textarea id="richieste" name="richieste" rows="4" maxlength="500" placeholder="Esigenze, preferenze, interessi o altri dettagli utili per costruire la proposta..."></textarea>
+      </div>
+    </div>
+
+    <div class="checkbox-gdpr" style="margin-top:18px;display:flex;align-items:flex-start;gap:8px;">
+      <input type="checkbox" id="consensoGDPR" name="consensoGDPR" required aria-required="true">
+      <label for="consensoGDPR" style="line-height:1.4;">
+        Acconsento al trattamento dei miei dati personali ai sensi del
+        <a id="privacyLink" href="privacy.html" target="_blank" rel="noopener" style="color:#C9A86A;text-decoration:underline;">
+          Regolamento (UE) 2016/679 (GDPR)
+        </a>.
+        <br>
+        <small style="opacity:.75">Informativa privacy – versione: <span id="privacyVer">—</span></small>
+      </label>
+    </div>
+
+    <div class="ym-submit-wrap">
+      <button type="submit" id="inviaPacchettoBtn" class="modern-btn">Invia richiesta</button>
+      <div id="formLoading" role="status" aria-live="polite" aria-hidden="true">
+        <div class="ym-loading-row"><strong id="formLoadingText">Invio in corso…</strong><span>Non chiudere la pagina</span></div>
+        <div class="ym-loading-track" aria-hidden="true"><div class="ym-loading-bar"></div></div>
+      </div>
+      <div id="formFeedback" class="form-feedback-msg" aria-live="polite"></div>
+    </div>
   </form>
 </section>
-
 <!-- Carrello Laterale Yume -->
 <div id="carrelloContainer" class="yume-cart hidden">
   <div class="cart-header">
