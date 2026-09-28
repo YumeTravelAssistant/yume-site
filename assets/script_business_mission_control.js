@@ -89,10 +89,10 @@ const DATA={
     {stage:'Preferred',count:0,detail:'Performance-based future tier'}
   ],
   roadmap:[
-    {period:'NOW',title:'Foundation',items:['Corporate data model','Partner Registry','Mission permissions','Auth architecture']},
-    {period:'NEXT',title:'Mission Control MVP',items:['Dashboard','Decisions','Documents','Participants','Travel summary']},
-    {period:'PILOT',title:'Real missions',items:['1–3 corporate projects','Measure usage','Refine roles','Partner pilots']},
-    {period:'LATER',title:'Network intelligence',items:['Partner scoring','Benchmarks','Enterprise SSO','Partner workspace']}
+    {period:'TTG 2026',title:'Demo-ready operating story',items:['Controlled access workflow','Mission Control UX','YUME Network view','Japan Core + Asia Extension']},
+    {period:'POST-TTG',title:'Production foundation',items:['Supabase Auth + MFA','Organization / Membership','Private document storage','Audit & permission model']},
+    {period:'PILOT',title:'Real corporate missions',items:['1–3 projects','Partner qualification pilots','Measure real usage','Refine document pack']},
+    {period:'BIT',title:'Enterprise-ready layer',items:['Network intelligence','Partner scoring','Client account history','SSO / WorkOS readiness if required']}
   ],
   asia:[
     {name:'South Korea',hub:'Seoul',role:'Tech · consumer · beauty',state:'Exploration',note:'Estensione solo quando completa il business case giapponese o crea confronto utile.'},
