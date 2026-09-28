@@ -3,8 +3,8 @@
 const STORAGE='yumeMissionControlPreviewV1';
 const INTERNAL_AUTH_URL='https://hlikhyemzophandqkjdy.supabase.co';
 const INTERNAL_AUTH_KEY='sb_publishable_Z5S66pZ85I3WlGuJDArJhA_QuXhKP51';
-const INTERNAL_EMAIL='info-yume@gmail.com';
 const INTERNAL_TOKEN_KEY='ymcInternalAccessToken';
+const INTERNAL_ALLOWED_ROLES=new Set(['staff','admin']);
 
 const DATA={
   organization:{name:'Aurea Italia S.r.l.',short:'Aurea Italia',industry:'Wine & Spirits',member:'Alessandro Rinaldi',role:'Corporate Admin'},
@@ -242,13 +242,16 @@ function render(){
   el('[data-ymc-gate]').hidden=state.session||state.onboarding;
   el('[data-ymc-onboarding]').hidden=!state.onboarding;
   el('[data-ymc-app]').hidden=!state.session;
+  const sidebarOpen=!!state.session&&!!state.sidebar;
+  el('[data-ymc-sidebar]')?.classList.toggle('is-open',sidebarOpen);
+  el('[data-ymc-sidebar-backdrop]')?.classList.toggle('is-open',sidebarOpen);
+  document.body.classList.toggle('ymc-nav-open',sidebarOpen);
   if(state.onboarding){renderOnboarding();return;}
   if(!state.session)return;
   renderNav();renderRole();
   const content=el('[data-ymc-content]');
   content.innerHTML=state.role==='client'?renderClient(state.section):renderInternal(state.section);
   bindDynamic();
-  el('[data-ymc-sidebar]').classList.toggle('is-open',!!state.sidebar);
 }
 function renderClient(section){
   const map={overview:clientOverview,company:clientCompany,mission:clientMission,agenda:clientAgenda,decisions:clientDecisions,participants:clientParticipants,travel:clientTravel,documents:clientDocuments,financials:clientFinancials,followup:clientFollowup};
@@ -500,18 +503,31 @@ function enter(role){
 }
 function openInternalLogin(){const m=el('[data-ymc-internal-login]');if(m){m.hidden=false;requestAnimationFrame(()=>el('[data-ymc-internal-password]')?.focus())}}
 function closeInternalLogin(){const m=el('[data-ymc-internal-login]');if(m)m.hidden=true;const e=el('[data-ymc-internal-login-error]');if(e)e.hidden=true;const p=el('[data-ymc-internal-password]');if(p)p.value=''}
+async function getAuthorizedInternalProfile(token,userId){
+  if(!token||!userId)return null;
+  const url=INTERNAL_AUTH_URL+'/rest/v1/profiles?select=role,active&user_id=eq.'+encodeURIComponent(userId)+'&limit=1';
+  const res=await fetch(url,{headers:{'apikey':INTERNAL_AUTH_KEY,'Authorization':'Bearer '+token,'Accept':'application/json'}});
+  if(!res.ok)return null;
+  const rows=await res.json().catch(()=>([]));
+  const profile=Array.isArray(rows)?rows[0]:null;
+  const role=String(profile?.role||'').toLowerCase();
+  if(!profile||profile.active!==true||!INTERNAL_ALLOWED_ROLES.has(role))return null;
+  return {role,active:true};
+}
 async function internalSignIn(e){
   e.preventDefault();
   const email=el('[data-ymc-internal-email]')?.value.trim().toLowerCase()||'';
   const password=el('[data-ymc-internal-password]')?.value||'';
   const err=el('[data-ymc-internal-login-error]'),submit=e.currentTarget.querySelector('button[type="submit"]');
-  if(email!==INTERNAL_EMAIL){err.hidden=false;err.textContent='Account non autorizzato per YUME Internal.';return}
+  if(!email||!email.includes('@')){err.hidden=false;err.textContent='Inserisci una email staff valida.';return}
   if(!password){err.hidden=false;err.textContent='Inserisci la password staff.';return}
   submit.disabled=true;err.hidden=true;
   try{
     const res=await fetch(INTERNAL_AUTH_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'apikey':INTERNAL_AUTH_KEY,'Content-Type':'application/json'},body:JSON.stringify({email,password})});
     const data=await res.json().catch(()=>({}));
-    if(!res.ok||!data.access_token||String(data.user?.email||'').toLowerCase()!==INTERNAL_EMAIL)throw new Error(data.error_description||data.msg||'Credenziali non valide o utente staff non ancora creato.');
+    if(!res.ok||!data.access_token||!data.user?.id)throw new Error(data.error_description||data.msg||'Credenziali non valide.');
+    const profile=await getAuthorizedInternalProfile(data.access_token,data.user.id);
+    if(!profile)throw new Error('Account autenticato ma non autorizzato per YUME Internal.');
     sessionStorage.setItem(INTERNAL_TOKEN_KEY,data.access_token);
     closeInternalLogin();state.onboarding=false;state.session=true;state.role='internal';state.section='network';save();render();toast('YUME Internal autenticato.');
   }catch(ex){err.hidden=false;err.textContent=String(ex.message||ex)}
@@ -526,7 +542,8 @@ async function validateInternalSession(){
     });
     if(!res.ok)return false;
     const user=await res.json().catch(()=>({}));
-    return String(user?.email||'').toLowerCase()===INTERNAL_EMAIL;
+    if(!user?.id)return false;
+    return !!(await getAuthorizedInternalProfile(token,user.id));
   }catch(_){return false}
 }
 async function bootstrap(){
@@ -543,7 +560,7 @@ async function bootstrap(){
 }
 function logout(){sessionStorage.removeItem(INTERNAL_TOKEN_KEY);state={...baseState()};save();render()}
 function resetPreview(){try{localStorage.removeItem(STORAGE)}catch(_){}sessionStorage.removeItem(INTERNAL_TOKEN_KEY);state=baseState();save();render()}
-function toggleMenu(open){state.sidebar=typeof open==='boolean'?open:!state.sidebar;el('[data-ymc-sidebar]')?.classList.toggle('is-open',state.sidebar);el('[data-ymc-sidebar-backdrop]')?.classList.toggle('is-open',state.sidebar)}
+function toggleMenu(open){state.sidebar=typeof open==='boolean'?open:!state.sidebar;const sidebarOpen=!!state.session&&!!state.sidebar;el('[data-ymc-sidebar]')?.classList.toggle('is-open',sidebarOpen);el('[data-ymc-sidebar-backdrop]')?.classList.toggle('is-open',sidebarOpen);document.body.classList.toggle('ymc-nav-open',sidebarOpen)}
 function initStatic(){
   els('[data-ymc-enter]').forEach(b=>b.onclick=()=>enter(b.dataset.ymcEnter));
   els('[data-ymc-open-internal-login]').forEach(b=>b.onclick=openInternalLogin);
