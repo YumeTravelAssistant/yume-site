@@ -163,24 +163,42 @@ async function loadInternalLiveData(){
     state.liveLoaded=true;save();return true;
   }catch(ex){console.error('Mission Control live load failed',ex);state.liveLoaded=false;return false}
 }
-async function loadPartnerWorkspaceData(id){
-  const token=internalToken();if(!token||!id)return;
+function mapPartnerDocument(x){
+  return {id:x.id,fileName:x.file_name,mimeType:x.mime_type||'',size:Number(x.file_size)||0,originalSize:Number(x.original_size_bytes)||Number(x.file_size)||0,wasCompressed:!!x.was_compressed,compressionNote:x.compression_note||'',status:x.status,createdAt:x.created_at};
+}
+async function loadPartnerDocuments(id){
+  const token=internalToken();if(!token||!id)return false;
   try{
     const q=encodeURIComponent(id);
-    const [contacts,tickets,requests,events,docs]=await Promise.all([
-      ymcFetch('/rest/v1/ymc_partner_contacts?select=id,name,role,email,phone,created_at&partner_id=eq.'+q+'&order=created_at.asc',{token}),
-      ymcFetch('/rest/v1/ymc_partner_tickets?select=id,title,owner,status,priority,due_date,created_at&partner_id=eq.'+q+'&order=created_at.desc',{token}),
-      ymcFetch('/rest/v1/ymc_partner_requests?select=id,request_type,subject,status,owner,created_at&partner_id=eq.'+q+'&order=created_at.desc',{token}),
-      ymcFetch('/rest/v1/ymc_partner_events?select=id,event_type,title,detail,created_at&partner_id=eq.'+q+'&order=created_at.asc',{token}),
-      ymcFetch('/rest/v1/ymc_partner_documents?select=id,file_name,mime_type,file_size,original_size_bytes,was_compressed,compression_note,status,created_at&partner_id=eq.'+q+'&status=eq.uploaded&order=created_at.desc',{token})
-    ]);
-    state.partnerContacts[id]=(contacts||[]).map(x=>({name:x.name,role:x.role||'',email:x.email||'',phone:x.phone||''}));
-    state.partnerTickets[id]=(tickets||[]).map(x=>({id:x.id,title:x.title,owner:x.owner||'',status:x.status,priority:x.priority,due:x.due_date||'—'}));
-    state.partnerRequests[id]=(requests||[]).map(x=>({id:x.id,type:x.request_type,subject:x.subject,status:x.status,owner:x.owner||''}));
-    state.partnerTimeline[id]=(events||[]).map(x=>({date:new Date(x.created_at).toLocaleDateString('it-IT'),title:x.title,detail:x.detail||'',type:x.event_type}));
-    state.partnerDocs[id]=(docs||[]).map(x=>({id:x.id,fileName:x.file_name,mimeType:x.mime_type||'',size:Number(x.file_size)||0,originalSize:Number(x.original_size_bytes)||Number(x.file_size)||0,wasCompressed:!!x.was_compressed,compressionNote:x.compression_note||'',status:x.status,createdAt:x.created_at}));
+    const docs=await ymcFetch('/rest/v1/ymc_partner_documents?select=id,file_name,mime_type,file_size,original_size_bytes,was_compressed,compression_note,status,created_at&partner_id=eq.'+q+'&status=eq.uploaded&order=created_at.desc',{token});
+    state.partnerDocs[id]=(Array.isArray(docs)?docs:[]).map(mapPartnerDocument);
     save();
-  }catch(ex){console.error('Partner workspace load failed',ex)}
+    return true;
+  }catch(ex){
+    console.error('Partner document load failed',ex);
+    return false;
+  }
+}
+async function loadPartnerWorkspaceData(id){
+  const token=internalToken();if(!token||!id)return;
+  const q=encodeURIComponent(id);
+  const results=await Promise.allSettled([
+    ymcFetch('/rest/v1/ymc_partner_contacts?select=id,name,role,email,phone,created_at&partner_id=eq.'+q+'&order=created_at.asc',{token}),
+    ymcFetch('/rest/v1/ymc_partner_tickets?select=id,title,owner,status,priority,due_date,created_at&partner_id=eq.'+q+'&order=created_at.desc',{token}),
+    ymcFetch('/rest/v1/ymc_partner_requests?select=id,request_type,subject,status,owner,created_at&partner_id=eq.'+q+'&order=created_at.desc',{token}),
+    ymcFetch('/rest/v1/ymc_partner_events?select=id,event_type,title,detail,created_at&partner_id=eq.'+q+'&order=created_at.asc',{token})
+  ]);
+  const [contacts,tickets,requests,events]=results;
+  if(contacts.status==='fulfilled')state.partnerContacts[id]=(contacts.value||[]).map(x=>({name:x.name,role:x.role||'',email:x.email||'',phone:x.phone||''}));
+  else console.error('Partner contacts load failed',contacts.reason);
+  if(tickets.status==='fulfilled')state.partnerTickets[id]=(tickets.value||[]).map(x=>({id:x.id,title:x.title,owner:x.owner||'',status:x.status,priority:x.priority,due:x.due_date||'—'}));
+  else console.error('Partner tickets load failed',tickets.reason);
+  if(requests.status==='fulfilled')state.partnerRequests[id]=(requests.value||[]).map(x=>({id:x.id,type:x.request_type,subject:x.subject,status:x.status,owner:x.owner||''}));
+  else console.error('Partner requests load failed',requests.reason);
+  if(events.status==='fulfilled')state.partnerTimeline[id]=(events.value||[]).map(x=>({date:new Date(x.created_at).toLocaleDateString('it-IT'),title:x.title,detail:x.detail||'',type:x.event_type}));
+  else console.error('Partner events load failed',events.reason);
+  await loadPartnerDocuments(id);
+  save();
 }
 
 const DATA={
@@ -331,7 +349,12 @@ function baseState(){
     clientMode:'demo',clientOrganization:null
   };
 }
-function save(){try{localStorage.setItem(STORAGE,JSON.stringify(state))}catch(_){}}
+function save(){
+  try{
+    const persisted={...state,partnerDocs:{}};
+    localStorage.setItem(STORAGE,JSON.stringify(persisted));
+  }catch(_){}
+}
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function money(v){return new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(v)}
 function el(sel,root=document){return root.querySelector(sel)}
@@ -762,8 +785,23 @@ function bindDynamic(){
   els('[data-ymc-doc-open]').forEach(b=>b.onclick=async()=>{try{await openPartnerDocument(b.dataset.ymcDocOpen,false)}catch(ex){toast('Apertura non riuscita: '+ex.message)}});
   els('[data-ymc-doc-download]').forEach(b=>b.onclick=async()=>{try{await openPartnerDocument(b.dataset.ymcDocDownload,true)}catch(ex){toast('Download non riuscito: '+ex.message)}});
   els('[data-ymc-doc-delete]').forEach(b=>b.onclick=async()=>{
-    const docId=b.dataset.ymcDocDelete;if(!window.confirm('Eliminare definitivamente questo documento dal dossier partner?'))return;b.disabled=true;
-    try{await ymcDocumentAction(docId,'delete');await loadPartnerWorkspaceData(state.activePartnerId);render();toast('Documento eliminato da Storage e database.')}catch(ex){b.disabled=false;toast('Eliminazione non riuscita: '+ex.message)}
+    const docId=b.dataset.ymcDocDelete,partnerId=state.activePartnerId;
+    if(!window.confirm('Eliminare definitivamente questo documento dal dossier partner?'))return;
+    b.disabled=true;
+    try{
+      const result=await ymcDocumentAction(docId,'delete');
+      if(partnerId){
+        state.partnerDocs[partnerId]=(state.partnerDocs[partnerId]||[]).filter(d=>d.id!==docId);
+        save();
+        render();
+        const refreshed=await loadPartnerDocuments(partnerId);
+        if(refreshed)render();
+      }
+      toast(result?.already_absent?'Documento già eliminato: elenco riallineato.':'Documento eliminato da Storage e database.');
+    }catch(ex){
+      b.disabled=false;
+      toast('Eliminazione non riuscita: '+ex.message);
+    }
   });
   els('[data-ymc-toast]').forEach(b=>b.onclick=()=>toast(b.dataset.ymcToast));
   els('[data-ymc-open-menu]').forEach(b=>b.onclick=()=>toggleMenu(true));
@@ -895,7 +933,10 @@ async function bootstrap(){
   if(state.session&&state.role==='internal'){
     const valid=await validateInternalSession();
     if(!valid){sessionStorage.removeItem(INTERNAL_TOKEN_KEY);state=baseState();save()}
-    else await loadInternalLiveData();
+    else{
+      await loadInternalLiveData();
+      if(state.section==='partnerWorkspace'&&state.activePartnerId)await loadPartnerWorkspaceData(state.activePartnerId);
+    }
   }else if(state.session&&state.role==='client'&&state.clientMode==='platform'){
     const valid=await validateCorporateSession();
     if(!valid){sessionStorage.removeItem(CORPORATE_TOKEN_KEY);state=baseState();save()}
