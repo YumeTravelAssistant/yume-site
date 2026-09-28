@@ -148,18 +148,55 @@ function internalToken(){return sessionStorage.getItem(INTERNAL_TOKEN_KEY)||''}
 function corporateToken(){return sessionStorage.getItem(CORPORATE_TOKEN_KEY)||''}
 function networkData(){return state.livePartners?.length?state.livePartners:DATA.network}
 function clientOrg(){return state.clientOrganization||DATA.organization}
+function activeMission(){return (state.clientMissions||[]).find(m=>m.id===state.activeMissionId)||(state.clientMissions||[])[0]||null}
+function requestTypeLabel(type){
+  const map={new_mission:'New Mission',itinerary:'Itinerary / Business Travel',partner_search:'Partner Search',introduction:'Business Introduction',business_meeting:'Business Meeting',interpreter:'Interpreter',market_research:'Market Research',factory_visit:'Factory Visit',fair_support:'Fair Support',recruiting_partner:'Recruiting / HR Partner',travel_change:'Travel Change',document_visa:'Documents / Visa',other:'Other'};
+  return map[type]||type||'Request';
+}
+function requestStatusLabel(status){
+  const map={submitted:'Submitted',reviewing:'Reviewing',need_info:'Need info',in_progress:'In progress',delivered:'Delivered',closed:'Closed',rejected:'Rejected'};
+  return map[status]||status;
+}
+async function loadRequestMessages(requestId,token){
+  if(!requestId||!token)return [];
+  try{
+    const rows=await ymcFetch('/rest/v1/ymc_request_messages?select=id,request_id,organization_id,sender_side,body,created_at&request_id=eq.'+encodeURIComponent(requestId)+'&order=created_at.asc',{token});
+    state.requestMessages[requestId]=Array.isArray(rows)?rows:[];
+    save();return state.requestMessages[requestId];
+  }catch(ex){console.error('Request messages load failed',ex);return []}
+}
+async function loadCorporateLiveData(){
+  const token=corporateToken(),org=clientOrg();
+  if(!token||!org?.id)return false;
+  try{
+    const orgId=encodeURIComponent(org.id);
+    const [missions,requests]=await Promise.all([
+      ymcFetch('/rest/v1/ymc_missions?select=id,organization_id,mission_code,title,mission_type,sector,objective,desired_outcome,direction,target_markets,target_cities,date_start,date_end,date_flexibility,budget_band,participants_count,status,created_at,updated_at&organization_id=eq.'+orgId+'&order=created_at.desc',{token}),
+      ymcFetch('/rest/v1/ymc_client_requests?select=id,organization_id,mission_id,request_type,service_scope,subject,description,sector,target_markets,target_profile,priority,status,created_at,updated_at&organization_id=eq.'+orgId+'&order=created_at.desc',{token})
+    ]);
+    state.clientMissions=Array.isArray(missions)?missions:[];
+    state.clientRequests=Array.isArray(requests)?requests:[];
+    if(state.activeMissionId&&!state.clientMissions.some(m=>m.id===state.activeMissionId))state.activeMissionId=null;
+    if(!state.activeMissionId&&state.clientMissions.length)state.activeMissionId=state.clientMissions[0].id;
+    save();return true;
+  }catch(ex){console.error('Corporate live load failed',ex);return false}
+}
 function mapPartnerRow(r){
   return {id:r.id,externalKey:r.external_key||'',name:r.name,kind:r.kind||'',geo:r.geo||'',stage:r.stage||'Mapping',tier:r.tier||'',cap:r.capabilities||[],owner:r.owner||'',next:r.next_action||'',note:r.note||''};
 }
 async function loadInternalLiveData(){
   const token=internalToken();if(!token)return false;
   try{
-    const [requests,partners]=await Promise.all([
+    const [requests,partners,clientRequests,missions]=await Promise.all([
       ymcFetch('/rest/v1/ymc_access_requests?select=id,request_type,status,company_name,vat,rea,hq,website,sector,contact_name,contact_role,contact_email,contact_phone,use_case,submitted_at,reviewed_at,review_notes,demo_access_code&order=submitted_at.desc',{token}),
-      ymcFetch('/rest/v1/ymc_partners?select=id,external_key,name,kind,geo,stage,tier,capabilities,owner,next_action,note,active,updated_at&active=eq.true&order=name.asc',{token})
+      ymcFetch('/rest/v1/ymc_partners?select=id,external_key,name,kind,geo,stage,tier,capabilities,owner,next_action,note,active,updated_at&active=eq.true&order=name.asc',{token}),
+      ymcFetch('/rest/v1/ymc_client_requests?select=id,organization_id,mission_id,request_type,service_scope,subject,description,sector,target_markets,target_profile,priority,status,created_at,updated_at,ymc_organizations(legal_name)&order=created_at.desc',{token}),
+      ymcFetch('/rest/v1/ymc_missions?select=id,organization_id,mission_code,title,mission_type,sector,objective,desired_outcome,target_markets,status,created_at,ymc_organizations(legal_name)&order=created_at.desc',{token})
     ]);
     state.liveAccessRequests=Array.isArray(requests)?requests:[];
     state.livePartners=Array.isArray(partners)?partners.map(mapPartnerRow):[];
+    state.internalClientRequests=Array.isArray(clientRequests)?clientRequests:[];
+    state.internalMissions=Array.isArray(missions)?missions:[];
     state.liveLoaded=true;save();return true;
   }catch(ex){console.error('Mission Control live load failed',ex);state.liveLoaded=false;return false}
 }
@@ -309,8 +346,15 @@ const CLIENT_NAV=[
   ['overview','◎','Overview'],['company','⌂','Company'],['mission','◇','Mission'],['agenda','◫','Agenda'],['decisions','✓','Decisions'],
   ['participants','○','People'],['travel','↗','Travel'],['documents','▤','Documents'],['financials','€','Financials'],['followup','↺','Follow-up']
 ];
+const PLATFORM_CLIENT_NAV=[
+  ['overview','◎','Home'],
+  ['mission','◇','Missions'],
+  ['requests','↗','Requests'],
+  ['networkClient','⌁','Network'],
+  ['company','⌂','Company']
+];
 const INTERNAL_NAV=[
-  ['network','◎','Network'],['onboarding','⌂','Onboarding'],['partners','◇','Partners'],['coverage','◫','Coverage'],['pipeline','↗','Pipeline'],['roadmap','↺','Roadmap'],['access','⌁','Access architecture']
+  ['network','◎','Network'],['clientDesk','↗','Client Desk'],['onboarding','⌂','Onboarding'],['partners','◇','Partners'],['coverage','◫','Coverage'],['pipeline','↗','Pipeline'],['roadmap','↺','Roadmap'],['access','⌁','Access architecture']
 ];
 
 let state=loadState();
@@ -346,7 +390,9 @@ function baseState(){
     role:'client',section:'overview',activePartnerId:null,decisionStatus:{d1:'required',d2:'open',d3:'approved'},
     sidebar:false,drawer:false,uploadedDocs:{},partnerStatuses,partnerContacts:{},partnerTickets,
     partnerRequests:{},partnerTimeline,partnerDocs:{},liveAccessRequests:[],livePartners:[],liveLoaded:false,
-    clientMode:'demo',clientOrganization:null
+    internalClientRequests:[],internalMissions:[],
+    clientMode:'demo',clientOrganization:null,clientMissions:[],clientRequests:[],requestMessages:{},
+    activeMissionId:null,activeClientRequestId:null,activeInternalRequestId:null,quickRequestType:null
   };
 }
 function save(){
@@ -444,13 +490,39 @@ function drawerContent(type,id){
   return'';
 }
 function renderNav(){
-  const nav=state.role==='client'?CLIENT_NAV:INTERNAL_NAV;
+  const clientNav=state.clientMode==='platform'?PLATFORM_CLIENT_NAV:CLIENT_NAV;
+  const nav=state.role==='client'?clientNav:INTERNAL_NAV;
   const n=el('[data-ymc-nav]');
   n.innerHTML=nav.map(([id,icon,label])=>'<button type="button" data-ymc-section="'+id+'" class="'+(state.section===id?'is-active':'')+'"><span>'+icon+'</span>'+esc(label)+'</button>').join('');
   const mobile=el('[data-ymc-mobile-nav]');
-  const picks=state.role==='client'?[CLIENT_NAV[0],CLIENT_NAV[3],CLIENT_NAV[4],CLIENT_NAV[7]]:[INTERNAL_NAV[0],INTERNAL_NAV[1],INTERNAL_NAV[2],INTERNAL_NAV[4]];
+  const picks=state.role==='client'
+    ?(state.clientMode==='platform'?[clientNav[0],clientNav[1],clientNav[2],clientNav[3]]:[CLIENT_NAV[0],CLIENT_NAV[3],CLIENT_NAV[4],CLIENT_NAV[7]])
+    :[INTERNAL_NAV[0],INTERNAL_NAV[1],INTERNAL_NAV[2],INTERNAL_NAV[3]];
   mobile.innerHTML=picks.map(([id,icon,label])=>'<button type="button" data-ymc-section="'+id+'" class="'+(state.section===id?'is-active':'')+'"><span>'+icon+'</span>'+esc(label)+'</button>').join('')+
     '<button type="button" data-ymc-open-menu><span>•••</span>More</button>';
+}
+function renderTopbar(){
+  const missionId=el('[data-ymc-mission-id]'),projectName=el('[data-ymc-project-name]'),projectMenu=el('[data-ymc-project-menu]'),sync=el('[data-ymc-sync]');
+  if(state.role==='client'&&state.clientMode==='platform'){
+    const m=activeMission();
+    if(missionId)missionId.textContent=m?.mission_code||'NO ACTIVE MISSION';
+    if(projectName)projectName.textContent=m?.title||'Create or request a mission';
+    if(sync)sync.innerHTML='<i></i> Live data';
+    if(projectMenu)projectMenu.innerHTML=(state.clientMissions||[]).length
+      ?state.clientMissions.map(x=>'<button type="button" data-ymc-select-mission="'+x.id+'" class="'+(m?.id===x.id?'is-active':'')+'"><span>'+esc(x.mission_code)+'</span><b>'+esc(x.title)+'</b><small>'+esc(x.status)+'</small></button>').join('')
+      :'<button type="button" data-ymc-section="mission"><span>NO MISSION</span><b>Start a business mission</b><small>Submit a new project to YUME</small></button>';
+    return;
+  }
+  if(state.role==='internal'){
+    if(missionId)missionId.textContent='YUME INTERNAL';
+    if(projectName)projectName.textContent=state.section==='clientDesk'?'Client Desk':'Network & Operations';
+    if(sync)sync.innerHTML='<i></i> Live data';
+    if(projectMenu)projectMenu.innerHTML='<button type="button" data-ymc-section="clientDesk"><span>OPERATIONS</span><b>Client Desk</b><small>Mission & service requests</small></button><button type="button" data-ymc-section="network"><span>NETWORK</span><b>Partner Registry</b><small>Internal intelligence</small></button>';
+    return;
+  }
+  if(missionId)missionId.textContent=DATA.mission.id;
+  if(projectName)projectName.textContent=DATA.mission.name;
+  if(sync)sync.innerHTML='<i></i> Demo data';
 }
 function renderRole(){
   const org=clientOrg();
@@ -468,7 +540,7 @@ function render(){
   document.body.classList.toggle('ymc-nav-open',sidebarOpen);
   if(state.onboarding){renderOnboarding();return;}
   if(!state.session)return;
-  renderNav();renderRole();
+  renderNav();renderRole();renderTopbar();
   const content=el('[data-ymc-content]');
   content.innerHTML=state.role==='client'?renderClient(state.section):renderInternal(state.section);
   bindDynamic();
@@ -875,7 +947,8 @@ async function activateCorporateToken(token,{firstActivation=false}={}){
   const user=await ymcFetch('/auth/v1/user',{token});
   sessionStorage.setItem(CORPORATE_TOKEN_KEY,token);
   state.session=true;state.onboarding=false;state.role='client';state.clientMode='platform';state.section='overview';
-  state.clientOrganization={name:activation.organization.legal_name,short:activation.organization.legal_name,member:user?.user_metadata?.full_name||user?.email||'Corporate Admin',role:'Corporate Admin'};
+  state.clientOrganization={id:activation.organization.id,name:activation.organization.legal_name,short:activation.organization.legal_name,member:user?.user_metadata?.full_name||user?.email||'Corporate Admin',role:'Corporate Admin'};
+  await loadCorporateLiveData();
   save();closeCorporateLogin();render();return true;
 }
 async function corporateSignIn(e){
@@ -982,6 +1055,7 @@ async function bootstrap(){
   }else if(state.session&&state.role==='client'&&state.clientMode==='platform'){
     const valid=await validateCorporateSession();
     if(!valid){sessionStorage.removeItem(CORPORATE_TOKEN_KEY);state=baseState();save()}
+    else await loadCorporateLiveData();
   }
   render();
 }
