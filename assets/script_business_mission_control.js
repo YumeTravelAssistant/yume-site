@@ -3,11 +3,11 @@
 const STORAGE='yumeMissionControlPreviewV1';
 
 const DATA={
-  organization:{name:'Nuova Impresa Demo S.r.l.',short:'Aurea Italia',industry:'Wine & Spirits',member:'Laura Bianchi',role:'Corporate Admin'},
+  organization:{name:'Aurea Italia S.r.l.',short:'Aurea Italia',industry:'Wine & Spirits',member:'Alessandro Rinaldi',role:'Corporate Admin'},
   mission:{
     id:'YM-DEMO-27W01',name:'Japan Market Entry · Wine & Spirits',phase:'Architecture',period:'12–18 April 2027',
     purpose:'Sourcing & partners',outcome:'Qualificare controparti distributive e costruire una shortlist prioritaria per il follow-up commerciale.',
-    sector:'Wine & Spirits',budget:'€18.500',participants:4,seniority:'Amministratrice',
+    sector:'Wine & Spirits',budget:'€18.500',participants:4,seniority:'Founder / proprietà',
     route:['Tokyo','Nagoya / Chūbu','Osaka / Kansai'],
     modules:['Business roadshow','Buyer meetings','Retail intelligence','Tasting B2B'],
     health:{Brief:100,Agenda:64,Travel:42,Documents:78,Budget:55},
@@ -28,7 +28,7 @@ const DATA={
     {day:'Fri 16',time:'10:30',title:'Kansai business roadshow',place:'Osaka',status:'decision',owner:'Client + YUME',type:'Decision'}
   ],
   participants:[
-    {name:'Laura Bianchi',role:'Founder',travel:'Ready',documents:'Ready',dietary:'—'},
+    {name:'Alessandro Rinaldi',role:'Founder',travel:'Ready',documents:'Ready',dietary:'—'},
     {name:'Giulia Ferri',role:'Commercial Director',travel:'Ready',documents:'Passport check',dietary:'Vegetarian'},
     {name:'Marco Lodi',role:'Export Manager',travel:'Pending',documents:'Ready',dietary:'—'},
     {name:'Elena Serra',role:'Brand Director',travel:'Ready',documents:'Ready',dietary:'Lactose free'}
