@@ -544,7 +544,7 @@ async function submitAccessRequest(){
 async function onboardingNext(){
   collectOnboardingFields();
   const f=state.onboardingForm||{},platform=state.onboardingType==='platform',max=onboardingMaxSteps();
-  const err=()=>{const c=el('[data-ymc-onboarding-content]');const p=document.createElement('p');p.className='ymc-access-error';p.textContent=arguments[0]||'Completa i campi richiesti.';c.appendChild(p)};
+  const err=(message)=>{const c=el('[data-ymc-onboarding-content]');const p=document.createElement('p');p.className='ymc-access-error';p.textContent=message||'Completa i campi richiesti.';c.appendChild(p)};
   if(state.onboardingStep===1&&!f.company){err('Inserisci la ragione sociale.');return}
   if(state.onboardingStep===2&&(!f.contact_name||!String(f.contact_email||'').includes('@'))){err('Inserisci nome e una email aziendale valida.');return}
   if(state.onboardingStep===max){
@@ -640,8 +640,11 @@ async function enter(role){
 }
 
 function openCorporateLogin(){
-  const m=el('[data-ymc-corporate-login]');if(m)m.hidden=false;
-  el('[data-ymc-corporate-email]')?.focus();
+  const m=el('[data-ymc-corporate-login]'),pending=sessionStorage.getItem('ymcPendingInviteToken');
+  const login=el('[data-ymc-corporate-login-form]'),activation=el('[data-ymc-corporate-activation-form]');
+  if(login)login.hidden=!!pending;if(activation)activation.hidden=!pending;
+  if(m)m.hidden=false;
+  (pending?el('[data-ymc-corporate-new-password]'):el('[data-ymc-corporate-email]'))?.focus();
 }
 function closeCorporateLogin(){
   const m=el('[data-ymc-corporate-login]');if(m)m.hidden=true;
@@ -724,7 +727,7 @@ async function internalSignIn(e){
     const profile=await getAuthorizedInternalProfile(data.access_token,data.user.id);
     if(!profile)throw new Error('Account autenticato ma non autorizzato per YUME Internal.');
     sessionStorage.setItem(INTERNAL_TOKEN_KEY,data.access_token);
-    closeInternalLogin();state.onboarding=false;state.session=true;state.role='internal';state.section='network';save();render();toast('YUME Internal autenticato.');
+    closeInternalLogin();state.onboarding=false;state.session=true;state.role='internal';state.section='network';await loadInternalLiveData();save();render();toast('YUME Internal autenticato.');
   }catch(ex){err.hidden=false;err.textContent=String(ex.message||ex)}
   finally{submit.disabled=false}
 }
@@ -743,21 +746,35 @@ async function validateInternalSession(){
 }
 async function bootstrap(){
   initStatic();
+  if(detectCorporateInvite()){render();return}
   if(state.session&&state.role==='internal'){
     const valid=await validateInternalSession();
-    if(!valid){
-      sessionStorage.removeItem(INTERNAL_TOKEN_KEY);
-      state=baseState();
-      save();
-    }
+    if(!valid){sessionStorage.removeItem(INTERNAL_TOKEN_KEY);state=baseState();save()}
+    else await loadInternalLiveData();
+  }else if(state.session&&state.role==='client'&&state.clientMode==='platform'){
+    const valid=await validateCorporateSession();
+    if(!valid){sessionStorage.removeItem(CORPORATE_TOKEN_KEY);state=baseState();save()}
   }
   render();
 }
-function logout(){sessionStorage.removeItem(INTERNAL_TOKEN_KEY);state={...baseState()};save();render()}
-function resetPreview(){try{localStorage.removeItem(STORAGE)}catch(_){}sessionStorage.removeItem(INTERNAL_TOKEN_KEY);state=baseState();save();render()}
+function logout(){
+  sessionStorage.removeItem(INTERNAL_TOKEN_KEY);sessionStorage.removeItem(CORPORATE_TOKEN_KEY);sessionStorage.removeItem('ymcPendingInviteToken');
+  state={...baseState()};save();render();
+}
+function resetPreview(){
+  try{localStorage.removeItem(STORAGE)}catch(_){}
+  sessionStorage.removeItem(INTERNAL_TOKEN_KEY);sessionStorage.removeItem(CORPORATE_TOKEN_KEY);sessionStorage.removeItem('ymcPendingInviteToken');
+  state=baseState();save();render();
+}
 function toggleMenu(open){state.sidebar=typeof open==='boolean'?open:!state.sidebar;const sidebarOpen=!!state.session&&!!state.sidebar;el('[data-ymc-sidebar]')?.classList.toggle('is-open',sidebarOpen);el('[data-ymc-sidebar-backdrop]')?.classList.toggle('is-open',sidebarOpen);document.body.classList.toggle('ymc-nav-open',sidebarOpen)}
 function initStatic(){
   els('[data-ymc-enter]').forEach(b=>b.onclick=()=>enter(b.dataset.ymcEnter));
+  els('[data-ymc-open-corporate-login]').forEach(b=>b.onclick=openCorporateLogin);
+  els('[data-ymc-close-corporate-login]').forEach(b=>b.onclick=closeCorporateLogin);
+  el('[data-ymc-corporate-login-form]').onsubmit=corporateSignIn;
+  el('[data-ymc-corporate-activation-form]').onsubmit=corporateActivate;
+  els('[data-ymc-toggle-corporate-password]').forEach(b=>b.onclick=()=>{const input=el('[data-ymc-corporate-password]');if(!input)return;const show=input.type==='password';input.type=show?'text':'password';b.textContent=show?'Nascondi':'Mostra'});
+  els('[data-ymc-toggle-corporate-new-password]').forEach(b=>b.onclick=()=>{const input=el('[data-ymc-corporate-new-password]');if(!input)return;const show=input.type==='password';input.type=show?'text':'password';b.textContent=show?'Nascondi':'Mostra'});
   els('[data-ymc-open-internal-login]').forEach(b=>b.onclick=openInternalLogin);
   els('[data-ymc-close-internal-login]').forEach(b=>b.onclick=closeInternalLogin);
   els('[data-ymc-toggle-password]').forEach(b=>b.onclick=()=>{
@@ -770,7 +787,7 @@ function initStatic(){
     b.setAttribute('aria-label',show?'Nascondi password':'Mostra password');
   });
   el('[data-ymc-internal-login-form]').onsubmit=internalSignIn;
-  els('[data-ymc-open-onboarding]').forEach(b=>b.onclick=openOnboarding);
+  els('[data-ymc-open-onboarding]').forEach(b=>b.onclick=()=>openOnboarding(b.dataset.ymcOpenOnboarding||'demo'));
   els('[data-ymc-close-onboarding]').forEach(b=>b.onclick=closeOnboarding);
   el('[data-ymc-onboarding-next]').onclick=onboardingNext;
   el('[data-ymc-onboarding-back]').onclick=onboardingBack;
@@ -783,7 +800,7 @@ function initStatic(){
   el('[data-ymc-profile]').onclick=()=>{const m=el('[data-ymc-profile-menu]');m.hidden=!m.hidden};
   el('[data-ymc-logout]').onclick=logout;
   el('[data-ymc-reset]').onclick=resetPreview;
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeInternalLogin();closeDrawer();toggleMenu(false);el('[data-ymc-project-menu]').hidden=true;el('[data-ymc-profile-menu]').hidden=true}});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeCorporateLogin();closeInternalLogin();closeDrawer();toggleMenu(false);el('[data-ymc-project-menu]').hidden=true;el('[data-ymc-profile-menu]').hidden=true}});
   document.addEventListener('click',e=>{
     if(!e.target.closest('[data-ymc-project-switch]')&&!e.target.closest('[data-ymc-project-menu]'))el('[data-ymc-project-menu]').hidden=true;
     if(!e.target.closest('[data-ymc-profile]')&&!e.target.closest('[data-ymc-profile-menu]'))el('[data-ymc-profile-menu]').hidden=true;
