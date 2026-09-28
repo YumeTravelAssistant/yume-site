@@ -250,3 +250,49 @@ body.ymc-nav-open{overflow:hidden}
 .ymc-doc-actions button.is-danger:hover{background:#fff3f1}
 .ymc-doc-policy{margin-top:12px!important;padding-top:10px;border-top:1px solid rgba(13,21,29,.08);font-size:11px!important;line-height:1.55!important}
 .ymc-upload-btn:has(input:disabled){opacity:.55;pointer-events:none}
+
+
+/* Mission Control Business OS v1 */
+.ymc-os-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.ymc-os-actions>button{position:relative;min-height:170px;padding:22px;text-align:left;border:1px solid var(--ymc-line);border-radius:20px;background:#fbfaf7;color:var(--ymc-ink);cursor:pointer;transition:.2s ease}
+.ymc-os-actions>button:hover,.ymc-os-actions>button:focus-visible{transform:translateY(-2px);border-color:rgba(148,115,65,.55);box-shadow:0 14px 32px rgba(13,21,29,.08);outline:none}
+.ymc-os-actions>button span{display:block;color:#947341;font-size:8px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+.ymc-os-actions>button b{display:block;margin:20px 28px 8px 0;font:600 24px/1.05 "Playfair Display",serif}
+.ymc-os-actions>button small{display:block;color:var(--ymc-muted);font-size:9px;line-height:1.55}
+.ymc-os-actions>button i{position:absolute;right:20px;top:20px;font-style:normal;color:#947341;font-size:18px}
+.ymc-os-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}
+.ymc-os-form label{display:grid;gap:6px}
+.ymc-os-form label>span,.ymc-status-control>span{font-size:8px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#8b7655}
+.ymc-os-form input,.ymc-os-form select,.ymc-os-form textarea,.ymc-status-control select,.ymc-message-form textarea{width:100%;border:1px solid var(--ymc-line);border-radius:12px;background:#fff;color:var(--ymc-ink);padding:12px 13px;font:inherit;font-size:11px;outline:none}
+.ymc-os-form textarea{min-height:110px;resize:vertical}
+.ymc-os-form input:focus,.ymc-os-form select:focus,.ymc-os-form textarea:focus,.ymc-status-control select:focus,.ymc-message-form textarea:focus{border-color:#a7854e;box-shadow:0 0 0 3px rgba(167,133,78,.10)}
+.ymc-os-form .is-wide{grid-column:1/-1}
+.ymc-os-form-action{grid-column:1/-1;display:flex;align-items:center;gap:12px;justify-content:space-between;padding-top:4px}
+.ymc-os-form-action small{max-width:620px;color:var(--ymc-muted);font-size:8px;line-height:1.5}
+.ymc-empty-inline{padding:18px 0;color:var(--ymc-muted);font-size:10px;line-height:1.5}
+.ymc-request-meta{display:flex;gap:7px;flex-wrap:wrap;margin:15px 0}
+.ymc-request-meta span{display:inline-flex;padding:7px 9px;border-radius:999px;background:#f2eee7;color:#765f3d;font-size:8px;font-weight:800}
+.ymc-thread{display:grid;gap:9px;max-height:420px;overflow:auto;padding-right:4px}
+.ymc-thread-item{max-width:88%;padding:12px 14px;border-radius:14px;background:#f3f0ea;border:1px solid var(--ymc-line)}
+.ymc-thread-item.is-yume{justify-self:end;background:#0d151d;color:#fff;border-color:#0d151d}
+.ymc-thread-item>span{display:block;margin-bottom:5px;font-size:7px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#8b7655}
+.ymc-thread-item.is-yume>span{color:#d9bd87}
+.ymc-thread-item p{margin:0;font-size:10px;line-height:1.55}
+.ymc-message-form{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:12px}
+.ymc-message-form textarea{min-height:76px;resize:vertical}
+.ymc-status-control{display:grid;gap:6px;margin-top:18px;max-width:260px}
+.ymc-topbar .ymc-sync{white-space:nowrap}
+
+@media(max-width:1050px){
+  .ymc-os-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:640px){
+  .ymc-os-actions{grid-template-columns:1fr}
+  .ymc-os-actions>button{min-height:145px}
+  .ymc-os-form{grid-template-columns:1fr}
+  .ymc-os-form .is-wide,.ymc-os-form-action{grid-column:auto}
+  .ymc-os-form input,.ymc-os-form select,.ymc-os-form textarea,.ymc-message-form textarea{font-size:16px}
+  .ymc-os-form-action{align-items:stretch;flex-direction:column}
+  .ymc-message-form{grid-template-columns:1fr}
+  .ymc-thread-item{max-width:96%}
+}

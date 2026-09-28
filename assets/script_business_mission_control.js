@@ -148,18 +148,55 @@ function internalToken(){return sessionStorage.getItem(INTERNAL_TOKEN_KEY)||''}
 function corporateToken(){return sessionStorage.getItem(CORPORATE_TOKEN_KEY)||''}
 function networkData(){return state.livePartners?.length?state.livePartners:DATA.network}
 function clientOrg(){return state.clientOrganization||DATA.organization}
+function activeMission(){return (state.clientMissions||[]).find(m=>m.id===state.activeMissionId)||(state.clientMissions||[])[0]||null}
+function requestTypeLabel(type){
+  const map={new_mission:'New Mission',itinerary:'Itinerary / Business Travel',partner_search:'Partner Search',introduction:'Business Introduction',business_meeting:'Business Meeting',interpreter:'Interpreter',market_research:'Market Research',factory_visit:'Factory Visit',fair_support:'Fair Support',recruiting_partner:'Recruiting / HR Partner',travel_change:'Travel Change',document_visa:'Documents / Visa',other:'Other'};
+  return map[type]||type||'Request';
+}
+function requestStatusLabel(status){
+  const map={submitted:'Submitted',reviewing:'Reviewing',need_info:'Need info',in_progress:'In progress',delivered:'Delivered',closed:'Closed',rejected:'Rejected'};
+  return map[status]||status;
+}
+async function loadRequestMessages(requestId,token){
+  if(!requestId||!token)return [];
+  try{
+    const rows=await ymcFetch('/rest/v1/ymc_request_messages?select=id,request_id,organization_id,sender_side,body,created_at&request_id=eq.'+encodeURIComponent(requestId)+'&order=created_at.asc',{token});
+    state.requestMessages[requestId]=Array.isArray(rows)?rows:[];
+    save();return state.requestMessages[requestId];
+  }catch(ex){console.error('Request messages load failed',ex);return []}
+}
+async function loadCorporateLiveData(){
+  const token=corporateToken(),org=clientOrg();
+  if(!token||!org?.id)return false;
+  try{
+    const orgId=encodeURIComponent(org.id);
+    const [missions,requests]=await Promise.all([
+      ymcFetch('/rest/v1/ymc_missions?select=id,organization_id,mission_code,title,mission_type,sector,objective,desired_outcome,direction,target_markets,target_cities,date_start,date_end,date_flexibility,budget_band,participants_count,status,created_at,updated_at&organization_id=eq.'+orgId+'&order=created_at.desc',{token}),
+      ymcFetch('/rest/v1/ymc_client_requests?select=id,organization_id,mission_id,request_type,service_scope,subject,description,sector,target_markets,target_profile,priority,status,created_at,updated_at&organization_id=eq.'+orgId+'&order=created_at.desc',{token})
+    ]);
+    state.clientMissions=Array.isArray(missions)?missions:[];
+    state.clientRequests=Array.isArray(requests)?requests:[];
+    if(state.activeMissionId&&!state.clientMissions.some(m=>m.id===state.activeMissionId))state.activeMissionId=null;
+    if(!state.activeMissionId&&state.clientMissions.length)state.activeMissionId=state.clientMissions[0].id;
+    save();return true;
+  }catch(ex){console.error('Corporate live load failed',ex);return false}
+}
 function mapPartnerRow(r){
   return {id:r.id,externalKey:r.external_key||'',name:r.name,kind:r.kind||'',geo:r.geo||'',stage:r.stage||'Mapping',tier:r.tier||'',cap:r.capabilities||[],owner:r.owner||'',next:r.next_action||'',note:r.note||''};
 }
 async function loadInternalLiveData(){
   const token=internalToken();if(!token)return false;
   try{
-    const [requests,partners]=await Promise.all([
+    const [requests,partners,clientRequests,missions]=await Promise.all([
       ymcFetch('/rest/v1/ymc_access_requests?select=id,request_type,status,company_name,vat,rea,hq,website,sector,contact_name,contact_role,contact_email,contact_phone,use_case,submitted_at,reviewed_at,review_notes,demo_access_code&order=submitted_at.desc',{token}),
-      ymcFetch('/rest/v1/ymc_partners?select=id,external_key,name,kind,geo,stage,tier,capabilities,owner,next_action,note,active,updated_at&active=eq.true&order=name.asc',{token})
+      ymcFetch('/rest/v1/ymc_partners?select=id,external_key,name,kind,geo,stage,tier,capabilities,owner,next_action,note,active,updated_at&active=eq.true&order=name.asc',{token}),
+      ymcFetch('/rest/v1/ymc_client_requests?select=id,organization_id,mission_id,request_type,service_scope,subject,description,sector,target_markets,target_profile,priority,status,created_at,updated_at,ymc_organizations(legal_name)&order=created_at.desc',{token}),
+      ymcFetch('/rest/v1/ymc_missions?select=id,organization_id,mission_code,title,mission_type,sector,objective,desired_outcome,target_markets,status,created_at,ymc_organizations(legal_name)&order=created_at.desc',{token})
     ]);
     state.liveAccessRequests=Array.isArray(requests)?requests:[];
     state.livePartners=Array.isArray(partners)?partners.map(mapPartnerRow):[];
+    state.internalClientRequests=Array.isArray(clientRequests)?clientRequests:[];
+    state.internalMissions=Array.isArray(missions)?missions:[];
     state.liveLoaded=true;save();return true;
   }catch(ex){console.error('Mission Control live load failed',ex);state.liveLoaded=false;return false}
 }
@@ -309,8 +346,15 @@ const CLIENT_NAV=[
   ['overview','◎','Overview'],['company','⌂','Company'],['mission','◇','Mission'],['agenda','◫','Agenda'],['decisions','✓','Decisions'],
   ['participants','○','People'],['travel','↗','Travel'],['documents','▤','Documents'],['financials','€','Financials'],['followup','↺','Follow-up']
 ];
+const PLATFORM_CLIENT_NAV=[
+  ['overview','◎','Home'],
+  ['mission','◇','Missions'],
+  ['requests','↗','Requests'],
+  ['networkClient','⌁','Network'],
+  ['company','⌂','Company']
+];
 const INTERNAL_NAV=[
-  ['network','◎','Network'],['onboarding','⌂','Onboarding'],['partners','◇','Partners'],['coverage','◫','Coverage'],['pipeline','↗','Pipeline'],['roadmap','↺','Roadmap'],['access','⌁','Access architecture']
+  ['network','◎','Network'],['clientDesk','↗','Client Desk'],['onboarding','⌂','Onboarding'],['partners','◇','Partners'],['coverage','◫','Coverage'],['pipeline','↗','Pipeline'],['roadmap','↺','Roadmap'],['access','⌁','Access architecture']
 ];
 
 let state=loadState();
@@ -346,12 +390,22 @@ function baseState(){
     role:'client',section:'overview',activePartnerId:null,decisionStatus:{d1:'required',d2:'open',d3:'approved'},
     sidebar:false,drawer:false,uploadedDocs:{},partnerStatuses,partnerContacts:{},partnerTickets,
     partnerRequests:{},partnerTimeline,partnerDocs:{},liveAccessRequests:[],livePartners:[],liveLoaded:false,
-    clientMode:'demo',clientOrganization:null
+    internalClientRequests:[],internalMissions:[],
+    clientMode:'demo',clientOrganization:null,clientMissions:[],clientRequests:[],requestMessages:{},
+    activeMissionId:null,activeClientRequestId:null,activeInternalRequestId:null,quickRequestType:null
   };
 }
 function save(){
   try{
-    const persisted={...state,partnerDocs:{}};
+    const persisted={
+      ...state,
+      partnerDocs:{},
+      clientMissions:[],
+      clientRequests:[],
+      requestMessages:{},
+      internalClientRequests:[],
+      internalMissions:[]
+    };
     localStorage.setItem(STORAGE,JSON.stringify(persisted));
   }catch(_){}
 }
@@ -444,19 +498,50 @@ function drawerContent(type,id){
   return'';
 }
 function renderNav(){
-  const nav=state.role==='client'?CLIENT_NAV:INTERNAL_NAV;
+  const clientNav=state.clientMode==='platform'?PLATFORM_CLIENT_NAV:CLIENT_NAV;
+  const nav=state.role==='client'?clientNav:INTERNAL_NAV;
   const n=el('[data-ymc-nav]');
   n.innerHTML=nav.map(([id,icon,label])=>'<button type="button" data-ymc-section="'+id+'" class="'+(state.section===id?'is-active':'')+'"><span>'+icon+'</span>'+esc(label)+'</button>').join('');
   const mobile=el('[data-ymc-mobile-nav]');
-  const picks=state.role==='client'?[CLIENT_NAV[0],CLIENT_NAV[3],CLIENT_NAV[4],CLIENT_NAV[7]]:[INTERNAL_NAV[0],INTERNAL_NAV[1],INTERNAL_NAV[2],INTERNAL_NAV[4]];
+  const picks=state.role==='client'
+    ?(state.clientMode==='platform'?[clientNav[0],clientNav[1],clientNav[2],clientNav[3]]:[CLIENT_NAV[0],CLIENT_NAV[3],CLIENT_NAV[4],CLIENT_NAV[7]])
+    :[INTERNAL_NAV[0],INTERNAL_NAV[1],INTERNAL_NAV[2],INTERNAL_NAV[3]];
   mobile.innerHTML=picks.map(([id,icon,label])=>'<button type="button" data-ymc-section="'+id+'" class="'+(state.section===id?'is-active':'')+'"><span>'+icon+'</span>'+esc(label)+'</button>').join('')+
     '<button type="button" data-ymc-open-menu><span>•••</span>More</button>';
 }
+function renderTopbar(){
+  const missionId=el('[data-ymc-mission-id]'),projectName=el('[data-ymc-project-name]'),projectMenu=el('[data-ymc-project-menu]'),sync=el('[data-ymc-sync]');
+  if(state.role==='client'&&state.clientMode==='platform'){
+    const m=activeMission();
+    if(missionId)missionId.textContent=m?.mission_code||'NO ACTIVE MISSION';
+    if(projectName)projectName.textContent=m?.title||'Create or request a mission';
+    if(sync)sync.innerHTML='<i></i> Live data';
+    if(projectMenu)projectMenu.innerHTML=(state.clientMissions||[]).length
+      ?state.clientMissions.map(x=>'<button type="button" data-ymc-select-mission="'+x.id+'" class="'+(m?.id===x.id?'is-active':'')+'"><span>'+esc(x.mission_code)+'</span><b>'+esc(x.title)+'</b><small>'+esc(x.status)+'</small></button>').join('')
+      :'<button type="button" data-ymc-section="mission"><span>NO MISSION</span><b>Start a business mission</b><small>Submit a new project to YUME</small></button>';
+    return;
+  }
+  if(state.role==='internal'){
+    if(missionId)missionId.textContent='YUME INTERNAL';
+    if(projectName)projectName.textContent=state.section==='clientDesk'?'Client Desk':'Network & Operations';
+    if(sync)sync.innerHTML='<i></i> Live data';
+    if(projectMenu)projectMenu.innerHTML='<button type="button" data-ymc-section="clientDesk"><span>OPERATIONS</span><b>Client Desk</b><small>Mission & service requests</small></button><button type="button" data-ymc-section="network"><span>NETWORK</span><b>Partner Registry</b><small>Internal intelligence</small></button>';
+    return;
+  }
+  if(missionId)missionId.textContent=DATA.mission.id;
+  if(projectName)projectName.textContent=DATA.mission.name;
+  if(sync)sync.innerHTML='<i></i> Demo data';
+}
 function renderRole(){
-  const org=clientOrg();
+  const org=clientOrg(),platform=state.role==='client'&&state.clientMode==='platform',internal=state.role==='internal';
   el('[data-ymc-avatar]').textContent=state.role==='client'?String(org.short||org.name||'CO').slice(0,2).toUpperCase():'YU';
   el('[data-ymc-profile-name]').textContent=state.role==='client'?(org.short||org.name||'Corporate'):'YUME Works Team';
-  el('[data-ymc-profile-role]').textContent=state.role==='client'?(state.clientMode==='platform'?'Corporate Admin · Platform':'Corporate Admin · Demo'):'Internal Operations · Live';
+  el('[data-ymc-profile-role]').textContent=state.role==='client'?(platform?'Corporate Admin · Platform':'Corporate Admin · Demo'):'Internal Operations · Live';
+  const reset=el('[data-ymc-reset]');if(reset)reset.hidden=platform||internal;
+  const logoutBtn=el('[data-ymc-logout]');if(logoutBtn)logoutBtn.textContent=platform||internal?'Esci':'Esci dalla preview';
+  const label=el('[data-ymc-ribbon-label]'),copy=el('[data-ymc-ribbon-copy]');
+  if(label)label.textContent=platform?'CORPORATE WORKSPACE':internal?'YUME INTERNAL':'PREVIEW PRIVATA';
+  if(copy)copy.textContent=platform?'Mission Control · Live Corporate Platform':internal?'Mission Control · Network & Operations':'Mission Control · Corporate demo';
 }
 function render(){
   el('[data-ymc-gate]').hidden=state.session||state.onboarding;
@@ -468,7 +553,7 @@ function render(){
   document.body.classList.toggle('ymc-nav-open',sidebarOpen);
   if(state.onboarding){renderOnboarding();return;}
   if(!state.session)return;
-  renderNav();renderRole();
+  renderNav();renderRole();renderTopbar();
   const content=el('[data-ymc-content]');
   content.innerHTML=state.role==='client'?renderClient(state.section):renderInternal(state.section);
   bindDynamic();
@@ -478,21 +563,92 @@ function renderClient(section){
   const map={overview:clientOverview,company:clientCompany,mission:clientMission,agenda:clientAgenda,decisions:clientDecisions,participants:clientParticipants,travel:clientTravel,documents:clientDocuments,financials:clientFinancials,followup:clientFollowup};
   return (map[section]||clientOverview)();
 }
-function renderPlatformClient(section){
+function platformHome(){
+  const org=clientOrg(),missions=state.clientMissions||[],requests=state.clientRequests||[];
+  const open=requests.filter(r=>!['closed','rejected'].includes(r.status)).length;
+  const network=requests.filter(r=>['partner_search','introduction','business_meeting','recruiting_partner','market_research'].includes(r.request_type)&&!['closed','rejected'].includes(r.status)).length;
+  const latest=missions[0]||null;
+  return pageHead('YUME WORKS · BUSINESS OS','Buongiorno, <em>'+esc((org.member||'').split(' ')[0]||org.name||'Corporate')+'.</em>','Da qui potete aprire una missione, chiedere un itinerario, cercare controparti o attivare il team YUME su una richiesta specifica.')+
+    '<section class="ymc-grid ymc-grid--4"><article class="ymc-card ymc-stat"><span>MISSIONS</span><strong>'+missions.length+'</strong><small>'+esc(latest?latest.mission_code+' · '+latest.status:'Nessun progetto attivo')+'</small></article><article class="ymc-card ymc-stat"><span>OPEN REQUESTS</span><strong>'+open+'</strong><small>richieste in lavorazione</small></article><article class="ymc-card ymc-stat"><span>NETWORK DESK</span><strong>'+network+'</strong><small>ricerche / introduzioni aperte</small></article><article class="ymc-card ymc-stat"><span>ACCOUNT</span><strong>LIVE</strong><small>'+esc(org.name||'Organization verificata')+'</small></article></section>'+
+    '<section class="ymc-os-actions" style="margin-top:12px">'+
+      '<button type="button" data-ymc-quick-request="new_mission"><span>01 · BUILD</span><b>Start a Business Mission</b><small>Market entry, sourcing, fiere, executive learning o progetto custom.</small><i>→</i></button>'+
+      '<button type="button" data-ymc-quick-request="itinerary"><span>02 · TRAVEL</span><b>Request itinerary</b><small>Business travel, delegazione, logistica, hotel, transfer e agenda.</small><i>→</i></button>'+
+      '<button type="button" data-ymc-quick-request="partner_search"><span>03 · NETWORK</span><b>Find partners</b><small>Buyer, distributori, fornitori, specialisti, recruiting e istituzioni.</small><i>→</i></button>'+
+      '<button type="button" data-ymc-quick-request="market_research"><span>04 · INTELLIGENCE</span><b>Ask YUME</b><small>Mercato, fiere, cluster, opportunità e supporto operativo Japan / Asia.</small><i>→</i></button>'+
+    '</section>'+
+    '<section class="ymc-grid ymc-grid--2" style="margin-top:12px">'+
+      '<article class="ymc-card"><div class="ymc-card-head"><div><span>RECENT MISSIONS</span><h2>Projects</h2></div><button data-ymc-section="mission">View all →</button></div><div class="ymc-list">'+(missions.length?missions.slice(0,4).map(m=>'<div class="ymc-list-row"><div><b>'+esc(m.title)+'</b><small>'+esc(m.mission_code)+' · '+esc(m.status)+'</small></div><button data-ymc-select-mission="'+m.id+'">Open →</button></div>').join(''):'<div class="ymc-empty-inline">Nessuna missione. Potete crearne una direttamente dal portale.</div>')+'</div></article>'+
+      '<article class="ymc-card"><div class="ymc-card-head"><div><span>CLIENT DESK</span><h2>Requests</h2></div><button data-ymc-section="requests">Open desk →</button></div><div class="ymc-list">'+(requests.length?requests.slice(0,4).map(r=>'<div class="ymc-list-row"><div><b>'+esc(r.subject)+'</b><small>'+esc(requestTypeLabel(r.request_type))+' · '+esc(requestStatusLabel(r.status))+'</small></div><button data-ymc-open-client-request="'+r.id+'">Open →</button></div>').join(''):'<div class="ymc-empty-inline">Nessuna richiesta aperta.</div>')+'</div></article>'+
+    '</section>';
+}
+function platformMissions(){
+  const missions=state.clientMissions||[],m=activeMission();
+  return pageHead('MISSIONS','From intent to <em>execution.</em>','Una Mission è il contenitore operativo: obiettivo, interlocutori, agenda, viaggio e follow-up. Potete inviare un nuovo progetto a YUME direttamente da qui.')+
+    '<section class="ymc-grid ymc-grid--2">'+
+      '<article class="ymc-card"><div class="ymc-card-head"><div><span>YOUR MISSIONS</span><h2>'+missions.length+' project'+(missions.length===1?'':'s')+'</h2></div></div><div class="ymc-list">'+(missions.length?missions.map(x=>'<div class="ymc-list-row"><div><b>'+esc(x.title)+'</b><small>'+esc(x.mission_code)+' · '+esc(x.mission_type)+' · '+esc(x.status)+'</small></div><button data-ymc-select-mission="'+x.id+'">'+(m?.id===x.id?'Selected':'Open')+' →</button></div>').join(''):'<div class="ymc-empty-inline">Nessuna Mission ancora creata.</div>')+'</div></article>'+
+      '<article class="ymc-card ymc-card--brass"><span class="ymc-section-label">ACTIVE MISSION</span><h2>'+esc(m?.title||'No active mission')+'</h2><p>'+(m?esc(m.objective||m.desired_outcome||'Mission sottoposta a YUME per la qualificazione.'):'Create una Mission quando volete trasformare un obiettivo di business in un progetto operativo.')+'</p>'+(m?'<div class="ymc-route"><span>'+esc(m.status)+'</span><i>→</i><span>'+esc((m.target_markets||[]).join(', ')||'Market TBD')+'</span><i>→</i><span>'+esc(m.budget_band||'Budget TBD')+'</span></div>':'')+'</article>'+
+    '</section>'+
+    '<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>NEW MISSION REQUEST</span><h2>Tell us what must happen.</h2></div></div>'+
+      '<form class="ymc-os-form" data-ymc-new-mission-form>'+
+        '<label><span>Mission title *</span><input name="title" required maxlength="180" placeholder="Es. Japan distributor search 2027"></label>'+
+        '<label><span>Mission type</span><select name="mission_type"><option value="business_mission">Business mission</option><option value="market_entry">Market entry</option><option value="sourcing">Sourcing</option><option value="fair_support">Fair support</option><option value="executive_learning">Executive learning</option><option value="travel_only">Business travel only</option><option value="incoming">Incoming to Italy</option><option value="other">Other</option></select></label>'+
+        '<label><span>Sector</span><input name="sector" maxlength="120" placeholder="Automotive, food, tech…"></label>'+
+        '<label><span>Target markets</span><input name="target_markets" maxlength="240" placeholder="Japan, South Korea…"></label>'+
+        '<label class="is-wide"><span>Objective *</span><textarea name="objective" required maxlength="2500" placeholder="Cosa volete ottenere?"></textarea></label>'+
+        '<label class="is-wide"><span>Desired outcome</span><textarea name="desired_outcome" maxlength="2500" placeholder="Cosa dovrebbe essere diverso al ritorno?"></textarea></label>'+
+        '<label><span>Target cities</span><input name="target_cities" maxlength="240" placeholder="Tokyo, Osaka, Nagoya…"></label>'+
+        '<label><span>Budget band</span><input name="budget_band" maxlength="120" placeholder="Es. €10.000–25.000"></label>'+
+        '<label><span>Participants</span><input name="participants_count" type="number" min="1" max="500" placeholder="4"></label>'+
+        '<div class="ymc-os-form-action"><button class="ymc-btn ymc-btn--dark" type="submit">Submit Mission →</button><small>YUME riceverà il progetto in stato Submitted e lo qualificherà prima di qualsiasi impegno operativo.</small></div>'+
+      '</form>'+
+    '</section>';
+}
+function platformRequests(){
+  const rows=state.clientRequests||[],selected=rows.find(r=>r.id===state.activeClientRequestId);
+  if(selected){
+    const messages=state.requestMessages[selected.id]||[];
+    return pageHead('CLIENT DESK','Request <em>detail.</em>','Qui resta la conversazione operativa con YUME.','<button class="ymc-btn" data-ymc-back-requests>← All requests</button>')+
+      '<section class="ymc-grid ymc-grid--2"><article class="ymc-card"><span class="ymc-section-label">'+esc(requestTypeLabel(selected.request_type))+'</span><h2>'+esc(selected.subject)+'</h2><p>'+esc(selected.description)+'</p><div class="ymc-request-meta"><span>Status · '+esc(requestStatusLabel(selected.status))+'</span><span>Priority · '+esc(selected.priority)+'</span><span>Scope · '+esc(selected.service_scope)+'</span></div>'+(selected.target_profile?'<p><b>Target:</b> '+esc(selected.target_profile)+'</p>':'')+'</article>'+
+      '<article class="ymc-card"><div class="ymc-card-head"><div><span>CONVERSATION</span><h2>YUME ↔ '+esc(clientOrg().name||'Client')+'</h2></div></div><div class="ymc-thread">'+(messages.length?messages.map(msg=>'<div class="ymc-thread-item is-'+esc(msg.sender_side)+'"><span>'+esc(msg.sender_side==='client'?'Client':'YUME')+' · '+esc(new Date(msg.created_at).toLocaleString('it-IT'))+'</span><p>'+esc(msg.body)+'</p></div>').join(''):'<div class="ymc-empty-inline">Nessun messaggio ancora. Potete aggiungere contesto qui sotto.</div>')+'</div><form data-ymc-client-message-form="'+selected.id+'" class="ymc-message-form"><textarea name="body" maxlength="8000" required placeholder="Scrivi a YUME…"></textarea><button class="ymc-btn ymc-btn--dark" type="submit">Send →</button></form></article></section>';
+  }
+  const pre=state.quickRequestType||'';
+  return pageHead('CLIENT DESK','Ask YUME. <em>Track the answer.</em>','Aprite una richiesta per travel, partner search, introduzioni, ricerca di mercato, interpreti, recruiting partner o altre necessità. Ogni richiesta resta tracciata.')+
+    '<section class="ymc-card"><div class="ymc-card-head"><div><span>NEW REQUEST</span><h2>What do you need?</h2></div></div>'+
+      '<form class="ymc-os-form" data-ymc-new-request-form>'+
+        '<label><span>Request type *</span><select name="request_type" required>'+
+          '<option value="itinerary" '+(pre==='itinerary'?'selected':'')+'>Itinerary / Business Travel</option>'+
+          '<option value="partner_search" '+(pre==='partner_search'?'selected':'')+'>Partner Search</option>'+
+          '<option value="introduction">Business Introduction</option><option value="business_meeting">Business Meeting</option><option value="market_research" '+(pre==='market_research'?'selected':'')+'>Market Research</option><option value="interpreter">Interpreter</option><option value="factory_visit">Factory Visit</option><option value="fair_support">Fair Support</option><option value="recruiting_partner">Recruiting / HR Partner</option><option value="travel_change">Travel Change</option><option value="document_visa">Documents / Visa</option><option value="other">Other</option>'+
+        '</select></label>'+
+        '<label><span>Priority</span><select name="priority"><option value="normal">Normal</option><option value="high">High</option><option value="urgent">Urgent</option><option value="low">Low</option></select></label>'+
+        '<label><span>Sector</span><input name="sector" maxlength="120" placeholder="Your industry"></label>'+
+        '<label><span>Target markets</span><input name="target_markets" maxlength="240" placeholder="Japan, Korea…"></label>'+
+        '<label class="is-wide"><span>Subject *</span><input name="subject" required maxlength="200" placeholder="Es. Cerchiamo distributori B2B in Kansai"></label>'+
+        '<label class="is-wide"><span>Describe the request *</span><textarea name="description" required maxlength="5000" placeholder="Obiettivo, contesto, timing, vincoli e cosa vi aspettate da YUME."></textarea></label>'+
+        '<label class="is-wide"><span>Target profile / counterpart</span><textarea name="target_profile" maxlength="2500" placeholder="Se cercate partner: profilo ideale, dimensione, canale, territorio, competenze…"></textarea></label>'+
+        '<div class="ymc-os-form-action"><button class="ymc-btn ymc-btn--dark" type="submit">Open request →</button><small>La richiesta entra nel Client Desk YUME. La presa in carico non implica automaticamente un incarico di mediazione o la disponibilità di una controparte.</small></div>'+
+      '</form>'+
+    '</section>'+
+    '<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>REQUEST HISTORY</span><h2>'+rows.length+' request'+(rows.length===1?'':'s')+'</h2></div></div><div class="ymc-list">'+(rows.length?rows.map(r=>'<div class="ymc-list-row"><div><b>'+esc(r.subject)+'</b><small>'+esc(requestTypeLabel(r.request_type))+' · '+esc(requestStatusLabel(r.status))+' · '+esc(new Date(r.created_at).toLocaleDateString('it-IT'))+'</small></div><button data-ymc-open-client-request="'+r.id+'">Open →</button></div>').join(''):'<div class="ymc-empty-inline">Nessuna richiesta inviata.</div>')+'</div></section>';
+}
+function platformNetwork(){
+  return pageHead('YUME NETWORK','Search with a <em>business case.</em>','Non una directory aperta: descrivete il tipo di controparte che cercate e YUME attiva il percorso più adatto tra network proprietario, istituzioni, camere, specialisti e ricerca mirata.')+
+    '<section class="ymc-os-actions">'+
+      '<button type="button" data-ymc-quick-request="partner_search"><span>PARTNER SEARCH</span><b>Buyer / Distributor / Supplier</b><small>Ricerca e qualificazione di controparti coerenti con settore e obiettivo.</small><i>→</i></button>'+
+      '<button type="button" data-ymc-quick-request="introduction"><span>INTRODUCTION</span><b>Request an introduction</b><small>Quando esiste già un soggetto o un ecosistema rilevante da attivare.</small><i>→</i></button>'+
+      '<button type="button" data-ymc-quick-request="recruiting_partner"><span>PEOPLE</span><b>Recruiting / HR partner</b><small>Ricerca di operatori o società specializzate; YUME coordina la richiesta, non svolge selezione del personale.</small><i>→</i></button>'+
+      '<button type="button" data-ymc-quick-request="market_research"><span>INSTITUTIONAL</span><b>Chambers & ecosystem</b><small>Camera di commercio, cluster, fiere, università e organismi di supporto quando utili al caso.</small><i>→</i></button>'+
+    '</section>'+
+    '<section class="ymc-grid ymc-grid--2" style="margin-top:12px"><article class="ymc-card"><span class="ymc-section-label">HOW IT WORKS</span><h2>Request → qualify → connect.</h2><div class="ymc-route"><span>Business need</span><i>→</i><span>YUME review</span><i>→</i><span>Search / Network</span><i>→</i><span>Introduction</span><i>→</i><span>Follow-up</span></div><p>Il nome e i contatti dei partner non vengono esposti automaticamente: il registry interno resta intelligence YUME e le introduzioni vengono gestite caso per caso.</p></article><article class="ymc-card ymc-card--brass"><span class="ymc-section-label">JAPAN CORE · ASIA EXTENSION</span><h2>Network follows demand.</h2><p>Giappone come core; Corea, Singapore, Hong Kong, Taiwan e altri hub entrano solo quando migliorano il business case. Partner e istituzioni vengono qualificati in funzione della Mission, non aggiunti per quantità.</p></article></section>';
+}
+function platformCompany(){
   const org=clientOrg();
-  if(section==='overview'){
-    return pageHead('CORPORATE PLATFORM · LIVE','Benvenuti in <em>'+esc(org.name||'Mission Control')+'.</em>','Organization e Membership sono reali. I moduli missione restano vuoti finché YUME non assegna un progetto operativo.')+
-      '<section class="ymc-grid ymc-grid--4"><article class="ymc-card ymc-stat"><span>ORGANIZATION</span><strong>Active</strong><small>'+esc(org.name||'—')+'</small></article><article class="ymc-card ymc-stat"><span>MEMBERSHIP</span><strong>Corporate Admin</strong><small>Supabase Auth nominativo</small></article><article class="ymc-card ymc-stat"><span>MISSIONS</span><strong>0</strong><small>Nessuna missione assegnata</small></article><article class="ymc-card ymc-stat"><span>DATA MODE</span><strong>LIVE</strong><small>Nessun dato Demo mischiato</small></article></section>'+
-      '<section class="ymc-card ymc-card--brass" style="margin-top:12px"><span class="ymc-section-label">NEXT STEP</span><h2>Workspace pronto.</h2><p>YUME può ora collegare una missione reale a questa Organization. Fino a quel momento agenda, travel, documenti, decisioni, partecipanti e financials restano intenzionalmente vuoti.</p></section>';
-  }
-  if(section==='company'){
-    return pageHead('COMPANY','Organization <em>verified.</em>','Profilo corporate legato alla Membership attiva.')+
-      '<section class="ymc-card"><span class="ymc-section-label">LEGAL ORGANIZATION</span><h2>'+esc(org.name||'—')+'</h2><p>Corporate Admin: '+esc(org.member||'—')+'</p><div class="ymc-route"><span>Organization</span><i>→</i><span>Membership</span><i>→</i><span>Mission</span></div></section>';
-  }
-  const labels={mission:'Mission',agenda:'Agenda',decisions:'Decisions',participants:'Participants',travel:'Travel',documents:'Documents',financials:'Financials',followup:'Follow-up'};
-  const label=labels[section]||'Workspace';
-  return pageHead(label.toUpperCase(),label+' <em>workspace.</em>','Modulo disponibile per la Organization, ma senza dati fittizi.')+
-    '<section class="ymc-card"><span class="ymc-section-label">EMPTY STATE · LIVE PLATFORM</span><h2>Nessun dato ancora assegnato.</h2><p>Questo spazio verrà popolato esclusivamente con record reali collegati alla vostra Organization. La Demo resta separata.</p></section>';
+  return pageHead('COMPANY','Organization <em>verified.</em>','Profilo corporate e accesso nominativo collegati alla vostra Organization.')+
+    '<section class="ymc-grid ymc-grid--2"><article class="ymc-card"><span class="ymc-section-label">LEGAL ORGANIZATION</span><h2>'+esc(org.name||'—')+'</h2><p>Corporate Admin: '+esc(org.member||'—')+'</p><div class="ymc-route"><span>Organization</span><i>→</i><span>Membership</span><i>→</i><span>Missions</span></div></article><article class="ymc-card"><span class="ymc-section-label">WORKSPACE MODEL</span><h2>One company. Multiple missions.</h2><p>Missioni, richieste e conversazioni restano collegate alla stessa Organization. In una fase successiva potremo aggiungere altri membri con ruoli e permessi differenti.</p></article></section>';
+}
+function renderPlatformClient(section){
+  const map={overview:platformHome,mission:platformMissions,requests:platformRequests,networkClient:platformNetwork,company:platformCompany};
+  return (map[section]||platformHome)();
 }
 function clientOverview(){
   const next=DATA.decisions.find(d=>(state.decisionStatus[d.id]||d.status)==='required')||DATA.decisions[0];
@@ -573,8 +729,23 @@ function clientFollowup(){
     '<section class="ymc-card ymc-card--brass" style="margin-top:12px"><span class="ymc-section-label">ACCOUNT MEMORY</span><h2>Il vantaggio cresce missione dopo missione.</h2><p>Quando la stessa azienda torna in Giappone o Asia, YUME non riparte da zero: storico delle missioni, contatti, decisioni, documenti e follow-up diventano memoria aziendale condivisa.</p></section>';
 }
 function renderInternal(section){
-  const map={network:internalNetwork,onboarding:internalOnboarding,partners:internalPartners,partnerWorkspace:internalPartnerWorkspace,coverage:internalCoverage,pipeline:internalPipeline,roadmap:internalRoadmap,access:internalAccess};
+  const map={network:internalNetwork,clientDesk:internalClientDesk,onboarding:internalOnboarding,partners:internalPartners,partnerWorkspace:internalPartnerWorkspace,coverage:internalCoverage,pipeline:internalPipeline,roadmap:internalRoadmap,access:internalAccess};
   return (map[section]||internalNetwork)();
+}
+function internalClientDesk(){
+  const rows=state.internalClientRequests||[],missions=state.internalMissions||[],selected=rows.find(r=>r.id===state.activeInternalRequestId);
+  const open=rows.filter(r=>!['closed','rejected'].includes(r.status)).length;
+  if(selected){
+    const messages=state.requestMessages[selected.id]||[];
+    const org=selected.ymc_organizations?.legal_name||selected.organization_id;
+    return pageHead('CLIENT DESK · LIVE','Work the <em>request.</em>','Richiesta reale collegata alla Organization.','<button class="ymc-btn" data-ymc-back-internal-requests>← All requests</button>')+
+      '<section class="ymc-grid ymc-grid--2"><article class="ymc-card"><span class="ymc-section-label">'+esc(requestTypeLabel(selected.request_type))+'</span><h2>'+esc(selected.subject)+'</h2><p>'+esc(selected.description)+'</p><div class="ymc-request-meta"><span>'+esc(org)+'</span><span>Priority · '+esc(selected.priority)+'</span><span>Scope · '+esc(selected.service_scope)+'</span></div><label class="ymc-status-control"><span>STATUS</span><select data-ymc-internal-request-status="'+selected.id+'"><option value="submitted" '+(selected.status==='submitted'?'selected':'')+'>Submitted</option><option value="reviewing" '+(selected.status==='reviewing'?'selected':'')+'>Reviewing</option><option value="need_info" '+(selected.status==='need_info'?'selected':'')+'>Need info</option><option value="in_progress" '+(selected.status==='in_progress'?'selected':'')+'>In progress</option><option value="delivered" '+(selected.status==='delivered'?'selected':'')+'>Delivered</option><option value="closed" '+(selected.status==='closed'?'selected':'')+'>Closed</option><option value="rejected" '+(selected.status==='rejected'?'selected':'')+'>Rejected</option></select></label></article>'+
+      '<article class="ymc-card"><div class="ymc-card-head"><div><span>CLIENT THREAD</span><h2>'+esc(org)+'</h2></div></div><div class="ymc-thread">'+(messages.length?messages.map(msg=>'<div class="ymc-thread-item is-'+esc(msg.sender_side)+'"><span>'+esc(msg.sender_side==='client'?'Client':'YUME')+' · '+esc(new Date(msg.created_at).toLocaleString('it-IT'))+'</span><p>'+esc(msg.body)+'</p></div>').join(''):'<div class="ymc-empty-inline">Nessun messaggio.</div>')+'</div><form data-ymc-internal-message-form="'+selected.id+'" class="ymc-message-form"><textarea name="body" maxlength="8000" required placeholder="Rispondi al cliente…"></textarea><button class="ymc-btn ymc-btn--dark" type="submit">Send as YUME →</button></form></article></section>';
+  }
+  return pageHead('CLIENT DESK · LIVE','Requests become <em>work.</em>','Qui arrivano le richieste Corporate: travel, ricerca partner, introduzioni, market research, interpreti, recruiting partner e altri servizi.','<button class="ymc-btn" data-ymc-refresh-live>↻ Refresh</button>')+
+    '<section class="ymc-grid ymc-grid--3"><article class="ymc-card ymc-stat"><span>OPEN REQUESTS</span><strong>'+open+'</strong><small>da prendere in carico / lavorare</small></article><article class="ymc-card ymc-stat"><span>TOTAL REQUESTS</span><strong>'+rows.length+'</strong><small>client desk</small></article><article class="ymc-card ymc-stat"><span>MISSIONS</span><strong>'+missions.length+'</strong><small>progetti Corporate reali</small></article></section>'+
+    '<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>CLIENT REQUESTS</span><h2>Operations queue</h2></div></div><div class="ymc-table-wrap"><table class="ymc-table"><thead><tr><th>Company</th><th>Request</th><th>Type</th><th>Priority</th><th>Status</th><th>Created</th><th></th></tr></thead><tbody>'+(rows.length?rows.map(r=>'<tr><td><b>'+esc(r.ymc_organizations?.legal_name||'Organization')+'</b></td><td><b>'+esc(r.subject)+'</b><small>'+esc((r.target_markets||[]).join(', ')||r.sector||'')+'</small></td><td>'+esc(requestTypeLabel(r.request_type))+'</td><td>'+esc(r.priority)+'</td><td>'+esc(requestStatusLabel(r.status))+'</td><td>'+esc(new Date(r.created_at).toLocaleDateString('it-IT'))+'</td><td><button data-ymc-open-internal-request="'+r.id+'">Open →</button></td></tr>').join(''):'<tr><td colspan="7">Nessuna richiesta Corporate.</td></tr>')+'</tbody></table></div></section>'+
+    '<section class="ymc-card" style="margin-top:12px"><div class="ymc-card-head"><div><span>MISSIONS</span><h2>Project intake</h2></div></div><div class="ymc-list">'+(missions.length?missions.slice(0,8).map(m=>'<div class="ymc-list-row"><div><b>'+esc(m.title)+'</b><small>'+esc(m.ymc_organizations?.legal_name||'Organization')+' · '+esc(m.mission_code)+' · '+esc(m.status)+'</small></div><span>'+esc(m.mission_type)+'</span></div>').join(''):'<div class="ymc-empty-inline">Nessuna Mission inviata dalla Platform.</div>')+'</div></section>';
 }
 function internalNetwork(){
   const net=networkData(),qual=net.filter(p=>['Qualification','Pilot','Approved','Preferred'].includes(partnerStatus(p.id))).length;
@@ -734,6 +905,130 @@ function bindDynamic(){
   els('[data-ymc-partner-status]').forEach(s=>s.onchange=()=>updatePartnerStatus(s.dataset.ymcPartnerStatus,s.value));
   els('[data-ymc-refresh-live]').forEach(b=>b.onclick=async()=>{b.disabled=true;await loadInternalLiveData();render();toast('Dati aggiornati da Supabase.');});
 
+  els('[data-ymc-quick-request]').forEach(b=>b.onclick=()=>{
+    const type=b.dataset.ymcQuickRequest||'';
+    state.quickRequestType=type;
+    state.section=type==='new_mission'?'mission':'requests';
+    state.activeClientRequestId=null;
+    save();render();
+  });
+
+  els('[data-ymc-select-mission]').forEach(b=>b.onclick=()=>{
+    state.activeMissionId=b.dataset.ymcSelectMission||null;
+    state.section='mission';save();render();
+  });
+
+  const missionForm=el('[data-ymc-new-mission-form]');
+  if(missionForm)missionForm.onsubmit=async e=>{
+    e.preventDefault();
+    const token=corporateToken(),org=clientOrg(),fd=new FormData(missionForm);
+    if(!token||!org?.id)return toast('Sessione Corporate non disponibile.');
+    const body={
+      organization_id:org.id,
+      title:String(fd.get('title')||'').trim(),
+      mission_type:String(fd.get('mission_type')||'business_mission'),
+      sector:String(fd.get('sector')||'').trim()||null,
+      objective:String(fd.get('objective')||'').trim(),
+      desired_outcome:String(fd.get('desired_outcome')||'').trim()||null,
+      target_markets:String(fd.get('target_markets')||'').split(',').map(x=>x.trim()).filter(Boolean),
+      target_cities:String(fd.get('target_cities')||'').split(',').map(x=>x.trim()).filter(Boolean),
+      budget_band:String(fd.get('budget_band')||'').trim()||null,
+      participants_count:Number(fd.get('participants_count')||0)||null,
+      status:'submitted',
+      source:'mission-control'
+    };
+    if(!body.title||!body.objective)return toast('Titolo e obiettivo sono obbligatori.');
+    const btn=missionForm.querySelector('button[type="submit"]');if(btn)btn.disabled=true;
+    try{
+      const created=await ymcFetch('/rest/v1/ymc_missions',{method:'POST',token,body,prefer:'return=representation'});
+      await loadCorporateLiveData();
+      if(Array.isArray(created)&&created[0]?.id)state.activeMissionId=created[0].id;
+      save();render();toast('Mission inviata a YUME.');
+    }catch(ex){toast('Mission non inviata: '+ex.message)}
+    finally{if(btn)btn.disabled=false}
+  };
+
+  const requestForm=el('[data-ymc-new-request-form]');
+  if(requestForm)requestForm.onsubmit=async e=>{
+    e.preventDefault();
+    const token=corporateToken(),org=clientOrg(),fd=new FormData(requestForm);
+    if(!token||!org?.id)return toast('Sessione Corporate non disponibile.');
+    const body={
+      organization_id:org.id,
+      mission_id:state.activeMissionId||null,
+      request_type:String(fd.get('request_type')||'other'),
+      service_scope:'to_be_assessed',
+      subject:String(fd.get('subject')||'').trim(),
+      description:String(fd.get('description')||'').trim(),
+      sector:String(fd.get('sector')||'').trim()||null,
+      target_markets:String(fd.get('target_markets')||'').split(',').map(x=>x.trim()).filter(Boolean),
+      target_profile:String(fd.get('target_profile')||'').trim()||null,
+      priority:String(fd.get('priority')||'normal'),
+      status:'submitted'
+    };
+    if(!body.subject||!body.description)return toast('Oggetto e descrizione sono obbligatori.');
+    const btn=requestForm.querySelector('button[type="submit"]');if(btn)btn.disabled=true;
+    try{
+      const created=await ymcFetch('/rest/v1/ymc_client_requests',{method:'POST',token,body,prefer:'return=representation'});
+      state.quickRequestType=null;
+      await loadCorporateLiveData();
+      if(Array.isArray(created)&&created[0]?.id){
+        state.activeClientRequestId=created[0].id;
+        await loadRequestMessages(created[0].id,token);
+      }
+      save();render();toast('Richiesta inviata al Client Desk YUME.');
+    }catch(ex){toast('Richiesta non inviata: '+ex.message)}
+    finally{if(btn)btn.disabled=false}
+  };
+
+  els('[data-ymc-open-client-request]').forEach(b=>b.onclick=async()=>{
+    const id=b.dataset.ymcOpenClientRequest;
+    state.activeClientRequestId=id;state.section='requests';
+    await loadRequestMessages(id,corporateToken());save();render();
+  });
+  els('[data-ymc-back-requests]').forEach(b=>b.onclick=()=>{state.activeClientRequestId=null;save();render()});
+
+  els('[data-ymc-client-message-form]').forEach(form=>form.onsubmit=async e=>{
+    e.preventDefault();
+    const id=form.dataset.ymcClientMessageForm,fd=new FormData(form),bodyText=String(fd.get('body')||'').trim(),org=clientOrg();
+    if(!id||!bodyText||!org?.id)return;
+    const btn=form.querySelector('button[type="submit"]');if(btn)btn.disabled=true;
+    try{
+      await ymcFetch('/rest/v1/ymc_request_messages',{method:'POST',token:corporateToken(),body:{request_id:id,organization_id:org.id,sender_side:'client',body:bodyText},prefer:'return=minimal'});
+      await loadRequestMessages(id,corporateToken());render();toast('Messaggio inviato a YUME.');
+    }catch(ex){toast('Messaggio non inviato: '+ex.message)}
+    finally{if(btn)btn.disabled=false}
+  });
+
+  els('[data-ymc-open-internal-request]').forEach(b=>b.onclick=async()=>{
+    const id=b.dataset.ymcOpenInternalRequest;
+    state.activeInternalRequestId=id;state.section='clientDesk';
+    await loadRequestMessages(id,internalToken());save();render();
+  });
+  els('[data-ymc-back-internal-requests]').forEach(b=>b.onclick=()=>{state.activeInternalRequestId=null;save();render()});
+
+  els('[data-ymc-internal-request-status]').forEach(sel=>sel.onchange=async()=>{
+    const id=sel.dataset.ymcInternalRequestStatus,status=sel.value;
+    try{
+      await ymcFetch('/rest/v1/ymc_client_requests?id=eq.'+encodeURIComponent(id),{method:'PATCH',token:internalToken(),body:{status},prefer:'return=minimal'});
+      const row=state.internalClientRequests.find(r=>r.id===id);if(row)row.status=status;
+      save();render();toast('Stato richiesta aggiornato.');
+    }catch(ex){toast('Aggiornamento non riuscito: '+ex.message)}
+  });
+
+  els('[data-ymc-internal-message-form]').forEach(form=>form.onsubmit=async e=>{
+    e.preventDefault();
+    const id=form.dataset.ymcInternalMessageForm,fd=new FormData(form),bodyText=String(fd.get('body')||'').trim();
+    const req=(state.internalClientRequests||[]).find(r=>r.id===id);
+    if(!id||!bodyText||!req)return;
+    const btn=form.querySelector('button[type="submit"]');if(btn)btn.disabled=true;
+    try{
+      await ymcFetch('/rest/v1/ymc_request_messages',{method:'POST',token:internalToken(),body:{request_id:id,organization_id:req.organization_id,sender_side:'yume',body:bodyText},prefer:'return=minimal'});
+      await loadRequestMessages(id,internalToken());render();toast('Risposta YUME inviata nel thread.');
+    }catch(ex){toast('Risposta non inviata: '+ex.message)}
+    finally{if(btn)btn.disabled=false}
+  });
+
   els('[data-ymc-review-request]').forEach(b=>b.onclick=async()=>{
     const [id,decision]=b.dataset.ymcReviewRequest.split(':');
     b.disabled=true;
@@ -875,7 +1170,8 @@ async function activateCorporateToken(token,{firstActivation=false}={}){
   const user=await ymcFetch('/auth/v1/user',{token});
   sessionStorage.setItem(CORPORATE_TOKEN_KEY,token);
   state.session=true;state.onboarding=false;state.role='client';state.clientMode='platform';state.section='overview';
-  state.clientOrganization={name:activation.organization.legal_name,short:activation.organization.legal_name,member:user?.user_metadata?.full_name||user?.email||'Corporate Admin',role:'Corporate Admin'};
+  state.clientOrganization={id:activation.organization.id,name:activation.organization.legal_name,short:activation.organization.legal_name,member:user?.user_metadata?.full_name||user?.email||'Corporate Admin',role:'Corporate Admin'};
+  await loadCorporateLiveData();
   save();closeCorporateLogin();render();return true;
 }
 async function corporateSignIn(e){
@@ -982,6 +1278,7 @@ async function bootstrap(){
   }else if(state.session&&state.role==='client'&&state.clientMode==='platform'){
     const valid=await validateCorporateSession();
     if(!valid){sessionStorage.removeItem(CORPORATE_TOKEN_KEY);state=baseState();save()}
+    else await loadCorporateLiveData();
   }
   render();
 }
