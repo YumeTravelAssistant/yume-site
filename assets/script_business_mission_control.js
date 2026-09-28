@@ -525,10 +525,15 @@ function renderTopbar(){
   if(sync)sync.innerHTML='<i></i> Demo data';
 }
 function renderRole(){
-  const org=clientOrg();
+  const org=clientOrg(),platform=state.role==='client'&&state.clientMode==='platform',internal=state.role==='internal';
   el('[data-ymc-avatar]').textContent=state.role==='client'?String(org.short||org.name||'CO').slice(0,2).toUpperCase():'YU';
   el('[data-ymc-profile-name]').textContent=state.role==='client'?(org.short||org.name||'Corporate'):'YUME Works Team';
-  el('[data-ymc-profile-role]').textContent=state.role==='client'?(state.clientMode==='platform'?'Corporate Admin · Platform':'Corporate Admin · Demo'):'Internal Operations · Live';
+  el('[data-ymc-profile-role]').textContent=state.role==='client'?(platform?'Corporate Admin · Platform':'Corporate Admin · Demo'):'Internal Operations · Live';
+  const reset=el('[data-ymc-reset]');if(reset)reset.hidden=platform||internal;
+  const logoutBtn=el('[data-ymc-logout]');if(logoutBtn)logoutBtn.textContent=platform||internal?'Esci':'Esci dalla preview';
+  const label=el('[data-ymc-ribbon-label]'),copy=el('[data-ymc-ribbon-copy]');
+  if(label)label.textContent=platform?'CORPORATE WORKSPACE':internal?'YUME INTERNAL':'PREVIEW PRIVATA';
+  if(copy)copy.textContent=platform?'Mission Control · Live Corporate Platform':internal?'Mission Control · Network & Operations':'Mission Control · Corporate demo';
 }
 function render(){
   el('[data-ymc-gate]').hidden=state.session||state.onboarding;
