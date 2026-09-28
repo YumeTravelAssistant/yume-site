@@ -846,19 +846,30 @@ async function enter(role){
   }catch(ex){if(err){err.hidden=false;err.textContent=ex.message}}
 }
 
-function openCorporateLogin(){
-  const m=el('[data-ymc-corporate-login]'),pending=sessionStorage.getItem('ymcPendingInviteToken');
+function showCorporateMode(mode='login'){
+  const activationMode=mode==='activation';
   const login=el('[data-ymc-corporate-login-form]'),activation=el('[data-ymc-corporate-activation-form]');
-  if(login)login.hidden=!!pending;if(activation)activation.hidden=!pending;
+  if(login)login.hidden=activationMode;
+  if(activation)activation.hidden=!activationMode;
+  const loginErr=el('[data-ymc-corporate-login-error]'),activationErr=el('[data-ymc-corporate-activation-error]');
+  if(loginErr)loginErr.hidden=true;if(activationErr)activationErr.hidden=true;
+  requestAnimationFrame(()=>(
+    activationMode?el('[data-ymc-corporate-activation-email]'):el('[data-ymc-corporate-email]')
+  )?.focus());
+}
+function openCorporateLogin(mode='login'){
+  const m=el('[data-ymc-corporate-login]');
+  const queryActivation=new URLSearchParams(location.search).get('activate')==='corporate';
+  showCorporateMode(mode==='activation'||queryActivation?'activation':'login');
   if(m)m.hidden=false;
-  (pending?el('[data-ymc-corporate-new-password]'):el('[data-ymc-corporate-email]'))?.focus();
 }
 function closeCorporateLogin(){
   const m=el('[data-ymc-corporate-login]');if(m)m.hidden=true;
   const e=el('[data-ymc-corporate-login-error]');if(e)e.hidden=true;
+  const a=el('[data-ymc-corporate-activation-error]');if(a)a.hidden=true;
 }
-async function activateCorporateToken(token){
-  const activation=await ymcFetch('/functions/v1/ymc-activate-membership',{method:'POST',token,body:{}});
+async function activateCorporateToken(token,{firstActivation=false}={}){
+  const activation=await ymcFetch('/functions/v1/ymc-activate-membership',{method:'POST',token,body:{first_activation:firstActivation}});
   if(!activation?.ok||!activation.organization)throw new Error(activation?.error||'Membership YUME non valida');
   const user=await ymcFetch('/auth/v1/user',{token});
   sessionStorage.setItem(CORPORATE_TOKEN_KEY,token);
@@ -877,24 +888,30 @@ async function corporateSignIn(e){
   }catch(ex){err.hidden=false;err.textContent=ex.message}finally{btn.disabled=false}
 }
 async function corporateActivate(e){
-  e.preventDefault();const token=sessionStorage.getItem('ymcPendingInviteToken')||'',pwd=el('[data-ymc-corporate-new-password]')?.value||'',confirm=el('[data-ymc-corporate-confirm-password]')?.value||'',err=el('[data-ymc-corporate-activation-error]'),btn=e.currentTarget.querySelector('button[type="submit"]');
+  e.preventDefault();
+  const email=el('[data-ymc-corporate-activation-email]')?.value.trim().toLowerCase()||'';
+  const tempCode=(el('[data-ymc-corporate-temp-code]')?.value||'').trim().toUpperCase().replace(/\s+/g,'');
+  const pwd=el('[data-ymc-corporate-new-password]')?.value||'';
+  const confirm=el('[data-ymc-corporate-confirm-password]')?.value||'';
+  const err=el('[data-ymc-corporate-activation-error]'),btn=e.currentTarget.querySelector('button[type="submit"]');
+  if(!email.includes('@')){err.hidden=false;err.textContent='Inserisci l’email aziendale approvata da YUME.';return}
+  if(!/^[A-HJ-NP-Z2-9]{10}$/.test(tempCode)){err.hidden=false;err.textContent='Inserisci il codice provvisorio di 10 caratteri ricevuto via email.';return}
   if(pwd.length<10){err.hidden=false;err.textContent='Usa una password di almeno 10 caratteri.';return}
   if(pwd!==confirm){err.hidden=false;err.textContent='Le password non coincidono.';return}
   btn.disabled=true;err.hidden=true;
   try{
-    await ymcFetch('/auth/v1/user',{method:'PUT',token,body:{password:pwd}});
-    await activateCorporateToken(token);
-    sessionStorage.removeItem('ymcPendingInviteToken');
-    history.replaceState(null,'',location.pathname+location.search);
-  }catch(ex){err.hidden=false;err.textContent=ex.message}finally{btn.disabled=false}
+    const session=await ymcFetch('/auth/v1/token?grant_type=password',{method:'POST',body:{email,password:tempCode}});
+    if(!session?.access_token)throw new Error('Codice provvisorio non valido. Se YUME ha rigenerato il codice, usa l’ultimo ricevuto.');
+    await ymcFetch('/auth/v1/user',{method:'PUT',token:session.access_token,body:{password:pwd}});
+    await activateCorporateToken(session.access_token,{firstActivation:true});
+    history.replaceState(null,'',location.pathname);
+  }catch(ex){err.hidden=false;err.textContent=String(ex.message||ex)}
+  finally{btn.disabled=false}
 }
 function detectCorporateInvite(){
-  if(!location.hash)return false;
-  const p=new URLSearchParams(location.hash.slice(1)),token=p.get('access_token'),type=p.get('type');
-  if(!token||!['invite','recovery','signup'].includes(type||''))return false;
-  sessionStorage.setItem('ymcPendingInviteToken',token);
-  const login=el('[data-ymc-corporate-login-form]'),activation=el('[data-ymc-corporate-activation-form]');
-  if(login)login.hidden=true;if(activation)activation.hidden=false;openCorporateLogin();return true;
+  if(new URLSearchParams(location.search).get('activate')!=='corporate')return false;
+  openCorporateLogin('activation');
+  return true;
 }
 async function validateCorporateSession(){
   const token=corporateToken();if(!token)return false;
@@ -979,8 +996,10 @@ function resetPreview(){
 function toggleMenu(open){state.sidebar=typeof open==='boolean'?open:!state.sidebar;const sidebarOpen=!!state.session&&!!state.sidebar;el('[data-ymc-sidebar]')?.classList.toggle('is-open',sidebarOpen);el('[data-ymc-sidebar-backdrop]')?.classList.toggle('is-open',sidebarOpen);document.body.classList.toggle('ymc-nav-open',sidebarOpen)}
 function initStatic(){
   els('[data-ymc-enter]').forEach(b=>b.onclick=()=>enter(b.dataset.ymcEnter));
-  els('[data-ymc-open-corporate-login]').forEach(b=>b.onclick=openCorporateLogin);
+  els('[data-ymc-open-corporate-login]').forEach(b=>b.onclick=()=>openCorporateLogin('login'));
   els('[data-ymc-close-corporate-login]').forEach(b=>b.onclick=closeCorporateLogin);
+  els('[data-ymc-show-corporate-activation]').forEach(b=>b.onclick=()=>showCorporateMode('activation'));
+  els('[data-ymc-show-corporate-login]').forEach(b=>b.onclick=()=>showCorporateMode('login'));
   el('[data-ymc-corporate-login-form]').onsubmit=corporateSignIn;
   el('[data-ymc-corporate-activation-form]').onsubmit=corporateActivate;
   els('[data-ymc-toggle-corporate-password]').forEach(b=>b.onclick=()=>{const input=el('[data-ymc-corporate-password]');if(!input)return;const show=input.type==='password';input.type=show?'text':'password';b.textContent=show?'Nascondi':'Mostra'});
