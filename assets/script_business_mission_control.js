@@ -892,6 +892,130 @@ function bindDynamic(){
   els('[data-ymc-partner-status]').forEach(s=>s.onchange=()=>updatePartnerStatus(s.dataset.ymcPartnerStatus,s.value));
   els('[data-ymc-refresh-live]').forEach(b=>b.onclick=async()=>{b.disabled=true;await loadInternalLiveData();render();toast('Dati aggiornati da Supabase.');});
 
+  els('[data-ymc-quick-request]').forEach(b=>b.onclick=()=>{
+    const type=b.dataset.ymcQuickRequest||'';
+    state.quickRequestType=type;
+    state.section=type==='new_mission'?'mission':'requests';
+    state.activeClientRequestId=null;
+    save();render();
+  });
+
+  els('[data-ymc-select-mission]').forEach(b=>b.onclick=()=>{
+    state.activeMissionId=b.dataset.ymcSelectMission||null;
+    state.section='mission';save();render();
+  });
+
+  const missionForm=el('[data-ymc-new-mission-form]');
+  if(missionForm)missionForm.onsubmit=async e=>{
+    e.preventDefault();
+    const token=corporateToken(),org=clientOrg(),fd=new FormData(missionForm);
+    if(!token||!org?.id)return toast('Sessione Corporate non disponibile.');
+    const body={
+      organization_id:org.id,
+      title:String(fd.get('title')||'').trim(),
+      mission_type:String(fd.get('mission_type')||'business_mission'),
+      sector:String(fd.get('sector')||'').trim()||null,
+      objective:String(fd.get('objective')||'').trim(),
+      desired_outcome:String(fd.get('desired_outcome')||'').trim()||null,
+      target_markets:String(fd.get('target_markets')||'').split(',').map(x=>x.trim()).filter(Boolean),
+      target_cities:String(fd.get('target_cities')||'').split(',').map(x=>x.trim()).filter(Boolean),
+      budget_band:String(fd.get('budget_band')||'').trim()||null,
+      participants_count:Number(fd.get('participants_count')||0)||null,
+      status:'submitted',
+      source:'mission-control'
+    };
+    if(!body.title||!body.objective)return toast('Titolo e obiettivo sono obbligatori.');
+    const btn=missionForm.querySelector('button[type="submit"]');if(btn)btn.disabled=true;
+    try{
+      const created=await ymcFetch('/rest/v1/ymc_missions',{method:'POST',token,body,prefer:'return=representation'});
+      await loadCorporateLiveData();
+      if(Array.isArray(created)&&created[0]?.id)state.activeMissionId=created[0].id;
+      save();render();toast('Mission inviata a YUME.');
+    }catch(ex){toast('Mission non inviata: '+ex.message)}
+    finally{if(btn)btn.disabled=false}
+  };
+
+  const requestForm=el('[data-ymc-new-request-form]');
+  if(requestForm)requestForm.onsubmit=async e=>{
+    e.preventDefault();
+    const token=corporateToken(),org=clientOrg(),fd=new FormData(requestForm);
+    if(!token||!org?.id)return toast('Sessione Corporate non disponibile.');
+    const body={
+      organization_id:org.id,
+      mission_id:state.activeMissionId||null,
+      request_type:String(fd.get('request_type')||'other'),
+      service_scope:'to_be_assessed',
+      subject:String(fd.get('subject')||'').trim(),
+      description:String(fd.get('description')||'').trim(),
+      sector:String(fd.get('sector')||'').trim()||null,
+      target_markets:String(fd.get('target_markets')||'').split(',').map(x=>x.trim()).filter(Boolean),
+      target_profile:String(fd.get('target_profile')||'').trim()||null,
+      priority:String(fd.get('priority')||'normal'),
+      status:'submitted'
+    };
+    if(!body.subject||!body.description)return toast('Oggetto e descrizione sono obbligatori.');
+    const btn=requestForm.querySelector('button[type="submit"]');if(btn)btn.disabled=true;
+    try{
+      const created=await ymcFetch('/rest/v1/ymc_client_requests',{method:'POST',token,body,prefer:'return=representation'});
+      state.quickRequestType=null;
+      await loadCorporateLiveData();
+      if(Array.isArray(created)&&created[0]?.id){
+        state.activeClientRequestId=created[0].id;
+        await loadRequestMessages(created[0].id,token);
+      }
+      save();render();toast('Richiesta inviata al Client Desk YUME.');
+    }catch(ex){toast('Richiesta non inviata: '+ex.message)}
+    finally{if(btn)btn.disabled=false}
+  };
+
+  els('[data-ymc-open-client-request]').forEach(b=>b.onclick=async()=>{
+    const id=b.dataset.ymcOpenClientRequest;
+    state.activeClientRequestId=id;state.section='requests';
+    await loadRequestMessages(id,corporateToken());save();render();
+  });
+  els('[data-ymc-back-requests]').forEach(b=>b.onclick=()=>{state.activeClientRequestId=null;save();render()});
+
+  els('[data-ymc-client-message-form]').forEach(form=>form.onsubmit=async e=>{
+    e.preventDefault();
+    const id=form.dataset.ymcClientMessageForm,fd=new FormData(form),bodyText=String(fd.get('body')||'').trim(),org=clientOrg();
+    if(!id||!bodyText||!org?.id)return;
+    const btn=form.querySelector('button[type="submit"]');if(btn)btn.disabled=true;
+    try{
+      await ymcFetch('/rest/v1/ymc_request_messages',{method:'POST',token:corporateToken(),body:{request_id:id,organization_id:org.id,sender_side:'client',body:bodyText},prefer:'return=minimal'});
+      await loadRequestMessages(id,corporateToken());render();toast('Messaggio inviato a YUME.');
+    }catch(ex){toast('Messaggio non inviato: '+ex.message)}
+    finally{if(btn)btn.disabled=false}
+  });
+
+  els('[data-ymc-open-internal-request]').forEach(b=>b.onclick=async()=>{
+    const id=b.dataset.ymcOpenInternalRequest;
+    state.activeInternalRequestId=id;state.section='clientDesk';
+    await loadRequestMessages(id,internalToken());save();render();
+  });
+  els('[data-ymc-back-internal-requests]').forEach(b=>b.onclick=()=>{state.activeInternalRequestId=null;save();render()});
+
+  els('[data-ymc-internal-request-status]').forEach(sel=>sel.onchange=async()=>{
+    const id=sel.dataset.ymcInternalRequestStatus,status=sel.value;
+    try{
+      await ymcFetch('/rest/v1/ymc_client_requests?id=eq.'+encodeURIComponent(id),{method:'PATCH',token:internalToken(),body:{status},prefer:'return=minimal'});
+      const row=state.internalClientRequests.find(r=>r.id===id);if(row)row.status=status;
+      save();render();toast('Stato richiesta aggiornato.');
+    }catch(ex){toast('Aggiornamento non riuscito: '+ex.message)}
+  });
+
+  els('[data-ymc-internal-message-form]').forEach(form=>form.onsubmit=async e=>{
+    e.preventDefault();
+    const id=form.dataset.ymcInternalMessageForm,fd=new FormData(form),bodyText=String(fd.get('body')||'').trim();
+    const req=(state.internalClientRequests||[]).find(r=>r.id===id);
+    if(!id||!bodyText||!req)return;
+    const btn=form.querySelector('button[type="submit"]');if(btn)btn.disabled=true;
+    try{
+      await ymcFetch('/rest/v1/ymc_request_messages',{method:'POST',token:internalToken(),body:{request_id:id,organization_id:req.organization_id,sender_side:'yume',body:bodyText},prefer:'return=minimal'});
+      await loadRequestMessages(id,internalToken());render();toast('Risposta YUME inviata nel thread.');
+    }catch(ex){toast('Risposta non inviata: '+ex.message)}
+    finally{if(btn)btn.disabled=false}
+  });
+
   els('[data-ymc-review-request]').forEach(b=>b.onclick=async()=>{
     const [id,decision]=b.dataset.ymcReviewRequest.split(':');
     b.disabled=true;
