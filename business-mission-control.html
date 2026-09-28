@@ -12,8 +12,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/styles_business_mission_control.css?v=20260928-v2">
-  <script defer src="/assets/script_business_mission_control.js?v=20260928-v1"></script>
+  <link rel="stylesheet" href="/assets/styles_business_mission_control.css?v=20260928-v3">
+  <script defer src="/assets/script_business_mission_control.js?v=20260928-v2"></script>
 </head>
 <body>
 <a class="ymc-skip" href="#ymc-main">Vai al contenuto</a>
@@ -55,21 +55,64 @@
         </div>
       </div>
       <div class="ymc-gate-card">
-        <span class="ymc-gate-card-label">APRIRE LA PREVIEW</span>
-        <h2>Due punti di vista.<br>Un solo progetto.</h2>
-        <p>Provate la stessa missione come azienda cliente oppure come team YUME. Nessun dato viene inviato al server.</p>
-        <label class="ymc-field">
-          <span>Email demo</span>
-          <input type="email" value="demo@azienda.it" autocomplete="off" data-ymc-demo-email>
-        </label>
+        <span class="ymc-gate-card-label">ACCESSO CONTROLLATO DA YUME</span>
+        <h2>Nessuna registrazione libera.<br>Prima l’azienda. Poi l’accesso.</h2>
+        <p>Mission Control è invitation-only: YUME identifica l’Organization, verifica il set documentale concordato e abilita il referente aziendale. Solo dopo viene emesso l’invito di accesso.</p>
+        <div class="ymc-access-notice"><i></i><span><b>Azienda già abilitata?</b> Inserisci email aziendale e token YUME.</span></div>
+        <div class="ymc-access-fields">
+          <label class="ymc-field">
+            <span>Email aziendale</span>
+            <input type="email" value="demo@azienda.it" autocomplete="off" data-ymc-demo-email>
+          </label>
+          <label class="ymc-field">
+            <span>Access token demo</span>
+            <input type="text" value="YUME-DEMO-2701" autocomplete="off" spellcheck="false" data-ymc-demo-token>
+          </label>
+        </div>
+        <p class="ymc-access-error" data-ymc-access-error hidden></p>
         <button class="ymc-gate-action" type="button" data-ymc-enter="client">
-          <span><b>Corporate Admin</b><small>Mission Control cliente</small></span><i>→</i>
+          <span><b>Accedi come Corporate Admin</b><small>Organization verificata · demo</small></span><i>→</i>
+        </button>
+        <button class="ymc-onboarding-entry" type="button" data-ymc-open-onboarding>
+          <span><b>Hai ricevuto il link di onboarding?</b><small>Simula verifica aziendale e documenti</small></span><i>↗</i>
         </button>
         <button class="ymc-gate-action ymc-gate-action--secondary" type="button" data-ymc-enter="internal">
-          <span><b>YUME Internal</b><small>Network & project operations</small></span><i>→</i>
+          <span><b>YUME Internal</b><small>Network · onboarding · project operations</small></span><i>→</i>
         </button>
-        <small class="ymc-gate-disclaimer">Preview UX/UI. Auth reale prevista con organization, RLS e MFA; non è collegata a Supabase né al CRM di produzione.</small>
+        <small class="ymc-gate-disclaimer">Preview UX/UI. Nessun documento viene caricato davvero e nessun dato viene inviato a Supabase/CRM. Il set documentale definitivo dovrà essere validato sul piano legale/privacy prima della produzione.</small>
       </div>
+    </div>
+  </div>
+</section>
+
+<section class="ymc-onboarding" data-ymc-onboarding hidden>
+  <div class="ymc-onboarding-shell">
+    <header class="ymc-onboarding-head">
+      <a href="/business" class="ymc-onboarding-brand">
+        <img src="/assets/logo-yume.jpg" alt="" width="48" height="48">
+        <span><strong>YUME</strong><small>WORKS · COMPANY ONBOARDING</small></span>
+      </a>
+      <button type="button" class="ymc-onboarding-exit" data-ymc-close-onboarding>×</button>
+    </header>
+    <div class="ymc-onboarding-layout">
+      <aside class="ymc-onboarding-aside">
+        <p class="ymc-kicker">Invitation-only workflow</p>
+        <h2>Verify the organization.<br><em>Then unlock the mission.</em></h2>
+        <p>Questo flusso non crea un account pubblico. Raccoglie il set documentale richiesto da YUME per identificare l’azienda e il referente che potrà amministrare Mission Control.</p>
+        <div class="ymc-onboarding-progress" data-ymc-onboarding-progress></div>
+        <div class="ymc-onboarding-security">
+          <span>PRODUCTION PRINCIPLE</span>
+          <strong>Upload link temporaneo</strong>
+          <p>Link nominativo, scadenza, antivirus, cifratura, audit log e nessun documento sensibile in cartelle pubbliche.</p>
+        </div>
+      </aside>
+      <main class="ymc-onboarding-main">
+        <div data-ymc-onboarding-content></div>
+        <div class="ymc-onboarding-actions">
+          <button type="button" class="ymc-btn" data-ymc-onboarding-back>← Indietro</button>
+          <button type="button" class="ymc-btn ymc-btn--dark" data-ymc-onboarding-next>Continua →</button>
+        </div>
+      </main>
     </div>
   </div>
 </section>
