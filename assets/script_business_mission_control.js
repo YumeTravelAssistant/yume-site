@@ -308,6 +308,7 @@ function bindDynamic(){
   els('[data-ymc-decision]').forEach(b=>b.onclick=()=>{const [id,status]=b.dataset.ymcDecision.split(':');updateDecision(id,status)});
   els('[data-ymc-drawer-open]').forEach(b=>b.onclick=()=>{const [type,id]=b.dataset.ymcDrawerOpen.split(':');openDrawer(type,id)});
   els('[data-ymc-toast]').forEach(b=>b.onclick=()=>toast(b.dataset.ymcToast));
+  els('[data-ymc-open-menu]').forEach(b=>b.onclick=()=>toggleMenu(true));
 }
 function enter(role){
   state.session=true;state.role=role;state.section=role==='client'?'overview':'network';save();render();
