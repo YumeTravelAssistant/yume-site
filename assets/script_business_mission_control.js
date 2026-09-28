@@ -166,7 +166,21 @@ function setRole(role){
   save();render();
 }
 function setSection(section){
+  if(section!=='partnerWorkspace')state.activePartnerId=null;
   state.section=section;state.sidebar=false;save();render();requestAnimationFrame(()=>el('#ymc-main')?.focus({preventScroll:true}));
+}
+function partnerStatus(id){return state.partnerStatuses?.[id]||'Da contattare'}
+function openPartnerWorkspace(id){
+  state.activePartnerId=id;state.section='partnerWorkspace';state.sidebar=false;closeDrawer();save();render();requestAnimationFrame(()=>el('#ymc-main')?.focus({preventScroll:true}));
+}
+function addPartnerTimeline(id,title,detail,type='Team'){
+  state.partnerTimeline=state.partnerTimeline||{};
+  state.partnerTimeline[id]=[...(state.partnerTimeline[id]||[]),{date:new Date().toLocaleDateString('it-IT'),title,detail,type}];
+}
+function updatePartnerStatus(id,status){
+  state.partnerStatuses[id]=status;
+  addPartnerTimeline(id,'Stato rapporto aggiornato',status,'Status');
+  save();render();toast('Stato partner aggiornato: '+status);
 }
 function toast(msg){
   const t=el('[data-ymc-toast]');if(!t)return;
@@ -192,10 +206,11 @@ function drawerContent(type,id){
   }
   if(type==='partner'){
     const p=DATA.network.find(x=>x.id===id);if(!p)return'';
-    return '<span class="ymc-section-label">PARTNER REGISTRY · INTERNAL</span><h2 class="ymc-drawer-title">'+esc(p.name)+'</h2><p class="ymc-drawer-copy">'+esc(p.note)+'</p>'+
-      '<div class="ymc-drawer-section"><dl><div><dt>Type</dt><dd>'+esc(p.kind)+'</dd></div><div><dt>Geography</dt><dd>'+esc(p.geo)+'</dd></div><div><dt>Stage</dt><dd>'+esc(p.stage)+'</dd></div><div><dt>Tier</dt><dd>'+esc(p.tier)+'</dd></div><div><dt>YUME owner</dt><dd>'+esc(p.owner)+'</dd></div></dl></div>'+
-      '<div class="ymc-drawer-section"><h4>Capabilities</h4><div class="ymc-decision-meta">'+p.cap.map(x=>'<span>'+esc(x)+'</span>').join('')+'</div></div>'+
-      '<div class="ymc-drawer-section"><h4>Next action</h4><p class="ymc-drawer-copy">'+esc(p.next)+'</p></div>';
+    return '<span class="ymc-section-label">PARTNER REGISTRY · QUICK VIEW</span><h2 class="ymc-drawer-title">'+esc(p.name)+'</h2><p class="ymc-drawer-copy">'+esc(p.note)+'</p>'+
+      '<div class="ymc-drawer-section"><dl><div><dt>Type</dt><dd>'+esc(p.kind)+'</dd></div><div><dt>Geography</dt><dd>'+esc(p.geo)+'</dd></div><div><dt>Stato</dt><dd>'+esc(partnerStatus(p.id))+'</dd></div><div><dt>Tier</dt><dd>'+esc(p.tier)+'</dd></div><div><dt>YUME owner</dt><dd>'+esc(p.owner)+'</dd></div></dl></div>'+
+      '<div class="ymc-drawer-section"><h4>Capabilities</h4><div class="ymc-partner-capabilities">'+p.cap.map(x=>'<span>'+esc(x)+'</span>').join('')+'</div></div>'+
+      '<div class="ymc-drawer-section"><h4>Next action</h4><p class="ymc-drawer-copy">'+esc(p.next)+'</p></div>'+
+      '<div class="ymc-drawer-section"><button type="button" class="ymc-btn ymc-btn--dark" data-ymc-open-partner="'+p.id+'">Apri Partner Workspace →</button></div>';
   }
   if(type==='agenda'){
     const a=DATA.agenda[Number(id)];if(!a)return'';
@@ -315,7 +330,7 @@ function clientFollowup(){
     '<section class="ymc-card ymc-card--brass" style="margin-top:12px"><span class="ymc-section-label">ACCOUNT MEMORY</span><h2>Il vantaggio cresce missione dopo missione.</h2><p>Quando la stessa azienda torna in Giappone o Asia, YUME non riparte da zero: storico delle missioni, contatti, decisioni, documenti e follow-up diventano memoria aziendale condivisa.</p></section>';
 }
 function renderInternal(section){
-  const map={network:internalNetwork,onboarding:internalOnboarding,partners:internalPartners,coverage:internalCoverage,pipeline:internalPipeline,roadmap:internalRoadmap,access:internalAccess};
+  const map={network:internalNetwork,onboarding:internalOnboarding,partners:internalPartners,partnerWorkspace:internalPartnerWorkspace,coverage:internalCoverage,pipeline:internalPipeline,roadmap:internalRoadmap,access:internalAccess};
   return (map[section]||internalNetwork)();
 }
 function internalNetwork(){
