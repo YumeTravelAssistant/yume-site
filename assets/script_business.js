@@ -160,8 +160,34 @@ function card(a){
  return '<article class="yb-offer yb-click-card" role="link" tabindex="0" data-cat="'+a[0]+'" data-card-href="'+href+'"><small>'+labels[a[0]]+'</small><h3>'+a[1]+'</h3><p>'+a[2]+'</p><footer><span>'+a[3]+'</span><span>Brief ↗</span></footer></article>';
 }
 function renderActivities(){const box=qs('[data-business-activities]');if(box)box.innerHTML=ACTIVITIES.map(card).join('');const c=qs('[data-activity-count]');if(c)c.textContent=ACTIVITIES.length+' attività'}
-function initFilters(){qsa('[data-filter]').forEach(btn=>btn.addEventListener('click',()=>{qsa('[data-filter]').forEach(x=>x.classList.remove('is-active'));btn.classList.add('is-active');const f=btn.dataset.filter;qsa('.yb-offer').forEach(c=>c.hidden=f!=='all'&&c.dataset.cat!==f)}))}
+function initFilters(){
+ const buttons=qsa('[data-filter]');
+ if(!buttons.length)return;
+ const apply=(filter,scroll=false)=>{
+  const target=buttons.find(b=>b.dataset.filter===filter)||buttons.find(b=>b.dataset.filter==='all');
+  buttons.forEach(x=>x.classList.toggle('is-active',x===target));
+  const active=target?.dataset.filter||'all';
+  qsa('.yb-offer').forEach(card=>card.hidden=active!=='all'&&card.dataset.cat!==active);
+  if(scroll&&target)target.scrollIntoView({behavior:'smooth',block:'center',inline:'center'});
+ };
+ buttons.forEach(btn=>btn.addEventListener('click',()=>apply(btn.dataset.filter)));
+ const fromUrl=()=>{
+  const hash=location.hash.replace('#','');
+  const query=new URLSearchParams(location.search).get('filter');
+  const wanted=query||hash;
+  if(wanted&&buttons.some(b=>b.dataset.filter===wanted))apply(wanted,false);
+ };
+ fromUrl();
+ addEventListener('hashchange',fromUrl);
+}
 function initClickCards(){qsa('[data-card-href]').forEach(card=>{const href=card.dataset.cardHref;if(!href)return;const go=()=>location.href=href;card.addEventListener('click',e=>{if(e.target.closest('a,button,input,select,textarea'))return;go()});card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}})})}
+function initCurrentNav(){
+ const path=location.pathname.replace(/\/$/,'')||'/';
+ qsa('.yb-desktop-nav a,.yb-mobile-nav a').forEach(a=>{
+  const href=(a.getAttribute('href')||'').split('#')[0].replace(/\/$/,'');
+  if(href&&href.startsWith('/business')&&href===path)a.setAttribute('aria-current','page');
+ });
+}
 function preserveAttribution(){const p=new URLSearchParams(location.search),keys=['utm_source','utm_medium','utm_campaign','utm_content','utm_term','ref'];const cur={};keys.forEach(k=>{if(p.get(k))cur[k]=p.get(k)});try{if(Object.keys(cur).length)sessionStorage.setItem('yumeBusinessAttribution',JSON.stringify(cur))}catch(_){}} 
-document.addEventListener('DOMContentLoaded',()=>{initNav();initReveal();renderActivities();initFilters();initClickCards();preserveAttribution()});
+document.addEventListener('DOMContentLoaded',()=>{initNav();initReveal();renderActivities();initFilters();initClickCards();initCurrentNav();preserveAttribution()});
 })();
