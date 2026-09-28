@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>YUME Works · Mission Control Preview</title>
+  <meta name="description" content="Preview privata di YUME Works Mission Control: missioni corporate, decisioni, agenda, travel, documenti e network operativo.">
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+  <link rel="canonical" href="https://yume-travel.com/business/mission-control">
+  <meta name="theme-color" content="#0d151d">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/styles_business_mission_control.css?v=20260928-v1">
+  <script defer src="/assets/script_business_mission_control.js?v=20260928-v1"></script>
+</head>
+<body>
+<a class="ymc-skip" href="#ymc-main">Vai al contenuto</a>
+
+<div class="ymc-preview-ribbon" aria-label="Stato preview">
+  <span>PREVIEW PRIVATA</span>
+  <b>Mission Control · dati demo · nessun login reale</b>
+  <a href="/business">← Torna a YUME Works</a>
+</div>
+
+<section class="ymc-gate" data-ymc-gate>
+  <div class="ymc-gate-bg" aria-hidden="true"></div>
+  <div class="ymc-gate-shell">
+    <div class="ymc-gate-brand">
+      <img src="/assets/logo-yume.jpg" alt="" width="54" height="54">
+      <div><strong>YUME</strong><span>WORKS · MISSION CONTROL</span></div>
+    </div>
+    <div class="ymc-gate-grid">
+      <div class="ymc-gate-copy">
+        <p class="ymc-kicker">Private operating layer · interactive preview</p>
+        <h1>Move the mission.<br><em>Not just the trip.</em></h1>
+        <p>Una missione corporate non vive in un PDF: vive tra decisioni, persone, agenda, travel, partner e follow-up. Questa preview mostra come YUME può tenere tutto nello stesso sistema.</p>
+        <div class="ymc-gate-principles">
+          <span>Mission-first</span><span>Invite-only</span><span>Organization-based</span><span>Human + Tech</span>
+        </div>
+      </div>
+      <div class="ymc-gate-card">
+        <span class="ymc-gate-card-label">APRIRE LA PREVIEW</span>
+        <h2>Due punti di vista.<br>Un solo progetto.</h2>
+        <p>Provate la stessa missione come azienda cliente oppure come team YUME. Nessun dato viene inviato al server.</p>
+        <label class="ymc-field">
+          <span>Email demo</span>
+          <input type="email" value="demo@azienda.it" autocomplete="off" data-ymc-demo-email>
+        </label>
+        <button class="ymc-gate-action" type="button" data-ymc-enter="client">
+          <span><b>Corporate Admin</b><small>Mission Control cliente</small></span><i>→</i>
+        </button>
+        <button class="ymc-gate-action ymc-gate-action--secondary" type="button" data-ymc-enter="internal">
+          <span><b>YUME Internal</b><small>Network & project operations</small></span><i>→</i>
+        </button>
+        <small class="ymc-gate-disclaimer">Preview UX/UI. Auth reale prevista con organization, RLS e MFA; non è collegata a Supabase né al CRM di produzione.</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ymc-app" data-ymc-app hidden>
+  <aside class="ymc-sidebar" data-ymc-sidebar>
+    <div class="ymc-sidebar-brand">
+      <a href="/business" aria-label="YUME Works">
+        <img src="/assets/logo-yume.jpg" alt="" width="42" height="42">
+        <span><strong>YUME</strong><small>WORKS · MISSION CONTROL</small></span>
+      </a>
+      <button type="button" class="ymc-sidebar-close" data-ymc-close-menu aria-label="Chiudi menu">×</button>
+    </div>
+
+    <div class="ymc-mode-switch" role="group" aria-label="Vista demo">
+      <button type="button" data-ymc-role="client">Client</button>
+      <button type="button" data-ymc-role="internal">YUME</button>
+    </div>
+
+    <nav class="ymc-nav" aria-label="Mission Control" data-ymc-nav></nav>
+
+    <div class="ymc-sidebar-bottom">
+      <div class="ymc-security-card">
+        <span>ACCESS MODEL</span>
+        <strong>Invite-only</strong>
+        <p>Organization → Member → Mission → Permission</p>
+      </div>
+      <a href="/business" class="ymc-back-link">← YUME Works</a>
+    </div>
+  </aside>
+
+  <div class="ymc-shell">
+    <header class="ymc-topbar">
+      <div class="ymc-topbar-left">
+        <button class="ymc-menu-btn" type="button" data-ymc-open-menu aria-label="Apri menu"><span></span></button>
+        <div class="ymc-mission-id">
+          <span>MISSION</span>
+          <strong data-ymc-mission-id>YM-DEMO-27W01</strong>
+        </div>
+      </div>
+      <div class="ymc-topbar-center">
+        <button class="ymc-project-switch" type="button" data-ymc-project-switch aria-expanded="false">
+          <span><small>ACTIVE PROJECT</small><strong data-ymc-project-name>Japan Market Entry · Wine & Spirits</strong></span>
+          <i>⌄</i>
+        </button>
+        <div class="ymc-project-menu" data-ymc-project-menu hidden>
+          <button type="button" class="is-active"><span>YM-DEMO-27W01</span><b>Japan Market Entry · Wine & Spirits</b><small>Architecture phase</small></button>
+          <button type="button" disabled><span>YM-DEMO-28A02</span><b>Asia Innovation Mission</b><small>Example · future project</small></button>
+        </div>
+      </div>
+      <div class="ymc-topbar-right">
+        <span class="ymc-sync"><i></i> Demo data</span>
+        <button class="ymc-profile" type="button" data-ymc-profile aria-label="Profilo demo">
+          <span data-ymc-avatar>AR</span><i>⌄</i>
+        </button>
+        <div class="ymc-profile-menu" data-ymc-profile-menu hidden>
+          <strong data-ymc-profile-name>Aurea Italia</strong>
+          <small data-ymc-profile-role>Corporate Admin · Demo</small>
+          <button type="button" data-ymc-reset>Reset preview</button>
+          <button type="button" data-ymc-logout>Esci dalla preview</button>
+        </div>
+      </div>
+    </header>
+
+    <main id="ymc-main" class="ymc-main" tabindex="-1">
+      <div class="ymc-main-inner" data-ymc-content></div>
+    </main>
+
+    <nav class="ymc-mobile-nav" aria-label="Navigazione mobile" data-ymc-mobile-nav></nav>
+  </div>
+
+  <div class="ymc-drawer-backdrop" data-ymc-drawer-backdrop></div>
+  <aside class="ymc-detail-drawer" data-ymc-drawer aria-hidden="true">
+    <button type="button" class="ymc-drawer-close" data-ymc-close-drawer aria-label="Chiudi dettaglio">×</button>
+    <div data-ymc-drawer-content></div>
+  </aside>
+
+  <div class="ymc-toast" role="status" aria-live="polite" data-ymc-toast></div>
+</div>
+
+<noscript>
+  <div class="ymc-noscript">Questa preview richiede JavaScript.</div>
+</noscript>
+</body>
+</html>
