@@ -169,3 +169,5 @@
 .yb-sector-example__body a{display:inline-flex;margin-top:17px;font-size:10px;font-weight:900}
 @media(max-width:820px){.yb-sector-examples{grid-template-columns:1fr}.yb-sector-example{display:grid;grid-template-columns:220px 1fr}.yb-sector-example__media{height:100%}.yb-sector-example__body p{min-height:0}}
 @media(max-width:560px){.yb-sector-example{display:block}.yb-sector-example__media{height:175px}}
+
+/* deployment retry marker */
