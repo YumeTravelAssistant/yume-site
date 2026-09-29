@@ -7,9 +7,9 @@
 .yb-scenario-index-number{position:absolute;z-index:3;top:20px;left:20px;width:42px;height:42px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.32);border-radius:50%;background:rgba(10,17,24,.62);backdrop-filter:blur(12px);color:#ead6ad;font:700 11px/1 "Manrope",sans-serif}
 .yb-scenario-index-media{height:228px;background-position:center;background-size:cover}
 .yb-scenario-index-card--network .yb-scenario-index-media{background-image:linear-gradient(0deg,rgba(8,13,18,.18),rgba(8,13,18,.03)),url("https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=1400&q=84")}
-.yb-scenario-index-card--fair .yb-scenario-index-media{background-image:linear-gradient(0deg,rgba(8,13,18,.18),rgba(8,13,18,.03)),url("https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=1400&q=84")}
+.yb-scenario-index-card--fair .yb-scenario-index-media{background-image:linear-gradient(0deg,rgba(8,13,18,.20),rgba(8,13,18,.04)),url("https://images.unsplash.com/photo-1761195689615-9469b65dac01?auto=format&fit=crop&w=1400&q=82");background-position:center}
 .yb-scenario-index-card--contact .yb-scenario-index-media{background-image:linear-gradient(0deg,rgba(8,13,18,.16),rgba(8,13,18,.02)),url("https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1400&q=84")}
-.yb-scenario-index-card--scouting .yb-scenario-index-media{background-image:linear-gradient(0deg,rgba(8,13,18,.2),rgba(8,13,18,.03)),url("https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=1400&q=84")}
+.yb-scenario-index-card--scouting .yb-scenario-index-media{background-image:linear-gradient(0deg,rgba(8,13,18,.18),rgba(8,13,18,.03)),url("https://images.unsplash.com/photo-1758518730151-cf64fddb4f0a?auto=format&fit=crop&w=1400&q=82");background-position:center}
 .yb-scenario-index-body{padding:25px 27px 27px}
 .yb-scenario-index-body small{font-size:9px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:#99743e}
 .yb-scenario-index-body h3{margin:10px 0 9px;font:600 34px/1.02 "Playfair Display",serif}
