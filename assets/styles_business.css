@@ -375,6 +375,11 @@ body:not(.yb-has-contact-dock) .yb-control-teaser{right:22px}
 .yb-contact-dock__item strong{display:block;color:#f7f2e9!important;font-size:12px}
 .yb-contact-dock__item small{display:block;margin-top:2px;color:#e2c793!important;font-size:9px}
 
+@media(max-width:920px){
+ .yb-nav{grid-template-columns:1fr auto}
+ .yb-desktop-nav,.yb-nav>.yb-nav-cta{display:none}
+ .yb-menu-btn{display:block}
+}
 @media(max-width:820px){
  body.yb-menu-open .yb-control-teaser,
  body.yb-menu-open .yb-contact-dock{opacity:0!important;pointer-events:none!important}
