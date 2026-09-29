@@ -9,6 +9,38 @@
       }
     },
     {
+      "route": "/business/network",
+      "rewrite": "/business-network.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet"
+      }
+    },
+    {
+      "route": "/business/fiera",
+      "rewrite": "/business-fair.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet"
+      }
+    },
+    {
+      "route": "/business/market-entry-contatto",
+      "rewrite": "/business-market-contact.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet"
+      }
+    },
+    {
+      "route": "/business/market-entry-scouting",
+      "rewrite": "/business-market-scouting.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet"
+      }
+    },
+    {
       "route": "/business/mission-control",
       "rewrite": "/business-mission-control.html",
       "headers": {
@@ -244,6 +276,34 @@
       "headers": {
         "Cache-Control": "no-store",
         "X-Robots-Tag": "noindex, nofollow, noarchive"
+      }
+    },
+    {
+      "route": "/business-network.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet"
+      }
+    },
+    {
+      "route": "/business-fair.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet"
+      }
+    },
+    {
+      "route": "/business-market-contact.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet"
+      }
+    },
+    {
+      "route": "/business-market-scouting.html",
+      "headers": {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet"
       }
     }
   ],
