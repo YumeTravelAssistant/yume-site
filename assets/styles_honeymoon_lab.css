@@ -144,3 +144,35 @@
   .lab-consent{font-size:11px}
   .lab-share .lab-btn--wine{width:100%;font-size:12px}
 }
+
+
+/* Journey Lab v11 · state lifecycle + manual allocation + mobile trade-off spacing */
+.lab-resume{margin-top:24px;padding:20px 22px;border:1px solid rgba(184,137,77,.38);border-radius:18px;background:rgba(255,253,249,.82);box-shadow:0 12px 32px rgba(43,13,22,.06)}
+.lab-resume[hidden]{display:none!important}
+.lab-resume>small{display:block;color:#9a7440;font-size:8px;font-weight:800;letter-spacing:.13em}
+.lab-resume>b{display:block;margin-top:7px;color:var(--wine);font:600 22px/1.25 "Playfair Display",serif}
+.lab-resume>p{max-width:650px;margin:7px 0 0;color:var(--muted);font-size:11px;line-height:1.55}
+.lab-resume-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+.lab-resume-actions .lab-btn{min-height:48px}
+.lab-allocation-status{min-height:20px;margin:13px 0 -4px;color:var(--muted);font-size:10px;line-height:1.45}
+.lab-allocation.is-total-ok .lab-allocation-status{color:#5f6f4f}
+.lab-allocation.is-total-off .lab-allocation-head strong{text-decoration:underline;text-decoration-color:rgba(184,137,77,.55);text-underline-offset:5px}
+.lab-next:disabled{opacity:.46;cursor:not-allowed;box-shadow:none}
+.lab-btn--restart{border-style:dashed}
+@media(max-width:640px){
+  .lab-resume{margin-top:20px;padding:18px 16px}
+  .lab-resume>b{font-size:24px}
+  .lab-resume>p{font-size:12px}
+  .lab-resume-actions{display:grid;grid-template-columns:1fr}
+  .lab-resume-actions .lab-btn{width:100%;white-space:normal}
+  .lab-allocation-head{align-items:flex-start}
+  .lab-allocation-head strong{font-size:25px}
+  .lab-allocation-status{margin:12px 0 0;font-size:11px}
+  .lab-duels{gap:30px}
+  .lab-duel{gap:12px;padding:0 0 28px;border-bottom:1px solid var(--line)}
+  .lab-duel:last-child{padding-bottom:0;border-bottom:0}
+  .lab-duel>span{padding:10px 0;text-align:center;line-height:1}
+  .lab-duel button{min-height:142px;padding:24px 20px}
+  .lab-duel button b{font-size:26px;line-height:1.15}
+  .lab-duel button small{margin-top:8px;font-size:12px;line-height:1.45}
+}
