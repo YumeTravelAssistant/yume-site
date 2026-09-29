@@ -189,5 +189,91 @@ function initCurrentNav(){
  });
 }
 function preserveAttribution(){const p=new URLSearchParams(location.search),keys=['utm_source','utm_medium','utm_campaign','utm_content','utm_term','ref'];const cur={};keys.forEach(k=>{if(p.get(k))cur[k]=p.get(k)});try{if(Object.keys(cur).length)sessionStorage.setItem('yumeBusinessAttribution',JSON.stringify(cur))}catch(_){}} 
-document.addEventListener('DOMContentLoaded',()=>{initNav();initReveal();renderActivities();initFilters();initClickCards();initCurrentNav();preserveAttribution()});
+
+function businessEditorialContext(){
+ const path=location.pathname.toLowerCase().replace(/\/+$/,'')||'/';
+ if(path.includes('/business/soluzioni'))return 'Soluzioni YUME Works';
+ if(path.includes('/business/metodo'))return 'Metodo YUME Works';
+ return 'YUME Works · Business Missions';
+}
+function isBusinessEditorialPage(){
+ const path=location.pathname.toLowerCase().replace(/\/+$/,'')||'/';
+ return path==='/business'||path==='/business.html'||path.includes('/business/soluzioni')||path.includes('/business/metodo');
+}
+function initBusinessContactDock(){
+ if(!isBusinessEditorialPage())return;
+ if(qs('.yb-contact-dock'))return;
+ document.body.classList.add('yb-has-contact-dock');
+ const context=businessEditorialContext();
+ const message=encodeURIComponent(
+  'Ciao YUME, sto valutando una missione business e sto guardando la sezione "'+
+  context+
+  '". Vorrei parlarne con voi e capire come strutturare il progetto.'
+ );
+ const dock=document.createElement('aside');
+ dock.className='yb-contact-dock';
+ dock.setAttribute('aria-label','Contatta YUME Works');
+ dock.innerHTML=`
+  <span class="yb-contact-dock__label">Parliamo del progetto</span>
+  <a class="yb-contact-dock__item yb-contact-dock__item--wa" href="https://wa.me/393703081341?text=${message}" target="_blank" rel="noopener" data-track="business_whatsapp">
+   <span class="yb-contact-dock__icon" aria-hidden="true">
+    <svg viewBox="0 0 32 32" role="img"><path d="M16 4.2A11.7 11.7 0 0 0 6 22l-1.4 5.2 5.3-1.4A11.7 11.7 0 1 0 16 4.2Zm0 2.1a9.6 9.6 0 0 1 0 19.2 9.5 9.5 0 0 1-4.9-1.3l-.7-.4-3.1.8.8-3-.4-.7A9.6 9.6 0 0 1 16 6.3Zm-4.1 4.4c-.3 0-.6.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2.1 3.3 5.2 4.5 2.6 1 3.1.8 3.7.8.6-.1 1.9-.8 2.1-1.5.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.7-.4l-2.1-1c-.3-.1-.6-.2-.8.2-.2.3-.8 1-1 1.2-.2.2-.4.3-.8.1-.3-.2-1.5-.6-2.8-1.7-1-.9-1.7-2-1.9-2.4-.2-.3 0-.5.1-.7l.5-.6.3-.6c.1-.2 0-.5 0-.7l-1-2.2c-.2-.5-.5-.5-.8-.5h-.6Z"/></svg>
+   </span>
+   <span><strong>WhatsApp</strong><small>Messaggio già pronto</small></span>
+  </a>
+  <a class="yb-contact-dock__item" href="tel:+393703081341" data-track="business_call">
+   <span class="yb-contact-dock__icon" aria-hidden="true">
+    <svg viewBox="0 0 32 32"><path d="M9.3 5.5 6.8 7.4c-.8.6-1.1 1.6-.8 2.5 2.2 7.2 7.9 12.9 15.1 15.1.9.3 1.9 0 2.5-.8l1.9-2.5c.6-.8.5-1.9-.2-2.5l-3.7-3c-.7-.5-1.6-.5-2.2.1l-1.8 1.8a17 17 0 0 1-3.7-3.7l1.8-1.8c.6-.6.6-1.5.1-2.2l-3-3.7c-.6-.7-1.7-.8-2.5-.2Z"/></svg>
+   </span>
+   <span><strong>Chiamaci</strong><small>+39 370 308 1341</small></span>
+  </a>`;
+ document.body.appendChild(dock);
+
+ const updateDock=()=>{
+  const shouldShow=window.scrollY>Math.min(window.innerHeight*.18,180);
+  dock.classList.toggle('is-visible',shouldShow);
+ };
+ updateDock();
+ window.addEventListener('scroll',updateDock,{passive:true});
+
+ const footer=qs('.yb-footer');
+ if(footer&&'IntersectionObserver'in window){
+  const observer=new IntersectionObserver(entries=>{
+   entries.forEach(entry=>dock.classList.toggle('is-muted',entry.isIntersecting));
+  },{threshold:.18});
+  observer.observe(footer);
+ }
+}
+function initMissionControlTeaser(){
+ const teaser=qs('#yb-control-teaser');
+ const hero=qs('.yb-hero');
+ if(!teaser||!hero)return;
+ try{if(sessionStorage.getItem('yumeBusinessMissionControlTeaserClosed')==='1')return}catch(_){}
+
+ let timeReady=false,scrollReady=false,shown=false;
+ const maybeShow=()=>{
+  if(shown||!timeReady||!scrollReady)return;
+  shown=true;
+  teaser.classList.add('is-visible');
+  teaser.setAttribute('aria-hidden','false');
+ };
+ window.setTimeout(()=>{timeReady=true;maybeShow()},8000);
+ const onScroll=()=>{
+  if(window.scrollY>Math.min(hero.offsetHeight*.28,320)){
+   scrollReady=true;
+   maybeShow();
+   window.removeEventListener('scroll',onScroll);
+  }
+ };
+ window.addEventListener('scroll',onScroll,{passive:true});
+
+ const close=()=>{
+  teaser.classList.remove('is-visible');
+  teaser.setAttribute('aria-hidden','true');
+  try{sessionStorage.setItem('yumeBusinessMissionControlTeaserClosed','1')}catch(_){}
+ };
+ qs('[data-control-teaser-close]',teaser)?.addEventListener('click',close);
+ qs('a[href="/business/mission-control"]',teaser)?.addEventListener('click',close);
+}
+document.addEventListener('DOMContentLoaded',()=>{initNav();initReveal();renderActivities();initFilters();initClickCards();initCurrentNav();preserveAttribution();initBusinessContactDock();initMissionControlTeaser()});
 })();
